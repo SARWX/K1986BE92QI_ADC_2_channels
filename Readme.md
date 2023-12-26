@@ -18,18 +18,18 @@
 // параллельная передача буфера альтернативной по USB
 void StageOneDMA()
 {
-    while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) == 0);								// ждем, когда DMA перейдет на альтернативную структуру
-    DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_PRIMARY, &sDMA_PriCtrlData_ADC1);			// реинициализируем основную структуру
-    USB_CDC_SendData((uint8_t *)(MainArrayForADC), ((NUM_OF_MES) * 2 ));								// отправка буфера основной структуры DMA по USB
+    while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) == 0);			// ждем, когда DMA перейдет на альтернативную структуру
+    DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_PRIMARY, &sDMA_PriCtrlData_ADC1);		// реинициализируем основную структуру
+    USB_CDC_SendData((uint8_t *)(MainArrayForADC), ((NUM_OF_MES) * 2 ));			// отправка буфера основной структуры DMA по USB
 }
 
 // 2 стадия - заполнение буфера, с использованием альтернативной структуры DMA,
 // параллельная передача буфера основной по USB
 void StageTwoDMA()
 {
-    while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) != 0);								// ждем, когда DMA перейдет на основную структуру
+    while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) != 0);			// ждем, когда DMA перейдет на основную структуру
     DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_ALTERNATE, &sDMA_AltCtrlData_ADC1);		// реинициализируем альтернативную структуру
-    USB_CDC_SendData((uint8_t *)(AlternareArrayForADC), ((NUM_OF_MES) * 2));						// отправка буфера альтернативной структуры DMA по USB
+    USB_CDC_SendData((uint8_t *)(AlternareArrayForADC), ((NUM_OF_MES) * 2));			// отправка буфера альтернативной структуры DMA по USB
 }
 ```
 В используемой микросхеме реализован интерфейс USB 2.0 Full Speed, который позволяет установить максимальную скорость передачи, равную 12 Мбит/сек. В отличие от преобразователя USB - UART, использованного в другом проекте, для данной микросхемы не требуется устанавливать символьную скорость. \
@@ -39,19 +39,19 @@ void StageTwoDMA()
 АЦП такируется от процессора с изменяемым коэффициентом деления тактовой частоты. С этим коэффициентом можно экспериментировать. Все приведённые на скриншотах результаты относятся к коэффициенту деления равному 32. При коэффициенте 16 и меньше, оцифровка может работать нестабильно. \
 ```C
 // Настройка АЦП
-    ADC_DeInit();																											// Сбросить все прежние настройки АЦП
-    ADC_StructInit(&sADC);																						// Проинициализировать структуру стандартными значениями
-		ADC_Init (&sADC);																									// Применить конфигурацию, занесенную в sADC
-    ADCx_StructInit (&sADCx);																					// Проинициализировать структуру для отдельного канала стандартными значениями
-    sADCx.ADC_ClockSource      = ADC_CLOCK_SOURCE_CPU;								// Источник тактирования - ЦПУ (т.е. от HSE)
-    sADCx.ADC_SamplingMode     = ADC_SAMPLING_MODE_CYCLIC_CONV;				// Режим работы (циклические преобразования, а не одиночное)
-    sADCx.ADC_ChannelSwitching = ADC_CH_SWITCHING_Enable;							// Переключение каналов разрешено, АЦП 1 будет вссегда работать на PD0,// PD1
-    sADCx.ADC_ChannelNumber    = ADC_CH_ADC0;													// Указываем канал АЦП 1 (ADC0 = АЦП 1, т.к. у Миландр он то первый, то нулевой)
+    ADC_DeInit();							// Сбросить все прежние настройки АЦП
+    ADC_StructInit(&sADC);						// Проинициализировать структуру стандартными значениями
+		ADC_Init (&sADC);					// Применить конфигурацию, занесенную в sADC
+    ADCx_StructInit (&sADCx);						// Проинициализировать структуру для отдельного канала стандартными значениями
+    sADCx.ADC_ClockSource      = ADC_CLOCK_SOURCE_CPU;			// Источник тактирования - ЦПУ (т.е. от HSE)
+    sADCx.ADC_SamplingMode     = ADC_SAMPLING_MODE_CYCLIC_CONV;		// Режим работы (циклические преобразования, а не одиночное)
+    sADCx.ADC_ChannelSwitching = ADC_CH_SWITCHING_Enable;		// Переключение каналов разрешено, АЦП 1 будет вссегда работать на PD0,// PD1
+    sADCx.ADC_ChannelNumber    = ADC_CH_ADC0;				// Указываем канал АЦП 1 (ADC0 = АЦП 1, т.к. у Миландр он то первый, то нулевой)
     sADCx.ADC_Channels         = (ADC_CH_ADC0_MSK | ADC_CH_ADC1_MSK);	// Маска для каналов 0 и 1 (АЦП 1 будет оцифровывать их поочередно)
-    sADCx.ADC_VRefSource       = ADC_VREF_SOURCE_INTERNAL;						// Опорное напряжение от внутреннего источника
-    sADCx.ADC_IntVRefSource    = ADC_INT_VREF_SOURCE_INEXACT;					// Выбираем неточный источник опорного напряжения
-    sADCx.ADC_Prescaler        = ADC_CLK_div_32;											// Задаем скорость работы АЦП, ИМЕННО ЭТОЙ НАСТРОЙКОЙ ЗАДАЕТСЯ СКОРОСТЬ РАБОТЫ УСТРОЙСТВА
-		sADCx.ADC_DelayGo          = 0x2;																	// Отложенный запуск, необходиим для нормальной работы
+    sADCx.ADC_VRefSource       = ADC_VREF_SOURCE_INTERNAL;		// Опорное напряжение от внутреннего источника
+    sADCx.ADC_IntVRefSource    = ADC_INT_VREF_SOURCE_INEXACT;		// Выбираем неточный источник опорного напряжения
+    sADCx.ADC_Prescaler        = ADC_CLK_div_32;			// Задаем скорость работы АЦП, ИМЕННО ЭТОЙ НАСТРОЙКОЙ ЗАДАЕТСЯ СКОРОСТЬ РАБОТЫ УСТРОЙСТВА
+		sADCx.ADC_DelayGo          = 0x2;			// Отложенный запуск, необходиим для нормальной работы
 ```
 
 В GNU Radio получение оцифрованных данных происходит при помощи побайтового чтения данных из виртуального Serial порта. Далее, поочерёдно происходит запись либо в первый выходной порт, либо во второй, так как, каналы оцифровываются по очереди. 
