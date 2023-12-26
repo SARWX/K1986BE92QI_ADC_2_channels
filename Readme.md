@@ -1,5 +1,5 @@
 # Использование АЦП на микроконтроллере К1986ВЕ92QI
-Также принимал участие @SARWX \
+Также принимал участие [SARWX](https://github.com/SARWX) \
 В данном проекте, производится настройка АЦП и одновременная оцифровка с его помощью двух синусоидальных сигналов с разной частотой. \
 Для запуска кода и повторения данного примера, вам потребуется:
 - Отладочная плата, [(например одна из этих)](https://ldm-systems.ru/catalog/milandr?cat=k1986be92qi&scat=op) с микроконтроллером [К1986ВЕ92QI](https://ic.milandr.ru/products/mikrokontrollery_i_protsessory/32_razryadnye_mikrokontrollery/k1986ve92qi/?ysclid=lqmbaqu6ql771500733)
