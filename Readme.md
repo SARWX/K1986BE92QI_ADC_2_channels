@@ -71,19 +71,19 @@ while(n < len(outputItems[0])) :
 Для демонстрации работы, можно собрать простую схему в GNU Radio, состоящую из блока "Embedded Python Block" и блока "Time Sink". 
 
 <p align="center">
-  <img width="" height="" src="imgs/simpleGraph.png">
+  <img width="" height="" src="/Imgs/simpleGraph.png">
 </p>
 
 На картинке ниже показана оцифровка двух синусоидальных сигналов с частотами 1кГц и 500 Гц по разным каналам.
 
 <p align="center">
-  <img width="" height="" src="imgs/1k+500HzRead.png">
+  <img width="" height="" src="/Imgs/1k+500HzRead.png">
 </p>
 
 Тоже оцифровка, но сигналы с частотой 5кГц и 1кГц.
 
 <p align="center">
-  <img width="" height="" src="imgs/5k+1kHzRead.png">
+  <img width="" height="" src="/Imgs/5k+1kHzRead.png">
 </p>
 
 ## Вывод
@@ -92,5 +92,5 @@ while(n < len(outputItems[0])) :
 
 Кастомные платы, использованные в тестах. 
 <p align="center">
-  <img width="" height="" src="imgs/miniboards.jpg">
+  <img width="" height="" src="/Imgs/miniboards.jpg">
 </p>
