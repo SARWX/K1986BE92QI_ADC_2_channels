@@ -34,7 +34,7 @@ static USB_Clock_TypeDef USB_Clock_InitStruct;
 static USB_DeviceBUSParam_TypeDef USB_DeviceBUSParam;
 static MDR_SSP_TypeDef SSP_InitStruct;
 SSP_InitTypeDef sSSP;
-PORT_InitTypeDef PORT_InitStructure;
+PORT_InitTypeDef port_init_structure;
 
 static uint8_t Buffer[BUFFER_LENGTH];
 static uint8_t RecBuf[BUFFER_LENGTH];
@@ -50,13 +50,13 @@ uint16_t ADC1_array_m[200];
 uint16_t ADC1_array_a[200];
 
 // Структуры для АЦП
-ADC_InitTypeDef sADC;
-ADCx_InitTypeDef sADCx;
+ADC_InitTypeDef ADC_structure;
+ADCx_InitTypeDef ADCx_structure;
 // Структуры для DMA
-DMA_ChannelInitTypeDef sDMA_ADC1;
+DMA_ChannelInitTypeDef ADC1_DMA_structure;
 DMA_ChannelInitTypeDef sDMA_ADC2;
-DMA_CtrlDataInitTypeDef sDMA_PriCtrlData_ADC1;				// Основная структура канала для ADC1
-DMA_CtrlDataInitTypeDef sDMA_AltCtrlData_ADC1;				// Альтернативная структура канала для ADC1
+DMA_CtrlDataInitTypeDef ADC1_primary_DMA_structure;				// Основная структура канала для ADC1
+DMA_CtrlDataInitTypeDef ADC1_alternate_DMA_structure;				// Альтернативная структура канала для ADC1
 DMA_CtrlDataInitTypeDef sDMA_PriCtrlData_ADC2;				// Основная структура канала для ADC2
 DMA_CtrlDataInitTypeDef sDMA_AltCtrlData_ADC2;				// Альтернативная структура канала для ADC2
 /* ---------------------------------------------------------------------------*/
@@ -70,12 +70,12 @@ static void Setup_CPU_Clock(void); 							// настройка тактиров
 static void Setup_USB(void);
 static void VCom_Configuration(void); 						// конфигурация виртуального COM-порта
 static void USB_PrintDebug(char *format, ...);				// вывод отладочных сообщений
-static void SetupDMA();
+static void Setup_DMA();
 static void SetupADC(); 									// настройка АЦП
 
 /* Определение функций ---------------------------------------------------------*/
 // задержка на count тактов 
-void delayTick(uint32_t count)		// Ждать count тактов процессора
+void delay_tick(uint32_t count)		// Ждать count тактов процессора
 {	
 	while (count--) {				// декремент счетчика	
 		__NOP();					// Не делать ничего
@@ -102,7 +102,7 @@ void USB_PrintDebug(char *format, ...)
 	va_end(argptr);
 	//CDC_Transmit_FS((uint8_t *)tempString,strlen(tempString) );
 	USB_CDC_SendData((uint8_t *)tempString, strlen(tempString));
-	delayTick(timeout);
+	delay_tick(timeout);
 #endif
 }
 
@@ -119,18 +119,18 @@ int main(void)
 
 	/* CDC layer initialization */
 	SetupADC();
-	SetupDMA();
+	Setup_DMA();
 	USB_CDC_Init(Buffer, 1, SET);
 	Setup_CPU_Clock();
 	Setup_USB();
   
 	// Инициализация пина для светодиода
 	RST_CLK_PCLKcmd (RST_CLK_PCLK_PORTC, ENABLE);
-	PORT_InitStructure.PORT_Pin = (LED_Pin);
-	PORT_InitStructure.PORT_OE = PORT_OE_OUT;
-	PORT_InitStructure.PORT_SPEED = PORT_SPEED_MAXFAST;
-	PORT_InitStructure.PORT_MODE = PORT_MODE_DIGITAL;
-	PORT_Init(LED_Port, &PORT_InitStructure);
+	port_init_structure.PORT_Pin = (LED_Pin);
+	port_init_structure.PORT_OE = PORT_OE_OUT;
+	port_init_structure.PORT_SPEED = PORT_SPEED_MAXFAST;
+	port_init_structure.PORT_MODE = PORT_MODE_DIGITAL;
+	PORT_Init(LED_Port, &port_init_structure);
 
 	int num_of_transfers = 0;
 reinit_DMA:
@@ -161,14 +161,14 @@ num_of_transfers = 0;
 		// 1 стадия
 		while ((DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) == 0))
 			;
-		DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_PRIMARY, &sDMA_PriCtrlData_ADC1);	
+		DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_PRIMARY, &ADC1_primary_DMA_structure);	
 
 		USB_CDC_SendData((uint8_t *)(ADC1_array_m), ((NUM_OF_MES) * 2 ));
 		
 		// 2 стадия
 		while ((DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) != 0))
 			;					// ждем, когда ADC1 перейдет на основную структуру
-		DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_ALTERNATE, &sDMA_AltCtrlData_ADC1);	// для DMA_Channel_ADC1
+		DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_ALTERNATE, &ADC1_alternate_DMA_structure);	// для DMA_Channel_ADC1
 		DMA_CtrlInit(DMA_Channel_ADC2, DMA_CTRL_DATA_ALTERNATE, &sDMA_AltCtrlData_ADC2);
 //		DMA_Cmd(DMA_Channel_ADC1, ENABLE);		// разрешаем работу 1ого канала
 //		DMA_Cmd(DMA_Channel_ADC2, ENABLE);		// разрешаем работу 2ого канала
@@ -197,31 +197,31 @@ void SetupADC()
     PORT_DeInit(MDR_PORTD);
 
 	// Конфигурируем выводы для АЦП 1 и 2
-    PORT_InitStructure.PORT_Pin   = PORT_Pin_0 | PORT_Pin_1;			// АЦП 1 и 2 расположены на PD0 и PD1 (см. распиновку)
-    PORT_InitStructure.PORT_OE    = PORT_OE_IN;							// Режим на вход
-    PORT_InitStructure.PORT_MODE  = PORT_MODE_ANALOG;					// Аналоговый вход
-    PORT_Init(MDR_PORTD, &PORT_InitStructure);							// Инициализация выводов заданной структурой
+    port_init_structure.PORT_Pin   = PORT_Pin_0 | PORT_Pin_1;			// АЦП 1 и 2 расположены на PD0 и PD1 (см. распиновку)
+    port_init_structure.PORT_OE    = PORT_OE_IN;							// Режим на вход
+    port_init_structure.PORT_MODE  = PORT_MODE_ANALOG;					// Аналоговый вход
+    PORT_Init(MDR_PORTD, &port_init_structure);							// Инициализация выводов заданной структурой
 
 	// Настройка АЦП
     ADC_DeInit();														// Сбросить все прежние настройки АЦП
-    ADC_StructInit(&sADC);												// Проинициализировать структуру стандартными значениями
-//		sADC.ADC_SynchronousMode  = ADC_SyncMode_Synchronous;		// Запустить 2 АЦП в сихронном режиме
-//		sADC.ADC_StartDelay = 0xF;								// Задержка 4 такта
-		ADC_Init (&sADC);													// Применить конфигурацию, занесенную в sADC
+    ADC_StructInit(&ADC_structure);												// Проинициализировать структуру стандартными значениями
+//		ADC_structure.ADC_SynchronousMode  = ADC_SyncMode_Synchronous;		// Запустить 2 АЦП в сихронном режиме
+//		ADC_structure.ADC_StartDelay = 0xF;								// Задержка 4 такта
+		ADC_Init (&ADC_structure);													// Применить конфигурацию, занесенную в ADC_structure
 
-    ADCx_StructInit (&sADCx);											// Проинициализировать структуру для отдельного канала стандартными значениями
-    sADCx.ADC_ClockSource      = ADC_CLOCK_SOURCE_CPU;					// Источник тактирования - ЦПУ (т.е. от HSE)
-    sADCx.ADC_SamplingMode     = ADC_SAMPLING_MODE_CYCLIC_CONV;			// Режим работы (циклические преобразования, а не одиночное)
-    sADCx.ADC_ChannelSwitching = ADC_CH_SWITCHING_Enable;				// Переключение каналов разрешено, АЦП 1 будет вссегда работать на PD0,// PD1
-    sADCx.ADC_ChannelNumber    = ADC_CH_ADC0;							// Указываем канал АЦП 1 (ADC0 = АЦП 1, т.к. у Миландр он то первый, то нулевой)
-    sADCx.ADC_Channels         = (ADC_CH_ADC0_MSK | ADC_CH_ADC1_MSK);						// Маска для каналов 0 и 1
-    sADCx.ADC_VRefSource       = ADC_VREF_SOURCE_INTERNAL;				// Опорное напряжение от внутреннего источника
-    sADCx.ADC_IntVRefSource    = ADC_INT_VREF_SOURCE_INEXACT;			// Выбираем неточный источник опорного напряжения
-    sADCx.ADC_Prescaler        = ADC_CLK_div_16;						// Задаем скорость работы АЦП, ИМЕННО ЭТОЙ НАСТРОЙКОЙ ЗАДАЕТСЯ СКОРОСТЬ РАБОТЫ УСТРОЙСТВА
- //   sADCx.ADC_DelayGo          = 0x7;									// Отложенный запуск, необходиим для нормальной работы
-		sADCx.ADC_DelayGo          = 0x2;
+    ADCx_StructInit (&ADCx_structure);											// Проинициализировать структуру для отдельного канала стандартными значениями
+    ADCx_structure.ADC_ClockSource      = ADC_CLOCK_SOURCE_CPU;					// Источник тактирования - ЦПУ (т.е. от HSE)
+    ADCx_structure.ADC_SamplingMode     = ADC_SAMPLING_MODE_CYCLIC_CONV;			// Режим работы (циклические преобразования, а не одиночное)
+    ADCx_structure.ADC_ChannelSwitching = ADC_CH_SWITCHING_Enable;				// Переключение каналов разрешено, АЦП 1 будет вссегда работать на PD0,// PD1
+    ADCx_structure.ADC_ChannelNumber    = ADC_CH_ADC0;							// Указываем канал АЦП 1 (ADC0 = АЦП 1, т.к. у Миландр он то первый, то нулевой)
+    ADCx_structure.ADC_Channels         = (ADC_CH_ADC0_MSK | ADC_CH_ADC1_MSK);						// Маска для каналов 0 и 1
+    ADCx_structure.ADC_VRefSource       = ADC_VREF_SOURCE_INTERNAL;				// Опорное напряжение от внутреннего источника
+    ADCx_structure.ADC_IntVRefSource    = ADC_INT_VREF_SOURCE_INEXACT;			// Выбираем неточный источник опорного напряжения
+    ADCx_structure.ADC_Prescaler        = ADC_CLK_div_16;						// Задаем скорость работы АЦП, ИМЕННО ЭТОЙ НАСТРОЙКОЙ ЗАДАЕТСЯ СКОРОСТЬ РАБОТЫ УСТРОЙСТВА
+ //   ADCx_structure.ADC_DelayGo          = 0x7;									// Отложенный запуск, необходиим для нормальной работы
+		ADCx_structure.ADC_DelayGo          = 0x2;
 		
-    ADC1_Init (&sADCx);													// Применяем настройки к АЦП 1
+    ADC1_Init (&ADCx_structure);													// Применяем настройки к АЦП 1
 
     // Разрешаем прерывания от АЦП
     ADC1_ITConfig((ADCx_IT_END_OF_CONVERSION), ENABLE);
@@ -349,7 +349,7 @@ USB_Result USB_CDC_SetLineCoding(uint16_t wINDEX, const USB_CDC_LineCoding_TypeD
 #endif /* USB_CDC_LINE_CODING_SUPPORTED */
 
 // Настройка DMA
-void SetupDMA() 
+void Setup_DMA() 
 {
 	// Разрешить тактирование DMA
 	RST_CLK_PCLKcmd (RST_CLK_PCLK_DMA | RST_CLK_PCLK_SSP1 |
@@ -361,46 +361,46 @@ void SetupDMA()
 
 	// Сбросить все настройки DMA
 	DMA_DeInit();
-	DMA_StructInit (&sDMA_ADC1);		// Проинициализировать sDMA_ADC1 стандартными значениями
+	DMA_StructInit (&ADC1_DMA_structure);		// Проинициализировать sDMA_ADC1 стандартными значениями
 	DMA_StructInit (&sDMA_ADC2);		// Проинициализировать sDMA_ADC2 стандартными значениями
 	
 	// Заполняем структуру sDMA_PriCtrlData_ADC1 для АЦП 1
-	sDMA_PriCtrlData_ADC1.DMA_SourceBaseAddr =								// Адрес откуда будем брать измерения 
+	ADC1_primary_DMA_structure.DMA_SourceBaseAddr =								// Адрес откуда будем брать измерения 
 	(uint32_t)(&(MDR_ADC->ADC1_RESULT));									// Соответственно это регистр ADC1_RESULT
-	sDMA_PriCtrlData_ADC1.DMA_DestBaseAddr = (uint32_t)(ADC1_array_m);			// Адрес куда будем писать наши измерения
-	sDMA_PriCtrlData_ADC1.DMA_CycleSize = NUM_OF_MES;								// Сколько измерений (DMA передач) содержит 1 DMA цикл
-	sDMA_PriCtrlData_ADC1.DMA_SourceIncSize = DMA_SourceIncNo;				// Адрес ADC1_RESULT не требует инкремента, он статичен
-	sDMA_PriCtrlData_ADC1.DMA_DestIncSize = DMA_DestIncHalfword;			// Адрес места, куда будем писать измерения будет инкрементироваться на 16 бит, т.к. АЦП 12 битный и в 8 бит он не поместится
-	sDMA_PriCtrlData_ADC1.DMA_MemoryDataSize =								// Скажем DMA, Что мы работаем с 16 битными данными
+	ADC1_primary_DMA_structure.DMA_DestBaseAddr = (uint32_t)(ADC1_array_m);			// Адрес куда будем писать наши измерения
+	ADC1_primary_DMA_structure.DMA_CycleSize = NUM_OF_MES;								// Сколько измерений (DMA передач) содержит 1 DMA цикл
+	ADC1_primary_DMA_structure.DMA_SourceIncSize = DMA_SourceIncNo;				// Адрес ADC1_RESULT не требует инкремента, он статичен
+	ADC1_primary_DMA_structure.DMA_DestIncSize = DMA_DestIncHalfword;			// Адрес места, куда будем писать измерения будет инкрементироваться на 16 бит, т.к. АЦП 12 битный и в 8 бит он не поместится
+	ADC1_primary_DMA_structure.DMA_MemoryDataSize =								// Скажем DMA, Что мы работаем с 16 битными данными
 	DMA_MemoryDataSize_HalfWord;	
-	sDMA_PriCtrlData_ADC1.DMA_NumContinuous = DMA_Transfers_1024;			// Сколько передач может пройти между процедурой арбитража
-	sDMA_PriCtrlData_ADC1.DMA_SourceProtCtrl = DMA_SourcePrivileged;			// Память, откуда берем значения кэшируемая (не факт)
-	sDMA_PriCtrlData_ADC1.DMA_DestProtCtrl = DMA_DestCacheable;				// Память, куда пишем значения кэшируемая (не факт)
-	sDMA_PriCtrlData_ADC1.DMA_Mode = DMA_Mode_PingPong;						// Режим "Пинг-понг" ст. 385 спецификации к К1986ВЕ92QI
+	ADC1_primary_DMA_structure.DMA_NumContinuous = DMA_Transfers_1024;			// Сколько передач может пройти между процедурой арбитража
+	ADC1_primary_DMA_structure.DMA_SourceProtCtrl = DMA_SourcePrivileged;			// Память, откуда берем значения кэшируемая (не факт)
+	ADC1_primary_DMA_structure.DMA_DestProtCtrl = DMA_DestCacheable;				// Память, куда пишем значения кэшируемая (не факт)
+	ADC1_primary_DMA_structure.DMA_Mode = DMA_Mode_PingPong;						// Режим "Пинг-понг" ст. 385 спецификации к К1986ВЕ92QI
 
 	// Заполним структуру sDMA_AltCtrlData_ADC1 для АЦП 1	
-	sDMA_AltCtrlData_ADC1.DMA_SourceBaseAddr =								// Адрес откуда будем брать измерения 
+	ADC1_alternate_DMA_structure.DMA_SourceBaseAddr =								// Адрес откуда будем брать измерения 
 	(uint32_t)(&(MDR_ADC->ADC1_RESULT));									// Соответственно это регистр ADC1_RESULT
-	sDMA_AltCtrlData_ADC1.DMA_DestBaseAddr = (uint32_t) (ADC1_array_a);	// Адрес куда будем писать наши измерения (+ размер массива / 2 * 2 байта)
-	sDMA_AltCtrlData_ADC1.DMA_CycleSize = NUM_OF_MES;								// Сколько измерений (DMA передач) содержит 1 DMA цикл
-	sDMA_AltCtrlData_ADC1.DMA_SourceIncSize = DMA_SourceIncNo;				// Адрес ADC1_RESULT не требует инкремента, он статичен
-	sDMA_AltCtrlData_ADC1.DMA_DestIncSize = DMA_DestIncHalfword;			// Адрес места, куда будем писать измерения будет инкрементироваться на 16 бит
-	sDMA_AltCtrlData_ADC1.DMA_MemoryDataSize =								// Скажем DMA, Что мы работаем с 16 битными данными
+	ADC1_alternate_DMA_structure.DMA_DestBaseAddr = (uint32_t) (ADC1_array_a);	// Адрес куда будем писать наши измерения (+ размер массива / 2 * 2 байта)
+	ADC1_alternate_DMA_structure.DMA_CycleSize = NUM_OF_MES;								// Сколько измерений (DMA передач) содержит 1 DMA цикл
+	ADC1_alternate_DMA_structure.DMA_SourceIncSize = DMA_SourceIncNo;				// Адрес ADC1_RESULT не требует инкремента, он статичен
+	ADC1_alternate_DMA_structure.DMA_DestIncSize = DMA_DestIncHalfword;			// Адрес места, куда будем писать измерения будет инкрементироваться на 16 бит
+	ADC1_alternate_DMA_structure.DMA_MemoryDataSize =								// Скажем DMA, Что мы работаем с 16 битными данными
 	DMA_MemoryDataSize_HalfWord;
-	sDMA_AltCtrlData_ADC1.DMA_NumContinuous = DMA_Transfers_1024;			// Сколько передач может пройти между процедурой арбитража
-	sDMA_AltCtrlData_ADC1.DMA_SourceProtCtrl = DMA_SourcePrivileged;			// Память, откуда берем значения кэшируемая (не факт)
-	sDMA_AltCtrlData_ADC1.DMA_DestProtCtrl = DMA_DestCacheable;				// Память, куда пишем значения кэшируемая (не факт)
-	sDMA_AltCtrlData_ADC1.DMA_Mode = DMA_Mode_PingPong;						// Режим "Пинг-понг" ст. 385 спецификации к К1986ВЕ92QI
+	ADC1_alternate_DMA_structure.DMA_NumContinuous = DMA_Transfers_1024;			// Сколько передач может пройти между процедурой арбитража
+	ADC1_alternate_DMA_structure.DMA_SourceProtCtrl = DMA_SourcePrivileged;			// Память, откуда берем значения кэшируемая (не факт)
+	ADC1_alternate_DMA_structure.DMA_DestProtCtrl = DMA_DestCacheable;				// Память, куда пишем значения кэшируемая (не факт)
+	ADC1_alternate_DMA_structure.DMA_Mode = DMA_Mode_PingPong;						// Режим "Пинг-понг" ст. 385 спецификации к К1986ВЕ92QI
 	
 	// Заполним структуру для 1ого канала
-	sDMA_ADC1.DMA_PriCtrlData = &sDMA_PriCtrlData_ADC1;						// Укажем основную структуру
-	sDMA_ADC1.DMA_AltCtrlData = &sDMA_AltCtrlData_ADC1;						// Укажем альтернативную структуру
-	sDMA_ADC1.DMA_Priority = DMA_Priority_Default;							// Обычный уровень приоритетности (нужен для арбитража)
-	sDMA_ADC1.DMA_UseBurst = DMA_BurstClear;
-	sDMA_ADC1.DMA_SelectDataStructure =	DMA_CTRL_DATA_PRIMARY;				// в качестве базовой берем основную структуру
+	ADC1_DMA_structure.DMA_PriCtrlData = &ADC1_primary_DMA_structure;						// Укажем основную структуру
+	ADC1_DMA_structure.DMA_AltCtrlData = &ADC1_alternate_DMA_structure;						// Укажем альтернативную структуру
+	ADC1_DMA_structure.DMA_Priority = DMA_Priority_Default;							// Обычный уровень приоритетности (нужен для арбитража)
+	ADC1_DMA_structure.DMA_UseBurst = DMA_BurstClear;
+	ADC1_DMA_structure.DMA_SelectDataStructure =	DMA_CTRL_DATA_PRIMARY;				// в качестве базовой берем основную структуру
 	
 	// Проинициализируем первый канал
-	DMA_Init(DMA_Channel_ADC1, &sDMA_ADC1);
+	DMA_Init(DMA_Channel_ADC1, &ADC1_DMA_structure);
 	MDR_DMA->CHNL_REQ_MASK_CLR = 1 << DMA_Channel_ADC1;
 	MDR_DMA->CHNL_USEBURST_CLR = 1 << DMA_Channel_ADC1;
 

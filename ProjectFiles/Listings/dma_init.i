@@ -1,18 +1,12 @@
-# 1 "CustomLibs/src/ADC_for_proj.c"
+# 1 "CustomLibs/src/DMA_init.c"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
 # 383 "<built-in>" 3
 # 1 "<command line>" 1
 # 1 "<built-in>" 2
-# 1 "CustomLibs/src/ADC_for_proj.c" 2
-# 1 "./CustomLibs/inc\\ADC_for_proj.h" 1
-
-
-
-void SetupADC();
-# 2 "CustomLibs/src/ADC_for_proj.c" 2
-# 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h" 1
-# 32 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h"
+# 1 "CustomLibs/src/DMA_init.c" 2
+# 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_dma.h" 1
+# 32 "./SPL/MDR32Fx/inc\\MDR32F9Qx_dma.h"
 # 1 "./SPL/MDR32Fx\\MDR32F9Qx_config.h" 1
 # 54 "./SPL/MDR32Fx\\MDR32F9Qx_config.h"
 # 1 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdint.h" 1 3
@@ -1205,7 +1199,286 @@ typedef struct
 
 }MDR_EBC_TypeDef;
 # 82 "./SPL/MDR32Fx\\MDR32F9Qx_config.h" 2
-# 33 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h" 2
+# 33 "./SPL/MDR32Fx/inc\\MDR32F9Qx_dma.h" 2
+# 57 "./SPL/MDR32Fx/inc\\MDR32F9Qx_dma.h"
+typedef enum
+{
+    DMA_ALternateDataDisabled = ((uint16_t)(0x00)),
+    DMA_ALternateDataEnabled = ((uint16_t)(0x01))
+} DMA_Alt_Data_Usage;
+
+
+
+
+
+
+
+typedef enum
+{
+
+    DMA_Channel_UART1_TX = ((uint8_t)(0)),
+    DMA_Channel_UART1_RX = ((uint8_t)(1)),
+    DMA_Channel_UART2_TX = ((uint8_t)(2)),
+    DMA_Channel_UART2_RX = ((uint8_t)(3)),
+    DMA_Channel_SSP1_TX = ((uint8_t)(4)),
+    DMA_Channel_SSP1_RX = ((uint8_t)(5)),
+    DMA_Channel_SSP2_TX = ((uint8_t)(6)),
+    DMA_Channel_SSP2_RX = ((uint8_t)(7)),
+    DMA_Channel_ADC1 = ((uint8_t)(8)),
+    DMA_Channel_ADC2 = ((uint8_t)(9)),
+    DMA_Channel_TIM1 = ((uint8_t)(10)),
+    DMA_Channel_TIM2 = ((uint8_t)(11)),
+    DMA_Channel_TIM3 = ((uint8_t)(12)),
+    DMA_Channel_SW1 = ((uint8_t)(13)),
+    DMA_Channel_SW2 = ((uint8_t)(14)),
+    DMA_Channel_SW3 = ((uint8_t)(15)),
+    DMA_Channel_SW4 = ((uint8_t)(16)),
+    DMA_Channel_SW5 = ((uint8_t)(17)),
+    DMA_Channel_SW6 = ((uint8_t)(18)),
+    DMA_Channel_SW7 = ((uint8_t)(19)),
+    DMA_Channel_SW8 = ((uint8_t)(20)),
+    DMA_Channel_SW9 = ((uint8_t)(21)),
+    DMA_Channel_SW10 = ((uint8_t)(22)),
+    DMA_Channel_SW11 = ((uint8_t)(23)),
+    DMA_Channel_SW12 = ((uint8_t)(24)),
+    DMA_Channel_SW13 = ((uint8_t)(25)),
+    DMA_Channel_SW14 = ((uint8_t)(26)),
+    DMA_Channel_SW15 = ((uint8_t)(27)),
+    DMA_Channel_SW16 = ((uint8_t)(28)),
+    DMA_Channel_SW17 = ((uint8_t)(29)),
+    DMA_Channel_SW18 = ((uint8_t)(30)),
+    DMA_Channel_SW19 = ((uint8_t)(31)),
+# 299 "./SPL/MDR32Fx/inc\\MDR32F9Qx_dma.h"
+} DMA_Valid_Channels;
+
+
+
+
+
+
+typedef enum
+{
+    DMA_SourceIncByte = ((uint32_t)0x00),
+    DMA_SourceIncHalfword = ((uint32_t)0x01),
+    DMA_SourceIncWord = ((uint32_t)0x02),
+    DMA_SourceIncNo = ((uint32_t)0x03)
+} DMA_Src_Inc_Mode;
+# 322 "./SPL/MDR32Fx/inc\\MDR32F9Qx_dma.h"
+typedef enum
+{
+    DMA_DestIncByte = ((uint32_t)0x00),
+    DMA_DestIncHalfword = ((uint32_t)0x01),
+    DMA_DestIncWord = ((uint32_t)0x02),
+    DMA_DestIncNo = ((uint32_t)0x03)
+} DMA_Dest_Inc_Mode;
+# 338 "./SPL/MDR32Fx/inc\\MDR32F9Qx_dma.h"
+typedef enum
+{
+    DMA_MemoryDataSize_Byte = ((uint32_t)(0x00 << 24)),
+    DMA_MemoryDataSize_HalfWord = ((uint32_t)(0x11 << 24)),
+    DMA_MemoryDataSize_Word = ((uint32_t)(0x22 << 24))
+} DMA_Mem_Data_Size;
+# 352 "./SPL/MDR32Fx/inc\\MDR32F9Qx_dma.h"
+typedef enum
+{
+    DMA_Mode_Stop = ((uint32_t)0x0),
+    DMA_Mode_Basic = ((uint32_t)0x1),
+    DMA_Mode_AutoRequest = ((uint32_t)0x2),
+    DMA_Mode_PingPong = ((uint32_t)0x3),
+    DMA_Mode_MemScatterPri = ((uint32_t)0x4),
+    DMA_Mode_MemScatterAlt = ((uint32_t)0x5),
+    DMA_Mode_PerScatterPri = ((uint32_t)0x6),
+    DMA_Mode_PerScatterAlt = ((uint32_t)0x7),
+    DMA_Mode_PerScatterAltBurst = ((uint32_t)0xF)
+} DMA_Operating_Mode;
+# 386 "./SPL/MDR32Fx/inc\\MDR32F9Qx_dma.h"
+typedef enum
+{
+    DMA_Priority_Default = ((uint8_t)0x00),
+    DMA_Priority_High = ((uint8_t)0x01)
+} DMA_Priority_Level;
+
+
+
+
+
+
+
+typedef enum
+{
+    DMA_BurstClear = ((uint8_t)0x00),
+    DMA_BurstSet = ((uint8_t)0x01)
+} DMA_Burst_Mode;
+
+
+
+
+
+
+
+typedef enum
+{
+    DMA_SourceCacheable = ((uint32_t)(0x01 << 20)),
+    DMA_SourceBufferable = ((uint32_t)(0x01 << 19)),
+    DMA_SourcePrivileged = ((uint32_t)(0x01 << 18))
+} DMA_Src_Protection_Control;
+
+
+
+
+
+
+typedef enum
+{
+    DMA_DestCacheable = ((uint32_t)(0x01 << 23)),
+    DMA_DestBufferable = ((uint32_t)(0x01 << 22)),
+    DMA_DestPrivileged = ((uint32_t)(0x01 << 21))
+} DMA_Dest_Protection_Control;
+# 442 "./SPL/MDR32Fx/inc\\MDR32F9Qx_dma.h"
+typedef enum
+{
+    DMA_AHB_Cacheable = ((uint32_t)(0x01 << 7)),
+    DMA_AHB_Bufferable = ((uint32_t)(0x01 << 6)),
+    DMA_AHB_Privileged = ((uint32_t)(0x01 << 5))
+} DMA_AHB_Protection_Control;
+
+
+
+
+
+
+typedef enum
+{
+    DMA_Transfers_1 = ((uint32_t)(0x00 << 14)),
+    DMA_Transfers_2 = ((uint32_t)(0x01 << 14)),
+    DMA_Transfers_4 = ((uint32_t)(0x02 << 14)),
+    DMA_Transfers_8 = ((uint32_t)(0x03 << 14)),
+    DMA_Transfers_16 = ((uint32_t)(0x04 << 14)),
+    DMA_Transfers_32 = ((uint32_t)(0x05 << 14)),
+    DMA_Transfers_64 = ((uint32_t)(0x06 << 14)),
+    DMA_Transfers_128 = ((uint32_t)(0x07 << 14)),
+    DMA_Transfers_256 = ((uint32_t)(0x08 << 14)),
+    DMA_Transfers_512 = ((uint32_t)(0x09 << 14)),
+    DMA_Transfers_1024 = ((uint32_t)(0x0A << 14))
+} DMA_Number_Continuous_Transfers;
+# 484 "./SPL/MDR32Fx/inc\\MDR32F9Qx_dma.h"
+typedef enum
+{
+    DMA_CTRL_DATA_PRIMARY = ((uint8_t)0x00),
+
+    DMA_CTRL_DATA_ALTERNATE = ((uint8_t)0x01)
+
+} DMA_Data_Struct_Selection;
+# 502 "./SPL/MDR32Fx/inc\\MDR32F9Qx_dma.h"
+typedef enum
+{
+    DMA_FLAG_DMA_ENA = ((uint8_t)0x01),
+    DMA_FLAG_DMA_ERR = ((uint8_t)0x02),
+    DMA_FLAG_CHNL_ENA = ((uint8_t)0x03),
+    DMA_FLAG_CHNL_MASK = ((uint8_t)0x04),
+    DMA_FLAG_CHNL_WAIT = ((uint8_t)0x05),
+    DMA_FLAG_CHNL_BURST = ((uint8_t)0x06),
+    DMA_FLAG_CHNL_ALT = ((uint8_t)0x07),
+    DMA_FLAG_CHNL_PRIORITY = ((uint8_t)0x08)
+} DMA_Flags;
+# 526 "./SPL/MDR32Fx/inc\\MDR32F9Qx_dma.h"
+typedef struct
+{
+    uint32_t DMA_SourceBaseAddr;
+    uint32_t DMA_DestBaseAddr;
+    DMA_Src_Inc_Mode DMA_SourceIncSize;
+
+    DMA_Dest_Inc_Mode DMA_DestIncSize;
+
+    DMA_Mem_Data_Size DMA_MemoryDataSize;
+
+    DMA_Operating_Mode DMA_Mode;
+
+    uint32_t DMA_CycleSize;
+
+    DMA_Number_Continuous_Transfers DMA_NumContinuous;
+
+    uint32_t DMA_SourceProtCtrl;
+
+    uint32_t DMA_DestProtCtrl;
+
+} DMA_CtrlDataInitTypeDef;
+
+
+
+
+typedef struct
+{
+    uint32_t DMA_SourceEndAddr;
+    uint32_t DMA_DestEndAddr;
+    uint32_t DMA_Control;
+    uint32_t DMA_Unused;
+} DMA_CtrlDataTypeDef;
+
+
+
+
+typedef struct
+{
+    DMA_CtrlDataInitTypeDef *DMA_PriCtrlData;
+
+    DMA_CtrlDataInitTypeDef *DMA_AltCtrlData;
+
+    uint32_t DMA_ProtCtrl;
+
+    DMA_Priority_Level DMA_Priority;
+
+    DMA_Burst_Mode DMA_UseBurst;
+
+    DMA_Data_Struct_Selection DMA_SelectDataStructure;
+
+} DMA_ChannelInitTypeDef;
+
+
+
+
+typedef struct
+{
+    DMA_CtrlDataTypeDef *DMA_SG_TaskArray;
+
+
+
+
+    uint32_t DMA_SG_TaskNumber;
+    uint32_t DMA_SourceProtCtrl;
+
+    uint32_t DMA_DestProtCtrl;
+
+    uint32_t DMA_ProtCtrl;
+
+    DMA_Priority_Level DMA_Priority;
+
+    DMA_Burst_Mode DMA_UseBurst;
+
+} DMA_Channel_SG_InitTypeDef;
+# 608 "./SPL/MDR32Fx/inc\\MDR32F9Qx_dma.h"
+void DMA_DeInit(void);
+
+void DMA_CtrlDataInit(DMA_CtrlDataInitTypeDef *DMA_ctrl_data_ptr, DMA_CtrlDataTypeDef *DMA_ctrl_table_ptr);
+void DMA_CtrlInit(uint8_t DMA_Channel, DMA_Data_Struct_Selection DMA_CtrlDataType, DMA_CtrlDataInitTypeDef* DMA_CtrlStruct);
+void DMA_SG_CtrlInit(uint32_t DMA_Task, DMA_CtrlDataTypeDef *DMA_SG_TaskArray, DMA_CtrlDataInitTypeDef* DMA_CtrlStruct);
+
+void DMA_SG_Init(uint8_t DMA_Channel, DMA_Channel_SG_InitTypeDef *DMA_SG_InitStruct);
+void DMA_Init(uint8_t DMA_Channel, DMA_ChannelInitTypeDef* DMA_InitStruct);
+
+void DMA_StructInit(DMA_ChannelInitTypeDef* DMA_InitStruct);
+void DMA_SG_StructInit(DMA_Channel_SG_InitTypeDef* DMA_InitStruct);
+
+void DMA_Cmd(uint8_t DMA_Channel, FunctionalState NewState);
+
+void DMA_Request(uint8_t DMA_Channel);
+void DMA_ClearError(void);
+
+uint32_t DMA_GetCurrTransferCounter(uint8_t DMA_Channel, DMA_Data_Struct_Selection DMA_CtrlData);
+
+FlagStatus DMA_GetFlagStatus(uint8_t DMA_Channel, DMA_Flags DMA_Flag);
+# 2 "CustomLibs/src/DMA_init.c" 2
+# 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h" 1
 # 49 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h"
 typedef struct
 {
@@ -1452,559 +1725,138 @@ void RST_CLK_PCLKcmd(uint32_t RST_CLK_PCLK, FunctionalState NewState);
 void RST_CLK_GetClocksFreq(RST_CLK_FreqTypeDef* RST_CLK_Clocks);
 
 FlagStatus RST_CLK_GetFlagStatus(RST_CLK_Flags RST_CLK_FLAG);
-# 3 "CustomLibs/src/ADC_for_proj.c" 2
-# 1 "./CustomLibs/inc\\defines_for_proj.h" 1
-# 4 "CustomLibs/src/ADC_for_proj.c" 2
-# 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_port.h" 1
-# 49 "./SPL/MDR32Fx/inc\\MDR32F9Qx_port.h"
-typedef enum
-{
-    PORT_OE_IN = 0x0,
-    PORT_OE_OUT = 0x1
-} PORT_OE_TypeDef;
+# 3 "CustomLibs/src/DMA_init.c" 2
+# 1 "./CustomLibs/inc\\defines.h" 1
+# 4 "CustomLibs/src/DMA_init.c" 2
+# 1 "./CustomLibs/inc\\DMA_init.h" 1
 
 
 
+extern DMA_CtrlDataInitTypeDef ADC1_primary_DMA_structure;
+extern DMA_CtrlDataInitTypeDef ADC1_alternate_DMA_structure;
+void Setup_DMA();
+# 5 "CustomLibs/src/DMA_init.c" 2
 
 
+extern uint16_t DAC_table[];
+extern uint16_t main_array_for_ADC[];
+extern uint16_t alternate_array_for_ADC[];
 
-typedef enum
-{
-    PORT_MODE_ANALOG = 0x0,
-    PORT_MODE_DIGITAL = 0x1
-} PORT_MODE_TypeDef;
 
+DMA_ChannelInitTypeDef ADC1_DMA_structure;
+DMA_ChannelInitTypeDef TIM2_DMA_structure;
+DMA_CtrlDataInitTypeDef ADC1_primary_DMA_structure;
+DMA_CtrlDataInitTypeDef ADC1_alternate_DMA_structure;
+DMA_CtrlDataInitTypeDef TIM2_primary_DMA_structure;
+DMA_CtrlDataInitTypeDef TIM2_alternate_DMA_structure;
 
-
-
-
-
-typedef enum
-{
-    PORT_PULL_UP_OFF = 0x0,
-    PORT_PULL_UP_ON = 0x1
-} PORT_PULL_UP_TypeDef;
-
-
-
-
-
-
-typedef enum
-{
-    PORT_PULL_DOWN_OFF = 0x0,
-    PORT_PULL_DOWN_ON = 0x1
-} PORT_PULL_DOWN_TypeDef;
-
-
-
-
-
-
-
-typedef enum
-{
-    PORT_PD_SHM_OFF = 0x0,
-    PORT_PD_SHM_ON = 0x1
-} PORT_PD_SHM_TypeDef;
-
-
-
-
-
-
-
-typedef enum
-{
-    PORT_PD_DRIVER = 0x0,
-    PORT_PD_OPEN = 0x1
-} PORT_PD_TypeDef;
-
-
-
-
-
-
-typedef enum
-{
-    PORT_GFEN_OFF = 0x0,
-    PORT_GFEN_ON = 0x1
-} PORT_GFEN_TypeDef;
-
-
-
-
-
-
-typedef enum
-{
-    PORT_FUNC_PORT = 0x0,
-    PORT_FUNC_MAIN = 0x1,
-    PORT_FUNC_ALTER = 0x2,
-    PORT_FUNC_OVERRID = 0x3
-} PORT_FUNC_TypeDef;
-
-
-
-
-
-
-
-typedef enum
-{
-    PORT_OUTPUT_OFF = 0x0,
-    PORT_SPEED_SLOW = 0x1,
-    PORT_SPEED_FAST = 0x2,
-    PORT_SPEED_MAXFAST = 0x3
-} PORT_SPEED_TypeDef;
-
-
-
-
-
-
-
-typedef enum
-{
-    PORT_Pin_0 = 0x0001U,
-    PORT_Pin_1 = 0x0002U,
-    PORT_Pin_2 = 0x0004U,
-    PORT_Pin_3 = 0x0008U,
-    PORT_Pin_4 = 0x0010U,
-    PORT_Pin_5 = 0x0020U,
-    PORT_Pin_6 = 0x0040U,
-    PORT_Pin_7 = 0x0080U,
-    PORT_Pin_8 = 0x0100U,
-    PORT_Pin_9 = 0x0200U,
-    PORT_Pin_10 = 0x0400U,
-    PORT_Pin_11 = 0x0800U,
-    PORT_Pin_12 = 0x1000U,
-    PORT_Pin_13 = 0x2000U,
-    PORT_Pin_14 = 0x4000U,
-    PORT_Pin_15 = 0x8000U,
-    PORT_Pin_All = 0xFFFFU
-} PORT_Pin_TypeDef;
-# 200 "./SPL/MDR32Fx/inc\\MDR32F9Qx_port.h"
-typedef struct
-{
-    uint16_t PORT_Pin;
-
-    PORT_OE_TypeDef PORT_OE;
-
-    PORT_PULL_UP_TypeDef PORT_PULL_UP;
-
-    PORT_PULL_DOWN_TypeDef PORT_PULL_DOWN;
-
-    PORT_PD_SHM_TypeDef PORT_PD_SHM;
-
-    PORT_PD_TypeDef PORT_PD;
-
-    PORT_GFEN_TypeDef PORT_GFEN;
-
-    PORT_FUNC_TypeDef PORT_FUNC;
-
-    PORT_SPEED_TypeDef PORT_SPEED;
-
-    PORT_MODE_TypeDef PORT_MODE;
-
-} PORT_InitTypeDef;
-
-
-
-
-
-
-
-typedef enum
-{
-    Bit_RESET = 0,
-    Bit_SET
-} BitAction;
-# 276 "./SPL/MDR32Fx/inc\\MDR32F9Qx_port.h"
-void PORT_DeInit(MDR_PORT_TypeDef* MDR_PORTx);
-void PORT_Init(MDR_PORT_TypeDef* MDR_PORTx, const PORT_InitTypeDef* PORT_InitStruct);
-void PORT_StructInit(PORT_InitTypeDef* PORT_InitStruct);
-
-uint8_t PORT_ReadInputDataBit(MDR_PORT_TypeDef* MDR_PORTx, PORT_Pin_TypeDef PORT_Pin);
-uint32_t PORT_ReadInputData(MDR_PORT_TypeDef* MDR_PORTx);
-
-void PORT_SetBits(MDR_PORT_TypeDef* MDR_PORTx, uint32_t PORT_Pin);
-void PORT_ResetBits(MDR_PORT_TypeDef* MDR_PORTx, uint32_t PORT_Pin);
-
-
-    void PORT_WriteBit(MDR_PORT_TypeDef* MDR_PORTx, uint32_t PORT_Pin, BitAction BitVal);
-
-
-
-void PORT_Write(MDR_PORT_TypeDef* MDR_PORTx, uint32_t PortVal);
-# 5 "CustomLibs/src/ADC_for_proj.c" 2
-# 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h" 1
-# 135 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h"
-typedef enum
-{
-    ADC_SyncMode_Independent = (((uint32_t)0x0) << 16),
-    ADC_SyncMode_Synchronous = (((uint32_t)0x1) << 16)
-} ADC_SyncMode;
-# 149 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h"
-typedef enum
-{
-    ADC_TEMP_SENSOR_Disable = (((uint32_t)0x0) << 17),
-    ADC_TEMP_SENSOR_Enable = (((uint32_t)0x1) << 17)
-} ADC_Temp_Sensor;
-
-
-
-
-
-
-
-typedef enum
-{
-    ADC_TEMP_SENSOR_AMPLIFIER_Disable = (((uint32_t)0x0) << 18),
-    ADC_TEMP_SENSOR_AMPLIFIER_Enable = (((uint32_t)0x1) << 18)
-} ADC_Temp_Sensor_Amplifier;
-
-
-
-
-
-
-
-typedef enum
-{
-    ADC_TEMP_SENSOR_CONVERSION_Disable = (((uint32_t)0x0) << 19),
-    ADC_TEMP_SENSOR_CONVERSION_Enable = (((uint32_t)0x1) << 19)
-} ADC_Temp_Sensor_Conversion;
-
-
-
-
-
-
-
-typedef enum
-{
-    ADC_VREF_CONVERSION_Disable = (((uint32_t)0x0) << 20),
-    ADC_VREF_CONVERSION_Enable = (((uint32_t)0x1) << 20)
-} ADC_Int_VRef_Conversion;
-
-
-
-
-
-
-
-typedef enum
-{
-    ADC_CLOCK_SOURCE_CPU = (((uint32_t)0x0) << 2),
-    ADC_CLOCK_SOURCE_ADC = (((uint32_t)0x1) << 2)
-} ADCx_Clock_Source;
-
-
-
-
-
-
-
-typedef enum
-{
-    ADC_SAMPLING_MODE_SINGLE_CONV = (((uint32_t)0x0) << 3),
-    ADC_SAMPLING_MODE_CYCLIC_CONV = (((uint32_t)0x1) << 3)
-} ADCx_Sampling_Mode;
-# 226 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h"
-typedef enum
-{
-    ADC_CH_SWITCHING_Disable = (((uint32_t)0x0) << 9),
-    ADC_CH_SWITCHING_Enable = (((uint32_t)0x1) << 9)
-} ADCx_Channel_Switching;
-
-
-
-
-
-
-
-typedef enum
-{
-    ADC_CH_ADC0 = ((uint32_t)0x00),
-    ADC_CH_ADC1 = ((uint32_t)0x01),
-    ADC_CH_ADC2 = ((uint32_t)0x02),
-    ADC_CH_ADC3 = ((uint32_t)0x03),
-    ADC_CH_ADC4 = ((uint32_t)0x04),
-    ADC_CH_ADC5 = ((uint32_t)0x05),
-    ADC_CH_ADC6 = ((uint32_t)0x06),
-    ADC_CH_ADC7 = ((uint32_t)0x07),
-    ADC_CH_ADC8 = ((uint32_t)0x08),
-    ADC_CH_ADC9 = ((uint32_t)0x09),
-    ADC_CH_ADC10 = ((uint32_t)0x0A),
-    ADC_CH_ADC11 = ((uint32_t)0x0B),
-    ADC_CH_ADC12 = ((uint32_t)0x0C),
-    ADC_CH_ADC13 = ((uint32_t)0x0D),
-    ADC_CH_ADC14 = ((uint32_t)0x0E),
-    ADC_CH_ADC15 = ((uint32_t)0x0F),
-    ADC_CH_INT_VREF = ((uint32_t)0x1E),
-    ADC_CH_TEMP_SENSOR = ((uint32_t)0x1F)
-} ADCx_Channel_Number;
-# 284 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h"
-typedef enum
-{
-    ADC_LEVEL_CONTROL_Disable = (((uint32_t)0x0) << 10),
-    ADC_LEVEL_CONTROL_Enable = (((uint32_t)0x1) << 10)
-} ADCx_Level_Control;
-# 299 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h"
-typedef enum
-{
-    ADC_VREF_SOURCE_INTERNAL = (((uint32_t)0x0) << 11),
-    ADC_VREF_SOURCE_EXTERNAL = (((uint32_t)0x1) << 11)
-} ADCx_VRef_Source;
-
-
-
-
-
-
-
-typedef enum
-{
-    ADC_INT_VREF_SOURCE_INEXACT = ((uint32_t)0x0),
-    ADC_INT_VREF_SOURCE_EXACT = ((uint32_t)0x1)
-} ADCx_Int_VRef_Source;
-
-
-
-
-
-
-
-typedef enum
-{
-    ADC_CLK_div_None = (((uint32_t)0x0) << 12),
-    ADC_CLK_div_2 = (((uint32_t)0x1) << 12),
-    ADC_CLK_div_4 = (((uint32_t)0x2) << 12),
-    ADC_CLK_div_8 = (((uint32_t)0x3) << 12),
-    ADC_CLK_div_16 = (((uint32_t)0x4) << 12),
-    ADC_CLK_div_32 = (((uint32_t)0x5) << 12),
-    ADC_CLK_div_64 = (((uint32_t)0x6) << 12),
-    ADC_CLK_div_128 = (((uint32_t)0x7) << 12),
-    ADC_CLK_div_256 = (((uint32_t)0x8) << 12),
-    ADC_CLK_div_512 = (((uint32_t)0x9) << 12),
-    ADC_CLK_div_1024 = (((uint32_t)0xA) << 12),
-    ADC_CLK_div_2048 = (((uint32_t)0xB) << 12)
-} ADCx_Prescaler;
-# 355 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h"
-typedef enum
-{
-    ADCx_FLAG_OVERWRITE = (((uint32_t)0x1) << 0),
-    ADCx_FLAG_OUT_OF_RANGE = (((uint32_t)0x1) << 1),
-    ADCx_FLAG_END_OF_CONVERSION = (((uint32_t)0x1) << 2)
-} ADCx_Flags;
-# 369 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h"
-typedef enum
-{
-    ADC1_FLAG_OVERWRITE = (ADCx_FLAG_OVERWRITE << 0),
-    ADC1_FLAG_OUT_OF_RANGE = (ADCx_FLAG_OUT_OF_RANGE << 0),
-    ADC1_FLAG_END_OF_CONVERSION = (ADCx_FLAG_END_OF_CONVERSION << 0),
-
-    ADC2_FLAG_OVERWRITE = (ADCx_FLAG_OVERWRITE << 16),
-    ADC2_FLAG_OUT_OF_RANGE = (ADCx_FLAG_OUT_OF_RANGE << 16),
-    ADC2_FLAG_END_OF_CONVERSION = (ADCx_FLAG_END_OF_CONVERSION << 16)
-
-} ADC_Flags;
-# 399 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h"
-typedef enum
-{
-    ADCx_IT_OUT_OF_RANGE = (((uint32_t)0x1) << 1),
-    ADCx_IT_END_OF_CONVERSION = (((uint32_t)0x1) << 2)
-} ADCx_IT_Def;
-
-
-
-
-
-
-
-typedef enum
-{
-    ADC1_IT_OUT_OF_RANGE = (ADCx_IT_OUT_OF_RANGE << 0),
-    ADC1_IT_END_OF_CONVERSION = (ADCx_IT_END_OF_CONVERSION << 0),
-
-    ADC2_IT_OUT_OF_RANGE = (ADCx_IT_OUT_OF_RANGE << 16),
-    ADC2_IT_END_OF_CONVERSION = (ADCx_IT_END_OF_CONVERSION << 16)
-
-} ADC_IT_Def;
-# 453 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h"
-typedef struct {
-
-    ADC_SyncMode ADC_SynchronousMode;
-
-    uint32_t ADC_StartDelay;
-
-
-    ADC_Temp_Sensor ADC_TempSensor;
-
-    ADC_Temp_Sensor_Amplifier ADC_TempSensorAmplifier;
-
-    ADC_Temp_Sensor_Conversion ADC_TempSensorConversion;
-
-    ADC_Int_VRef_Conversion ADC_IntVRefConversion;
-
-    uint32_t ADC_IntVRefTrimming;
-
-
-
-
-
-
-} ADC_InitTypeDef;
-
-
-
-
-typedef struct
-{
-    ADCx_Clock_Source ADC_ClockSource;
-
-
-    ADCx_Sampling_Mode ADC_SamplingMode;
-
-
-    ADCx_Channel_Switching ADC_ChannelSwitching;
-
-
-    ADCx_Channel_Number ADC_ChannelNumber;
-
-
-    uint32_t ADC_Channels;
-
-
-    ADCx_Level_Control ADC_LevelControl;
-
-
-    uint16_t ADC_LowLevel;
-
-
-    uint16_t ADC_HighLevel;
-
-
-    ADCx_VRef_Source ADC_VRefSource;
-
-
-    ADCx_Int_VRef_Source ADC_IntVRefSource;
-
-
-    ADCx_Prescaler ADC_Prescaler;
-
-
-    uint32_t ADC_DelayGo;
-
-} ADCx_InitTypeDef;
-# 526 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h"
-void ADC_DeInit(void);
-
-void ADC_Init(const ADC_InitTypeDef* ADC_InitStruct);
-void ADC_StructInit(ADC_InitTypeDef* ADC_InitStruct);
-
-void ADC_SetTrim(uint32_t Trim);
-
-void ADC1_Init(const ADCx_InitTypeDef* ADCx_InitStruct);
-void ADCx_StructInit(ADCx_InitTypeDef* ADCx_InitStruct);
-
-void ADC1_Cmd(FunctionalState NewState);
-
-void ADC1_SetChannel(ADCx_Channel_Number Channel);
-void ADC1_SetChannels(uint32_t ChannelMask);
-
-void ADC1_OperationModeConfig(ADCx_Sampling_Mode SamplingMode, ADCx_Channel_Switching SwitchingMode);
-void ADC1_SamplingModeConfig(ADCx_Sampling_Mode SamplingMode);
-void ADC1_ChannelSwithingConfig(ADCx_Channel_Switching SwitchingMode);
-
-void ADC1_LevelsConfig(uint32_t LowLevel, uint32_t HighLevel, ADCx_Level_Control NewState);
-void ADC1_SetLowLevel(uint32_t LowLevel);
-void ADC1_SetHighLevel(uint32_t HighLevel);
-
-void ADC1_Start(void);
-
-uint32_t ADC1_GetResult(void);
-
-uint32_t ADC_GetStatus(void);
-uint32_t ADC1_GetStatus(void);
-
-FlagStatus ADC_GetFlagStatus(ADC_Flags Flag);
-FlagStatus ADC1_GetFlagStatus(ADCx_Flags Flag);
-
-void ADC1_ClearOverwriteFlag(void);
-void ADC1_ClearOutOfRangeFlag(void);
-
-void ADC_ITConfig(ADC_IT_Def ADC_IT, FunctionalState NewState);
-void ADC1_ITConfig(ADC_IT_Def ADC_IT, FunctionalState NewState);
-
-ITStatus ADC_GetITStatus(ADC_IT_Def ADC_IT);
-ITStatus ADC1_GetITStatus(ADC_IT_Def ADC_IT);
-
-
-
-    void ADC2_Init(const ADCx_InitTypeDef* ADCx_InitStruct);
-    void ADC2_Cmd(FunctionalState NewState);
-    void ADC2_SetChannel(ADCx_Channel_Number Channel);
-    void ADC2_SetChannels(uint32_t ChannelMask);
-    void ADC2_OperationModeConfig(ADCx_Sampling_Mode SamplingMode, ADCx_Channel_Switching SwitchingMode);
-    void ADC2_OperationModeConfig(ADCx_Sampling_Mode SamplingMode, ADCx_Channel_Switching SwitchingMode);
-    void ADC2_SamplingModeConfig(ADCx_Sampling_Mode SamplingMode);
-    void ADC2_ChannelSwithingConfig(ADCx_Channel_Switching SwitchingMode);
-    void ADC2_LevelsConfig(uint32_t LowLevel, uint32_t HighLevel, ADCx_Level_Control NewState);
-    void ADC2_SetLowLevel(uint32_t LowLevel);
-    void ADC2_SetHighLevel(uint32_t HighLevel);
-    void ADC2_Start(void);
-    uint32_t ADC2_GetResult(void);
-    uint32_t ADC2_GetStatus(void);
-    FlagStatus ADC2_GetFlagStatus(ADCx_Flags Flag);
-    void ADC2_ClearOverwriteFlag(void);
-    void ADC2_ClearOutOfRangeFlag(void);
-    void ADC2_ITConfig(ADC_IT_Def ADC_IT, FunctionalState NewState);
-    ITStatus ADC2_GetITStatus(ADC_IT_Def ADC_IT);
-# 6 "CustomLibs/src/ADC_for_proj.c" 2
-
-
-ADC_InitTypeDef ADC_structure;
-ADCx_InitTypeDef ADCx_structure;
-
-
-extern PORT_InitTypeDef port_init_structure;
-
-void SetupADC()
+void Setup_DMA()
 {
 
-    RST_CLK_PCLKcmd((((uint32_t)(1U << ((((uint32_t)(0x40020000)) >> 15) & 0x1F))) | ((uint32_t)(1U << ((((uint32_t)(0x40088000)) >> 15) & 0x1F)))), ENABLE);
-    RST_CLK_PCLKcmd((((uint32_t)(1U << ((((uint32_t)(0x400B8000)) >> 15) & 0x1F))) | ((uint32_t)(1U << ((((uint32_t)(0x400C0000)) >> 15) & 0x1F)))), ENABLE);
+ RST_CLK_PCLKcmd (((uint32_t)(1U << ((((uint32_t)(0x40028000)) >> 15) & 0x1F))) | ((uint32_t)(1U << ((((uint32_t)(0x40040000)) >> 15) & 0x1F))) |
+ ((uint32_t)(1U << ((((uint32_t)(0x400A0000)) >> 15) & 0x1F))), ENABLE);
 
-    ((SCB_Type *) ((0xE000E000UL) + 0x0D00UL) )->AIRCR = 0x5FA0500;
-    ((SCB_Type *) ((0xE000E000UL) + 0x0D00UL) )->VTOR = 0x08000000;
 
-    ((NVIC_Type *) ((0xE000E000UL) + 0x0100UL) )->ICPR[0] = 0xFFFFFFFF;
-    ((NVIC_Type *) ((0xE000E000UL) + 0x0100UL) )->ICER[0] = 0xFFFFFFFF;
- ((NVIC_Type *) ((0xE000E000UL) + 0x0100UL) )->ISER[0] = (1<<ADC_IRQn);
+ ((NVIC_Type *) ((0xE000E000UL) + 0x0100UL) )->ICPR[0] = 0xFFFFFFFF;
+ ((NVIC_Type *) ((0xE000E000UL) + 0x0100UL) )->ICER[0] = 0xFFFFFFFF;
 
-    PORT_DeInit(((MDR_PORT_TypeDef *) (0x400C0000)));
 
-    port_init_structure.PORT_Pin = PORT_Pin_0 | PORT_Pin_1;
-    port_init_structure.PORT_OE = PORT_OE_IN;
-    port_init_structure.PORT_MODE = PORT_MODE_ANALOG;
-    PORT_Init(((MDR_PORT_TypeDef *) (0x400C0000)), &port_init_structure);
+ DMA_DeInit();
+ DMA_StructInit (&ADC1_DMA_structure);
 
-    ADC_DeInit();
-    ADC_StructInit(&ADC_structure);
- ADC_Init (&ADC_structure);
-    ADCx_StructInit (&ADCx_structure);
-    ADCx_structure.ADC_ClockSource = ADC_CLOCK_SOURCE_CPU;
-    ADCx_structure.ADC_SamplingMode = ADC_SAMPLING_MODE_CYCLIC_CONV;
-    ADCx_structure.ADC_ChannelSwitching = ADC_CH_SWITCHING_Enable;
-    ADCx_structure.ADC_ChannelNumber = ADC_CH_ADC0;
-    ADCx_structure.ADC_Channels = ((((uint32_t)0x1) << ADC_CH_ADC0 ) | (((uint32_t)0x1) << ADC_CH_ADC1 ));
-    ADCx_structure.ADC_VRefSource = ADC_VREF_SOURCE_INTERNAL;
-    ADCx_structure.ADC_IntVRefSource = ADC_INT_VREF_SOURCE_INEXACT;
-    ADCx_structure.ADC_Prescaler = ADC_CLK_div_32;
- ADCx_structure.ADC_DelayGo = 0x2;
-    ADC1_Init (&ADCx_structure);
 
-    ADC1_ITConfig((ADCx_IT_END_OF_CONVERSION), ENABLE);
+ ADC1_primary_DMA_structure.DMA_SourceBaseAddr =
+ (uint32_t)(&(((MDR_ADC_TypeDef *) (0x40088000))->ADC1_RESULT));
+ ADC1_primary_DMA_structure.DMA_DestBaseAddr = (uint32_t)(main_array_for_ADC);
+ ADC1_primary_DMA_structure.DMA_CycleSize = 128;
+ ADC1_primary_DMA_structure.DMA_SourceIncSize = DMA_SourceIncNo;
+ ADC1_primary_DMA_structure.DMA_DestIncSize = DMA_DestIncHalfword;
+ ADC1_primary_DMA_structure.DMA_MemoryDataSize =
+ DMA_MemoryDataSize_HalfWord;
+ ADC1_primary_DMA_structure.DMA_NumContinuous = DMA_Transfers_1024;
+ ADC1_primary_DMA_structure.DMA_SourceProtCtrl = DMA_SourcePrivileged;
+ ADC1_primary_DMA_structure.DMA_DestProtCtrl = DMA_DestCacheable;
+ ADC1_primary_DMA_structure.DMA_Mode = DMA_Mode_PingPong;
+
+
+ ADC1_alternate_DMA_structure.DMA_SourceBaseAddr =
+ (uint32_t)(&(((MDR_ADC_TypeDef *) (0x40088000))->ADC1_RESULT));
+ ADC1_alternate_DMA_structure.DMA_DestBaseAddr = (uint32_t) (alternate_array_for_ADC);
+ ADC1_alternate_DMA_structure.DMA_CycleSize = 128;
+ ADC1_alternate_DMA_structure.DMA_SourceIncSize = DMA_SourceIncNo;
+ ADC1_alternate_DMA_structure.DMA_DestIncSize = DMA_DestIncHalfword;
+ ADC1_alternate_DMA_structure.DMA_MemoryDataSize =
+ DMA_MemoryDataSize_HalfWord;
+ ADC1_alternate_DMA_structure.DMA_NumContinuous = DMA_Transfers_1024;
+ ADC1_alternate_DMA_structure.DMA_SourceProtCtrl = DMA_SourcePrivileged;
+ ADC1_alternate_DMA_structure.DMA_DestProtCtrl = DMA_DestCacheable;
+ ADC1_alternate_DMA_structure.DMA_Mode = DMA_Mode_PingPong;
+
+
+ ADC1_DMA_structure.DMA_PriCtrlData = &ADC1_primary_DMA_structure;
+ ADC1_DMA_structure.DMA_AltCtrlData = &ADC1_alternate_DMA_structure;
+ ADC1_DMA_structure.DMA_Priority = DMA_Priority_Default;
+ ADC1_DMA_structure.DMA_UseBurst = DMA_BurstClear;
+ ADC1_DMA_structure.DMA_SelectDataStructure = DMA_CTRL_DATA_PRIMARY;
+
+
+ DMA_Init(DMA_Channel_ADC1, &ADC1_DMA_structure);
+ ((MDR_DMA_TypeDef *) (0x40028000))->CHNL_REQ_MASK_CLR = 1 << DMA_Channel_ADC1;
+ ((MDR_DMA_TypeDef *) (0x40028000))->CHNL_USEBURST_CLR = 1 << DMA_Channel_ADC1;
+
+
+ DMA_StructInit (&TIM2_DMA_structure);
+
+ TIM2_primary_DMA_structure.DMA_SourceBaseAddr =
+ (uint32_t)(DAC_table);
+ TIM2_primary_DMA_structure.DMA_DestBaseAddr =
+ (uint32_t)(&(((MDR_DAC_TypeDef *) (0x40090000))->DAC2_DATA));
+ TIM2_primary_DMA_structure.DMA_CycleSize = (500);
+ TIM2_primary_DMA_structure.DMA_SourceIncSize = DMA_SourceIncHalfword;
+ TIM2_primary_DMA_structure.DMA_DestIncSize = DMA_DestIncNo;
+ TIM2_primary_DMA_structure.DMA_MemoryDataSize =
+ DMA_MemoryDataSize_HalfWord;
+ TIM2_primary_DMA_structure.DMA_NumContinuous = DMA_Transfers_16;
+ TIM2_primary_DMA_structure.DMA_SourceProtCtrl = DMA_SourcePrivileged;
+ TIM2_primary_DMA_structure.DMA_DestProtCtrl = DMA_DestCacheable;
+ TIM2_primary_DMA_structure.DMA_Mode = DMA_Mode_PingPong;
+
+
+ TIM2_alternate_DMA_structure.DMA_SourceBaseAddr =
+ (uint32_t)(DAC_table);
+ TIM2_alternate_DMA_structure.DMA_DestBaseAddr =
+ (uint32_t)(&(((MDR_DAC_TypeDef *) (0x40090000))->DAC2_DATA));
+ TIM2_alternate_DMA_structure.DMA_CycleSize = (500);
+ TIM2_alternate_DMA_structure.DMA_SourceIncSize = DMA_SourceIncHalfword;
+ TIM2_alternate_DMA_structure.DMA_DestIncSize = DMA_DestIncNo;
+ TIM2_alternate_DMA_structure.DMA_MemoryDataSize =
+ DMA_MemoryDataSize_HalfWord;
+ TIM2_alternate_DMA_structure.DMA_NumContinuous = DMA_Transfers_16;
+ TIM2_alternate_DMA_structure.DMA_SourceProtCtrl = DMA_SourcePrivileged;
+ TIM2_alternate_DMA_structure.DMA_DestProtCtrl = DMA_DestCacheable;
+ TIM2_alternate_DMA_structure.DMA_Mode = DMA_Mode_PingPong;
+
+
+ TIM2_DMA_structure.DMA_PriCtrlData = &TIM2_primary_DMA_structure;
+ TIM2_DMA_structure.DMA_Priority = DMA_Priority_Default;
+ TIM2_DMA_structure.DMA_UseBurst = DMA_BurstClear;
+ TIM2_DMA_structure.DMA_SelectDataStructure = DMA_CTRL_DATA_PRIMARY;
+
+
+ DMA_Init(DMA_Channel_TIM2, &TIM2_DMA_structure);
+ ((MDR_DMA_TypeDef *) (0x40028000))->CHNL_REQ_MASK_CLR = 1 << DMA_Channel_TIM2;
+ ((MDR_DMA_TypeDef *) (0x40028000))->CHNL_USEBURST_CLR = 1 << DMA_Channel_TIM2;
+
+
+ NVIC_EnableIRQ(DMA_IRQn);
+ NVIC_SetPriority (DMA_IRQn, 100);
+}
+
+void DMA_IRQHandler() {
+ if(DMA_GetFlagStatus(DMA_Channel_TIM2, DMA_FLAG_CHNL_ALT) == RESET) {
+  DMA_CtrlInit(DMA_Channel_TIM2, DMA_CTRL_DATA_ALTERNATE, &TIM2_alternate_DMA_structure);
+ }
+ else {
+  DMA_CtrlInit(DMA_Channel_TIM2, DMA_CTRL_DATA_PRIMARY, &TIM2_primary_DMA_structure);
+ }
 }

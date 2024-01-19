@@ -1,18 +1,10 @@
-# 1 "CustomLibs/src/ADC_for_proj.c"
+# 1 "CustomLibs/src/USB_init.c"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
 # 383 "<built-in>" 3
 # 1 "<command line>" 1
 # 1 "<built-in>" 2
-# 1 "CustomLibs/src/ADC_for_proj.c" 2
-# 1 "./CustomLibs/inc\\ADC_for_proj.h" 1
-
-
-
-void SetupADC();
-# 2 "CustomLibs/src/ADC_for_proj.c" 2
-# 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h" 1
-# 32 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h"
+# 1 "CustomLibs/src/USB_init.c" 2
 # 1 "./SPL/MDR32Fx\\MDR32F9Qx_config.h" 1
 # 54 "./SPL/MDR32Fx\\MDR32F9Qx_config.h"
 # 1 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdint.h" 1 3
@@ -1205,7 +1197,581 @@ typedef struct
 
 }MDR_EBC_TypeDef;
 # 82 "./SPL/MDR32Fx\\MDR32F9Qx_config.h" 2
-# 33 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h" 2
+# 2 "CustomLibs/src/USB_init.c" 2
+# 1 "./SPL/MDR32Fx/inc/USB_Library\\MDR32F9Qx_usb_handlers.h" 1
+# 31 "./SPL/MDR32Fx/inc/USB_Library\\MDR32F9Qx_usb_handlers.h"
+# 1 "./SPL/MDR32Fx/inc/USB_Library/MDR32F9Qx_usb_default_handlers.h" 1
+# 32 "./SPL/MDR32Fx/inc/USB_Library/MDR32F9Qx_usb_default_handlers.h"
+# 1 "./SPL/MDR32Fx/inc/USB_Library/MDR32F9Qx_usb_CDC.h" 1
+# 33 "./SPL/MDR32Fx/inc/USB_Library/MDR32F9Qx_usb_CDC.h"
+# 1 "./SPL/MDR32Fx/inc\\USB_Library/MDR32F9Qx_usb_device.h" 1
+# 33 "./SPL/MDR32Fx/inc\\USB_Library/MDR32F9Qx_usb_device.h"
+# 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_usb.h" 1
+# 49 "./SPL/MDR32Fx/inc\\MDR32F9Qx_usb.h"
+typedef enum
+{
+    USB_EP0 = 0,
+    USB_EP1 = 1,
+    USB_EP2 = 2,
+    USB_EP3 = 3,
+    Num_USB_EndPoints
+} USB_EP_TypeDef;
+
+
+
+
+
+
+typedef enum
+{
+    USB_C1HSIdiv1 = ((uint32_t)0x00),
+    USB_C1HSIdiv2 = ((uint32_t)0x01),
+    USB_C1HSEdiv1 = ((uint32_t)0x02),
+    USB_C1HSEdiv2 = ((uint32_t)0x03)
+} USB_C1_Source_TypeDef;
+
+
+
+
+
+
+typedef enum
+{
+    USB_PLLUSBMUL1 = ((uint32_t)0x00),
+    USB_PLLUSBMUL2 = ((uint32_t)0x01),
+    USB_PLLUSBMUL3 = ((uint32_t)0x02),
+    USB_PLLUSBMUL4 = ((uint32_t)0x03),
+    USB_PLLUSBMUL5 = ((uint32_t)0x04),
+    USB_PLLUSBMUL6 = ((uint32_t)0x05),
+    USB_PLLUSBMUL7 = ((uint32_t)0x06),
+    USB_PLLUSBMUL8 = ((uint32_t)0x07),
+    USB_PLLUSBMUL9 = ((uint32_t)0x08),
+    USB_PLLUSBMUL10 = ((uint32_t)0x09),
+    USB_PLLUSBMUL11 = ((uint32_t)0x0A),
+    USB_PLLUSBMUL12 = ((uint32_t)0x0B),
+    USB_PLLUSBMUL13 = ((uint32_t)0x0C),
+    USB_PLLUSBMUL14 = ((uint32_t)0x0D),
+    USB_PLLUSBMUL15 = ((uint32_t)0x0E),
+    USB_PLLUSBMUL16 = ((uint32_t)0x0F)
+} USB_PLL_Source_TypeDef;
+
+
+
+
+
+
+
+typedef struct
+{
+    USB_C1_Source_TypeDef USB_USBC1_Source;
+
+    USB_PLL_Source_TypeDef USB_PLLUSBMUL;
+
+} USB_Clock_TypeDef;
+
+
+
+
+typedef struct
+{
+    uint8_t USB_Version;
+    uint8_t USB_Revision;
+} USB_Version_TypeDef;
+# 637 "./SPL/MDR32Fx/inc\\MDR32F9Qx_usb.h"
+void USB_BRGInit(const USB_Clock_TypeDef* USB_Clock_InitStruct);
+void USB_Reset(void);
+
+
+
+
+
+uint32_t USB_GetHSCR(void);
+void USB_SetHSCR(uint32_t RegValue);
+
+USB_Version_TypeDef USB_GetHSVR(void);
+
+
+
+
+
+uint32_t USB_GetHTXC(void);
+void USB_SetHTXC(uint32_t RegValue);
+uint32_t USB_GetHTXT(void);
+void USB_SetHTXT(uint32_t RegValue);
+uint32_t USB_GetHTXLC(void);
+void USB_SetHTXLC(uint32_t RegValue);
+uint32_t USB_GetHTXSE(void);
+void USB_SetHTXSE(uint32_t RegValue);
+uint32_t USB_GetHTXA(void);
+void USB_SetHTXA(uint32_t RegValue);
+uint32_t USB_GetHTXE(void);
+void USB_SetHTXE(uint32_t RegValue);
+uint32_t USB_GetHFN(void);
+uint32_t USB_GetHIS(void);
+void USB_SetHIS(uint32_t RegValue);
+uint32_t USB_GetHIM(void);
+void USB_SetHIM(uint32_t RegValue);
+uint32_t USB_GetHRXS(void);
+uint32_t USB_GetHRXP(void);
+uint32_t USB_GetHRXA(void);
+uint32_t USB_GetHRXE(void);
+uint32_t USB_GetHRXCS(void);
+uint32_t USB_GetHSTM(void);
+uint32_t USB_GetHRXFD(void);
+uint32_t USB_GetHRXFDC(void);
+uint32_t USB_GetHRXFC(void);
+void USB_SetHRXFC(uint32_t RegValue);
+uint32_t USB_GetHTXFD(void);
+void USB_SetHTXFD(uint32_t RegValue);
+uint32_t USB_GetHTXFC(void);
+void USB_SetHTXFC(uint32_t RegValue);
+
+
+
+
+
+uint32_t USB_GetSEPxCTRL(USB_EP_TypeDef EndPointNumber);
+void USB_SetSEPxCTRL(USB_EP_TypeDef EndPointNumber, uint32_t RegValue);
+uint32_t USB_GetSEPxSTS(USB_EP_TypeDef EndPointNumber);
+uint32_t USB_GetSEPxTS(USB_EP_TypeDef EndPointNumber);
+uint32_t USB_GetSEPxNTS(USB_EP_TypeDef EndPointNumber);
+uint32_t USB_GetSC(void);
+void USB_SetSC(uint32_t RegValue);
+uint32_t USB_GetSLS(void);
+uint32_t USB_GetSIS(void);
+void USB_SetSIS(uint32_t RegValue);
+uint32_t USB_GetSIM(void);
+void USB_SetSIM(uint32_t RegValue);
+uint32_t USB_GetSA(void);
+void USB_SetSA(uint32_t RegValue);
+uint32_t USB_GetSFN(void);
+uint32_t USB_GetSEPxRXFD(USB_EP_TypeDef EndPointNumber);
+uint32_t USB_GetSEPxRXFDC(USB_EP_TypeDef EndPointNumber);
+uint32_t USB_GetSEPxRXFC(USB_EP_TypeDef EndPointNumber);
+void USB_SetSEPxRXFC(USB_EP_TypeDef EndPointNumber, uint32_t RegValue);
+uint32_t USB_GetSEPxTXFD(USB_EP_TypeDef EndPointNumber);
+void USB_SetSEPxTXFD(USB_EP_TypeDef EndPointNumber, uint32_t RegValue);
+uint32_t USB_GetSEPxTXFDC(USB_EP_TypeDef EndPointNumber);
+void USB_SetSEPxTXFDC(USB_EP_TypeDef EndPointNumber, uint32_t RegValue);
+void USB_SEPxToggleEPDATASEQ(USB_EP_TypeDef EndPointNumber);
+# 34 "./SPL/MDR32Fx/inc\\USB_Library/MDR32F9Qx_usb_device.h" 2
+# 50 "./SPL/MDR32Fx/inc\\USB_Library/MDR32F9Qx_usb_device.h"
+typedef enum
+{
+    USB_HOST_TO_DEVICE = 0x00,
+    USB_DEVICE_TO_HOST = 0x80
+}USB_RequestTypeDT_TypeDef;
+
+
+
+
+typedef enum
+{
+    USB_TYPE_STANDARD = 0x00,
+    USB_TYPE_CLASS = 0x20,
+    USB_TYPE_VENDOR = 0x40
+} USB_RequestType_TypeDef;
+
+
+
+
+
+
+
+typedef enum
+{
+    USB_GET_STATUS = 0,
+    USB_CLEAR_FEATURE,
+    USB_Reserved0,
+    USB_SET_FEATURE,
+    USB_Reserved1,
+    USB_SET_ADDRESS,
+    USB_GET_DESCRIPTOR,
+    USB_SET_DESCRIPTOR,
+    USB_GET_CONFIGURATION,
+    USB_SET_CONFIGURATION,
+    USB_GET_INTERFACE,
+    USB_SET_INTERFACE,
+    USB_SYNCH_FRAME
+} USB_Standard_Setup_TypeDef;
+
+
+
+
+typedef enum
+{
+    USB_DEVICE = 1,
+    USB_CONFIGURATION,
+    USB_STRING,
+    USB_INTERFACE,
+    USB_ENDPOINT,
+    USB_DEVICE_QUALIFIER,
+    USB_OTHER_SPEED_CONFIGURATION,
+    USB_INTERFACE_POWER
+} USB_Standard_Descriptor_TypeDef;
+
+
+
+
+typedef enum
+{
+    USB_ENDPOINT_HALT = 0,
+    USB_DEVICE_REMOTE_WAKEUP,
+    USB_TEST_MODE
+} USB_Standard_Festure_Selector_TypeDef;
+
+
+
+
+typedef enum
+{
+    USB_RECIPIENT_DEVICE = 0x00,
+    USB_RECIPIENT_INTERFACE = 0x01,
+    USB_RECIPIENT_ENDPOINT = 0x02,
+    USB_RECIPIENT_OTHER = 0x03
+} USB_RequestRecipient_TypeDef;
+# 132 "./SPL/MDR32Fx/inc\\USB_Library/MDR32F9Qx_usb_device.h"
+typedef struct
+{
+    uint8_t mRequestTypeData;
+
+
+
+    uint8_t bRequest;
+    uint16_t wValue;
+    uint16_t wIndex;
+    uint16_t wLength;
+} USB_SetupPacket_TypeDef;
+# 157 "./SPL/MDR32Fx/inc\\USB_Library/MDR32F9Qx_usb_device.h"
+typedef enum
+{
+    USB_SUCCESS = 0x0000,
+    USB_ERROR = 0x0001,
+    USB_ERR_INV_REQ = 0x0002,
+    USB_ERR_BUSY = 0x0200,
+} USB_Result;
+
+
+
+
+typedef enum {USB_STALL_PROTO = 0x0, USB_STALL_HALT = 0x1} USB_StallType;
+
+
+
+
+
+typedef USB_Result (*USB_EP_IO_Handler)(USB_EP_TypeDef EPx, uint8_t* Buffer, uint32_t Length);
+typedef USB_Result (*USB_EP_Setup_Handler)(USB_EP_TypeDef EPx, const USB_SetupPacket_TypeDef* USB_SetupPacket);
+typedef USB_Result (*USB_EP_Error_Handler)(USB_EP_TypeDef EPx, uint32_t STS, uint32_t TS, uint32_t CTRL);
+# 200 "./SPL/MDR32Fx/inc\\USB_Library/MDR32F9Qx_usb_device.h"
+USB_Result USB_EP_Init(USB_EP_TypeDef EPx, uint32_t USB_EP_Ctrl, USB_EP_Error_Handler onError);
+USB_Result USB_EP_Reset(USB_EP_TypeDef EPx);
+USB_Result USB_EP_Idle(USB_EP_TypeDef EPx);
+USB_Result USB_EP_Stall(USB_EP_TypeDef EPx, USB_StallType bHalt);
+
+USB_Result USB_EP_doDataIn(USB_EP_TypeDef EPx, uint8_t* Buffer, uint32_t Length, USB_EP_IO_Handler onInDone);
+USB_Result USB_EP_doDataOut(USB_EP_TypeDef EPx, uint8_t* Buffer, uint32_t Length, USB_EP_IO_Handler onOutDone);
+
+USB_Result USB_EP_setSetupHandler(USB_EP_TypeDef EPx, USB_SetupPacket_TypeDef* USB_SetupPacket, USB_EP_Setup_Handler onSetupPacket);
+
+USB_Result USB_EP_dispatchEvent(USB_EP_TypeDef EPx, uint32_t USB_IT);
+# 227 "./SPL/MDR32Fx/inc\\USB_Library/MDR32F9Qx_usb_device.h"
+typedef enum
+{
+    USB_DEV_STATE_UNKNOWN = 0,
+    USB_DEV_STATE_ATTACHED,
+    USB_DEV_STATE_POWERED,
+    USB_DEV_STATE_DEFAULT,
+    USB_DEV_STATE_ADDRESS,
+    USB_DEV_STATE_CONFIGURED,
+    Num_USB_DEV_STATE
+} USB_DeviceState_TypeDef;
+
+
+
+
+typedef enum
+{
+    USB_DEV_SELF_POWERED_OFF = 0,
+    USB_DEV_SELF_POWERED_ON = 1
+} USB_DeviceSelfPoweredState_TypeDef;
+
+
+
+
+typedef enum
+{
+    USB_DEV_REMOTE_WAKEUP_DISABLED = 0,
+    USB_DEV_REMOTE_WAKEUP_ENABLED = 1
+} USB_DeviceRemoteWakeup_TypeDef;
+
+
+
+
+typedef struct
+{
+
+
+
+
+
+
+
+    uint32_t Reserved;
+
+} Usb_DeviceStatus_TypeDef;
+
+
+
+
+typedef struct
+{
+    USB_DeviceState_TypeDef USB_DeviceState;
+    Usb_DeviceStatus_TypeDef USB_DeviceStatus;
+    uint32_t Address;
+} USB_DeviceContext_TypeDef;
+
+
+
+
+typedef struct {
+    uint32_t PULL;
+
+
+
+
+
+    uint32_t SPEED;
+
+
+
+    uint32_t MODE;
+
+
+
+} USB_DeviceBUSParam_TypeDef;
+# 323 "./SPL/MDR32Fx/inc\\USB_Library/MDR32F9Qx_usb_device.h"
+extern USB_SetupPacket_TypeDef USB_CurrentSetupPacket;
+
+
+
+
+extern USB_DeviceContext_TypeDef USB_DeviceContext;
+# 337 "./SPL/MDR32Fx/inc\\USB_Library/MDR32F9Qx_usb_device.h"
+USB_Result USB_DeviceInit(const USB_Clock_TypeDef* USB_Clock_InitStruct, USB_DeviceBUSParam_TypeDef* USB_DeviceBUSParam);
+USB_Result USB_DevicePowerOn(void);
+USB_Result USB_DevicePowerOff(void);
+
+
+
+
+USB_Result USB_DeviceReset(void);
+USB_Result USB_DeviceSuspend(void);
+USB_Result USB_DeviceResume(void);
+
+USB_Result USB_DeviceSetupPacket(USB_EP_TypeDef EPx, const USB_SetupPacket_TypeDef* USB_SetupPacket);
+
+USB_Result USB_DeviceClearFeature(USB_RequestRecipient_TypeDef Recipient, uint16_t wVALUE, uint16_t wINDEX);
+USB_Result USB_DeviceSetFeature(USB_RequestRecipient_TypeDef Recipient, uint16_t wVALUE, uint16_t wINDEX);
+
+USB_Result USB_DeviceDoStatusInAck(USB_EP_TypeDef EPx, uint8_t* Buffer, uint32_t Length);
+USB_Result USB_DeviceDoStatusOutAck(USB_EP_TypeDef EPx, uint8_t* Buffer, uint32_t Length);
+
+USB_Result USB_DeviceDispatchEvent(void);
+
+
+    void USB_IRQHandler(void);
+
+
+
+
+
+
+USB_Result USB_DeviceDummyGetStatus(USB_RequestRecipient_TypeDef Recipient, uint16_t wINDEX);
+USB_Result USB_DeviceDummySetAddress(uint16_t wVALUE);
+USB_Result USB_DeviceDummyGetDescriptor(uint16_t wVALUE, uint16_t wINDEX, uint16_t wLENGTH);
+USB_Result USB_DeviceDummySetDescriptor(uint16_t wVALUE, uint16_t wINDEX, uint16_t wLENGTH);
+uint8_t USB_DeviceDummyGetConfiguration(void);
+USB_Result USB_DeviceDummySetConfiguration(uint16_t wVALUE);
+uint8_t USB_DeviceDummyGetInterface(uint16_t wINDEX);
+USB_Result USB_DeviceDummySetInterface(uint16_t wVALUE, uint16_t wINDEX);
+USB_Result USB_DeviceDummySyncFrame(uint16_t wINDEX, uint8_t* DATA);
+USB_Result USB_DeviceDummyClassRequest(void);
+USB_Result USB_DeviceDummyVendorRequest(void);
+USB_Result USB_DeviceDummyDataError(USB_EP_TypeDef EPx, uint32_t STS, uint32_t TS, uint32_t CTRL);
+# 34 "./SPL/MDR32Fx/inc/USB_Library/MDR32F9Qx_usb_CDC.h" 2
+# 54 "./SPL/MDR32Fx/inc/USB_Library/MDR32F9Qx_usb_CDC.h"
+typedef enum
+{
+    USB_CDC_SEND_ENCAPSULATED_COMMAND = 0x00,
+    USB_CDC_GET_ENCAPSULATED_RESPONSE,
+    USB_CDC_SET_COMM_FEATURE,
+    USB_CDC_GET_COMM_FEATURE,
+    USB_CDC_CLEAR_COMM_FEATURE,
+    USB_CDC_SET_AUX_LINE_STATE = 0x10,
+    USB_CDC_SET_HOOK_STATE,
+    USB_CDC_PULSE_SETUP,
+    USB_CDC_SEND_PULSE,
+    USB_CDC_SET_PULSE_TIME,
+    USB_CDC_RING_AUX_JACK,
+    USB_CDC_SET_LINE_CODING = 0x20,
+    USB_CDC_GET_LINE_CODING,
+    USB_CDC_SET_CONTROL_LINE_STATE,
+    USB_CDC_SEND_BREAK,
+    USB_CDC_SET_RINGER_PARAMS = 0x30,
+    USB_CDC_GET_RINGER_PARAMS,
+    USB_CDC_SET_OPERATION_PARAMS,
+    USB_CDC_GET_OPERATION_PARAMS,
+    USB_CDC_SET_LINE_PARAMS,
+    USB_CDC_GET_LINE_PARAMS,
+    USB_CDC_DIAL_DIGITS
+} USB_CDC_Class_Setup_TypeDef;
+
+
+
+
+
+typedef enum
+{
+    USB_CDC_bRxCarrier = 0x01,
+    USB_CDC_bTxCarrier = 0x02,
+    USB_CDC_bBreak = 0x04,
+    USB_CDC_bRingSignal = 0x08,
+    USB_CDC_bFraming = 0x10,
+    USB_CDC_bParity = 0x20,
+    USB_CDC_bOverRun = 0x40
+} USB_CDCSerialState_TypeDef;
+
+
+
+
+typedef enum
+{
+    USB_CDC_STOP_BITS1 = 0x00,
+    USB_CDC_STOP_BITS1_5 = 0x01,
+    USB_CDC_STOP_BITS2 = 0x02,
+} USB_CDC_CharFormat_TypeDef;
+
+
+
+
+typedef enum
+{
+    USB_CDC_PARITY_NONE = 0x00,
+    USB_CDC_PARITY_ODD = 0x01,
+    USB_CDC_PARITY_EVEN = 0x02,
+    USB_CDC_PARITY_MARK = 0x03,
+    USB_CDC_PARITY_SPACE = 0x04
+} USB_CDC_ParityType_TypeDef;
+
+
+
+
+typedef enum
+{
+    USB_CDC_DATA_BITS5 = 0x05,
+    USB_CDC_DATA_BITS6 = 0x06,
+    USB_CDC_DATA_BITS7 = 0x07,
+    USB_CDC_DATA_BITS8 = 0x08,
+    USB_CDC_DATA_BITS16 = 0x0A
+} USB_CDC_DataBits_TypeDef;
+
+
+
+
+typedef struct
+{
+    uint32_t dwDTERate;
+    uint8_t bCharFormat;
+    uint8_t bParityType;
+    uint8_t bDataBits;
+} USB_CDC_LineCoding_TypeDef;
+
+
+
+
+typedef enum
+{
+    USB_CDC_DTR_PRESENT = 0x01,
+    USB_CDC_RTS_ACTIVATE_CARRIER = 0x02
+} USB_CDC_ControlLineState_TypeDef;
+
+
+
+
+
+typedef enum
+{
+    USB_CDC_RING_DETECT = 0x09,
+    USB_CDC_SERIAL_STATE = 0x20,
+    USB_CDC_CALL_STATE_CHANGE = 0x28,
+    USB_CDC_LINE_STATE_CHANGE = 0x29,
+    USB_CDC_CONNECTION_SPEED_CHANGE = 0x2A
+} USB_CDC_LineStateReport_TypeDef;
+# 186 "./SPL/MDR32Fx/inc/USB_Library/MDR32F9Qx_usb_CDC.h"
+USB_Result USB_CDC_Init(uint8_t* ReceiveBuffer, uint32_t DataPortionLength, FlagStatus StartReceiving);
+
+USB_Result USB_CDC_SetReceiveBuffer(uint8_t* ReceiveBuffer, uint32_t DataPortionLength);
+USB_Result USB_CDC_ReceiveStart(void);
+USB_Result USB_CDC_ReceiveStop(void);
+
+USB_Result USB_CDC_SendData(uint8_t* Buffer, uint32_t Length);
+int check_status_cdc(void);
+
+
+
+USB_Result USB_CDC_ReportState(uint16_t LineState);
+
+
+
+
+
+
+USB_Result USB_CDC_Reset(void);
+USB_Result USB_CDC_GetDescriptor(uint16_t wVALUE, uint16_t wINDEX, uint16_t wLENGTH);
+USB_Result USB_CDC_ClassRequest(void);
+
+
+
+
+
+
+
+USB_Result USB_CDC_DummyDataReceive(uint8_t* Buffer, uint32_t Length);
+USB_Result USB_CDC_DummyDataSent(void);
+
+
+USB_Result USB_CDC_DummySendEncapsulatedCMD(uint16_t wINDEX, uint16_t wLENGTH);
+USB_Result USB_CDC_DummyGetEncapsulatedResp(uint16_t wINDEX, uint16_t wLENGTH);
+
+
+
+USB_Result USB_CDC_DummyGetCommFeature(uint16_t wVALUE, uint16_t wINDEX, uint16_t* DATA);
+USB_Result USB_CDC_DummySetCommFeature(uint16_t wVALUE, uint16_t wINDEX, uint16_t DATA);
+USB_Result USB_CDC_DummyClearCommFeature(uint16_t wVALUE, uint16_t wINDEX);
+
+
+
+USB_Result USB_CDC_DummyGetLineCoding(uint16_t wINDEX, USB_CDC_LineCoding_TypeDef* DATA);
+USB_Result USB_CDC_DummySetLineCoding(uint16_t wINDEX, const USB_CDC_LineCoding_TypeDef* DATA);
+
+
+
+USB_Result USB_CDC_DummyControlLineState(uint16_t wVALUE, uint16_t wINDEX);
+
+
+
+USB_Result USB_CDC_DummySendBreak(uint16_t wVALUE, uint16_t wINDEX);
+# 33 "./SPL/MDR32Fx/inc/USB_Library/MDR32F9Qx_usb_default_handlers.h" 2
+# 32 "./SPL/MDR32Fx/inc/USB_Library\\MDR32F9Qx_usb_handlers.h" 2
+# 83 "./SPL/MDR32Fx/inc/USB_Library\\MDR32F9Qx_usb_handlers.h"
+USB_Result USB_CDC_RecieveData(uint8_t* Buffer, uint32_t Length);
+
+
+    USB_Result USB_CDC_GetLineCoding(uint16_t wINDEX, USB_CDC_LineCoding_TypeDef* DATA);
+    USB_Result USB_CDC_SetLineCoding(uint16_t wINDEX, const USB_CDC_LineCoding_TypeDef* DATA);
+# 3 "CustomLibs/src/USB_init.c" 2
+# 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h" 1
 # 49 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h"
 typedef struct
 {
@@ -1452,9 +2018,157 @@ void RST_CLK_PCLKcmd(uint32_t RST_CLK_PCLK, FunctionalState NewState);
 void RST_CLK_GetClocksFreq(RST_CLK_FreqTypeDef* RST_CLK_Clocks);
 
 FlagStatus RST_CLK_GetFlagStatus(RST_CLK_Flags RST_CLK_FLAG);
-# 3 "CustomLibs/src/ADC_for_proj.c" 2
-# 1 "./CustomLibs/inc\\defines_for_proj.h" 1
-# 4 "CustomLibs/src/ADC_for_proj.c" 2
+# 4 "CustomLibs/src/USB_init.c" 2
+# 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_ssp.h" 1
+# 49 "./SPL/MDR32Fx/inc\\MDR32F9Qx_ssp.h"
+typedef enum
+{
+    SSP_ModeMaster = ((uint32_t)0x00),
+    SSP_ModeSlave = ((uint32_t)0x04)
+} SSP_Mode_TypeDef;
+
+
+
+
+
+
+
+typedef enum
+{
+    SSP_WordLength4b = ((uint16_t)0x03),
+    SSP_WordLength5b = ((uint16_t)0x04),
+    SSP_WordLength6b = ((uint16_t)0x05),
+    SSP_WordLength7b = ((uint16_t)0x06),
+    SSP_WordLength8b = ((uint16_t)0x07),
+    SSP_WordLength9b = ((uint16_t)0x08),
+    SSP_WordLength10b = ((uint16_t)0x09),
+    SSP_WordLength11b = ((uint16_t)0x0A),
+    SSP_WordLength12b = ((uint16_t)0x0B),
+    SSP_WordLength13b = ((uint16_t)0x0C),
+    SSP_WordLength14b = ((uint16_t)0x0D),
+    SSP_WordLength15b = ((uint16_t)0x0E),
+    SSP_WordLength16b = ((uint16_t)0x0F)
+} SSP_Word_Length_TypeDef;
+# 95 "./SPL/MDR32Fx/inc\\MDR32F9Qx_ssp.h"
+typedef enum
+{
+    SSP_SPH_1Edge = ((uint16_t)0x00),
+    SSP_SPH_2Edge = ((uint16_t)0x80)
+} SSP_Clock_Phase_TypeDef;
+
+
+
+
+
+
+
+typedef enum
+{
+    SSP_SPO_Low = ((uint16_t)0x00),
+    SSP_SPO_High = ((uint16_t)0x40)
+} SSP_Clock_Polarity_TypeDef;
+
+
+
+
+
+
+
+typedef enum
+{
+    SSP_FRF_SPI_Motorola = ((uint16_t)0x00),
+    SSP_FRF_SSI_TI = ((uint16_t)0x10),
+    SSP_FRF_Microwire = ((uint16_t)0x20)
+} SSP_Frame_Format_TypeDef;
+# 133 "./SPL/MDR32Fx/inc\\MDR32F9Qx_ssp.h"
+typedef enum
+{
+    SSP_HardwareFlowControl_None = ((uint16_t)0x00),
+    SSP_HardwareFlowControl_SOD = ((uint16_t)0x08),
+    SSP_HardwareFlowControl_SSE = ((uint16_t)0x02),
+    SSP_HardwareFlowControl_LBM = ((uint16_t)0x01)
+} SSP_Hardware_Flow_Control_TypeDef;
+# 152 "./SPL/MDR32Fx/inc\\MDR32F9Qx_ssp.h"
+typedef enum
+{
+    SSP_FLAG_BSY = ((uint16_t)0x10),
+    SSP_FLAG_RFF = ((uint16_t)0x08),
+    SSP_FLAG_RNE = ((uint16_t)0x04),
+    SSP_FLAG_TNF = ((uint16_t)0x02),
+    SSP_FLAG_TFE = ((uint16_t)0x01)
+} SSP_Flags_TypeDef;
+# 170 "./SPL/MDR32Fx/inc\\MDR32F9Qx_ssp.h"
+typedef enum
+{
+    SSP_IT_TX = ((uint32_t)0x08),
+    SSP_IT_RX = ((uint32_t)0x04),
+    SSP_IT_RT = ((uint32_t)0x02),
+    SSP_IT_ROR = ((uint32_t)0x01)
+} SSP_IT_TypeDef;
+# 192 "./SPL/MDR32Fx/inc\\MDR32F9Qx_ssp.h"
+typedef enum
+{
+    SSP_DMA_RXE = ((uint32_t)0x01),
+    SSP_DMA_TXE = ((uint32_t)0x02)
+} SSP_DMA_Req_TypeDef;
+# 205 "./SPL/MDR32Fx/inc\\MDR32F9Qx_ssp.h"
+typedef enum
+{
+    SSP_HCLKdiv1 = ((uint32_t)0x00),
+    SSP_HCLKdiv2 = ((uint32_t)0x01),
+    SSP_HCLKdiv4 = ((uint32_t)0x02),
+    SSP_HCLKdiv8 = ((uint32_t)0x03),
+    SSP_HCLKdiv16 = ((uint32_t)0x04),
+    SSP_HCLKdiv32 = ((uint32_t)0x05),
+    SSP_HCLKdiv64 = ((uint32_t)0x06),
+    SSP_HCLKdiv128 = ((uint32_t)0x07)
+} SSP_Clock_BRG_TypeDef;
+
+
+
+
+
+
+typedef struct
+{
+    uint16_t SSP_SCR;
+
+
+
+    uint16_t SSP_CPSDVSR;
+
+    SSP_Mode_TypeDef SSP_Mode;
+
+    SSP_Word_Length_TypeDef SSP_WordLength;
+
+    SSP_Clock_Phase_TypeDef SSP_SPH;
+
+    SSP_Clock_Polarity_TypeDef SSP_SPO;
+
+    SSP_Frame_Format_TypeDef SSP_FRF;
+
+    SSP_Hardware_Flow_Control_TypeDef SSP_HardwareFlowControl;
+
+} SSP_InitTypeDef;
+# 264 "./SPL/MDR32Fx/inc\\MDR32F9Qx_ssp.h"
+void SSP_DeInit(MDR_SSP_TypeDef* SSPx);
+void SSP_Init(MDR_SSP_TypeDef* SSPx, const SSP_InitTypeDef* SSP_InitStruct);
+void SSP_StructInit(SSP_InitTypeDef* SSP_InitStruct);
+void SSP_Cmd(MDR_SSP_TypeDef* SSPx, FunctionalState NewState);
+
+void SSP_ITConfig(MDR_SSP_TypeDef* SSPx, uint32_t SSP_IT, FunctionalState NewState);
+ITStatus SSP_GetITStatus(MDR_SSP_TypeDef* SSPx, SSP_IT_TypeDef SSP_IT);
+ITStatus SSP_GetITStatusMasked(MDR_SSP_TypeDef* SSPx, SSP_IT_TypeDef SSP_IT);
+void SSP_ClearITPendingBit(MDR_SSP_TypeDef* SSPx, SSP_IT_TypeDef SSP_IT);
+
+void SSP_DMACmd(MDR_SSP_TypeDef* SSPx, uint32_t SSP_DMAReq, FunctionalState NewState);
+
+void SSP_SendData(MDR_SSP_TypeDef* SSPx, uint16_t Data);
+uint16_t SSP_ReceiveData(MDR_SSP_TypeDef* SSPx);
+
+FlagStatus SSP_GetFlagStatus(MDR_SSP_TypeDef* SSPx, SSP_Flags_TypeDef SSP_FLAG);
+void SSP_BRGInit(MDR_SSP_TypeDef* SSPx, SSP_Clock_BRG_TypeDef SSP_BRG);
+# 5 "CustomLibs/src/USB_init.c" 2
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_port.h" 1
 # 49 "./SPL/MDR32Fx/inc\\MDR32F9Qx_port.h"
 typedef enum
@@ -1637,138 +2351,100 @@ void PORT_ResetBits(MDR_PORT_TypeDef* MDR_PORTx, uint32_t PORT_Pin);
 
 
 void PORT_Write(MDR_PORT_TypeDef* MDR_PORTx, uint32_t PortVal);
-# 5 "CustomLibs/src/ADC_for_proj.c" 2
-# 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h" 1
-# 135 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h"
-typedef enum
-{
-    ADC_SyncMode_Independent = (((uint32_t)0x0) << 16),
-    ADC_SyncMode_Synchronous = (((uint32_t)0x1) << 16)
-} ADC_SyncMode;
-# 149 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h"
-typedef enum
-{
-    ADC_TEMP_SENSOR_Disable = (((uint32_t)0x0) << 17),
-    ADC_TEMP_SENSOR_Enable = (((uint32_t)0x1) << 17)
-} ADC_Temp_Sensor;
+# 6 "CustomLibs/src/USB_init.c" 2
+# 1 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 1 3
+# 51 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+    typedef unsigned int size_t;
 
 
 
 
 
 
+extern __attribute__((__nothrow__)) void *memcpy(void * __restrict ,
+                    const void * __restrict , size_t ) __attribute__((__nonnull__(1,2)));
 
-typedef enum
-{
-    ADC_TEMP_SENSOR_AMPLIFIER_Disable = (((uint32_t)0x0) << 18),
-    ADC_TEMP_SENSOR_AMPLIFIER_Enable = (((uint32_t)0x1) << 18)
-} ADC_Temp_Sensor_Amplifier;
 
 
 
 
 
+extern __attribute__((__nothrow__)) void *memmove(void * ,
+                    const void * , size_t ) __attribute__((__nonnull__(1,2)));
+# 77 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) char *strcpy(char * __restrict , const char * __restrict ) __attribute__((__nonnull__(1,2)));
 
 
-typedef enum
-{
-    ADC_TEMP_SENSOR_CONVERSION_Disable = (((uint32_t)0x0) << 19),
-    ADC_TEMP_SENSOR_CONVERSION_Enable = (((uint32_t)0x1) << 19)
-} ADC_Temp_Sensor_Conversion;
 
 
 
 
+extern __attribute__((__nothrow__)) char *strncpy(char * __restrict , const char * __restrict , size_t ) __attribute__((__nonnull__(1,2)));
+# 93 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) char *strcat(char * __restrict , const char * __restrict ) __attribute__((__nonnull__(1,2)));
 
 
 
-typedef enum
-{
-    ADC_VREF_CONVERSION_Disable = (((uint32_t)0x0) << 20),
-    ADC_VREF_CONVERSION_Enable = (((uint32_t)0x1) << 20)
-} ADC_Int_VRef_Conversion;
 
 
 
+extern __attribute__((__nothrow__)) char *strncat(char * __restrict , const char * __restrict , size_t ) __attribute__((__nonnull__(1,2)));
+# 117 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) int memcmp(const void * , const void * , size_t ) __attribute__((__nonnull__(1,2)));
 
 
 
 
-typedef enum
-{
-    ADC_CLOCK_SOURCE_CPU = (((uint32_t)0x0) << 2),
-    ADC_CLOCK_SOURCE_ADC = (((uint32_t)0x1) << 2)
-} ADCx_Clock_Source;
 
 
 
+extern __attribute__((__nothrow__)) int strcmp(const char * , const char * ) __attribute__((__nonnull__(1,2)));
 
 
 
 
-typedef enum
-{
-    ADC_SAMPLING_MODE_SINGLE_CONV = (((uint32_t)0x0) << 3),
-    ADC_SAMPLING_MODE_CYCLIC_CONV = (((uint32_t)0x1) << 3)
-} ADCx_Sampling_Mode;
-# 226 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h"
-typedef enum
-{
-    ADC_CH_SWITCHING_Disable = (((uint32_t)0x0) << 9),
-    ADC_CH_SWITCHING_Enable = (((uint32_t)0x1) << 9)
-} ADCx_Channel_Switching;
 
 
+extern __attribute__((__nothrow__)) int strncmp(const char * , const char * , size_t ) __attribute__((__nonnull__(1,2)));
+# 141 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) int strcasecmp(const char * , const char * ) __attribute__((__nonnull__(1,2)));
 
 
 
 
 
-typedef enum
-{
-    ADC_CH_ADC0 = ((uint32_t)0x00),
-    ADC_CH_ADC1 = ((uint32_t)0x01),
-    ADC_CH_ADC2 = ((uint32_t)0x02),
-    ADC_CH_ADC3 = ((uint32_t)0x03),
-    ADC_CH_ADC4 = ((uint32_t)0x04),
-    ADC_CH_ADC5 = ((uint32_t)0x05),
-    ADC_CH_ADC6 = ((uint32_t)0x06),
-    ADC_CH_ADC7 = ((uint32_t)0x07),
-    ADC_CH_ADC8 = ((uint32_t)0x08),
-    ADC_CH_ADC9 = ((uint32_t)0x09),
-    ADC_CH_ADC10 = ((uint32_t)0x0A),
-    ADC_CH_ADC11 = ((uint32_t)0x0B),
-    ADC_CH_ADC12 = ((uint32_t)0x0C),
-    ADC_CH_ADC13 = ((uint32_t)0x0D),
-    ADC_CH_ADC14 = ((uint32_t)0x0E),
-    ADC_CH_ADC15 = ((uint32_t)0x0F),
-    ADC_CH_INT_VREF = ((uint32_t)0x1E),
-    ADC_CH_TEMP_SENSOR = ((uint32_t)0x1F)
-} ADCx_Channel_Number;
-# 284 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h"
-typedef enum
-{
-    ADC_LEVEL_CONTROL_Disable = (((uint32_t)0x0) << 10),
-    ADC_LEVEL_CONTROL_Enable = (((uint32_t)0x1) << 10)
-} ADCx_Level_Control;
-# 299 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h"
-typedef enum
-{
-    ADC_VREF_SOURCE_INTERNAL = (((uint32_t)0x0) << 11),
-    ADC_VREF_SOURCE_EXTERNAL = (((uint32_t)0x1) << 11)
-} ADCx_VRef_Source;
 
 
+extern __attribute__((__nothrow__)) int strncasecmp(const char * , const char * , size_t ) __attribute__((__nonnull__(1,2)));
+# 158 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) int strcoll(const char * , const char * ) __attribute__((__nonnull__(1,2)));
+# 169 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) size_t strxfrm(char * __restrict , const char * __restrict , size_t ) __attribute__((__nonnull__(2)));
+# 193 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) void *memchr(const void * , int , size_t ) __attribute__((__nonnull__(1)));
+# 209 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) char *strchr(const char * , int ) __attribute__((__nonnull__(1)));
+# 218 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) size_t strcspn(const char * , const char * ) __attribute__((__nonnull__(1,2)));
+# 232 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) char *strpbrk(const char * , const char * ) __attribute__((__nonnull__(1,2)));
+# 247 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) char *strrchr(const char * , int ) __attribute__((__nonnull__(1)));
+# 257 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) size_t strspn(const char * , const char * ) __attribute__((__nonnull__(1,2)));
+# 270 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) char *strstr(const char * , const char * ) __attribute__((__nonnull__(1,2)));
+# 280 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) char *strtok(char * __restrict , const char * __restrict ) __attribute__((__nonnull__(2)));
+extern __attribute__((__nothrow__)) char *_strtok_r(char * , const char * , char ** ) __attribute__((__nonnull__(2,3)));
+# 321 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) void *memset(void * , int , size_t ) __attribute__((__nonnull__(1)));
 
 
 
 
 
-typedef enum
-{
-    ADC_INT_VREF_SOURCE_INEXACT = ((uint32_t)0x0),
-    ADC_INT_VREF_SOURCE_EXACT = ((uint32_t)0x1)
-} ADCx_Int_VRef_Source;
+extern __attribute__((__nothrow__)) char *strerror(int );
 
 
 
@@ -1776,235 +2452,123 @@ typedef enum
 
 
 
-typedef enum
-{
-    ADC_CLK_div_None = (((uint32_t)0x0) << 12),
-    ADC_CLK_div_2 = (((uint32_t)0x1) << 12),
-    ADC_CLK_div_4 = (((uint32_t)0x2) << 12),
-    ADC_CLK_div_8 = (((uint32_t)0x3) << 12),
-    ADC_CLK_div_16 = (((uint32_t)0x4) << 12),
-    ADC_CLK_div_32 = (((uint32_t)0x5) << 12),
-    ADC_CLK_div_64 = (((uint32_t)0x6) << 12),
-    ADC_CLK_div_128 = (((uint32_t)0x7) << 12),
-    ADC_CLK_div_256 = (((uint32_t)0x8) << 12),
-    ADC_CLK_div_512 = (((uint32_t)0x9) << 12),
-    ADC_CLK_div_1024 = (((uint32_t)0xA) << 12),
-    ADC_CLK_div_2048 = (((uint32_t)0xB) << 12)
-} ADCx_Prescaler;
-# 355 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h"
-typedef enum
-{
-    ADCx_FLAG_OVERWRITE = (((uint32_t)0x1) << 0),
-    ADCx_FLAG_OUT_OF_RANGE = (((uint32_t)0x1) << 1),
-    ADCx_FLAG_END_OF_CONVERSION = (((uint32_t)0x1) << 2)
-} ADCx_Flags;
-# 369 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h"
-typedef enum
-{
-    ADC1_FLAG_OVERWRITE = (ADCx_FLAG_OVERWRITE << 0),
-    ADC1_FLAG_OUT_OF_RANGE = (ADCx_FLAG_OUT_OF_RANGE << 0),
-    ADC1_FLAG_END_OF_CONVERSION = (ADCx_FLAG_END_OF_CONVERSION << 0),
+extern __attribute__((__nothrow__)) size_t strlen(const char * ) __attribute__((__nonnull__(1)));
 
-    ADC2_FLAG_OVERWRITE = (ADCx_FLAG_OVERWRITE << 16),
-    ADC2_FLAG_OUT_OF_RANGE = (ADCx_FLAG_OUT_OF_RANGE << 16),
-    ADC2_FLAG_END_OF_CONVERSION = (ADCx_FLAG_END_OF_CONVERSION << 16)
 
-} ADC_Flags;
-# 399 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h"
-typedef enum
-{
-    ADCx_IT_OUT_OF_RANGE = (((uint32_t)0x1) << 1),
-    ADCx_IT_END_OF_CONVERSION = (((uint32_t)0x1) << 2)
-} ADCx_IT_Def;
 
 
 
 
+extern __attribute__((__nothrow__)) size_t strlcpy(char * , const char * , size_t ) __attribute__((__nonnull__(1,2)));
+# 362 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) size_t strlcat(char * , const char * , size_t ) __attribute__((__nonnull__(1,2)));
+# 388 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) void _membitcpybl(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) void _membitcpybb(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) void _membitcpyhl(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) void _membitcpyhb(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) void _membitcpywl(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) void _membitcpywb(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) void _membitmovebl(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) void _membitmovebb(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) void _membitmovehl(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) void _membitmovehb(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) void _membitmovewl(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) void _membitmovewb(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+# 7 "CustomLibs/src/USB_init.c" 2
+# 1 "./CustomLibs/inc\\USB_init.h" 1
 
 
 
-typedef enum
-{
-    ADC1_IT_OUT_OF_RANGE = (ADCx_IT_OUT_OF_RANGE << 0),
-    ADC1_IT_END_OF_CONVERSION = (ADCx_IT_END_OF_CONVERSION << 0),
-
-    ADC2_IT_OUT_OF_RANGE = (ADCx_IT_OUT_OF_RANGE << 16),
-    ADC2_IT_END_OF_CONVERSION = (ADCx_IT_END_OF_CONVERSION << 16)
-
-} ADC_IT_Def;
-# 453 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h"
-typedef struct {
-
-    ADC_SyncMode ADC_SynchronousMode;
-
-    uint32_t ADC_StartDelay;
-
-
-    ADC_Temp_Sensor ADC_TempSensor;
-
-    ADC_Temp_Sensor_Amplifier ADC_TempSensorAmplifier;
-
-    ADC_Temp_Sensor_Conversion ADC_TempSensorConversion;
-
-    ADC_Int_VRef_Conversion ADC_IntVRefConversion;
-
-    uint32_t ADC_IntVRefTrimming;
-
-
-
-
-
-
-} ADC_InitTypeDef;
-
-
-
-
-typedef struct
-{
-    ADCx_Clock_Source ADC_ClockSource;
-
-
-    ADCx_Sampling_Mode ADC_SamplingMode;
-
-
-    ADCx_Channel_Switching ADC_ChannelSwitching;
-
-
-    ADCx_Channel_Number ADC_ChannelNumber;
-
-
-    uint32_t ADC_Channels;
-
-
-    ADCx_Level_Control ADC_LevelControl;
-
-
-    uint16_t ADC_LowLevel;
-
-
-    uint16_t ADC_HighLevel;
-
-
-    ADCx_VRef_Source ADC_VRefSource;
-
-
-    ADCx_Int_VRef_Source ADC_IntVRefSource;
-
-
-    ADCx_Prescaler ADC_Prescaler;
-
-
-    uint32_t ADC_DelayGo;
-
-} ADCx_InitTypeDef;
-# 526 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h"
-void ADC_DeInit(void);
-
-void ADC_Init(const ADC_InitTypeDef* ADC_InitStruct);
-void ADC_StructInit(ADC_InitTypeDef* ADC_InitStruct);
-
-void ADC_SetTrim(uint32_t Trim);
-
-void ADC1_Init(const ADCx_InitTypeDef* ADCx_InitStruct);
-void ADCx_StructInit(ADCx_InitTypeDef* ADCx_InitStruct);
-
-void ADC1_Cmd(FunctionalState NewState);
-
-void ADC1_SetChannel(ADCx_Channel_Number Channel);
-void ADC1_SetChannels(uint32_t ChannelMask);
-
-void ADC1_OperationModeConfig(ADCx_Sampling_Mode SamplingMode, ADCx_Channel_Switching SwitchingMode);
-void ADC1_SamplingModeConfig(ADCx_Sampling_Mode SamplingMode);
-void ADC1_ChannelSwithingConfig(ADCx_Channel_Switching SwitchingMode);
-
-void ADC1_LevelsConfig(uint32_t LowLevel, uint32_t HighLevel, ADCx_Level_Control NewState);
-void ADC1_SetLowLevel(uint32_t LowLevel);
-void ADC1_SetHighLevel(uint32_t HighLevel);
-
-void ADC1_Start(void);
-
-uint32_t ADC1_GetResult(void);
-
-uint32_t ADC_GetStatus(void);
-uint32_t ADC1_GetStatus(void);
-
-FlagStatus ADC_GetFlagStatus(ADC_Flags Flag);
-FlagStatus ADC1_GetFlagStatus(ADCx_Flags Flag);
-
-void ADC1_ClearOverwriteFlag(void);
-void ADC1_ClearOutOfRangeFlag(void);
-
-void ADC_ITConfig(ADC_IT_Def ADC_IT, FunctionalState NewState);
-void ADC1_ITConfig(ADC_IT_Def ADC_IT, FunctionalState NewState);
-
-ITStatus ADC_GetITStatus(ADC_IT_Def ADC_IT);
-ITStatus ADC1_GetITStatus(ADC_IT_Def ADC_IT);
-
-
-
-    void ADC2_Init(const ADCx_InitTypeDef* ADCx_InitStruct);
-    void ADC2_Cmd(FunctionalState NewState);
-    void ADC2_SetChannel(ADCx_Channel_Number Channel);
-    void ADC2_SetChannels(uint32_t ChannelMask);
-    void ADC2_OperationModeConfig(ADCx_Sampling_Mode SamplingMode, ADCx_Channel_Switching SwitchingMode);
-    void ADC2_OperationModeConfig(ADCx_Sampling_Mode SamplingMode, ADCx_Channel_Switching SwitchingMode);
-    void ADC2_SamplingModeConfig(ADCx_Sampling_Mode SamplingMode);
-    void ADC2_ChannelSwithingConfig(ADCx_Channel_Switching SwitchingMode);
-    void ADC2_LevelsConfig(uint32_t LowLevel, uint32_t HighLevel, ADCx_Level_Control NewState);
-    void ADC2_SetLowLevel(uint32_t LowLevel);
-    void ADC2_SetHighLevel(uint32_t HighLevel);
-    void ADC2_Start(void);
-    uint32_t ADC2_GetResult(void);
-    uint32_t ADC2_GetStatus(void);
-    FlagStatus ADC2_GetFlagStatus(ADCx_Flags Flag);
-    void ADC2_ClearOverwriteFlag(void);
-    void ADC2_ClearOutOfRangeFlag(void);
-    void ADC2_ITConfig(ADC_IT_Def ADC_IT, FunctionalState NewState);
-    ITStatus ADC2_GetITStatus(ADC_IT_Def ADC_IT);
-# 6 "CustomLibs/src/ADC_for_proj.c" 2
-
-
-ADC_InitTypeDef ADC_structure;
-ADCx_InitTypeDef ADCx_structure;
-
+void Setup_USB(void);
+void VCom_Configuration(void);
+# 8 "CustomLibs/src/USB_init.c" 2
+# 1 "./CustomLibs/inc\\defines.h" 1
+# 9 "CustomLibs/src/USB_init.c" 2
 
 extern PORT_InitTypeDef port_init_structure;
+static USB_Clock_TypeDef USB_Clock_InitStruct;
+static USB_DeviceBUSParam_TypeDef USB_DeviceBUSParam;
+static MDR_SSP_TypeDef SSP_InitStruct;
+SSP_InitTypeDef sSSP;
+PORT_InitTypeDef port_init_structure;
+extern uint8_t *buffer;
+char rec_buf[128];
+static uint8_t DoubleBuf[128 * 2];
+extern int command_recived;
 
-void SetupADC()
+char *start;
+char *end;
+char tokens[5][128 * 2];
+char tempString[100];
+
+
+static USB_CDC_LineCoding_TypeDef LineCoding;
+
+
+void Setup_USB(void) {
+
+ RST_CLK_PCLKcmd(((uint32_t)(1U << ((((uint32_t)(0x40010000)) >> 15) & 0x1F))), ENABLE);
+
+ USB_Clock_InitStruct.USB_USBC1_Source = USB_C1HSEdiv2;
+ USB_Clock_InitStruct.USB_PLLUSBMUL = USB_PLLUSBMUL6;
+ USB_DeviceBUSParam.MODE = (uint32_t)(1 << 4);
+ USB_DeviceBUSParam.SPEED = (uint32_t)(1 << 5);
+ USB_DeviceBUSParam.PULL = (uint32_t)(1 << 4);
+ USB_DeviceInit(&USB_Clock_InitStruct, &USB_DeviceBUSParam);
+
+ USB_SetSIM(((uint32_t)0x00000001) | ((uint32_t)0x00000002) | ((uint32_t)0x00000004) | ((uint32_t)0x00000008) | ((uint32_t)0x00000010));
+ USB_DevicePowerOn();
+
+
+ NVIC_EnableIRQ(USB_IRQn);
+
+ USB_CDC_Reset();
+}
+
+void VCom_Configuration(void)
 {
 
-    RST_CLK_PCLKcmd((((uint32_t)(1U << ((((uint32_t)(0x40020000)) >> 15) & 0x1F))) | ((uint32_t)(1U << ((((uint32_t)(0x40088000)) >> 15) & 0x1F)))), ENABLE);
-    RST_CLK_PCLKcmd((((uint32_t)(1U << ((((uint32_t)(0x400B8000)) >> 15) & 0x1F))) | ((uint32_t)(1U << ((((uint32_t)(0x400C0000)) >> 15) & 0x1F)))), ENABLE);
 
-    ((SCB_Type *) ((0xE000E000UL) + 0x0D00UL) )->AIRCR = 0x5FA0500;
-    ((SCB_Type *) ((0xE000E000UL) + 0x0D00UL) )->VTOR = 0x08000000;
+  LineCoding.dwDTERate = 10000000;
+  LineCoding.bCharFormat = 0;
+  LineCoding.bParityType = 0;
+  LineCoding.bDataBits = 8;
 
-    ((NVIC_Type *) ((0xE000E000UL) + 0x0100UL) )->ICPR[0] = 0xFFFFFFFF;
-    ((NVIC_Type *) ((0xE000E000UL) + 0x0100UL) )->ICER[0] = 0xFFFFFFFF;
- ((NVIC_Type *) ((0xE000E000UL) + 0x0100UL) )->ISER[0] = (1<<ADC_IRQn);
+}
 
-    PORT_DeInit(((MDR_PORT_TypeDef *) (0x400C0000)));
+USB_Result USB_CDC_RecieveData(uint8_t *Buffer, uint32_t Length)
+{
+ memcpy(rec_buf, buffer, 128);
+ command_recived = 1;
+ return USB_SUCCESS;
+}
 
-    port_init_structure.PORT_Pin = PORT_Pin_0 | PORT_Pin_1;
-    port_init_structure.PORT_OE = PORT_OE_IN;
-    port_init_structure.PORT_MODE = PORT_MODE_ANALOG;
-    PORT_Init(((MDR_PORT_TypeDef *) (0x400C0000)), &port_init_structure);
 
-    ADC_DeInit();
-    ADC_StructInit(&ADC_structure);
- ADC_Init (&ADC_structure);
-    ADCx_StructInit (&ADCx_structure);
-    ADCx_structure.ADC_ClockSource = ADC_CLOCK_SOURCE_CPU;
-    ADCx_structure.ADC_SamplingMode = ADC_SAMPLING_MODE_CYCLIC_CONV;
-    ADCx_structure.ADC_ChannelSwitching = ADC_CH_SWITCHING_Enable;
-    ADCx_structure.ADC_ChannelNumber = ADC_CH_ADC0;
-    ADCx_structure.ADC_Channels = ((((uint32_t)0x1) << ADC_CH_ADC0 ) | (((uint32_t)0x1) << ADC_CH_ADC1 ));
-    ADCx_structure.ADC_VRefSource = ADC_VREF_SOURCE_INTERNAL;
-    ADCx_structure.ADC_IntVRefSource = ADC_INT_VREF_SOURCE_INEXACT;
-    ADCx_structure.ADC_Prescaler = ADC_CLK_div_32;
- ADCx_structure.ADC_DelayGo = 0x2;
-    ADC1_Init (&ADCx_structure);
 
-    ADC1_ITConfig((ADCx_IT_END_OF_CONVERSION), ENABLE);
+USB_Result USB_CDC_GetLineCoding(uint16_t wINDEX, USB_CDC_LineCoding_TypeDef *DATA)
+{
+ ((void)0U);
+ if (wINDEX != 0)
+ {
+
+  return USB_ERR_INV_REQ;
+ }
+
+
+ *DATA = LineCoding;
+ return USB_SUCCESS;
+}
+
+USB_Result USB_CDC_SetLineCoding(uint16_t wINDEX, const USB_CDC_LineCoding_TypeDef *DATA) {
+ ((void)0U);
+ if (wINDEX != 0)
+ {
+
+  return USB_ERR_INV_REQ;
+ }
+
+
+ LineCoding = *DATA;
+ return USB_SUCCESS;
 }

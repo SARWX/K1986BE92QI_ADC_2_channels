@@ -1,8 +1,8 @@
 #ifndef DAC_for_porj
 #define DAC_for_porj
 
-void SetupDAC();
-void SetupTIM2();
-void Set_DAC_Table(int freq);
+void Setup_DAC();
+void Setup_TIM2();
+void set_DAC_table(int freq);
 
 #endif /* DAC_for_porj */

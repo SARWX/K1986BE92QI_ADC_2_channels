@@ -1,18 +1,12 @@
-# 1 "CustomLibs/src/ADC_for_proj.c"
+# 1 "CustomLibs/src/ADC_init.c"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
 # 383 "<built-in>" 3
 # 1 "<command line>" 1
 # 1 "<built-in>" 2
-# 1 "CustomLibs/src/ADC_for_proj.c" 2
-# 1 "./CustomLibs/inc\\ADC_for_proj.h" 1
-
-
-
-void SetupADC();
-# 2 "CustomLibs/src/ADC_for_proj.c" 2
-# 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h" 1
-# 32 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h"
+# 1 "CustomLibs/src/ADC_init.c" 2
+# 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_port.h" 1
+# 32 "./SPL/MDR32Fx/inc\\MDR32F9Qx_port.h"
 # 1 "./SPL/MDR32Fx\\MDR32F9Qx_config.h" 1
 # 54 "./SPL/MDR32Fx\\MDR32F9Qx_config.h"
 # 1 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdint.h" 1 3
@@ -1205,257 +1199,7 @@ typedef struct
 
 }MDR_EBC_TypeDef;
 # 82 "./SPL/MDR32Fx\\MDR32F9Qx_config.h" 2
-# 33 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h" 2
-# 49 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h"
-typedef struct
-{
-    uint32_t CPU_CLK_Frequency;
-    uint32_t USB_CLK_Frequency;
-    uint32_t ADC_CLK_Frequency;
-    uint32_t RTCHSI_Frequency;
-    uint32_t RTCHSE_Frequency;
-} RST_CLK_FreqTypeDef;
-
-
-
-
-typedef struct
-{
-    uint32_t REG_0F;
-} Init_NonVolatile_RST_CLK_TypeDef;
-
-
-
-
-typedef enum
-{
-    RST_CLK_HSE_OFF = ((uint32_t)0x00),
-    RST_CLK_HSE_ON = ((uint32_t)0x01),
-    RST_CLK_HSE_Bypass = ((uint32_t)0x02)
-} RST_CLK_HSE_Mode;
-# 99 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h"
-typedef enum
-{
-    RST_CLK_LSE_OFF = ((uint32_t)0x00),
-    RST_CLK_LSE_ON = ((uint32_t)0x01),
-    RST_CLK_LSE_Bypass = ((uint32_t)0x02)
-} RST_CLK_LSE_Mode;
-# 113 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h"
-typedef enum
-{
-    RST_CLK_CPU_PLLsrcHSIdiv1 = ((uint32_t)0x00),
-    RST_CLK_CPU_PLLsrcHSIdiv2 = ((uint32_t)0x01),
-    RST_CLK_CPU_PLLsrcHSEdiv1 = ((uint32_t)0x02),
-    RST_CLK_CPU_PLLsrcHSEdiv2 = ((uint32_t)0x03)
-} RST_CLK_CPU_PLL_Source;
-# 129 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h"
-typedef enum
-{
-    RST_CLK_CPU_C1srcHSIdiv1 = ((uint32_t)0x00),
-    RST_CLK_CPU_C1srcHSIdiv2 = ((uint32_t)0x01),
-    RST_CLK_CPU_C1srcHSEdiv1 = ((uint32_t)0x02),
-    RST_CLK_CPU_C1srcHSEdiv2 = ((uint32_t)0x03)
-} RST_CLK_CPU_C1_Source;
-# 145 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h"
-typedef enum
-{
-    RST_CLK_CPU_PLLmul1 = ((uint32_t)0x00),
-    RST_CLK_CPU_PLLmul2 = ((uint32_t)0x01),
-    RST_CLK_CPU_PLLmul3 = ((uint32_t)0x02),
-    RST_CLK_CPU_PLLmul4 = ((uint32_t)0x03),
-    RST_CLK_CPU_PLLmul5 = ((uint32_t)0x04),
-    RST_CLK_CPU_PLLmul6 = ((uint32_t)0x05),
-    RST_CLK_CPU_PLLmul7 = ((uint32_t)0x06),
-    RST_CLK_CPU_PLLmul8 = ((uint32_t)0x07),
-    RST_CLK_CPU_PLLmul9 = ((uint32_t)0x08),
-    RST_CLK_CPU_PLLmul10 = ((uint32_t)0x09),
-    RST_CLK_CPU_PLLmul11 = ((uint32_t)0x0A),
-    RST_CLK_CPU_PLLmul12 = ((uint32_t)0x0B),
-    RST_CLK_CPU_PLLmul13 = ((uint32_t)0x0C),
-    RST_CLK_CPU_PLLmul14 = ((uint32_t)0x0D),
-    RST_CLK_CPU_PLLmul15 = ((uint32_t)0x0E),
-    RST_CLK_CPU_PLLmul16 = ((uint32_t)0x0F)
-} RST_CLK_CPU_PLL_Multiplier;
-
-
-
-
-
-
-typedef enum
-{
-    RST_CLK_USB_PLLsrcHSIdiv1 = ((uint32_t)0x00),
-    RST_CLK_USB_PLLsrcHSIdiv2 = ((uint32_t)0x01),
-    RST_CLK_USB_PLLsrcHSEdiv1 = ((uint32_t)0x02),
-    RST_CLK_USB_PLLsrcHSEdiv2 = ((uint32_t)0x03)
-} RST_CLK_USB_PLL_Source;
-# 186 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h"
-typedef enum
-{
-    RST_CLK_USB_PLLmul1 = ((uint32_t)0x00),
-    RST_CLK_USB_PLLmul2 = ((uint32_t)0x01),
-    RST_CLK_USB_PLLmul3 = ((uint32_t)0x02),
-    RST_CLK_USB_PLLmul4 = ((uint32_t)0x03),
-    RST_CLK_USB_PLLmul5 = ((uint32_t)0x04),
-    RST_CLK_USB_PLLmul6 = ((uint32_t)0x05),
-    RST_CLK_USB_PLLmul7 = ((uint32_t)0x06),
-    RST_CLK_USB_PLLmul8 = ((uint32_t)0x07),
-    RST_CLK_USB_PLLmul9 = ((uint32_t)0x08),
-    RST_CLK_USB_PLLmul10 = ((uint32_t)0x09),
-    RST_CLK_USB_PLLmul11 = ((uint32_t)0x0A),
-    RST_CLK_USB_PLLmul12 = ((uint32_t)0x0B),
-    RST_CLK_USB_PLLmul13 = ((uint32_t)0x0C),
-    RST_CLK_USB_PLLmul14 = ((uint32_t)0x0D),
-    RST_CLK_USB_PLLmul15 = ((uint32_t)0x0E),
-    RST_CLK_USB_PLLmul16 = ((uint32_t)0x0F)
-} RST_CLK_USB_PLL_Multiplier;
-
-
-
-
-
-
-typedef enum
-{
-    RST_CLK_CPUclkDIV1 = ((uint32_t)0x00),
-    RST_CLK_CPUclkDIV2 = ((uint32_t)0x08),
-    RST_CLK_CPUclkDIV4 = ((uint32_t)0x09),
-    RST_CLK_CPUclkDIV8 = ((uint32_t)0x0A),
-    RST_CLK_CPUclkDIV16 = ((uint32_t)0x0B),
-    RST_CLK_CPUclkDIV32 = ((uint32_t)0x0C),
-    RST_CLK_CPUclkDIV64 = ((uint32_t)0x0D),
-    RST_CLK_CPUclkDIV128 = ((uint32_t)0x0E),
-    RST_CLK_CPUclkDIV256 = ((uint32_t)0x0F)
-} RST_CLK_CPU_C3_Divisor;
-# 237 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h"
-typedef enum
-{
-    RST_CLK_CPUclkHSI = ((uint32_t)0x0000),
-    RST_CLK_CPUclkCPU_C3 = ((uint32_t)0x0100),
-    RST_CLK_CPUclkLSE = ((uint32_t)0x0200),
-    RST_CLK_CPUclkLSI = ((uint32_t)0x0300)
-} RST_CLK_HCLK_Source;
-# 253 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h"
-typedef enum
-{
-    RST_CLK_ADCclkCPU_C1 = ((uint32_t)0x0020),
-    RST_CLK_ADCclkUSB_C1 = ((uint32_t)0x0021),
-    RST_CLK_ADCclkCPU_C2 = ((uint32_t)0x0022),
-    RST_CLK_ADCclkUSB_C2 = ((uint32_t)0x0023),
-    RST_CLK_ADCclkLSE = ((uint32_t)0x0000),
-    RST_CLK_ADCclkLSI = ((uint32_t)0x0010),
-    RST_CLK_ADCclkHSI_C1 = ((uint32_t)0x0030)
-} RST_CLK_ADC_Source;
-# 275 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h"
-typedef enum
-{
-    RST_CLK_ADCclkDIV1 = ((uint32_t)0x00),
-    RST_CLK_ADCclkDIV2 = ((uint32_t)0x08),
-    RST_CLK_ADCclkDIV4 = ((uint32_t)0x09),
-    RST_CLK_ADCclkDIV8 = ((uint32_t)0x0A),
-    RST_CLK_ADCclkDIV16 = ((uint32_t)0x0B),
-    RST_CLK_ADCclkDIV32 = ((uint32_t)0x0C),
-    RST_CLK_ADCclkDIV64 = ((uint32_t)0x0D),
-    RST_CLK_ADCclkDIV128 = ((uint32_t)0x0E),
-    RST_CLK_ADCclkDIV256 = ((uint32_t)0x0F)
-} RST_CLK_ADC_C3_Divisor;
-# 349 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h"
-typedef enum
-{
-    RST_CLK_FLAG_HSIRDY = ((uint32_t)(0x00 | 23)),
-    RST_CLK_FLAG_LSIRDY = ((uint32_t)(0x00 | 21)),
-    RST_CLK_FLAG_HSERDY = ((uint32_t)(0x20 | 2)),
-    RST_CLK_FLAG_HSE2RDY = ((uint32_t)(0x20 | 3)),
-    RST_CLK_FLAG_LSERDY = ((uint32_t)(0x00 | 13)),
-    RST_CLK_FLAG_PLLCPURDY = ((uint32_t)(0x20 | 1)),
-    RST_CLK_FLAG_PLLUSBRDY = ((uint32_t)(0x20 | 0)),
-    RST_CLK_FLAG_PLLDSPRDY = ((uint32_t)(0x20 | 3))
-} RST_CLK_Flags;
-# 373 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h"
-typedef enum
-{
-    RST_CLK_HSIclkDIV1 = ((uint32_t)0x00),
-    RST_CLK_HSIclkDIV2 = ((uint32_t)0x08),
-    RST_CLK_HSIclkDIV4 = ((uint32_t)0x09),
-    RST_CLK_HSIclkDIV8 = ((uint32_t)0x0A),
-    RST_CLK_HSIclkDIV16 = ((uint32_t)0x0B),
-    RST_CLK_HSIclkDIV32 = ((uint32_t)0x0C),
-    RST_CLK_HSIclkDIV64 = ((uint32_t)0x0D),
-    RST_CLK_HSIclkDIV128 = ((uint32_t)0x0E),
-    RST_CLK_HSIclkDIV256 = ((uint32_t)0x0F)
-} RST_CLK_HSI_C1_Divisor;
-# 399 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h"
-typedef enum
-{
-    RST_CLK_HSEclkDIV1 = ((uint32_t)0x00),
-    RST_CLK_HSEclkDIV2 = ((uint32_t)0x08),
-    RST_CLK_HSEclkDIV4 = ((uint32_t)0x09),
-    RST_CLK_HSEclkDIV8 = ((uint32_t)0x0A),
-    RST_CLK_HSEclkDIV16 = ((uint32_t)0x0B),
-    RST_CLK_HSEclkDIV32 = ((uint32_t)0x0C),
-    RST_CLK_HSEclkDIV64 = ((uint32_t)0x0D),
-    RST_CLK_HSEclkDIV128 = ((uint32_t)0x0E),
-    RST_CLK_HSEclkDIV256 = ((uint32_t)0x0F)
-} RST_CLK_HSE_C1_Divisor;
-# 683 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h"
-void RST_CLK_DeInit(void);
-void RST_CLK_WarmDeInit(void);
-
-void RST_CLK_HSEconfig(RST_CLK_HSE_Mode RST_CLK_HSE);
-ErrorStatus RST_CLK_HSEstatus(void);
-
-
-
-
-
-void RST_CLK_LSEconfig(RST_CLK_LSE_Mode RST_CLK_LSE);
-ErrorStatus RST_CLK_LSEstatus(void);
-
-void RST_CLK_HSIcmd(FunctionalState NewState);
-void RST_CLK_HSIadjust(uint32_t HSItrimValue);
-ErrorStatus RST_CLK_HSIstatus(void);
-
-void RST_CLK_LSIcmd(FunctionalState NewState);
-void RST_CLK_LSIadjust(uint32_t LSItrimValue);
-ErrorStatus RST_CLK_LSIstatus(void);
-
-void RST_CLK_CPU_PLLconfig(RST_CLK_CPU_PLL_Source RST_CLK_CPU_PLLsource, uint32_t RST_CLK_CPU_PLLmul);
-void RST_CLK_CPU_PLLuse(FunctionalState UsePLL);
-void RST_CLK_CPU_PLLcmd(FunctionalState NewState);
-ErrorStatus RST_CLK_CPU_PLLstatus(void);
-
-void RST_CLK_CPUclkPrescaler(RST_CLK_CPU_C3_Divisor CPUclkDivValue);
-void RST_CLK_CPUclkSelection(RST_CLK_HCLK_Source CPU_CLK);
-
-void RST_CLK_USB_PLLconfig(RST_CLK_USB_PLL_Source RST_CLK_USB_PLLsource, uint32_t RST_CLK_USB_PLLmul);
-void RST_CLK_USB_PLLuse(FunctionalState UsePLL);
-void RST_CLK_USB_PLLcmd(FunctionalState NewState);
-ErrorStatus RST_CLK_USB_PLLstatus(void);
-
-void RST_CLK_USBclkPrescaler(FunctionalState NewState);
-void RST_CLK_USBclkEnable(FunctionalState NewState);
-
-void RST_CLK_ADCclkSelection(RST_CLK_ADC_Source ADC_CLK);
-void RST_CLK_ADCclkPrescaler(RST_CLK_ADC_C3_Divisor ADCclkDivValue);
-void RST_CLK_ADCclkEnable(FunctionalState NewState);
-
-void RST_CLK_HSIclkPrescaler(RST_CLK_HSI_C1_Divisor HSIclkDivValue);
-void RST_CLK_RTC_HSIclkEnable(FunctionalState NewState);
-
-void RST_CLK_HSEclkPrescaler(RST_CLK_HSE_C1_Divisor HSEclkDivValue);
-void RST_CLK_RTC_HSEclkEnable(FunctionalState NewState);
-
-void RST_CLK_CPUclkSelectionC1(RST_CLK_CPU_C1_Source CPU_CLK);
-
-void RST_CLK_PCLKcmd(uint32_t RST_CLK_PCLK, FunctionalState NewState);
-# 744 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h"
-void RST_CLK_GetClocksFreq(RST_CLK_FreqTypeDef* RST_CLK_Clocks);
-
-FlagStatus RST_CLK_GetFlagStatus(RST_CLK_Flags RST_CLK_FLAG);
-# 3 "CustomLibs/src/ADC_for_proj.c" 2
-# 1 "./CustomLibs/inc\\defines_for_proj.h" 1
-# 4 "CustomLibs/src/ADC_for_proj.c" 2
-# 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_port.h" 1
+# 33 "./SPL/MDR32Fx/inc\\MDR32F9Qx_port.h" 2
 # 49 "./SPL/MDR32Fx/inc\\MDR32F9Qx_port.h"
 typedef enum
 {
@@ -1637,7 +1381,7 @@ void PORT_ResetBits(MDR_PORT_TypeDef* MDR_PORTx, uint32_t PORT_Pin);
 
 
 void PORT_Write(MDR_PORT_TypeDef* MDR_PORTx, uint32_t PortVal);
-# 5 "CustomLibs/src/ADC_for_proj.c" 2
+# 2 "CustomLibs/src/ADC_init.c" 2
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h" 1
 # 135 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h"
 typedef enum
@@ -1962,7 +1706,263 @@ ITStatus ADC1_GetITStatus(ADC_IT_Def ADC_IT);
     void ADC2_ClearOutOfRangeFlag(void);
     void ADC2_ITConfig(ADC_IT_Def ADC_IT, FunctionalState NewState);
     ITStatus ADC2_GetITStatus(ADC_IT_Def ADC_IT);
-# 6 "CustomLibs/src/ADC_for_proj.c" 2
+# 3 "CustomLibs/src/ADC_init.c" 2
+# 1 "./CustomLibs/inc\\ADC_init.h" 1
+
+
+
+void Setup_ADC();
+# 4 "CustomLibs/src/ADC_init.c" 2
+# 1 "./CustomLibs/inc\\defines.h" 1
+# 5 "CustomLibs/src/ADC_init.c" 2
+# 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h" 1
+# 49 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h"
+typedef struct
+{
+    uint32_t CPU_CLK_Frequency;
+    uint32_t USB_CLK_Frequency;
+    uint32_t ADC_CLK_Frequency;
+    uint32_t RTCHSI_Frequency;
+    uint32_t RTCHSE_Frequency;
+} RST_CLK_FreqTypeDef;
+
+
+
+
+typedef struct
+{
+    uint32_t REG_0F;
+} Init_NonVolatile_RST_CLK_TypeDef;
+
+
+
+
+typedef enum
+{
+    RST_CLK_HSE_OFF = ((uint32_t)0x00),
+    RST_CLK_HSE_ON = ((uint32_t)0x01),
+    RST_CLK_HSE_Bypass = ((uint32_t)0x02)
+} RST_CLK_HSE_Mode;
+# 99 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h"
+typedef enum
+{
+    RST_CLK_LSE_OFF = ((uint32_t)0x00),
+    RST_CLK_LSE_ON = ((uint32_t)0x01),
+    RST_CLK_LSE_Bypass = ((uint32_t)0x02)
+} RST_CLK_LSE_Mode;
+# 113 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h"
+typedef enum
+{
+    RST_CLK_CPU_PLLsrcHSIdiv1 = ((uint32_t)0x00),
+    RST_CLK_CPU_PLLsrcHSIdiv2 = ((uint32_t)0x01),
+    RST_CLK_CPU_PLLsrcHSEdiv1 = ((uint32_t)0x02),
+    RST_CLK_CPU_PLLsrcHSEdiv2 = ((uint32_t)0x03)
+} RST_CLK_CPU_PLL_Source;
+# 129 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h"
+typedef enum
+{
+    RST_CLK_CPU_C1srcHSIdiv1 = ((uint32_t)0x00),
+    RST_CLK_CPU_C1srcHSIdiv2 = ((uint32_t)0x01),
+    RST_CLK_CPU_C1srcHSEdiv1 = ((uint32_t)0x02),
+    RST_CLK_CPU_C1srcHSEdiv2 = ((uint32_t)0x03)
+} RST_CLK_CPU_C1_Source;
+# 145 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h"
+typedef enum
+{
+    RST_CLK_CPU_PLLmul1 = ((uint32_t)0x00),
+    RST_CLK_CPU_PLLmul2 = ((uint32_t)0x01),
+    RST_CLK_CPU_PLLmul3 = ((uint32_t)0x02),
+    RST_CLK_CPU_PLLmul4 = ((uint32_t)0x03),
+    RST_CLK_CPU_PLLmul5 = ((uint32_t)0x04),
+    RST_CLK_CPU_PLLmul6 = ((uint32_t)0x05),
+    RST_CLK_CPU_PLLmul7 = ((uint32_t)0x06),
+    RST_CLK_CPU_PLLmul8 = ((uint32_t)0x07),
+    RST_CLK_CPU_PLLmul9 = ((uint32_t)0x08),
+    RST_CLK_CPU_PLLmul10 = ((uint32_t)0x09),
+    RST_CLK_CPU_PLLmul11 = ((uint32_t)0x0A),
+    RST_CLK_CPU_PLLmul12 = ((uint32_t)0x0B),
+    RST_CLK_CPU_PLLmul13 = ((uint32_t)0x0C),
+    RST_CLK_CPU_PLLmul14 = ((uint32_t)0x0D),
+    RST_CLK_CPU_PLLmul15 = ((uint32_t)0x0E),
+    RST_CLK_CPU_PLLmul16 = ((uint32_t)0x0F)
+} RST_CLK_CPU_PLL_Multiplier;
+
+
+
+
+
+
+typedef enum
+{
+    RST_CLK_USB_PLLsrcHSIdiv1 = ((uint32_t)0x00),
+    RST_CLK_USB_PLLsrcHSIdiv2 = ((uint32_t)0x01),
+    RST_CLK_USB_PLLsrcHSEdiv1 = ((uint32_t)0x02),
+    RST_CLK_USB_PLLsrcHSEdiv2 = ((uint32_t)0x03)
+} RST_CLK_USB_PLL_Source;
+# 186 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h"
+typedef enum
+{
+    RST_CLK_USB_PLLmul1 = ((uint32_t)0x00),
+    RST_CLK_USB_PLLmul2 = ((uint32_t)0x01),
+    RST_CLK_USB_PLLmul3 = ((uint32_t)0x02),
+    RST_CLK_USB_PLLmul4 = ((uint32_t)0x03),
+    RST_CLK_USB_PLLmul5 = ((uint32_t)0x04),
+    RST_CLK_USB_PLLmul6 = ((uint32_t)0x05),
+    RST_CLK_USB_PLLmul7 = ((uint32_t)0x06),
+    RST_CLK_USB_PLLmul8 = ((uint32_t)0x07),
+    RST_CLK_USB_PLLmul9 = ((uint32_t)0x08),
+    RST_CLK_USB_PLLmul10 = ((uint32_t)0x09),
+    RST_CLK_USB_PLLmul11 = ((uint32_t)0x0A),
+    RST_CLK_USB_PLLmul12 = ((uint32_t)0x0B),
+    RST_CLK_USB_PLLmul13 = ((uint32_t)0x0C),
+    RST_CLK_USB_PLLmul14 = ((uint32_t)0x0D),
+    RST_CLK_USB_PLLmul15 = ((uint32_t)0x0E),
+    RST_CLK_USB_PLLmul16 = ((uint32_t)0x0F)
+} RST_CLK_USB_PLL_Multiplier;
+
+
+
+
+
+
+typedef enum
+{
+    RST_CLK_CPUclkDIV1 = ((uint32_t)0x00),
+    RST_CLK_CPUclkDIV2 = ((uint32_t)0x08),
+    RST_CLK_CPUclkDIV4 = ((uint32_t)0x09),
+    RST_CLK_CPUclkDIV8 = ((uint32_t)0x0A),
+    RST_CLK_CPUclkDIV16 = ((uint32_t)0x0B),
+    RST_CLK_CPUclkDIV32 = ((uint32_t)0x0C),
+    RST_CLK_CPUclkDIV64 = ((uint32_t)0x0D),
+    RST_CLK_CPUclkDIV128 = ((uint32_t)0x0E),
+    RST_CLK_CPUclkDIV256 = ((uint32_t)0x0F)
+} RST_CLK_CPU_C3_Divisor;
+# 237 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h"
+typedef enum
+{
+    RST_CLK_CPUclkHSI = ((uint32_t)0x0000),
+    RST_CLK_CPUclkCPU_C3 = ((uint32_t)0x0100),
+    RST_CLK_CPUclkLSE = ((uint32_t)0x0200),
+    RST_CLK_CPUclkLSI = ((uint32_t)0x0300)
+} RST_CLK_HCLK_Source;
+# 253 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h"
+typedef enum
+{
+    RST_CLK_ADCclkCPU_C1 = ((uint32_t)0x0020),
+    RST_CLK_ADCclkUSB_C1 = ((uint32_t)0x0021),
+    RST_CLK_ADCclkCPU_C2 = ((uint32_t)0x0022),
+    RST_CLK_ADCclkUSB_C2 = ((uint32_t)0x0023),
+    RST_CLK_ADCclkLSE = ((uint32_t)0x0000),
+    RST_CLK_ADCclkLSI = ((uint32_t)0x0010),
+    RST_CLK_ADCclkHSI_C1 = ((uint32_t)0x0030)
+} RST_CLK_ADC_Source;
+# 275 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h"
+typedef enum
+{
+    RST_CLK_ADCclkDIV1 = ((uint32_t)0x00),
+    RST_CLK_ADCclkDIV2 = ((uint32_t)0x08),
+    RST_CLK_ADCclkDIV4 = ((uint32_t)0x09),
+    RST_CLK_ADCclkDIV8 = ((uint32_t)0x0A),
+    RST_CLK_ADCclkDIV16 = ((uint32_t)0x0B),
+    RST_CLK_ADCclkDIV32 = ((uint32_t)0x0C),
+    RST_CLK_ADCclkDIV64 = ((uint32_t)0x0D),
+    RST_CLK_ADCclkDIV128 = ((uint32_t)0x0E),
+    RST_CLK_ADCclkDIV256 = ((uint32_t)0x0F)
+} RST_CLK_ADC_C3_Divisor;
+# 349 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h"
+typedef enum
+{
+    RST_CLK_FLAG_HSIRDY = ((uint32_t)(0x00 | 23)),
+    RST_CLK_FLAG_LSIRDY = ((uint32_t)(0x00 | 21)),
+    RST_CLK_FLAG_HSERDY = ((uint32_t)(0x20 | 2)),
+    RST_CLK_FLAG_HSE2RDY = ((uint32_t)(0x20 | 3)),
+    RST_CLK_FLAG_LSERDY = ((uint32_t)(0x00 | 13)),
+    RST_CLK_FLAG_PLLCPURDY = ((uint32_t)(0x20 | 1)),
+    RST_CLK_FLAG_PLLUSBRDY = ((uint32_t)(0x20 | 0)),
+    RST_CLK_FLAG_PLLDSPRDY = ((uint32_t)(0x20 | 3))
+} RST_CLK_Flags;
+# 373 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h"
+typedef enum
+{
+    RST_CLK_HSIclkDIV1 = ((uint32_t)0x00),
+    RST_CLK_HSIclkDIV2 = ((uint32_t)0x08),
+    RST_CLK_HSIclkDIV4 = ((uint32_t)0x09),
+    RST_CLK_HSIclkDIV8 = ((uint32_t)0x0A),
+    RST_CLK_HSIclkDIV16 = ((uint32_t)0x0B),
+    RST_CLK_HSIclkDIV32 = ((uint32_t)0x0C),
+    RST_CLK_HSIclkDIV64 = ((uint32_t)0x0D),
+    RST_CLK_HSIclkDIV128 = ((uint32_t)0x0E),
+    RST_CLK_HSIclkDIV256 = ((uint32_t)0x0F)
+} RST_CLK_HSI_C1_Divisor;
+# 399 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h"
+typedef enum
+{
+    RST_CLK_HSEclkDIV1 = ((uint32_t)0x00),
+    RST_CLK_HSEclkDIV2 = ((uint32_t)0x08),
+    RST_CLK_HSEclkDIV4 = ((uint32_t)0x09),
+    RST_CLK_HSEclkDIV8 = ((uint32_t)0x0A),
+    RST_CLK_HSEclkDIV16 = ((uint32_t)0x0B),
+    RST_CLK_HSEclkDIV32 = ((uint32_t)0x0C),
+    RST_CLK_HSEclkDIV64 = ((uint32_t)0x0D),
+    RST_CLK_HSEclkDIV128 = ((uint32_t)0x0E),
+    RST_CLK_HSEclkDIV256 = ((uint32_t)0x0F)
+} RST_CLK_HSE_C1_Divisor;
+# 683 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h"
+void RST_CLK_DeInit(void);
+void RST_CLK_WarmDeInit(void);
+
+void RST_CLK_HSEconfig(RST_CLK_HSE_Mode RST_CLK_HSE);
+ErrorStatus RST_CLK_HSEstatus(void);
+
+
+
+
+
+void RST_CLK_LSEconfig(RST_CLK_LSE_Mode RST_CLK_LSE);
+ErrorStatus RST_CLK_LSEstatus(void);
+
+void RST_CLK_HSIcmd(FunctionalState NewState);
+void RST_CLK_HSIadjust(uint32_t HSItrimValue);
+ErrorStatus RST_CLK_HSIstatus(void);
+
+void RST_CLK_LSIcmd(FunctionalState NewState);
+void RST_CLK_LSIadjust(uint32_t LSItrimValue);
+ErrorStatus RST_CLK_LSIstatus(void);
+
+void RST_CLK_CPU_PLLconfig(RST_CLK_CPU_PLL_Source RST_CLK_CPU_PLLsource, uint32_t RST_CLK_CPU_PLLmul);
+void RST_CLK_CPU_PLLuse(FunctionalState UsePLL);
+void RST_CLK_CPU_PLLcmd(FunctionalState NewState);
+ErrorStatus RST_CLK_CPU_PLLstatus(void);
+
+void RST_CLK_CPUclkPrescaler(RST_CLK_CPU_C3_Divisor CPUclkDivValue);
+void RST_CLK_CPUclkSelection(RST_CLK_HCLK_Source CPU_CLK);
+
+void RST_CLK_USB_PLLconfig(RST_CLK_USB_PLL_Source RST_CLK_USB_PLLsource, uint32_t RST_CLK_USB_PLLmul);
+void RST_CLK_USB_PLLuse(FunctionalState UsePLL);
+void RST_CLK_USB_PLLcmd(FunctionalState NewState);
+ErrorStatus RST_CLK_USB_PLLstatus(void);
+
+void RST_CLK_USBclkPrescaler(FunctionalState NewState);
+void RST_CLK_USBclkEnable(FunctionalState NewState);
+
+void RST_CLK_ADCclkSelection(RST_CLK_ADC_Source ADC_CLK);
+void RST_CLK_ADCclkPrescaler(RST_CLK_ADC_C3_Divisor ADCclkDivValue);
+void RST_CLK_ADCclkEnable(FunctionalState NewState);
+
+void RST_CLK_HSIclkPrescaler(RST_CLK_HSI_C1_Divisor HSIclkDivValue);
+void RST_CLK_RTC_HSIclkEnable(FunctionalState NewState);
+
+void RST_CLK_HSEclkPrescaler(RST_CLK_HSE_C1_Divisor HSEclkDivValue);
+void RST_CLK_RTC_HSEclkEnable(FunctionalState NewState);
+
+void RST_CLK_CPUclkSelectionC1(RST_CLK_CPU_C1_Source CPU_CLK);
+
+void RST_CLK_PCLKcmd(uint32_t RST_CLK_PCLK, FunctionalState NewState);
+# 744 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h"
+void RST_CLK_GetClocksFreq(RST_CLK_FreqTypeDef* RST_CLK_Clocks);
+
+FlagStatus RST_CLK_GetFlagStatus(RST_CLK_Flags RST_CLK_FLAG);
+# 6 "CustomLibs/src/ADC_init.c" 2
 
 
 ADC_InitTypeDef ADC_structure;
@@ -1971,7 +1971,7 @@ ADCx_InitTypeDef ADCx_structure;
 
 extern PORT_InitTypeDef port_init_structure;
 
-void SetupADC()
+void Setup_ADC()
 {
 
     RST_CLK_PCLKcmd((((uint32_t)(1U << ((((uint32_t)(0x40020000)) >> 15) & 0x1F))) | ((uint32_t)(1U << ((((uint32_t)(0x40088000)) >> 15) & 0x1F)))), ENABLE);

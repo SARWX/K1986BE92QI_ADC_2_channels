@@ -2486,12 +2486,12 @@ extern __attribute__((__nothrow__)) void _membitmovewl(void * , const void * , i
 extern __attribute__((__nothrow__)) void _membitmovewb(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
 # 9 "CustomLibs/src/USB_for_proj.c" 2
 
-extern PORT_InitTypeDef PORT_InitStructure;
+extern PORT_InitTypeDef port_init_structure;
 static USB_Clock_TypeDef USB_Clock_InitStruct;
 static USB_DeviceBUSParam_TypeDef USB_DeviceBUSParam;
 static MDR_SSP_TypeDef SSP_InitStruct;
 SSP_InitTypeDef sSSP;
-PORT_InitTypeDef PORT_InitStructure;
+PORT_InitTypeDef port_init_structure;
 extern uint8_t *Buffer;
 char RecBuf[128];
 static uint8_t DoubleBuf[128 * 2];

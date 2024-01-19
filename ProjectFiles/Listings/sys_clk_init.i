@@ -1,16 +1,10 @@
-# 1 "CustomLibs/src/ADC_for_proj.c"
+# 1 "CustomLibs/src/sys_CLK_init.c"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
 # 383 "<built-in>" 3
 # 1 "<command line>" 1
 # 1 "<built-in>" 2
-# 1 "CustomLibs/src/ADC_for_proj.c" 2
-# 1 "./CustomLibs/inc\\ADC_for_proj.h" 1
-
-
-
-void SetupADC();
-# 2 "CustomLibs/src/ADC_for_proj.c" 2
+# 1 "CustomLibs/src/sys_CLK_init.c" 2
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h" 1
 # 32 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h"
 # 1 "./SPL/MDR32Fx\\MDR32F9Qx_config.h" 1
@@ -1452,9 +1446,7 @@ void RST_CLK_PCLKcmd(uint32_t RST_CLK_PCLK, FunctionalState NewState);
 void RST_CLK_GetClocksFreq(RST_CLK_FreqTypeDef* RST_CLK_Clocks);
 
 FlagStatus RST_CLK_GetFlagStatus(RST_CLK_Flags RST_CLK_FLAG);
-# 3 "CustomLibs/src/ADC_for_proj.c" 2
-# 1 "./CustomLibs/inc\\defines_for_proj.h" 1
-# 4 "CustomLibs/src/ADC_for_proj.c" 2
+# 2 "CustomLibs/src/sys_CLK_init.c" 2
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_port.h" 1
 # 49 "./SPL/MDR32Fx/inc\\MDR32F9Qx_port.h"
 typedef enum
@@ -1637,374 +1629,75 @@ void PORT_ResetBits(MDR_PORT_TypeDef* MDR_PORTx, uint32_t PORT_Pin);
 
 
 void PORT_Write(MDR_PORT_TypeDef* MDR_PORTx, uint32_t PortVal);
-# 5 "CustomLibs/src/ADC_for_proj.c" 2
-# 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h" 1
-# 135 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h"
-typedef enum
+# 3 "CustomLibs/src/sys_CLK_init.c" 2
+
+# 1 "./CustomLibs/inc\\sys_CLK_init.h" 1
+
+
+
+
+void Setup_CPU_Clock(void);
+void delay_tick(uint32_t count);
+# 5 "CustomLibs/src/sys_CLK_init.c" 2
+# 1 "./CustomLibs/inc\\defines.h" 1
+# 6 "CustomLibs/src/sys_CLK_init.c" 2
+
+
+void delay_tick(uint32_t count)
 {
-    ADC_SyncMode_Independent = (((uint32_t)0x0) << 16),
-    ADC_SyncMode_Synchronous = (((uint32_t)0x1) << 16)
-} ADC_SyncMode;
-# 149 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h"
-typedef enum
-{
-    ADC_TEMP_SENSOR_Disable = (((uint32_t)0x0) << 17),
-    ADC_TEMP_SENSOR_Enable = (((uint32_t)0x1) << 17)
-} ADC_Temp_Sensor;
-
-
-
-
-
-
-
-typedef enum
-{
-    ADC_TEMP_SENSOR_AMPLIFIER_Disable = (((uint32_t)0x0) << 18),
-    ADC_TEMP_SENSOR_AMPLIFIER_Enable = (((uint32_t)0x1) << 18)
-} ADC_Temp_Sensor_Amplifier;
-
-
-
-
-
-
-
-typedef enum
-{
-    ADC_TEMP_SENSOR_CONVERSION_Disable = (((uint32_t)0x0) << 19),
-    ADC_TEMP_SENSOR_CONVERSION_Enable = (((uint32_t)0x1) << 19)
-} ADC_Temp_Sensor_Conversion;
-
-
-
-
-
-
-
-typedef enum
-{
-    ADC_VREF_CONVERSION_Disable = (((uint32_t)0x0) << 20),
-    ADC_VREF_CONVERSION_Enable = (((uint32_t)0x1) << 20)
-} ADC_Int_VRef_Conversion;
-
-
-
-
-
-
-
-typedef enum
-{
-    ADC_CLOCK_SOURCE_CPU = (((uint32_t)0x0) << 2),
-    ADC_CLOCK_SOURCE_ADC = (((uint32_t)0x1) << 2)
-} ADCx_Clock_Source;
-
-
-
-
-
-
-
-typedef enum
-{
-    ADC_SAMPLING_MODE_SINGLE_CONV = (((uint32_t)0x0) << 3),
-    ADC_SAMPLING_MODE_CYCLIC_CONV = (((uint32_t)0x1) << 3)
-} ADCx_Sampling_Mode;
-# 226 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h"
-typedef enum
-{
-    ADC_CH_SWITCHING_Disable = (((uint32_t)0x0) << 9),
-    ADC_CH_SWITCHING_Enable = (((uint32_t)0x1) << 9)
-} ADCx_Channel_Switching;
-
-
-
-
-
-
-
-typedef enum
-{
-    ADC_CH_ADC0 = ((uint32_t)0x00),
-    ADC_CH_ADC1 = ((uint32_t)0x01),
-    ADC_CH_ADC2 = ((uint32_t)0x02),
-    ADC_CH_ADC3 = ((uint32_t)0x03),
-    ADC_CH_ADC4 = ((uint32_t)0x04),
-    ADC_CH_ADC5 = ((uint32_t)0x05),
-    ADC_CH_ADC6 = ((uint32_t)0x06),
-    ADC_CH_ADC7 = ((uint32_t)0x07),
-    ADC_CH_ADC8 = ((uint32_t)0x08),
-    ADC_CH_ADC9 = ((uint32_t)0x09),
-    ADC_CH_ADC10 = ((uint32_t)0x0A),
-    ADC_CH_ADC11 = ((uint32_t)0x0B),
-    ADC_CH_ADC12 = ((uint32_t)0x0C),
-    ADC_CH_ADC13 = ((uint32_t)0x0D),
-    ADC_CH_ADC14 = ((uint32_t)0x0E),
-    ADC_CH_ADC15 = ((uint32_t)0x0F),
-    ADC_CH_INT_VREF = ((uint32_t)0x1E),
-    ADC_CH_TEMP_SENSOR = ((uint32_t)0x1F)
-} ADCx_Channel_Number;
-# 284 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h"
-typedef enum
-{
-    ADC_LEVEL_CONTROL_Disable = (((uint32_t)0x0) << 10),
-    ADC_LEVEL_CONTROL_Enable = (((uint32_t)0x1) << 10)
-} ADCx_Level_Control;
-# 299 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h"
-typedef enum
-{
-    ADC_VREF_SOURCE_INTERNAL = (((uint32_t)0x0) << 11),
-    ADC_VREF_SOURCE_EXTERNAL = (((uint32_t)0x1) << 11)
-} ADCx_VRef_Source;
-
-
-
-
-
-
-
-typedef enum
-{
-    ADC_INT_VREF_SOURCE_INEXACT = ((uint32_t)0x0),
-    ADC_INT_VREF_SOURCE_EXACT = ((uint32_t)0x1)
-} ADCx_Int_VRef_Source;
-
-
-
-
-
-
-
-typedef enum
-{
-    ADC_CLK_div_None = (((uint32_t)0x0) << 12),
-    ADC_CLK_div_2 = (((uint32_t)0x1) << 12),
-    ADC_CLK_div_4 = (((uint32_t)0x2) << 12),
-    ADC_CLK_div_8 = (((uint32_t)0x3) << 12),
-    ADC_CLK_div_16 = (((uint32_t)0x4) << 12),
-    ADC_CLK_div_32 = (((uint32_t)0x5) << 12),
-    ADC_CLK_div_64 = (((uint32_t)0x6) << 12),
-    ADC_CLK_div_128 = (((uint32_t)0x7) << 12),
-    ADC_CLK_div_256 = (((uint32_t)0x8) << 12),
-    ADC_CLK_div_512 = (((uint32_t)0x9) << 12),
-    ADC_CLK_div_1024 = (((uint32_t)0xA) << 12),
-    ADC_CLK_div_2048 = (((uint32_t)0xB) << 12)
-} ADCx_Prescaler;
-# 355 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h"
-typedef enum
-{
-    ADCx_FLAG_OVERWRITE = (((uint32_t)0x1) << 0),
-    ADCx_FLAG_OUT_OF_RANGE = (((uint32_t)0x1) << 1),
-    ADCx_FLAG_END_OF_CONVERSION = (((uint32_t)0x1) << 2)
-} ADCx_Flags;
-# 369 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h"
-typedef enum
-{
-    ADC1_FLAG_OVERWRITE = (ADCx_FLAG_OVERWRITE << 0),
-    ADC1_FLAG_OUT_OF_RANGE = (ADCx_FLAG_OUT_OF_RANGE << 0),
-    ADC1_FLAG_END_OF_CONVERSION = (ADCx_FLAG_END_OF_CONVERSION << 0),
-
-    ADC2_FLAG_OVERWRITE = (ADCx_FLAG_OVERWRITE << 16),
-    ADC2_FLAG_OUT_OF_RANGE = (ADCx_FLAG_OUT_OF_RANGE << 16),
-    ADC2_FLAG_END_OF_CONVERSION = (ADCx_FLAG_END_OF_CONVERSION << 16)
-
-} ADC_Flags;
-# 399 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h"
-typedef enum
-{
-    ADCx_IT_OUT_OF_RANGE = (((uint32_t)0x1) << 1),
-    ADCx_IT_END_OF_CONVERSION = (((uint32_t)0x1) << 2)
-} ADCx_IT_Def;
-
-
-
-
-
-
-
-typedef enum
-{
-    ADC1_IT_OUT_OF_RANGE = (ADCx_IT_OUT_OF_RANGE << 0),
-    ADC1_IT_END_OF_CONVERSION = (ADCx_IT_END_OF_CONVERSION << 0),
-
-    ADC2_IT_OUT_OF_RANGE = (ADCx_IT_OUT_OF_RANGE << 16),
-    ADC2_IT_END_OF_CONVERSION = (ADCx_IT_END_OF_CONVERSION << 16)
-
-} ADC_IT_Def;
-# 453 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h"
-typedef struct {
-
-    ADC_SyncMode ADC_SynchronousMode;
-
-    uint32_t ADC_StartDelay;
-
-
-    ADC_Temp_Sensor ADC_TempSensor;
-
-    ADC_Temp_Sensor_Amplifier ADC_TempSensorAmplifier;
-
-    ADC_Temp_Sensor_Conversion ADC_TempSensorConversion;
-
-    ADC_Int_VRef_Conversion ADC_IntVRefConversion;
-
-    uint32_t ADC_IntVRefTrimming;
-
-
-
-
-
-
-} ADC_InitTypeDef;
-
-
-
-
-typedef struct
-{
-    ADCx_Clock_Source ADC_ClockSource;
-
-
-    ADCx_Sampling_Mode ADC_SamplingMode;
-
-
-    ADCx_Channel_Switching ADC_ChannelSwitching;
-
-
-    ADCx_Channel_Number ADC_ChannelNumber;
-
-
-    uint32_t ADC_Channels;
-
-
-    ADCx_Level_Control ADC_LevelControl;
-
-
-    uint16_t ADC_LowLevel;
-
-
-    uint16_t ADC_HighLevel;
-
-
-    ADCx_VRef_Source ADC_VRefSource;
-
-
-    ADCx_Int_VRef_Source ADC_IntVRefSource;
-
-
-    ADCx_Prescaler ADC_Prescaler;
-
-
-    uint32_t ADC_DelayGo;
-
-} ADCx_InitTypeDef;
-# 526 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h"
-void ADC_DeInit(void);
-
-void ADC_Init(const ADC_InitTypeDef* ADC_InitStruct);
-void ADC_StructInit(ADC_InitTypeDef* ADC_InitStruct);
-
-void ADC_SetTrim(uint32_t Trim);
-
-void ADC1_Init(const ADCx_InitTypeDef* ADCx_InitStruct);
-void ADCx_StructInit(ADCx_InitTypeDef* ADCx_InitStruct);
-
-void ADC1_Cmd(FunctionalState NewState);
-
-void ADC1_SetChannel(ADCx_Channel_Number Channel);
-void ADC1_SetChannels(uint32_t ChannelMask);
-
-void ADC1_OperationModeConfig(ADCx_Sampling_Mode SamplingMode, ADCx_Channel_Switching SwitchingMode);
-void ADC1_SamplingModeConfig(ADCx_Sampling_Mode SamplingMode);
-void ADC1_ChannelSwithingConfig(ADCx_Channel_Switching SwitchingMode);
-
-void ADC1_LevelsConfig(uint32_t LowLevel, uint32_t HighLevel, ADCx_Level_Control NewState);
-void ADC1_SetLowLevel(uint32_t LowLevel);
-void ADC1_SetHighLevel(uint32_t HighLevel);
-
-void ADC1_Start(void);
-
-uint32_t ADC1_GetResult(void);
-
-uint32_t ADC_GetStatus(void);
-uint32_t ADC1_GetStatus(void);
-
-FlagStatus ADC_GetFlagStatus(ADC_Flags Flag);
-FlagStatus ADC1_GetFlagStatus(ADCx_Flags Flag);
-
-void ADC1_ClearOverwriteFlag(void);
-void ADC1_ClearOutOfRangeFlag(void);
-
-void ADC_ITConfig(ADC_IT_Def ADC_IT, FunctionalState NewState);
-void ADC1_ITConfig(ADC_IT_Def ADC_IT, FunctionalState NewState);
-
-ITStatus ADC_GetITStatus(ADC_IT_Def ADC_IT);
-ITStatus ADC1_GetITStatus(ADC_IT_Def ADC_IT);
-
-
-
-    void ADC2_Init(const ADCx_InitTypeDef* ADCx_InitStruct);
-    void ADC2_Cmd(FunctionalState NewState);
-    void ADC2_SetChannel(ADCx_Channel_Number Channel);
-    void ADC2_SetChannels(uint32_t ChannelMask);
-    void ADC2_OperationModeConfig(ADCx_Sampling_Mode SamplingMode, ADCx_Channel_Switching SwitchingMode);
-    void ADC2_OperationModeConfig(ADCx_Sampling_Mode SamplingMode, ADCx_Channel_Switching SwitchingMode);
-    void ADC2_SamplingModeConfig(ADCx_Sampling_Mode SamplingMode);
-    void ADC2_ChannelSwithingConfig(ADCx_Channel_Switching SwitchingMode);
-    void ADC2_LevelsConfig(uint32_t LowLevel, uint32_t HighLevel, ADCx_Level_Control NewState);
-    void ADC2_SetLowLevel(uint32_t LowLevel);
-    void ADC2_SetHighLevel(uint32_t HighLevel);
-    void ADC2_Start(void);
-    uint32_t ADC2_GetResult(void);
-    uint32_t ADC2_GetStatus(void);
-    FlagStatus ADC2_GetFlagStatus(ADCx_Flags Flag);
-    void ADC2_ClearOverwriteFlag(void);
-    void ADC2_ClearOutOfRangeFlag(void);
-    void ADC2_ITConfig(ADC_IT_Def ADC_IT, FunctionalState NewState);
-    ITStatus ADC2_GetITStatus(ADC_IT_Def ADC_IT);
-# 6 "CustomLibs/src/ADC_for_proj.c" 2
-
-
-ADC_InitTypeDef ADC_structure;
-ADCx_InitTypeDef ADCx_structure;
-
-
-extern PORT_InitTypeDef port_init_structure;
-
-void SetupADC()
+ while (count--) {
+  __NOP();
+ }
+}
+
+void Setup_CPU_Clock(void)
 {
 
-    RST_CLK_PCLKcmd((((uint32_t)(1U << ((((uint32_t)(0x40020000)) >> 15) & 0x1F))) | ((uint32_t)(1U << ((((uint32_t)(0x40088000)) >> 15) & 0x1F)))), ENABLE);
-    RST_CLK_PCLKcmd((((uint32_t)(1U << ((((uint32_t)(0x400B8000)) >> 15) & 0x1F))) | ((uint32_t)(1U << ((((uint32_t)(0x400C0000)) >> 15) & 0x1F)))), ENABLE);
+ RST_CLK_HSEconfig(RST_CLK_HSE_ON);
 
-    ((SCB_Type *) ((0xE000E000UL) + 0x0D00UL) )->AIRCR = 0x5FA0500;
-    ((SCB_Type *) ((0xE000E000UL) + 0x0D00UL) )->VTOR = 0x08000000;
+ if (RST_CLK_HSEstatus() != SUCCESS)
+ {
+  PORT_InitTypeDef GPIOInitStruct;
+  RST_CLK_PCLKcmd (((uint32_t)(1U << ((((uint32_t)(0x400B8000)) >> 15) & 0x1F))), ENABLE);
+  GPIOInitStruct.PORT_Pin = PORT_Pin_2;
+  GPIOInitStruct.PORT_OE = PORT_OE_OUT;
+  GPIOInitStruct.PORT_SPEED = PORT_SPEED_MAXFAST;
+  GPIOInitStruct.PORT_MODE = PORT_MODE_DIGITAL;
+     PORT_Init(((MDR_PORT_TypeDef *) (0x400B8000)), &GPIOInitStruct);
 
-    ((NVIC_Type *) ((0xE000E000UL) + 0x0100UL) )->ICPR[0] = 0xFFFFFFFF;
-    ((NVIC_Type *) ((0xE000E000UL) + 0x0100UL) )->ICER[0] = 0xFFFFFFFF;
- ((NVIC_Type *) ((0xE000E000UL) + 0x0100UL) )->ISER[0] = (1<<ADC_IRQn);
+  while (1)
+  {
+   PORT_SetBits(((MDR_PORT_TypeDef *) (0x400B8000)), PORT_Pin_2);
+   delay_tick(10000);
+   PORT_ResetBits(((MDR_PORT_TypeDef *) (0x400B8000)), PORT_Pin_2);
+   delay_tick(10000);
+  }
+ }
 
-    PORT_DeInit(((MDR_PORT_TypeDef *) (0x400C0000)));
+ RST_CLK_CPU_PLLconfig(RST_CLK_CPU_PLLsrcHSEdiv1, RST_CLK_CPU_PLLmul8);
 
-    port_init_structure.PORT_Pin = PORT_Pin_0 | PORT_Pin_1;
-    port_init_structure.PORT_OE = PORT_OE_IN;
-    port_init_structure.PORT_MODE = PORT_MODE_ANALOG;
-    PORT_Init(((MDR_PORT_TypeDef *) (0x400C0000)), &port_init_structure);
+ RST_CLK_CPU_PLLcmd(ENABLE);
 
-    ADC_DeInit();
-    ADC_StructInit(&ADC_structure);
- ADC_Init (&ADC_structure);
-    ADCx_StructInit (&ADCx_structure);
-    ADCx_structure.ADC_ClockSource = ADC_CLOCK_SOURCE_CPU;
-    ADCx_structure.ADC_SamplingMode = ADC_SAMPLING_MODE_CYCLIC_CONV;
-    ADCx_structure.ADC_ChannelSwitching = ADC_CH_SWITCHING_Enable;
-    ADCx_structure.ADC_ChannelNumber = ADC_CH_ADC0;
-    ADCx_structure.ADC_Channels = ((((uint32_t)0x1) << ADC_CH_ADC0 ) | (((uint32_t)0x1) << ADC_CH_ADC1 ));
-    ADCx_structure.ADC_VRefSource = ADC_VREF_SOURCE_INTERNAL;
-    ADCx_structure.ADC_IntVRefSource = ADC_INT_VREF_SOURCE_INEXACT;
-    ADCx_structure.ADC_Prescaler = ADC_CLK_div_32;
- ADCx_structure.ADC_DelayGo = 0x2;
-    ADC1_Init (&ADCx_structure);
+ if (RST_CLK_CPU_PLLstatus() != SUCCESS)
+ {
+  PORT_InitTypeDef GPIOInitStruct;
+  RST_CLK_PCLKcmd (((uint32_t)(1U << ((((uint32_t)(0x400B8000)) >> 15) & 0x1F))), ENABLE);
+  GPIOInitStruct.PORT_Pin = PORT_Pin_2;
+  GPIOInitStruct.PORT_OE = PORT_OE_OUT;
+  GPIOInitStruct.PORT_SPEED = PORT_SPEED_MAXFAST;
+  GPIOInitStruct.PORT_MODE = PORT_MODE_DIGITAL;
+     PORT_Init(((MDR_PORT_TypeDef *) (0x400B8000)), &GPIOInitStruct);
 
-    ADC1_ITConfig((ADCx_IT_END_OF_CONVERSION), ENABLE);
+  while (1)
+  {
+   PORT_SetBits(((MDR_PORT_TypeDef *) (0x400B8000)), PORT_Pin_2);
+   delay_tick(10000);
+   PORT_ResetBits(((MDR_PORT_TypeDef *) (0x400B8000)), PORT_Pin_2);
+   delay_tick(10000);
+  }
+ }
+
+ RST_CLK_CPUclkPrescaler(RST_CLK_CPUclkDIV1);
+ RST_CLK_CPU_PLLuse(ENABLE);
+ RST_CLK_CPUclkSelection(RST_CLK_CPUclkCPU_C3);
 }

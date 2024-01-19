@@ -1,16 +1,10 @@
-#include "DAC_for_proj.h"
 #include "MDR32F9Qx_rst_clk.h"
-#include "defines_for_proj.h"
 #include "MDR32F9Qx_port.h"
 #include "MDR32F9Qx_dac.h"
 #include "MDR32F9Qx_timer.h"
-
+#include "DAC_init.h"
+#include "defines.h"
 #include <math.h>
-
-
-// Внешние переменные
-extern uint16_t ADC1_array_m[];
-extern uint16_t ADC1_array_a[];	
 
 // Переменные и массивы для ЦАП
 int dac_inc_dec = 1;
@@ -20,29 +14,29 @@ int dac_cnt = 0;
 uint16_t DAC_table[SIN_RES];
 
 // Структура для порта
-extern PORT_InitTypeDef PORT_InitStructure;
+extern PORT_InitTypeDef port_init_structure;
 
 // Структура для таймера
 TIMER_CntInitTypeDef Cnt_sTim2;
 
-void SetupDAC() {
+void Setup_DAC() {
 	// Подключаем тактирование к блоку ЦАП, и порту E 
     RST_CLK_PCLKcmd((RST_CLK_PCLK_RST_CLK | RST_CLK_PCLK_DAC), ENABLE);
     RST_CLK_PCLKcmd((RST_CLK_PCLK_PORTE), ENABLE);
 	// Сбрасываем настройки порта E
     PORT_DeInit(MDR_PORTE);
 	// Конфигурируем выводы для ЦАП
-    PORT_InitStructure.PORT_Pin   = PORT_Pin_0;					// АЦП 1 и 2 расположены на PD0 и PD1 (см. распиновку)
-    PORT_InitStructure.PORT_OE    = PORT_OE_IN;					// Режим на вход
-    PORT_InitStructure.PORT_MODE  = PORT_MODE_ANALOG;			// Аналоговый вход (согласно спецификации)
-    PORT_Init(MDR_PORTE, &PORT_InitStructure);					// Инициализация выводов заданной структурой	
+    port_init_structure.PORT_Pin   = PORT_Pin_0;				// АЦП 1 и 2 расположены на PD0 и PD1 (см. распиновку)
+    port_init_structure.PORT_OE    = PORT_OE_IN;				// Режим на вход
+    port_init_structure.PORT_MODE  = PORT_MODE_ANALOG;			// Аналоговый вход (согласно спецификации)
+    PORT_Init(MDR_PORTE, &port_init_structure);					// Инициализация выводов заданной структурой	
 	// Настройка ЦАП
 	DAC_DeInit();												// Сбросить настройки ЦАП
 	DAC2_Init(DAC2_AVCC);										// AVcc - опорное напряжение
 	DAC2_Cmd(ENABLE);			
 }
 
-void SetupTIM2() {
+void Setup_TIM2() {
 	RST_CLK_PCLKcmd((RST_CLK_PCLK_TIMER2), ENABLE);
 	TIMER_DeInit(MDR_TIMER2);
 	TIMER_BRGInit(MDR_TIMER2, TIMER_HCLKdiv1);
@@ -63,7 +57,7 @@ void SetupTIM2() {
 	TIMER_Cmd(MDR_TIMER2, ENABLE);
 }
 
-void Set_DAC_Table(int freq) { 																					// MIN freq = 100 Hz
+void set_DAC_table(int freq) { 																					// MIN freq = 100 Hz
 	
 			double angle_inc = 6.28318 * (SIN_RES / (DISCRET_FREQ / freq) + ((freq % 100) != 0)) / SIN_RES;		// (2*Пи * кол-во периодов) / разрешение
 			for (int i = 0; i < (SIN_RES); i++) {

@@ -1,5 +1,4 @@
-./objects/command_system.o: CustomLibs\src\Command_system.c \
-  CustomLibs\inc\ADC_for_proj.h CustomLibs\inc\defines_for_proj.h \
+./objects/command_system.o: CustomLibs\src\command_system.c \
   SPL\MDR32Fx\inc\USB_Library\MDR32F9Qx_usb_CDC.h \
   SPL\MDR32Fx\MDR32F9Qx_config.h \
   C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdint.h \
@@ -10,6 +9,8 @@
   CMSIS\MDR32Fx\CoreSupport\CM3\core_cmFunc.h \
   CMSIS\MDR32Fx\DeviceSupport\MDR1986VE9x\startup\arm\system_MDR32F9Qx.h \
   SPL\MDR32Fx\inc\USB_Library\MDR32F9Qx_usb_device.h \
-  SPL\MDR32Fx\inc\MDR32F9Qx_usb.h CustomLibs\inc\DAC_for_proj.h \
+  SPL\MDR32Fx\inc\MDR32F9Qx_usb.h \
   C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h \
-  C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdlib.h
+  C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdlib.h \
+  CustomLibs\inc\ADC_init.h CustomLibs\inc\defines.h \
+  CustomLibs\inc\DAC_init.h

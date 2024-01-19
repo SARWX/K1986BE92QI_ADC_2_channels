@@ -9,9 +9,9 @@
 
 
 
-void SetupDAC();
-void SetupTIM2();
-void Set_DAC_Table(int freq);
+void Setup_DAC();
+void Setup_TIM2();
+void set_DAC_table(int freq);
 # 2 "CustomLibs/src/DAC_for_proj.c" 2
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h" 1
 # 32 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h"
@@ -2707,29 +2707,29 @@ int dac_cnt = 0;
 uint16_t DAC_table[500];
 
 
-extern PORT_InitTypeDef PORT_InitStructure;
+extern PORT_InitTypeDef port_init_structure;
 
 
 TIMER_CntInitTypeDef Cnt_sTim2;
 
-void SetupDAC() {
+void Setup_DAC() {
 
     RST_CLK_PCLKcmd((((uint32_t)(1U << ((((uint32_t)(0x40020000)) >> 15) & 0x1F))) | ((uint32_t)(1U << ((((uint32_t)(0x40090000)) >> 15) & 0x1F)))), ENABLE);
     RST_CLK_PCLKcmd((((uint32_t)(1U << ((((uint32_t)(0x400C8000)) >> 15) & 0x1F)))), ENABLE);
 
     PORT_DeInit(((MDR_PORT_TypeDef *) (0x400C8000)));
 
-    PORT_InitStructure.PORT_Pin = PORT_Pin_0;
-    PORT_InitStructure.PORT_OE = PORT_OE_IN;
-    PORT_InitStructure.PORT_MODE = PORT_MODE_ANALOG;
-    PORT_Init(((MDR_PORT_TypeDef *) (0x400C8000)), &PORT_InitStructure);
+    port_init_structure.PORT_Pin = PORT_Pin_0;
+    port_init_structure.PORT_OE = PORT_OE_IN;
+    port_init_structure.PORT_MODE = PORT_MODE_ANALOG;
+    PORT_Init(((MDR_PORT_TypeDef *) (0x400C8000)), &port_init_structure);
 
  DAC_DeInit();
  DAC2_Init(DAC2_AVCC);
  DAC2_Cmd(ENABLE);
 }
 
-void SetupTIM2() {
+void Setup_TIM2() {
  RST_CLK_PCLKcmd((((uint32_t)(1U << ((((uint32_t)(0x40078000)) >> 15) & 0x1F)))), ENABLE);
  TIMER_DeInit(((MDR_TIMER_TypeDef *) (0x40078000)));
  TIMER_BRGInit(((MDR_TIMER_TypeDef *) (0x40078000)), TIMER_HCLKdiv1);
@@ -2750,7 +2750,7 @@ void SetupTIM2() {
  TIMER_Cmd(((MDR_TIMER_TypeDef *) (0x40078000)), ENABLE);
 }
 
-void Set_DAC_Table(int freq) {
+void set_DAC_table(int freq) {
 
    double angle_inc = 6.28318 * (500 / ((16000000 / (16 * 20)) / freq) + ((freq % 100) != 0)) / 500;
    for (int i = 0; i < (500); i++) {

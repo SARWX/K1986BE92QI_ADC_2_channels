@@ -1,16 +1,10 @@
-# 1 "CustomLibs/src/ADC_for_proj.c"
+# 1 "CustomLibs/src/DAC_init.c"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
 # 383 "<built-in>" 3
 # 1 "<command line>" 1
 # 1 "<built-in>" 2
-# 1 "CustomLibs/src/ADC_for_proj.c" 2
-# 1 "./CustomLibs/inc\\ADC_for_proj.h" 1
-
-
-
-void SetupADC();
-# 2 "CustomLibs/src/ADC_for_proj.c" 2
+# 1 "CustomLibs/src/DAC_init.c" 2
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h" 1
 # 32 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h"
 # 1 "./SPL/MDR32Fx\\MDR32F9Qx_config.h" 1
@@ -1452,9 +1446,7 @@ void RST_CLK_PCLKcmd(uint32_t RST_CLK_PCLK, FunctionalState NewState);
 void RST_CLK_GetClocksFreq(RST_CLK_FreqTypeDef* RST_CLK_Clocks);
 
 FlagStatus RST_CLK_GetFlagStatus(RST_CLK_Flags RST_CLK_FLAG);
-# 3 "CustomLibs/src/ADC_for_proj.c" 2
-# 1 "./CustomLibs/inc\\defines_for_proj.h" 1
-# 4 "CustomLibs/src/ADC_for_proj.c" 2
+# 2 "CustomLibs/src/DAC_init.c" 2
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_port.h" 1
 # 49 "./SPL/MDR32Fx/inc\\MDR32F9Qx_port.h"
 typedef enum
@@ -1637,20 +1629,14 @@ void PORT_ResetBits(MDR_PORT_TypeDef* MDR_PORTx, uint32_t PORT_Pin);
 
 
 void PORT_Write(MDR_PORT_TypeDef* MDR_PORTx, uint32_t PortVal);
-# 5 "CustomLibs/src/ADC_for_proj.c" 2
-# 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h" 1
-# 135 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h"
+# 3 "CustomLibs/src/DAC_init.c" 2
+# 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_dac.h" 1
+# 49 "./SPL/MDR32Fx/inc\\MDR32F9Qx_dac.h"
 typedef enum
 {
-    ADC_SyncMode_Independent = (((uint32_t)0x0) << 16),
-    ADC_SyncMode_Synchronous = (((uint32_t)0x1) << 16)
-} ADC_SyncMode;
-# 149 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h"
-typedef enum
-{
-    ADC_TEMP_SENSOR_Disable = (((uint32_t)0x0) << 17),
-    ADC_TEMP_SENSOR_Enable = (((uint32_t)0x1) << 17)
-} ADC_Temp_Sensor;
+    DAC_SYNC_MODE_Independent = (((uint32_t)0x0) << 4),
+    DAC_SYNC_MODE_Synchronous = (((uint32_t)0x1) << 4)
+} DAC_Sync_Mode;
 
 
 
@@ -1660,9 +1646,9 @@ typedef enum
 
 typedef enum
 {
-    ADC_TEMP_SENSOR_AMPLIFIER_Disable = (((uint32_t)0x0) << 18),
-    ADC_TEMP_SENSOR_AMPLIFIER_Enable = (((uint32_t)0x1) << 18)
-} ADC_Temp_Sensor_Amplifier;
+    DAC1_AVCC = (((uint32_t)0x0) << 0),
+    DAC1_REF = (((uint32_t)0x1) << 0)
+} DAC1_Ref_Src;
 
 
 
@@ -1672,9 +1658,41 @@ typedef enum
 
 typedef enum
 {
-    ADC_TEMP_SENSOR_CONVERSION_Disable = (((uint32_t)0x0) << 19),
-    ADC_TEMP_SENSOR_CONVERSION_Enable = (((uint32_t)0x1) << 19)
-} ADC_Temp_Sensor_Conversion;
+    DAC2_AVCC = (((uint32_t)0x0) << 1),
+    DAC2_REF = (((uint32_t)0x1) << 1)
+} DAC2_Ref_Src;
+# 100 "./SPL/MDR32Fx/inc\\MDR32F9Qx_dac.h"
+void DAC_DeInit(void);
+
+void DAC_Init(DAC_Sync_Mode SyncMode, DAC1_Ref_Src DAC1_Ref, DAC2_Ref_Src DAC2_Ref);
+
+void DAC1_Init(DAC1_Ref_Src DAC1_Ref);
+void DAC2_Init(DAC2_Ref_Src DAC2_Ref);
+
+void DAC1_Cmd(FunctionalState NewState);
+void DAC2_Cmd(FunctionalState NewState);
+
+void DAC1_SetData(uint32_t Data);
+void DAC2_SetData(uint32_t Data);
+
+uint32_t DAC1_GetData(void);
+uint32_t DAC2_GetData(void);
+# 4 "CustomLibs/src/DAC_init.c" 2
+# 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_timer.h" 1
+# 49 "./SPL/MDR32Fx/inc\\MDR32F9Qx_timer.h"
+typedef enum
+{
+    TIMER_CntMode_ClkFixedDir = (((uint32_t)0x0) << 6),
+    TIMER_CntMode_ClkChangeDir = (((uint32_t)0x1) << 6),
+    TIMER_CntMode_EvtFixedDir = (((uint32_t)0x2) << 6),
+    TIMER_CntMode_EvtChangeDir = (((uint32_t)0x3) << 6)
+} TIMER_Counter_Mode_TypeDef;
+# 65 "./SPL/MDR32Fx/inc\\MDR32F9Qx_timer.h"
+typedef enum
+{
+    TIMER_CntDir_Up = (((uint32_t)0x0) << 3),
+    TIMER_CntDir_Dn = (((uint32_t)0x1) << 3)
+} TIMER_Counter_Dir_TypeDef;
 
 
 
@@ -1684,9 +1702,30 @@ typedef enum
 
 typedef enum
 {
-    ADC_VREF_CONVERSION_Disable = (((uint32_t)0x0) << 20),
-    ADC_VREF_CONVERSION_Enable = (((uint32_t)0x1) << 20)
-} ADC_Int_VRef_Conversion;
+    TIMER_EvSrc_TIM_CLK = (((uint32_t)0x0) << 8),
+    TIMER_EvSrc_TM1 = (((uint32_t)0x1) << 8),
+    TIMER_EvSrc_TM2 = (((uint32_t)0x2) << 8),
+    TIMER_EvSrc_TM3 = (((uint32_t)0x3) << 8),
+    TIMER_EvSrc_CH1 = (((uint32_t)0x4) << 8),
+    TIMER_EvSrc_CH2 = (((uint32_t)0x5) << 8),
+    TIMER_EvSrc_CH3 = (((uint32_t)0x6) << 8),
+    TIMER_EvSrc_CH4 = (((uint32_t)0x7) << 8),
+    TIMER_EvSrc_ETR = (((uint32_t)0x8) << 8)
+} TIMER_Event_Src_TypeDef;
+# 108 "./SPL/MDR32Fx/inc\\MDR32F9Qx_timer.h"
+typedef enum
+{
+    TIMER_FDTS_TIMER_CLK_div_1 = (((uint32_t)0x0) << 4),
+    TIMER_FDTS_TIMER_CLK_div_2 = (((uint32_t)0x1) << 4),
+    TIMER_FDTS_TIMER_CLK_div_3 = (((uint32_t)0x2) << 4),
+    TIMER_FDTS_TIMER_CLK_div_4 = (((uint32_t)0x3) << 4)
+} TIMER_Filter_Sampl_Clk_TypeDef;
+# 124 "./SPL/MDR32Fx/inc\\MDR32F9Qx_timer.h"
+typedef enum
+{
+    TIMER_ARR_Update_Immediately = (((uint32_t)0x0) << 1),
+    TIMER_ARR_Update_On_CNT_Overflow = (((uint32_t)0x1) << 1)
+} TIMER_ARR_Update_Mode_TypeDef;
 
 
 
@@ -1696,9 +1735,37 @@ typedef enum
 
 typedef enum
 {
-    ADC_CLOCK_SOURCE_CPU = (((uint32_t)0x0) << 2),
-    ADC_CLOCK_SOURCE_ADC = (((uint32_t)0x1) << 2)
-} ADCx_Clock_Source;
+    TIMER_Filter_1FF_at_TIMER_CLK = ((uint32_t)0x0),
+    TIMER_Filter_2FF_at_TIMER_CLK = ((uint32_t)0x1),
+    TIMER_Filter_4FF_at_TIMER_CLK = ((uint32_t)0x2),
+    TIMER_Filter_8FF_at_TIMER_CLK = ((uint32_t)0x3),
+    TIMER_Filter_6FF_at_FTDS_div_2 = ((uint32_t)0x4),
+    TIMER_Filter_8FF_at_FTDS_div_2 = ((uint32_t)0x5),
+    TIMER_Filter_6FF_at_FTDS_div_4 = ((uint32_t)0x6),
+    TIMER_Filter_8FF_at_FTDS_div_4 = ((uint32_t)0x7),
+    TIMER_Filter_6FF_at_FTDS_div_8 = ((uint32_t)0x8),
+    TIMER_Filter_8FF_at_FTDS_div_8 = ((uint32_t)0x9),
+    TIMER_Filter_5FF_at_FTDS_div_16 = ((uint32_t)0xA),
+    TIMER_Filter_6FF_at_FTDS_div_16 = ((uint32_t)0xB),
+    TIMER_Filter_8FF_at_FTDS_div_16 = ((uint32_t)0xC),
+    TIMER_Filter_5FF_at_FTDS_div_32 = ((uint32_t)0xD),
+    TIMER_Filter_6FF_at_FTDS_div_32 = ((uint32_t)0xE),
+    TIMER_Filter_8FF_at_FTDS_div_32 = ((uint32_t)0xF)
+} TIMER_Filter_Config_TypeDef;
+# 176 "./SPL/MDR32Fx/inc\\MDR32F9Qx_timer.h"
+typedef enum
+{
+    TIMER_ETR_Prescaler_None = (((uint32_t)0x0) << 2),
+    TIMER_ETR_Prescaler_div_2 = (((uint32_t)0x1) << 2),
+    TIMER_ETR_Prescaler_div_4 = (((uint32_t)0x2) << 2),
+    TIMER_ETR_Prescaler_div_8 = (((uint32_t)0x3) << 2)
+} TIMER_ETR_Prescaler_TypeDef;
+# 192 "./SPL/MDR32Fx/inc\\MDR32F9Qx_timer.h"
+typedef enum
+{
+   TIMER_ETRPolarity_NonInverted = (((uint32_t)0x0) << 1),
+   TIMER_ETRPolarity_Inverted = (((uint32_t)0x1) << 1)
+} TIMER_ETR_Polarity_TypeDef;
 
 
 
@@ -1708,15 +1775,9 @@ typedef enum
 
 typedef enum
 {
-    ADC_SAMPLING_MODE_SINGLE_CONV = (((uint32_t)0x0) << 3),
-    ADC_SAMPLING_MODE_CYCLIC_CONV = (((uint32_t)0x1) << 3)
-} ADCx_Sampling_Mode;
-# 226 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h"
-typedef enum
-{
-    ADC_CH_SWITCHING_Disable = (((uint32_t)0x0) << 9),
-    ADC_CH_SWITCHING_Enable = (((uint32_t)0x1) << 9)
-} ADCx_Channel_Switching;
+    TIMER_BRKPolarity_NonInverted = (((uint32_t)0x0) << 0),
+    TIMER_BRKPolarity_Inverted = (((uint32_t)0x1) << 0)
+} TIMER_BRK_Polarity_TypeDef;
 
 
 
@@ -1726,37 +1787,17 @@ typedef enum
 
 typedef enum
 {
-    ADC_CH_ADC0 = ((uint32_t)0x00),
-    ADC_CH_ADC1 = ((uint32_t)0x01),
-    ADC_CH_ADC2 = ((uint32_t)0x02),
-    ADC_CH_ADC3 = ((uint32_t)0x03),
-    ADC_CH_ADC4 = ((uint32_t)0x04),
-    ADC_CH_ADC5 = ((uint32_t)0x05),
-    ADC_CH_ADC6 = ((uint32_t)0x06),
-    ADC_CH_ADC7 = ((uint32_t)0x07),
-    ADC_CH_ADC8 = ((uint32_t)0x08),
-    ADC_CH_ADC9 = ((uint32_t)0x09),
-    ADC_CH_ADC10 = ((uint32_t)0x0A),
-    ADC_CH_ADC11 = ((uint32_t)0x0B),
-    ADC_CH_ADC12 = ((uint32_t)0x0C),
-    ADC_CH_ADC13 = ((uint32_t)0x0D),
-    ADC_CH_ADC14 = ((uint32_t)0x0E),
-    ADC_CH_ADC15 = ((uint32_t)0x0F),
-    ADC_CH_INT_VREF = ((uint32_t)0x1E),
-    ADC_CH_TEMP_SENSOR = ((uint32_t)0x1F)
-} ADCx_Channel_Number;
-# 284 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h"
+    TIMER_CHANNEL1 = ((uint32_t)0x0),
+    TIMER_CHANNEL2 = ((uint32_t)0x1),
+    TIMER_CHANNEL3 = ((uint32_t)0x2),
+    TIMER_CHANNEL4 = ((uint32_t)0x3)
+} TIMER_Channel_Number_TypeDef;
+# 232 "./SPL/MDR32Fx/inc\\MDR32F9Qx_timer.h"
 typedef enum
 {
-    ADC_LEVEL_CONTROL_Disable = (((uint32_t)0x0) << 10),
-    ADC_LEVEL_CONTROL_Enable = (((uint32_t)0x1) << 10)
-} ADCx_Level_Control;
-# 299 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h"
-typedef enum
-{
-    ADC_VREF_SOURCE_INTERNAL = (((uint32_t)0x0) << 11),
-    ADC_VREF_SOURCE_EXTERNAL = (((uint32_t)0x1) << 11)
-} ADCx_VRef_Source;
+    TIMER_CH_MODE_PWM = (((uint32_t)0x0) << 15),
+    TIMER_CH_MODE_CAPTURE = (((uint32_t)0x1) << 15)
+} TIMER_CH_Mode_TypeDef;
 
 
 
@@ -1766,9 +1807,9 @@ typedef enum
 
 typedef enum
 {
-    ADC_INT_VREF_SOURCE_INEXACT = ((uint32_t)0x0),
-    ADC_INT_VREF_SOURCE_EXACT = ((uint32_t)0x1)
-} ADCx_Int_VRef_Source;
+    TIMER_CH_ETR_RESET_Disable = (((uint32_t)0x0) << 13),
+    TIMER_CH_ETR_RESET_Enable = (((uint32_t)0x1) << 13)
+} TIMER_CH_ETR_RESET_TypeDef;
 
 
 
@@ -1778,44 +1819,9 @@ typedef enum
 
 typedef enum
 {
-    ADC_CLK_div_None = (((uint32_t)0x0) << 12),
-    ADC_CLK_div_2 = (((uint32_t)0x1) << 12),
-    ADC_CLK_div_4 = (((uint32_t)0x2) << 12),
-    ADC_CLK_div_8 = (((uint32_t)0x3) << 12),
-    ADC_CLK_div_16 = (((uint32_t)0x4) << 12),
-    ADC_CLK_div_32 = (((uint32_t)0x5) << 12),
-    ADC_CLK_div_64 = (((uint32_t)0x6) << 12),
-    ADC_CLK_div_128 = (((uint32_t)0x7) << 12),
-    ADC_CLK_div_256 = (((uint32_t)0x8) << 12),
-    ADC_CLK_div_512 = (((uint32_t)0x9) << 12),
-    ADC_CLK_div_1024 = (((uint32_t)0xA) << 12),
-    ADC_CLK_div_2048 = (((uint32_t)0xB) << 12)
-} ADCx_Prescaler;
-# 355 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h"
-typedef enum
-{
-    ADCx_FLAG_OVERWRITE = (((uint32_t)0x1) << 0),
-    ADCx_FLAG_OUT_OF_RANGE = (((uint32_t)0x1) << 1),
-    ADCx_FLAG_END_OF_CONVERSION = (((uint32_t)0x1) << 2)
-} ADCx_Flags;
-# 369 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h"
-typedef enum
-{
-    ADC1_FLAG_OVERWRITE = (ADCx_FLAG_OVERWRITE << 0),
-    ADC1_FLAG_OUT_OF_RANGE = (ADCx_FLAG_OUT_OF_RANGE << 0),
-    ADC1_FLAG_END_OF_CONVERSION = (ADCx_FLAG_END_OF_CONVERSION << 0),
-
-    ADC2_FLAG_OVERWRITE = (ADCx_FLAG_OVERWRITE << 16),
-    ADC2_FLAG_OUT_OF_RANGE = (ADCx_FLAG_OUT_OF_RANGE << 16),
-    ADC2_FLAG_END_OF_CONVERSION = (ADCx_FLAG_END_OF_CONVERSION << 16)
-
-} ADC_Flags;
-# 399 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h"
-typedef enum
-{
-    ADCx_IT_OUT_OF_RANGE = (((uint32_t)0x1) << 1),
-    ADCx_IT_END_OF_CONVERSION = (((uint32_t)0x1) << 2)
-} ADCx_IT_Def;
+    TIMER_CH_BRK_RESET_Disable = (((uint32_t)0x0) << 12),
+    TIMER_CH_BRK_RESET_Enable = (((uint32_t)0x1) << 12)
+} TIMER_CH_BRK_RESET_TypeDef;
 
 
 
@@ -1825,186 +1831,925 @@ typedef enum
 
 typedef enum
 {
-    ADC1_IT_OUT_OF_RANGE = (ADCx_IT_OUT_OF_RANGE << 0),
-    ADC1_IT_END_OF_CONVERSION = (ADCx_IT_END_OF_CONVERSION << 0),
-
-    ADC2_IT_OUT_OF_RANGE = (ADCx_IT_OUT_OF_RANGE << 16),
-    ADC2_IT_END_OF_CONVERSION = (ADCx_IT_END_OF_CONVERSION << 16)
-
-} ADC_IT_Def;
-# 453 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h"
-typedef struct {
-
-    ADC_SyncMode ADC_SynchronousMode;
-
-    uint32_t ADC_StartDelay;
-
-
-    ADC_Temp_Sensor ADC_TempSensor;
-
-    ADC_Temp_Sensor_Amplifier ADC_TempSensorAmplifier;
-
-    ADC_Temp_Sensor_Conversion ADC_TempSensorConversion;
-
-    ADC_Int_VRef_Conversion ADC_IntVRefConversion;
-
-    uint32_t ADC_IntVRefTrimming;
+    TIMER_CH_REF_Format0 = (((uint32_t)0x0) << 9),
+    TIMER_CH_REF_Format1 = (((uint32_t)0x1) << 9),
 
 
 
+    TIMER_CH_REF_Format2 = (((uint32_t)0x2) << 9),
 
 
 
-} ADC_InitTypeDef;
+    TIMER_CH_REF_Format3 = (((uint32_t)0x3) << 9),
+
+
+    TIMER_CH_REF_Format4 = (((uint32_t)0x4) << 9),
+    TIMER_CH_REF_Format5 = (((uint32_t)0x5) << 9),
+    TIMER_CH_REF_Format6 = (((uint32_t)0x6) << 9),
+
+
+
+    TIMER_CH_REF_Format7 = (((uint32_t)0x7) << 9)
+
+
+
+} TIMER_CH_REF_Format_TypeDef;
+# 306 "./SPL/MDR32Fx/inc\\MDR32F9Qx_timer.h"
+typedef enum
+{
+    TIMER_CH_Prescaler_None = ((uint32_t)0x0),
+    TIMER_CH_Prescaler_div_2 = ((uint32_t)0x1),
+    TIMER_CH_Prescaler_div_4 = ((uint32_t)0x2),
+    TIMER_CH_Prescaler_div_8 = ((uint32_t)0x3)
+} TIMER_CH_Prescaler_TypeDef;
+# 322 "./SPL/MDR32Fx/inc\\MDR32F9Qx_timer.h"
+typedef enum
+{
+    TIMER_CH_EvSrc_PE = (((uint32_t)0x0) << 4),
+    TIMER_CH_EvSrc_NE = (((uint32_t)0x1) << 4),
+    TIMER_CH_EvSrc_PE_OC1 = (((uint32_t)0x2) << 4),
+    TIMER_CH_EvSrc_PE_OC2 = (((uint32_t)0x3) << 4)
+} TIMER_CH_Event_Src_TypeDef;
+# 338 "./SPL/MDR32Fx/inc\\MDR32F9Qx_timer.h"
+typedef enum
+{
+    TIMER_CH_CCR1EvSrc_PE = (((uint32_t)0x0) << 0),
+    TIMER_CH_CCR1EvSrc_NE = (((uint32_t)0x1) << 0),
+    TIMER_CH_CCR1EvSrc_NE_OC1 = (((uint32_t)0x2) << 0),
+    TIMER_CH_CCR1EvSrc_NE_OC2 = (((uint32_t)0x3) << 0)
+} TIMER_CH_CCR1_Event_Src_TypeDef;
+# 354 "./SPL/MDR32Fx/inc\\MDR32F9Qx_timer.h"
+typedef enum
+{
+    TIMER_CH_CCR_Update_Immediately = (((uint32_t)0x0) << 3),
+    TIMER_CH_CCR_Update_On_CNT_eq_0 = (((uint32_t)0x1) << 3)
+} TIMER_CH_CCR_Update_Mode_TypeDef;
+
+
+
+
+
+
+
+typedef enum
+{
+    TIMER_CHOPolarity_NonInverted = ((uint32_t)0x0),
+    TIMER_CHOPolarity_Inverted = ((uint32_t)0x1)
+} TIMER_CH_OUT_Polarity_TypeDef;
+
+
+
+
+
+
+
+typedef enum
+{
+    TIMER_CH_OutSrc_Only_0 = ((uint32_t)0x0),
+    TIMER_CH_OutSrc_Only_1 = ((uint32_t)0x1),
+    TIMER_CH_OutSrc_REF = ((uint32_t)0x2),
+    TIMER_CH_OutSrc_DTG = ((uint32_t)0x3)
+} TIMER_CH_OUT_Src_TypeDef;
+# 394 "./SPL/MDR32Fx/inc\\MDR32F9Qx_timer.h"
+typedef enum
+{
+    TIMER_CH_OutMode_Input = ((uint32_t)0x0),
+    TIMER_CH_OutMode_Output = ((uint32_t)0x1),
+    TIMER_CH_OutMode_REF_as_OE = ((uint32_t)0x2),
+    TIMER_CH_OutMode_DTG_as_OE = ((uint32_t)0x3)
+} TIMER_CH_OUT_Mode_TypeDef;
+# 410 "./SPL/MDR32Fx/inc\\MDR32F9Qx_timer.h"
+typedef enum
+{
+    TIMER_CH_DTG_ClkSrc_TIMER_CLK = (((uint32_t)0x0) << 4),
+    TIMER_CH_DTG_ClkSrc_FDTS = (((uint32_t)0x1) << 4)
+} TIMER_CH_DTG_Clk_Src_TypeDef;
+
+
+
+
+
+
+
+typedef enum
+{
+    TIMER_STATUS_CNT_ZERO = (((uint32_t)0x1) << 0),
+    TIMER_STATUS_CNT_ARR = (((uint32_t)0x1) << 1),
+    TIMER_STATUS_ETR_RISING_EDGE = (((uint32_t)0x1) << 2),
+    TIMER_STATUS_ETR_FALLING_EDGE = (((uint32_t)0x1) << 3),
+    TIMER_STATUS_BRK = (((uint32_t)0x1) << 4),
+    TIMER_STATUS_CCR_CAP_CH1 = (((uint32_t)0x1) << 5),
+    TIMER_STATUS_CCR_CAP_CH2 = (((uint32_t)0x1) << 6),
+    TIMER_STATUS_CCR_CAP_CH3 = (((uint32_t)0x1) << 7),
+    TIMER_STATUS_CCR_CAP_CH4 = (((uint32_t)0x1) << 8),
+    TIMER_STATUS_CCR_REF_CH1 = (((uint32_t)0x1) << 9),
+    TIMER_STATUS_CCR_REF_CH2 = (((uint32_t)0x1) << 10),
+    TIMER_STATUS_CCR_REF_CH3 = (((uint32_t)0x1) << 11),
+    TIMER_STATUS_CCR_REF_CH4 = (((uint32_t)0x1) << 12),
+    TIMER_STATUS_CCR_CAP1_CH1 = (((uint32_t)0x1) << 13),
+    TIMER_STATUS_CCR_CAP1_CH2 = (((uint32_t)0x1) << 14),
+    TIMER_STATUS_CCR_CAP1_CH3 = (((uint32_t)0x1) << 15),
+    TIMER_STATUS_CCR_CAP1_CH4 = (((uint32_t)0x1) << 16)
+} TIMER_Status_Flags_TypeDef;
+# 506 "./SPL/MDR32Fx/inc\\MDR32F9Qx_timer.h"
+typedef enum
+{
+    TIMER_HCLKdiv1 = ((uint32_t)0x00),
+    TIMER_HCLKdiv2 = ((uint32_t)0x01),
+    TIMER_HCLKdiv4 = ((uint32_t)0x02),
+    TIMER_HCLKdiv8 = ((uint32_t)0x03),
+    TIMER_HCLKdiv16 = ((uint32_t)0x04),
+    TIMER_HCLKdiv32 = ((uint32_t)0x05),
+    TIMER_HCLKdiv64 = ((uint32_t)0x06),
+    TIMER_HCLKdiv128 = ((uint32_t)0x07)
+} TIMER_Clock_BRG_TypeDef;
+# 531 "./SPL/MDR32Fx/inc\\MDR32F9Qx_timer.h"
+typedef struct
+{
+
+    uint16_t TIMER_IniCounter;
+
+
+
+
+
+    uint16_t TIMER_Prescaler;
+
+
+
+    uint16_t TIMER_Period;
+
+
+
+
+
+
+
+    uint16_t TIMER_CounterMode;
+
+    uint16_t TIMER_CounterDirection;
+
+    uint16_t TIMER_EventSource;
+
+    uint16_t TIMER_FilterSampling;
+
+    uint16_t TIMER_ARR_UpdateMode;
+
+    uint16_t TIMER_ETR_FilterConf;
+
+    uint16_t TIMER_ETR_Prescaler;
+
+    uint16_t TIMER_ETR_Polarity;
+
+    uint16_t TIMER_BRK_Polarity;
+
+} TIMER_CntInitTypeDef;
 
 
 
 
 typedef struct
 {
-    ADCx_Clock_Source ADC_ClockSource;
+    uint16_t TIMER_CH_Number;
 
+    uint16_t TIMER_CH_Mode;
 
-    ADCx_Sampling_Mode ADC_SamplingMode;
+    uint16_t TIMER_CH_ETR_Ena;
 
+    uint16_t TIMER_CH_ETR_Reset;
 
-    ADCx_Channel_Switching ADC_ChannelSwitching;
+    uint16_t TIMER_CH_BRK_Reset;
 
+    uint16_t TIMER_CH_REF_Format;
 
-    ADCx_Channel_Number ADC_ChannelNumber;
+    uint16_t TIMER_CH_Prescaler;
 
+    uint16_t TIMER_CH_EventSource;
 
-    uint32_t ADC_Channels;
+    uint16_t TIMER_CH_FilterConf;
 
+    uint16_t TIMER_CH_CCR_UpdateMode;
 
-    ADCx_Level_Control ADC_LevelControl;
+    uint16_t TIMER_CH_CCR1_Ena;
 
+    uint16_t TIMER_CH_CCR1_EventSource;
 
-    uint16_t ADC_LowLevel;
-
-
-    uint16_t ADC_HighLevel;
-
-
-    ADCx_VRef_Source ADC_VRefSource;
-
-
-    ADCx_Int_VRef_Source ADC_IntVRefSource;
-
-
-    ADCx_Prescaler ADC_Prescaler;
-
-
-    uint32_t ADC_DelayGo;
-
-} ADCx_InitTypeDef;
-# 526 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h"
-void ADC_DeInit(void);
-
-void ADC_Init(const ADC_InitTypeDef* ADC_InitStruct);
-void ADC_StructInit(ADC_InitTypeDef* ADC_InitStruct);
-
-void ADC_SetTrim(uint32_t Trim);
-
-void ADC1_Init(const ADCx_InitTypeDef* ADCx_InitStruct);
-void ADCx_StructInit(ADCx_InitTypeDef* ADCx_InitStruct);
-
-void ADC1_Cmd(FunctionalState NewState);
-
-void ADC1_SetChannel(ADCx_Channel_Number Channel);
-void ADC1_SetChannels(uint32_t ChannelMask);
-
-void ADC1_OperationModeConfig(ADCx_Sampling_Mode SamplingMode, ADCx_Channel_Switching SwitchingMode);
-void ADC1_SamplingModeConfig(ADCx_Sampling_Mode SamplingMode);
-void ADC1_ChannelSwithingConfig(ADCx_Channel_Switching SwitchingMode);
-
-void ADC1_LevelsConfig(uint32_t LowLevel, uint32_t HighLevel, ADCx_Level_Control NewState);
-void ADC1_SetLowLevel(uint32_t LowLevel);
-void ADC1_SetHighLevel(uint32_t HighLevel);
-
-void ADC1_Start(void);
-
-uint32_t ADC1_GetResult(void);
-
-uint32_t ADC_GetStatus(void);
-uint32_t ADC1_GetStatus(void);
-
-FlagStatus ADC_GetFlagStatus(ADC_Flags Flag);
-FlagStatus ADC1_GetFlagStatus(ADCx_Flags Flag);
-
-void ADC1_ClearOverwriteFlag(void);
-void ADC1_ClearOutOfRangeFlag(void);
-
-void ADC_ITConfig(ADC_IT_Def ADC_IT, FunctionalState NewState);
-void ADC1_ITConfig(ADC_IT_Def ADC_IT, FunctionalState NewState);
-
-ITStatus ADC_GetITStatus(ADC_IT_Def ADC_IT);
-ITStatus ADC1_GetITStatus(ADC_IT_Def ADC_IT);
+} TIMER_ChnInitTypeDef;
 
 
 
-    void ADC2_Init(const ADCx_InitTypeDef* ADCx_InitStruct);
-    void ADC2_Cmd(FunctionalState NewState);
-    void ADC2_SetChannel(ADCx_Channel_Number Channel);
-    void ADC2_SetChannels(uint32_t ChannelMask);
-    void ADC2_OperationModeConfig(ADCx_Sampling_Mode SamplingMode, ADCx_Channel_Switching SwitchingMode);
-    void ADC2_OperationModeConfig(ADCx_Sampling_Mode SamplingMode, ADCx_Channel_Switching SwitchingMode);
-    void ADC2_SamplingModeConfig(ADCx_Sampling_Mode SamplingMode);
-    void ADC2_ChannelSwithingConfig(ADCx_Channel_Switching SwitchingMode);
-    void ADC2_LevelsConfig(uint32_t LowLevel, uint32_t HighLevel, ADCx_Level_Control NewState);
-    void ADC2_SetLowLevel(uint32_t LowLevel);
-    void ADC2_SetHighLevel(uint32_t HighLevel);
-    void ADC2_Start(void);
-    uint32_t ADC2_GetResult(void);
-    uint32_t ADC2_GetStatus(void);
-    FlagStatus ADC2_GetFlagStatus(ADCx_Flags Flag);
-    void ADC2_ClearOverwriteFlag(void);
-    void ADC2_ClearOutOfRangeFlag(void);
-    void ADC2_ITConfig(ADC_IT_Def ADC_IT, FunctionalState NewState);
-    ITStatus ADC2_GetITStatus(ADC_IT_Def ADC_IT);
-# 6 "CustomLibs/src/ADC_for_proj.c" 2
+
+typedef struct
+{
+    uint16_t TIMER_CH_Number;
+
+    uint16_t TIMER_CH_DirOut_Polarity;
+
+    uint16_t TIMER_CH_DirOut_Source;
+
+    uint16_t TIMER_CH_DirOut_Mode;
+
+    uint16_t TIMER_CH_NegOut_Polarity;
+
+    uint16_t TIMER_CH_NegOut_Source;
+
+    uint16_t TIMER_CH_NegOut_Mode;
+
+    uint16_t TIMER_CH_DTG_MainPrescaler;
 
 
-ADC_InitTypeDef ADC_structure;
-ADCx_InitTypeDef ADCx_structure;
+    uint16_t TIMER_CH_DTG_AuxPrescaler;
+
+
+    uint16_t TIMER_CH_DTG_ClockSource;
+
+} TIMER_ChnOutInitTypeDef;
+# 669 "./SPL/MDR32Fx/inc\\MDR32F9Qx_timer.h"
+void TIMER_DeInit(MDR_TIMER_TypeDef* TIMERx);
+
+void TIMER_CntInit(MDR_TIMER_TypeDef* TIMERx, const TIMER_CntInitTypeDef* TIMER_CntInitStruct);
+void TIMER_CntStructInit(TIMER_CntInitTypeDef* TIMER_CntInitStruct);
+
+void TIMER_Cmd(MDR_TIMER_TypeDef* TIMERx, FunctionalState NewState);
+
+
+
+
+
+    void TIMER_SetCounter(MDR_TIMER_TypeDef* TIMERx, uint16_t Counter);
+    uint16_t TIMER_GetCounter(MDR_TIMER_TypeDef* TIMERx);
+
+
+void TIMER_SetCntPrescaler(MDR_TIMER_TypeDef* TIMERx, uint16_t Prescaler);
+uint16_t TIMER_GetCntPrescaler(MDR_TIMER_TypeDef* TIMERx);
+
+
+
+
+
+
+    void TIMER_SetCntAutoreload(MDR_TIMER_TypeDef* TIMERx, uint16_t Autoreload);
+    void TIMER_CntAutoreloadConfig(MDR_TIMER_TypeDef* TIMERx, uint16_t Autoreload, TIMER_ARR_Update_Mode_TypeDef UpdateMode);
+    uint16_t TIMER_GetCntAutoreload(MDR_TIMER_TypeDef* TIMERx);
+
+
+void TIMER_CntEventSourceConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_Event_Src_TypeDef EventSource);
+void TIMER_FilterSamplingConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_Filter_Sampl_Clk_TypeDef Prescaler);
+void TIMER_CounterModeConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_Counter_Mode_TypeDef Mode);
+void TIMER_SetCounterDirection(MDR_TIMER_TypeDef* TIMERx, TIMER_Counter_Dir_TypeDef Direction);
+void TIMER_ETRInputConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_ETR_Prescaler_TypeDef Prescaler, TIMER_ETR_Polarity_TypeDef Polarity, TIMER_Filter_Config_TypeDef Filter);
+void TIMER_ETRFilterConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_Filter_Config_TypeDef Filter);
+void TIMER_ETRPrescalerConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_ETR_Prescaler_TypeDef Prescaler);
+void TIMER_ETRPolarityConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_ETR_Polarity_TypeDef Polarity);
+void TIMER_BRKPolarityConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_BRK_Polarity_TypeDef Polarity);
+TIMER_Counter_Dir_TypeDef TIMER_GetCounterDirection(MDR_TIMER_TypeDef* TIMERx);
+FlagStatus TIMER_GetCntWriteComplete(MDR_TIMER_TypeDef* TIMERx);
+
+void TIMER_ChnInit(MDR_TIMER_TypeDef* TIMERx, const TIMER_ChnInitTypeDef* TIMER_ChnInitStruct);
+void TIMER_ChnStructInit(TIMER_ChnInitTypeDef* TIMER_ChnInitStruct);
+
+
+
+
+
+
+    void TIMER_SetChnCompare(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel, uint16_t Compare);
+    void TIMER_ChnCompareConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel, uint16_t Compare, TIMER_CH_CCR_Update_Mode_TypeDef UpdateMode);
+    uint16_t TIMER_GetChnCapture(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel);
+
+
+
+
+
+
+
+    void TIMER_SetChnCompare1(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel, uint16_t Compare);
+    void TIMER_ChnCompare1Config(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel, uint16_t Compare, TIMER_CH_CCR_Update_Mode_TypeDef UpdateMode);
+    uint16_t TIMER_GetChnCapture1(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel);
+
+
+void TIMER_ChnETR_Cmd(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel, FunctionalState NewState);
+void TIMER_ChnETRResetConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel, TIMER_CH_ETR_RESET_TypeDef NewState);
+void TIMER_ChnBRKResetConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel, TIMER_CH_BRK_RESET_TypeDef NewState);
+void TIMER_ChnREFFormatConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel, TIMER_CH_REF_Format_TypeDef Format);
+void TIMER_ChnCapturePrescalerConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel, TIMER_CH_Prescaler_TypeDef Prescaler);
+void TIMER_ChnEventSourceConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel, TIMER_CH_Event_Src_TypeDef EventSource);
+void TIMER_ChnFilterConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel, TIMER_Filter_Config_TypeDef Filter);
+FlagStatus TIMER_GetChnWriteComplete(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel);
+void TIMER_ChnCCR1_EventSourceConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel, TIMER_CH_CCR1_Event_Src_TypeDef EventSource);
+void TIMER_ChnCCR1_Cmd(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel, FunctionalState NewState);
+
+void TIMER_ChnOutInit(MDR_TIMER_TypeDef* TIMERx, const TIMER_ChnOutInitTypeDef* TIMER_ChnOutInitStruct);
+void TIMER_ChnOutStructInit(TIMER_ChnOutInitTypeDef* TIMER_ChnOutInitStruct);
+void TIMER_ChnOutConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel, TIMER_CH_OUT_Src_TypeDef OutSource, TIMER_CH_OUT_Mode_TypeDef Mode, TIMER_CH_OUT_Polarity_TypeDef Polarity);
+void TIMER_ChnOutSourceConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel, TIMER_CH_OUT_Src_TypeDef OutSource);
+void TIMER_ChnOutModeConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel, TIMER_CH_OUT_Mode_TypeDef Mode);
+void TIMER_ChnOutPolarityConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel, TIMER_CH_OUT_Polarity_TypeDef Polarity);
+void TIMER_ChnNOutConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel, TIMER_CH_OUT_Src_TypeDef OutSource, TIMER_CH_OUT_Mode_TypeDef Mode, TIMER_CH_OUT_Polarity_TypeDef Polarity);
+void TIMER_ChnNOutSourceConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel, TIMER_CH_OUT_Src_TypeDef OutSource);
+void TIMER_ChnNOutModeConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel, TIMER_CH_OUT_Mode_TypeDef Mode);
+void TIMER_ChnNOutPolarityConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel, TIMER_CH_OUT_Polarity_TypeDef Polarity);
+void TIMER_ChnOutDTGConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel, uint32_t MainPrescaler, uint32_t AuxPrescaler, TIMER_CH_DTG_Clk_Src_TypeDef ClockSource);
+
+uint32_t TIMER_GetStatus(MDR_TIMER_TypeDef* TIMERx);
+FlagStatus TIMER_GetFlagStatus(MDR_TIMER_TypeDef* TIMERx, TIMER_Status_Flags_TypeDef Flag);
+void TIMER_ClearFlag(MDR_TIMER_TypeDef* TIMERx, uint32_t Flags);
+
+
+
+    void TIMER_DMACmd(MDR_TIMER_TypeDef* TIMERx, uint32_t TIMER_DMASource, FunctionalState NewState);
+
+
+void TIMER_ITConfig(MDR_TIMER_TypeDef* TIMERx, uint32_t TIMER_IT, FunctionalState NewState);
+ITStatus TIMER_GetITStatus(MDR_TIMER_TypeDef* TIMERx, TIMER_Status_Flags_TypeDef TIMER_IT);
+
+void TIMER_BRGInit(MDR_TIMER_TypeDef* TIMERx, TIMER_Clock_BRG_TypeDef TIMER_BRG);
+# 5 "CustomLibs/src/DAC_init.c" 2
+# 1 "./CustomLibs/inc\\DAC_init.h" 1
+
+
+
+void Setup_DAC();
+void Setup_TIM2();
+void set_DAC_table(int freq);
+# 6 "CustomLibs/src/DAC_init.c" 2
+# 1 "./CustomLibs/inc\\defines.h" 1
+# 7 "CustomLibs/src/DAC_init.c" 2
+# 1 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\math.h" 1 3
+# 157 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\math.h" 3
+extern __attribute__((__pcs__("aapcs"))) unsigned __ARM_dcmp4(double , double );
+extern __attribute__((__pcs__("aapcs"))) unsigned __ARM_fcmp4(float , float );
+
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) __attribute__((__pcs__("aapcs"))) int __ARM_fpclassifyf(float );
+extern __attribute__((__nothrow__)) __attribute__((__pcs__("aapcs"))) int __ARM_fpclassify(double );
+
+
+
+static __inline __attribute__((__nothrow__)) __attribute__((__pcs__("aapcs"))) int __ARM_isfinitef(float __x)
+{
+    return (((*(unsigned *)&(__x)) >> 23) & 0xff) != 0xff;
+}
+static __inline __attribute__((__nothrow__)) __attribute__((__pcs__("aapcs"))) int __ARM_isfinite(double __x)
+{
+    return (((*(1 + (unsigned *)&(__x))) >> 20) & 0x7ff) != 0x7ff;
+}
+
+
+
+static __inline __attribute__((__nothrow__)) __attribute__((__pcs__("aapcs"))) int __ARM_isinff(float __x)
+{
+    return ((*(unsigned *)&(__x)) << 1) == 0xff000000;
+}
+static __inline __attribute__((__nothrow__)) __attribute__((__pcs__("aapcs"))) int __ARM_isinf(double __x)
+{
+    return (((*(1 + (unsigned *)&(__x))) << 1) == 0xffe00000) && ((*(unsigned *)&(__x)) == 0);
+}
+
+
+
+static __inline __attribute__((__nothrow__)) __attribute__((__pcs__("aapcs"))) int __ARM_islessgreaterf(float __x, float __y)
+{
+    unsigned __f = __ARM_fcmp4(__x, __y) >> 28;
+    return (__f == 8) || (__f == 2);
+}
+static __inline __attribute__((__nothrow__)) __attribute__((__pcs__("aapcs"))) int __ARM_islessgreater(double __x, double __y)
+{
+    unsigned __f = __ARM_dcmp4(__x, __y) >> 28;
+    return (__f == 8) || (__f == 2);
+}
+
+
+
+
+
+static __inline __attribute__((__nothrow__)) __attribute__((__pcs__("aapcs"))) int __ARM_isnanf(float __x)
+{
+    return (0x7f800000 - ((*(unsigned *)&(__x)) & 0x7fffffff)) >> 31;
+}
+static __inline __attribute__((__nothrow__)) __attribute__((__pcs__("aapcs"))) int __ARM_isnan(double __x)
+{
+    unsigned __xf = (*(1 + (unsigned *)&(__x))) | (((*(unsigned *)&(__x)) == 0) ? 0 : 1);
+    return (0x7ff00000 - (__xf & 0x7fffffff)) >> 31;
+}
+
+
+
+static __inline __attribute__((__nothrow__)) __attribute__((__pcs__("aapcs"))) int __ARM_isnormalf(float __x)
+{
+    unsigned __xe = ((*(unsigned *)&(__x)) >> 23) & 0xff;
+    return (__xe != 0xff) && (__xe != 0);
+}
+static __inline __attribute__((__nothrow__)) __attribute__((__pcs__("aapcs"))) int __ARM_isnormal(double __x)
+{
+    unsigned __xe = ((*(1 + (unsigned *)&(__x))) >> 20) & 0x7ff;
+    return (__xe != 0x7ff) && (__xe != 0);
+}
+
+
+
+static __inline __attribute__((__nothrow__)) __attribute__((__pcs__("aapcs"))) int __ARM_signbitf(float __x)
+{
+    return (*(unsigned *)&(__x)) >> 31;
+}
+static __inline __attribute__((__nothrow__)) __attribute__((__pcs__("aapcs"))) int __ARM_signbit(double __x)
+{
+    return (*(1 + (unsigned *)&(__x))) >> 31;
+}
+# 266 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\math.h" 3
+  typedef float float_t;
+  typedef double double_t;
+# 282 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\math.h" 3
+extern const int math_errhandling;
+
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) double acos(double );
+
+
+
+extern __attribute__((__nothrow__)) double asin(double );
+
+
+
+
+
+extern __attribute__((__nothrow__)) __attribute__((__const__)) double atan(double );
+
+
+
+extern __attribute__((__nothrow__)) double atan2(double , double );
+
+
+
+
+
+extern __attribute__((__nothrow__)) double cos(double );
+
+
+
+
+extern __attribute__((__nothrow__)) double sin(double );
+
+
+
+
+
+extern void __use_accurate_range_reduction(void);
+
+
+
+extern __attribute__((__nothrow__)) double tan(double );
+
+
+
+
+
+extern __attribute__((__nothrow__)) double cosh(double );
+
+
+
+
+extern __attribute__((__nothrow__)) double sinh(double );
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) __attribute__((__const__)) double tanh(double );
+
+
+
+extern __attribute__((__nothrow__)) double exp(double );
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) double frexp(double , int * ) __attribute__((__nonnull__(2)));
+
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) double ldexp(double , int );
+
+
+
+
+extern __attribute__((__nothrow__)) double log(double );
+
+
+
+
+
+extern __attribute__((__nothrow__)) double log10(double );
+
+
+
+extern __attribute__((__nothrow__)) double modf(double , double * ) __attribute__((__nonnull__(2)));
+
+
+
+
+
+extern __attribute__((__nothrow__)) double pow(double , double );
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) double sqrt(double );
+# 410 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\math.h" 3
+    static __inline double _sqrt(double __x) { return sqrt(__x); }
+# 427 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\math.h" 3
+    static __inline float _sqrtf(float __x) { return (float)sqrt(__x); }
+
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) __attribute__((__const__)) double ceil(double );
+
+
+extern __attribute__((__nothrow__)) __attribute__((__const__)) double fabs(double );
+
+
+
+extern __attribute__((__nothrow__)) __attribute__((__const__)) double floor(double );
+
+
+
+extern __attribute__((__nothrow__)) double fmod(double , double );
+# 467 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\math.h" 3
+extern __attribute__((__nothrow__)) double acosh(double );
+
+
+
+extern __attribute__((__nothrow__)) double asinh(double );
+
+
+
+extern __attribute__((__nothrow__)) double atanh(double );
+
+
+
+extern __attribute__((__nothrow__)) double cbrt(double );
+
+
+
+static __inline __attribute__((__nothrow__)) __attribute__((__const__)) double copysign(double __x, double __y)
+
+
+
+{
+    (*(1 + (unsigned *)&(__x))) = ((*(1 + (unsigned *)&(__x))) & 0x7fffffff) | ((*(1 + (unsigned *)&(__y))) & 0x80000000);
+    return __x;
+}
+static __inline __attribute__((__nothrow__)) __attribute__((__const__)) float copysignf(float __x, float __y)
+
+
+
+{
+    (*(unsigned *)&(__x)) = ((*(unsigned *)&(__x)) & 0x7fffffff) | ((*(unsigned *)&(__y)) & 0x80000000);
+    return __x;
+}
+extern __attribute__((__nothrow__)) double erf(double );
+
+
+
+extern __attribute__((__nothrow__)) double erfc(double );
+
+
+
+extern __attribute__((__nothrow__)) double expm1(double );
+# 533 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\math.h" 3
+extern __attribute__((__nothrow__)) double hypot(double , double );
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) int ilogb(double );
+
+
+
+extern __attribute__((__nothrow__)) int ilogbf(float );
+
+
+
+extern __attribute__((__nothrow__)) int ilogbl(long double );
+# 646 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\math.h" 3
+extern __attribute__((__nothrow__)) double lgamma (double );
+
+
+
+
+extern __attribute__((__nothrow__)) double log1p(double );
+
+
+
+extern __attribute__((__nothrow__)) double logb(double );
+
+
+
+extern __attribute__((__nothrow__)) float logbf(float );
+
+
+
+extern __attribute__((__nothrow__)) long double logbl(long double );
+
+
+
+extern __attribute__((__nothrow__)) double nextafter(double , double );
+
+
+
+
+extern __attribute__((__nothrow__)) float nextafterf(float , float );
+
+
+
+
+extern __attribute__((__nothrow__)) long double nextafterl(long double , long double );
+
+
+
+
+extern __attribute__((__nothrow__)) double nexttoward(double , long double );
+
+
+
+
+extern __attribute__((__nothrow__)) float nexttowardf(float , long double );
+
+
+
+
+extern __attribute__((__nothrow__)) long double nexttowardl(long double , long double );
+
+
+
+
+extern __attribute__((__nothrow__)) double remainder(double , double );
+
+
+
+extern __attribute__((__nothrow__)) __attribute__((__const__)) double rint(double );
+
+
+
+extern __attribute__((__nothrow__)) double scalbln(double , long int );
+
+
+
+extern __attribute__((__nothrow__)) float scalblnf(float , long int );
+
+
+
+extern __attribute__((__nothrow__)) long double scalblnl(long double , long int );
+
+
+
+extern __attribute__((__nothrow__)) double scalbn(double , int );
+
+
+
+extern __attribute__((__nothrow__)) float scalbnf(float , int );
+
+
+
+extern __attribute__((__nothrow__)) long double scalbnl(long double , int );
+# 740 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\math.h" 3
+extern __attribute__((__nothrow__)) __attribute__((__const__)) float fabsf(float);
+static __inline __attribute__((__nothrow__)) __attribute__((__const__)) float _fabsf(float __f) { return fabsf(__f); }
+extern __attribute__((__nothrow__)) float sinf(float );
+extern __attribute__((__nothrow__)) float cosf(float );
+extern __attribute__((__nothrow__)) float tanf(float );
+extern __attribute__((__nothrow__)) float acosf(float );
+extern __attribute__((__nothrow__)) float asinf(float );
+extern __attribute__((__nothrow__)) float atanf(float );
+extern __attribute__((__nothrow__)) float atan2f(float , float );
+extern __attribute__((__nothrow__)) float sinhf(float );
+extern __attribute__((__nothrow__)) float coshf(float );
+extern __attribute__((__nothrow__)) float tanhf(float );
+extern __attribute__((__nothrow__)) float expf(float );
+extern __attribute__((__nothrow__)) float logf(float );
+extern __attribute__((__nothrow__)) float log10f(float );
+extern __attribute__((__nothrow__)) float powf(float , float );
+extern __attribute__((__nothrow__)) float sqrtf(float );
+extern __attribute__((__nothrow__)) float ldexpf(float , int );
+extern __attribute__((__nothrow__)) float frexpf(float , int * ) __attribute__((__nonnull__(2)));
+extern __attribute__((__nothrow__)) __attribute__((__const__)) float ceilf(float );
+extern __attribute__((__nothrow__)) __attribute__((__const__)) float floorf(float );
+extern __attribute__((__nothrow__)) float fmodf(float , float );
+extern __attribute__((__nothrow__)) float modff(float , float * ) __attribute__((__nonnull__(2)));
+# 780 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\math.h" 3
+__attribute__((__nothrow__)) long double acosl(long double );
+__attribute__((__nothrow__)) long double asinl(long double );
+__attribute__((__nothrow__)) long double atanl(long double );
+__attribute__((__nothrow__)) long double atan2l(long double , long double );
+__attribute__((__nothrow__)) long double ceill(long double );
+__attribute__((__nothrow__)) long double cosl(long double );
+__attribute__((__nothrow__)) long double coshl(long double );
+__attribute__((__nothrow__)) long double expl(long double );
+__attribute__((__nothrow__)) long double fabsl(long double );
+__attribute__((__nothrow__)) long double floorl(long double );
+__attribute__((__nothrow__)) long double fmodl(long double , long double );
+__attribute__((__nothrow__)) long double frexpl(long double , int* ) __attribute__((__nonnull__(2)));
+__attribute__((__nothrow__)) long double ldexpl(long double , int );
+__attribute__((__nothrow__)) long double logl(long double );
+__attribute__((__nothrow__)) long double log10l(long double );
+__attribute__((__nothrow__)) long double modfl(long double , long double * ) __attribute__((__nonnull__(2)));
+__attribute__((__nothrow__)) long double powl(long double , long double );
+__attribute__((__nothrow__)) long double sinl(long double );
+__attribute__((__nothrow__)) long double sinhl(long double );
+__attribute__((__nothrow__)) long double sqrtl(long double );
+__attribute__((__nothrow__)) long double tanl(long double );
+__attribute__((__nothrow__)) long double tanhl(long double );
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) float acoshf(float );
+__attribute__((__nothrow__)) long double acoshl(long double );
+extern __attribute__((__nothrow__)) float asinhf(float );
+__attribute__((__nothrow__)) long double asinhl(long double );
+extern __attribute__((__nothrow__)) float atanhf(float );
+__attribute__((__nothrow__)) long double atanhl(long double );
+__attribute__((__nothrow__)) long double copysignl(long double , long double );
+extern __attribute__((__nothrow__)) float cbrtf(float );
+__attribute__((__nothrow__)) long double cbrtl(long double );
+extern __attribute__((__nothrow__)) float erff(float );
+__attribute__((__nothrow__)) long double erfl(long double );
+extern __attribute__((__nothrow__)) float erfcf(float );
+__attribute__((__nothrow__)) long double erfcl(long double );
+extern __attribute__((__nothrow__)) float expm1f(float );
+__attribute__((__nothrow__)) long double expm1l(long double );
+extern __attribute__((__nothrow__)) float log1pf(float );
+__attribute__((__nothrow__)) long double log1pl(long double );
+extern __attribute__((__nothrow__)) float hypotf(float , float );
+__attribute__((__nothrow__)) long double hypotl(long double , long double );
+extern __attribute__((__nothrow__)) float lgammaf(float );
+__attribute__((__nothrow__)) long double lgammal(long double );
+extern __attribute__((__nothrow__)) float remainderf(float , float );
+__attribute__((__nothrow__)) long double remainderl(long double , long double );
+extern __attribute__((__nothrow__)) float rintf(float );
+__attribute__((__nothrow__)) long double rintl(long double );
+
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) double exp2(double );
+extern __attribute__((__nothrow__)) float exp2f(float );
+__attribute__((__nothrow__)) long double exp2l(long double );
+extern __attribute__((__nothrow__)) double fdim(double , double );
+extern __attribute__((__nothrow__)) float fdimf(float , float );
+__attribute__((__nothrow__)) long double fdiml(long double , long double );
+# 855 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\math.h" 3
+extern __attribute__((__nothrow__)) double fma(double , double , double );
+extern __attribute__((__nothrow__)) float fmaf(float , float , float );
+
+static __inline __attribute__((__nothrow__)) long double fmal(long double __x, long double __y, long double __z) { return (long double)fma((double)__x, (double)__y, (double)__z); }
+
+
+extern __attribute__((__nothrow__)) __attribute__((__const__)) double fmax(double , double );
+extern __attribute__((__nothrow__)) __attribute__((__const__)) float fmaxf(float , float );
+__attribute__((__nothrow__)) long double fmaxl(long double , long double );
+extern __attribute__((__nothrow__)) __attribute__((__const__)) double fmin(double , double );
+extern __attribute__((__nothrow__)) __attribute__((__const__)) float fminf(float , float );
+__attribute__((__nothrow__)) long double fminl(long double , long double );
+extern __attribute__((__nothrow__)) double log2(double );
+extern __attribute__((__nothrow__)) float log2f(float );
+__attribute__((__nothrow__)) long double log2l(long double );
+extern __attribute__((__nothrow__)) long lrint(double );
+extern __attribute__((__nothrow__)) long lrintf(float );
+
+static __inline __attribute__((__nothrow__)) long lrintl(long double __x) { return lrint((double)__x); }
+
+
+extern __attribute__((__nothrow__)) long long llrint(double );
+extern __attribute__((__nothrow__)) long long llrintf(float );
+
+static __inline __attribute__((__nothrow__)) long long llrintl(long double __x) { return llrint((double)__x); }
+
+
+extern __attribute__((__nothrow__)) long lround(double );
+extern __attribute__((__nothrow__)) long lroundf(float );
+
+static __inline __attribute__((__nothrow__)) long lroundl(long double __x) { return lround((double)__x); }
+
+
+extern __attribute__((__nothrow__)) long long llround(double );
+extern __attribute__((__nothrow__)) long long llroundf(float );
+
+static __inline __attribute__((__nothrow__)) long long llroundl(long double __x) { return llround((double)__x); }
+
+
+extern __attribute__((__nothrow__)) __attribute__((__const__)) double nan(const char * );
+extern __attribute__((__nothrow__)) __attribute__((__const__)) float nanf(const char * );
+
+static __inline __attribute__((__nothrow__)) __attribute__((__const__)) long double nanl(const char *__t) { return (long double)nan(__t); }
+# 908 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\math.h" 3
+extern __attribute__((__nothrow__)) __attribute__((__const__)) double nearbyint(double );
+extern __attribute__((__nothrow__)) __attribute__((__const__)) float nearbyintf(float );
+__attribute__((__nothrow__)) long double nearbyintl(long double );
+extern __attribute__((__nothrow__)) double remquo(double , double , int * );
+extern __attribute__((__nothrow__)) float remquof(float , float , int * );
+
+static __inline long double remquol(long double __x, long double __y, int *__q) { return (long double)remquo((double)__x, (double)__y, __q); }
+
+
+extern __attribute__((__nothrow__)) __attribute__((__const__)) double round(double );
+extern __attribute__((__nothrow__)) __attribute__((__const__)) float roundf(float );
+__attribute__((__nothrow__)) long double roundl(long double );
+extern __attribute__((__nothrow__)) double tgamma(double );
+extern __attribute__((__nothrow__)) float tgammaf(float );
+__attribute__((__nothrow__)) long double tgammal(long double );
+extern __attribute__((__nothrow__)) __attribute__((__const__)) double trunc(double );
+extern __attribute__((__nothrow__)) __attribute__((__const__)) float truncf(float );
+__attribute__((__nothrow__)) long double truncl(long double );
+# 8 "CustomLibs/src/DAC_init.c" 2
+
+
+int dac_inc_dec = 1;
+int cur_dac_val = 0;
+
+int dac_cnt = 0;
+uint16_t DAC_table[500];
 
 
 extern PORT_InitTypeDef port_init_structure;
 
-void SetupADC()
-{
 
-    RST_CLK_PCLKcmd((((uint32_t)(1U << ((((uint32_t)(0x40020000)) >> 15) & 0x1F))) | ((uint32_t)(1U << ((((uint32_t)(0x40088000)) >> 15) & 0x1F)))), ENABLE);
-    RST_CLK_PCLKcmd((((uint32_t)(1U << ((((uint32_t)(0x400B8000)) >> 15) & 0x1F))) | ((uint32_t)(1U << ((((uint32_t)(0x400C0000)) >> 15) & 0x1F)))), ENABLE);
+TIMER_CntInitTypeDef Cnt_sTim2;
 
-    ((SCB_Type *) ((0xE000E000UL) + 0x0D00UL) )->AIRCR = 0x5FA0500;
-    ((SCB_Type *) ((0xE000E000UL) + 0x0D00UL) )->VTOR = 0x08000000;
+void Setup_DAC() {
 
-    ((NVIC_Type *) ((0xE000E000UL) + 0x0100UL) )->ICPR[0] = 0xFFFFFFFF;
-    ((NVIC_Type *) ((0xE000E000UL) + 0x0100UL) )->ICER[0] = 0xFFFFFFFF;
- ((NVIC_Type *) ((0xE000E000UL) + 0x0100UL) )->ISER[0] = (1<<ADC_IRQn);
+    RST_CLK_PCLKcmd((((uint32_t)(1U << ((((uint32_t)(0x40020000)) >> 15) & 0x1F))) | ((uint32_t)(1U << ((((uint32_t)(0x40090000)) >> 15) & 0x1F)))), ENABLE);
+    RST_CLK_PCLKcmd((((uint32_t)(1U << ((((uint32_t)(0x400C8000)) >> 15) & 0x1F)))), ENABLE);
 
-    PORT_DeInit(((MDR_PORT_TypeDef *) (0x400C0000)));
+    PORT_DeInit(((MDR_PORT_TypeDef *) (0x400C8000)));
 
-    port_init_structure.PORT_Pin = PORT_Pin_0 | PORT_Pin_1;
+    port_init_structure.PORT_Pin = PORT_Pin_0;
     port_init_structure.PORT_OE = PORT_OE_IN;
     port_init_structure.PORT_MODE = PORT_MODE_ANALOG;
-    PORT_Init(((MDR_PORT_TypeDef *) (0x400C0000)), &port_init_structure);
+    PORT_Init(((MDR_PORT_TypeDef *) (0x400C8000)), &port_init_structure);
 
-    ADC_DeInit();
-    ADC_StructInit(&ADC_structure);
- ADC_Init (&ADC_structure);
-    ADCx_StructInit (&ADCx_structure);
-    ADCx_structure.ADC_ClockSource = ADC_CLOCK_SOURCE_CPU;
-    ADCx_structure.ADC_SamplingMode = ADC_SAMPLING_MODE_CYCLIC_CONV;
-    ADCx_structure.ADC_ChannelSwitching = ADC_CH_SWITCHING_Enable;
-    ADCx_structure.ADC_ChannelNumber = ADC_CH_ADC0;
-    ADCx_structure.ADC_Channels = ((((uint32_t)0x1) << ADC_CH_ADC0 ) | (((uint32_t)0x1) << ADC_CH_ADC1 ));
-    ADCx_structure.ADC_VRefSource = ADC_VREF_SOURCE_INTERNAL;
-    ADCx_structure.ADC_IntVRefSource = ADC_INT_VREF_SOURCE_INEXACT;
-    ADCx_structure.ADC_Prescaler = ADC_CLK_div_32;
- ADCx_structure.ADC_DelayGo = 0x2;
-    ADC1_Init (&ADCx_structure);
+ DAC_DeInit();
+ DAC2_Init(DAC2_AVCC);
+ DAC2_Cmd(ENABLE);
+}
 
-    ADC1_ITConfig((ADCx_IT_END_OF_CONVERSION), ENABLE);
+void Setup_TIM2() {
+ RST_CLK_PCLKcmd((((uint32_t)(1U << ((((uint32_t)(0x40078000)) >> 15) & 0x1F)))), ENABLE);
+ TIMER_DeInit(((MDR_TIMER_TypeDef *) (0x40078000)));
+ TIMER_BRGInit(((MDR_TIMER_TypeDef *) (0x40078000)), TIMER_HCLKdiv1);
+
+ TIMER_CntStructInit(&Cnt_sTim2);
+ Cnt_sTim2.TIMER_CounterMode = TIMER_CntMode_ClkFixedDir;
+ Cnt_sTim2.TIMER_CounterDirection = TIMER_CntDir_Up;
+
+ Cnt_sTim2.TIMER_FilterSampling = TIMER_FDTS_TIMER_CLK_div_4;
+ Cnt_sTim2.TIMER_ARR_UpdateMode = TIMER_ARR_Update_Immediately;
+ Cnt_sTim2.TIMER_IniCounter = 0;
+ Cnt_sTim2.TIMER_Period = 20 - 1;
+ Cnt_sTim2.TIMER_Prescaler = 16;
+ TIMER_CntInit(((MDR_TIMER_TypeDef *) (0x40078000)), &Cnt_sTim2);
+ NVIC_EnableIRQ(Timer2_IRQn);
+ TIMER_DMACmd(((MDR_TIMER_TypeDef *) (0x40078000)), TIMER_STATUS_CNT_ARR, ENABLE);
+
+ TIMER_Cmd(((MDR_TIMER_TypeDef *) (0x40078000)), ENABLE);
+}
+
+void set_DAC_table(int freq) {
+
+   double angle_inc = 6.28318 * (500 / ((16000000 / (16 * 20)) / freq) + ((freq % 100) != 0)) / 500;
+   for (int i = 0; i < (500); i++) {
+    DAC_table[i] = (int) (sin(i*angle_inc) * 2000) + 2000;
+   }
+   DAC_table[0] = 2000;
+   DAC_table[500 - 1] = 2000;
 }

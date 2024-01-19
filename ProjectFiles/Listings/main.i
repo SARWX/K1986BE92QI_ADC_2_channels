@@ -4665,44 +4665,44 @@ __attribute__((__nothrow__)) long double truncl(long double );
 # 17 "main.c" 2
 
 
-# 1 "./CustomLibs/inc\\DMA_for_proj.h" 1
+# 1 "./CustomLibs/inc\\DMA_init.h" 1
 
 
 
-extern DMA_CtrlDataInitTypeDef sDMA_PriCtrlData_ADC1;
-extern DMA_CtrlDataInitTypeDef sDMA_AltCtrlData_ADC1;
-void SetupDMA();
+extern DMA_CtrlDataInitTypeDef ADC1_primary_DMA_structure;
+extern DMA_CtrlDataInitTypeDef ADC1_alternate_DMA_structure;
+void Setup_DMA();
 # 20 "main.c" 2
-# 1 "./CustomLibs/inc\\DAC_for_proj.h" 1
+# 1 "./CustomLibs/inc\\DAC_init.h" 1
 
 
 
-void SetupDAC();
-void SetupTIM2();
-void Set_DAC_Table(int freq);
+void Setup_DAC();
+void Setup_TIM2();
+void set_DAC_table(int freq);
 # 21 "main.c" 2
-# 1 "./CustomLibs/inc\\ADC_for_proj.h" 1
+# 1 "./CustomLibs/inc\\ADC_init.h" 1
 
 
 
-void SetupADC();
+void Setup_ADC();
 # 22 "main.c" 2
-# 1 "./CustomLibs/inc\\SysCLK_for_proj.h" 1
+# 1 "./CustomLibs/inc\\sys_CLK_init.h" 1
 
 
 
 
 void Setup_CPU_Clock(void);
-void delayTick(uint32_t count);
+void delay_tick(uint32_t count);
 # 23 "main.c" 2
-# 1 "./CustomLibs/inc\\USB_for_proj.h" 1
+# 1 "./CustomLibs/inc\\USB_init.h" 1
 
 
 
 void Setup_USB(void);
 void VCom_Configuration(void);
 # 24 "main.c" 2
-# 1 "./CustomLibs/inc\\Command_system.h" 1
+# 1 "./CustomLibs/inc\\command_system.h" 1
 
 
 
@@ -4710,16 +4710,15 @@ void execute_command(char *command);
 # 25 "main.c" 2
 
 
-# 1 "./CustomLibs/inc\\defines_for_proj.h" 1
+# 1 "./CustomLibs/inc\\defines.h" 1
 # 28 "main.c" 2
 
 int command_recived = 0;
-static char Buffer[128];
-char RcBuffer[128];
-extern char RecBuf[];
+char buffer[128];
+extern char rec_buf[];
 
-uint16_t ADC1_array_m[128];
-uint16_t ADC1_array_a[128];
+uint16_t main_array_for_ADC[128];
+uint16_t alternate_array_for_ADC[128];
 
 
 
@@ -4727,14 +4726,14 @@ int main(void) {
  VCom_Configuration();
 
 
- SetupADC();
- SetupDMA();
- USB_CDC_Init((uint8_t *)Buffer, 1, SET);
+ Setup_ADC();
+ Setup_DMA();
+ USB_CDC_Init((uint8_t *)buffer, 1, SET);
  Setup_CPU_Clock();
  Setup_USB();
- Set_DAC_Table(100);
- SetupDAC();
- SetupTIM2();
+ set_DAC_table(100);
+ Setup_DAC();
+ Setup_TIM2();
 
  DMA_Cmd(DMA_Channel_TIM2, ENABLE);
 
@@ -4745,24 +4744,23 @@ int main(void) {
  while (1) {
   if (command_recived == 1) {
    ADC1_Cmd (DISABLE);
-
    command_recived = 0;
-   execute_command(RecBuf);
+   execute_command(rec_buf);
    for(int i = 0; i < 128; i++) {
-    Buffer[i] = 0;
+    buffer[i] = 0;
    }
-   ADC1_Cmd (ENABLE);
+   ADC1_Cmd(ENABLE);
   }
 
   while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) == 0)
    ;
-  DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_PRIMARY, &sDMA_PriCtrlData_ADC1);
-  USB_CDC_SendData((uint8_t *)(ADC1_array_m), ((128) * 2 ));
+  DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_PRIMARY, &ADC1_primary_DMA_structure);
+  USB_CDC_SendData((uint8_t *)(main_array_for_ADC), ((128) * 2 ));
 
 
   while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) != 0)
    ;
-  DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_ALTERNATE, &sDMA_AltCtrlData_ADC1);
-  USB_CDC_SendData((uint8_t *)(ADC1_array_a), ((128) * 2 ));
+  DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_ALTERNATE, &ADC1_alternate_DMA_structure);
+  USB_CDC_SendData((uint8_t *)(alternate_array_for_ADC), ((128) * 2 ));
  }
 }
