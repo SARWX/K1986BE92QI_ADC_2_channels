@@ -36,6 +36,7 @@
 ".\objects\dac_for_proj.o"
 ".\objects\adc_for_proj.o"
 ".\objects\sysclk_for_proj.o"
+".\objects\command_system.o"
 ".\objects\usb_for_proj.o"
 ".\objects\retarget_io.o"
 --ro-base 0x08000000 --entry 0x08000000 --rw-base 0x20000000 --entry Reset_Handler --first __Vectors --strict --summary_stderr --info summarysizes --info sizes --info totals

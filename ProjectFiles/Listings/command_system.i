@@ -1,11 +1,20 @@
-# 1 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_device.c"
+# 1 "CustomLibs/src/Command_system.c"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
 # 383 "<built-in>" 3
 # 1 "<command line>" 1
 # 1 "<built-in>" 2
-# 1 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_device.c" 2
-# 23 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_device.c"
+# 1 "CustomLibs/src/Command_system.c" 2
+# 1 "./CustomLibs/inc\\ADC_for_proj.h" 1
+
+
+
+void SetupADC();
+# 2 "CustomLibs/src/Command_system.c" 2
+# 1 "./CustomLibs/inc\\defines_for_proj.h" 1
+# 3 "CustomLibs/src/Command_system.c" 2
+# 1 "./SPL/MDR32Fx/inc/USB_Library\\MDR32F9Qx_usb_CDC.h" 1
+# 32 "./SPL/MDR32Fx/inc/USB_Library\\MDR32F9Qx_usb_CDC.h"
 # 1 "./SPL/MDR32Fx\\MDR32F9Qx_config.h" 1
 # 54 "./SPL/MDR32Fx\\MDR32F9Qx_config.h"
 # 1 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdint.h" 1 3
@@ -1198,13 +1207,7 @@ typedef struct
 
 }MDR_EBC_TypeDef;
 # 82 "./SPL/MDR32Fx\\MDR32F9Qx_config.h" 2
-# 24 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_device.c" 2
-# 1 "./SPL/MDR32Fx/inc/USB_Library\\MDR32F9Qx_usb_handlers.h" 1
-# 31 "./SPL/MDR32Fx/inc/USB_Library\\MDR32F9Qx_usb_handlers.h"
-# 1 "./SPL/MDR32Fx/inc/USB_Library/MDR32F9Qx_usb_default_handlers.h" 1
-# 32 "./SPL/MDR32Fx/inc/USB_Library/MDR32F9Qx_usb_default_handlers.h"
-# 1 "./SPL/MDR32Fx/inc/USB_Library/MDR32F9Qx_usb_CDC.h" 1
-# 33 "./SPL/MDR32Fx/inc/USB_Library/MDR32F9Qx_usb_CDC.h"
+# 33 "./SPL/MDR32Fx/inc/USB_Library\\MDR32F9Qx_usb_CDC.h" 2
 # 1 "./SPL/MDR32Fx/inc\\USB_Library/MDR32F9Qx_usb_device.h" 1
 # 33 "./SPL/MDR32Fx/inc\\USB_Library/MDR32F9Qx_usb_device.h"
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_usb.h" 1
@@ -1600,8 +1603,8 @@ USB_Result USB_DeviceDummySyncFrame(uint16_t wINDEX, uint8_t* DATA);
 USB_Result USB_DeviceDummyClassRequest(void);
 USB_Result USB_DeviceDummyVendorRequest(void);
 USB_Result USB_DeviceDummyDataError(USB_EP_TypeDef EPx, uint32_t STS, uint32_t TS, uint32_t CTRL);
-# 34 "./SPL/MDR32Fx/inc/USB_Library/MDR32F9Qx_usb_CDC.h" 2
-# 54 "./SPL/MDR32Fx/inc/USB_Library/MDR32F9Qx_usb_CDC.h"
+# 34 "./SPL/MDR32Fx/inc/USB_Library\\MDR32F9Qx_usb_CDC.h" 2
+# 54 "./SPL/MDR32Fx/inc/USB_Library\\MDR32F9Qx_usb_CDC.h"
 typedef enum
 {
     USB_CDC_SEND_ENCAPSULATED_COMMAND = 0x00,
@@ -1709,7 +1712,7 @@ typedef enum
     USB_CDC_LINE_STATE_CHANGE = 0x29,
     USB_CDC_CONNECTION_SPEED_CHANGE = 0x2A
 } USB_CDC_LineStateReport_TypeDef;
-# 186 "./SPL/MDR32Fx/inc/USB_Library/MDR32F9Qx_usb_CDC.h"
+# 186 "./SPL/MDR32Fx/inc/USB_Library\\MDR32F9Qx_usb_CDC.h"
 USB_Result USB_CDC_Init(uint8_t* ReceiveBuffer, uint32_t DataPortionLength, FlagStatus StartReceiving);
 
 USB_Result USB_CDC_SetReceiveBuffer(uint8_t* ReceiveBuffer, uint32_t DataPortionLength);
@@ -1763,961 +1766,353 @@ USB_Result USB_CDC_DummyControlLineState(uint16_t wVALUE, uint16_t wINDEX);
 
 
 USB_Result USB_CDC_DummySendBreak(uint16_t wVALUE, uint16_t wINDEX);
-# 33 "./SPL/MDR32Fx/inc/USB_Library/MDR32F9Qx_usb_default_handlers.h" 2
-# 32 "./SPL/MDR32Fx/inc/USB_Library\\MDR32F9Qx_usb_handlers.h" 2
-# 83 "./SPL/MDR32Fx/inc/USB_Library\\MDR32F9Qx_usb_handlers.h"
-USB_Result USB_CDC_RecieveData(uint8_t* Buffer, uint32_t Length);
+# 4 "CustomLibs/src/Command_system.c" 2
+# 1 "./CustomLibs/inc\\DAC_for_proj.h" 1
 
 
-    USB_Result USB_CDC_GetLineCoding(uint16_t wINDEX, USB_CDC_LineCoding_TypeDef* DATA);
-    USB_Result USB_CDC_SetLineCoding(uint16_t wINDEX, const USB_CDC_LineCoding_TypeDef* DATA);
-# 25 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_device.c" 2
-# 45 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_device.c"
-typedef enum
-{
-    USB_EP_NAK,
-    USB_EP_IDLE,
-    USB_EP_IN,
-    USB_EP_OUT,
-    USB_EP_SETUP,
-    USB_EP_STALL
-} USB_EPState_TypeDef;
+
+void SetupDAC();
+void SetupTIM2();
+void Set_DAC_Table(int freq);
+# 5 "CustomLibs/src/Command_system.c" 2
+# 1 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 1 3
+# 51 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+    typedef unsigned int size_t;
 
 
 
 
-typedef struct
-{
-    USB_EPState_TypeDef EP_State;
-    USB_StallType EP_Halt;
-    struct
-    {
-        struct
-        {
 
-            uint8_t *pBuffer;
-            uint32_t length, offset;
-            uint32_t bytesToAck;
 
-        } IO_Buffer;
-
-        USB_SetupPacket_TypeDef *pSetupPacket;
-    } Buffer;
-    FlagStatus EP_WasScdone;
-    FlagStatus EP_WaitOut, EP_WaitSetup;
-    USB_EP_IO_Handler InHandler;
-    USB_EP_IO_Handler OutHandler;
-    USB_EP_Setup_Handler SetupHandler;
-    USB_EP_Error_Handler ErrorHandler;
-} USB_EPContext_TypeDef;
+extern __attribute__((__nothrow__)) void *memcpy(void * __restrict ,
+                    const void * __restrict , size_t ) __attribute__((__nonnull__(1,2)));
 
 
 
 
-typedef enum
-{
-    USB_DATA_BIT_KEEP,
-    USB_DATA_BIT_TOGGLE,
-    USB_DATA_BIT_DATA1,
-} USB_EPData_Bit_TypeDef;
-# 102 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_device.c"
-USB_EPContext_TypeDef USB_EPContext[Num_USB_EndPoints];
-# 120 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_device.c"
-static void USB_EP_sendInDataPortion(USB_EP_TypeDef EPx, USB_EPData_Bit_TypeDef DataBitChange);
-static void USB_EP_SetReady(USB_EP_TypeDef EPx, uint32_t val);
-# 140 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_device.c"
-USB_Result USB_EP_Init(USB_EP_TypeDef EPx, uint32_t USB_EP_Ctrl, USB_EP_Error_Handler onError)
-{
-    USB_EPContext_TypeDef *ep = USB_EPContext + EPx;
 
 
-    ep->Buffer.IO_Buffer.pBuffer = 0;
-    ep->Buffer.IO_Buffer.length = 0;
-    ep->Buffer.IO_Buffer.bytesToAck = 0;
-    ep->Buffer.IO_Buffer.offset = 0;
-    ep->Buffer.pSetupPacket = 0;
-    ep->InHandler = 0;
-    ep->OutHandler = 0;
-    ep->SetupHandler = 0;
-    ep->ErrorHandler = onError;
-    ep->EP_Halt = USB_STALL_PROTO;
-    ep->EP_State = USB_EP_NAK;
-    ep->EP_WasScdone = RESET;
+extern __attribute__((__nothrow__)) void *memmove(void * ,
+                    const void * , size_t ) __attribute__((__nonnull__(1,2)));
+# 77 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) char *strcpy(char * __restrict , const char * __restrict ) __attribute__((__nonnull__(1,2)));
 
-    USB_SetSEPxCTRL(EPx, USB_EP_Ctrl);
 
-    return USB_SUCCESS;
-}
-# 170 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_device.c"
-USB_Result USB_EP_Reset(USB_EP_TypeDef EPx)
-{
-    USB_EPContext_TypeDef *ep = USB_EPContext + EPx;
 
-    ep->EP_State = USB_EP_NAK;
-    ep->EP_WasScdone = RESET;
 
-    USB_SetSEPxCTRL(EPx, (uint32_t)(1 << (4 + 16)) |
-                         (uint32_t)(1 << (1 + 16)) |
-                         (uint32_t)(1 << 0));
 
-    return USB_SUCCESS;
-}
-# 193 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_device.c"
-USB_Result USB_EP_Idle(USB_EP_TypeDef EPx)
-{
-    USB_EPContext_TypeDef *ep = USB_EPContext + EPx;
-    uint32_t val = (uint32_t)(1 << (3 + 16));
 
-    if (ep->EP_WaitOut || ep->EP_WaitSetup)
-    {
-        ep->EP_State = USB_EP_IDLE;
-        val |= (uint32_t)(1 << 1);
+extern __attribute__((__nothrow__)) char *strncpy(char * __restrict , const char * __restrict , size_t ) __attribute__((__nonnull__(1,2)));
+# 93 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) char *strcat(char * __restrict , const char * __restrict ) __attribute__((__nonnull__(1,2)));
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) char *strncat(char * __restrict , const char * __restrict , size_t ) __attribute__((__nonnull__(1,2)));
+# 117 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) int memcmp(const void * , const void * , size_t ) __attribute__((__nonnull__(1,2)));
+
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) int strcmp(const char * , const char * ) __attribute__((__nonnull__(1,2)));
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) int strncmp(const char * , const char * , size_t ) __attribute__((__nonnull__(1,2)));
+# 141 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) int strcasecmp(const char * , const char * ) __attribute__((__nonnull__(1,2)));
+
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) int strncasecmp(const char * , const char * , size_t ) __attribute__((__nonnull__(1,2)));
+# 158 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) int strcoll(const char * , const char * ) __attribute__((__nonnull__(1,2)));
+# 169 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) size_t strxfrm(char * __restrict , const char * __restrict , size_t ) __attribute__((__nonnull__(2)));
+# 193 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) void *memchr(const void * , int , size_t ) __attribute__((__nonnull__(1)));
+# 209 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) char *strchr(const char * , int ) __attribute__((__nonnull__(1)));
+# 218 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) size_t strcspn(const char * , const char * ) __attribute__((__nonnull__(1,2)));
+# 232 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) char *strpbrk(const char * , const char * ) __attribute__((__nonnull__(1,2)));
+# 247 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) char *strrchr(const char * , int ) __attribute__((__nonnull__(1)));
+# 257 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) size_t strspn(const char * , const char * ) __attribute__((__nonnull__(1,2)));
+# 270 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) char *strstr(const char * , const char * ) __attribute__((__nonnull__(1,2)));
+# 280 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) char *strtok(char * __restrict , const char * __restrict ) __attribute__((__nonnull__(2)));
+extern __attribute__((__nothrow__)) char *_strtok_r(char * , const char * , char ** ) __attribute__((__nonnull__(2,3)));
+# 321 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) void *memset(void * , int , size_t ) __attribute__((__nonnull__(1)));
+
+
+
+
+
+extern __attribute__((__nothrow__)) char *strerror(int );
+
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) size_t strlen(const char * ) __attribute__((__nonnull__(1)));
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) size_t strlcpy(char * , const char * , size_t ) __attribute__((__nonnull__(1,2)));
+# 362 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) size_t strlcat(char * , const char * , size_t ) __attribute__((__nonnull__(1,2)));
+# 388 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) void _membitcpybl(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) void _membitcpybb(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) void _membitcpyhl(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) void _membitcpyhb(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) void _membitcpywl(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) void _membitcpywb(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) void _membitmovebl(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) void _membitmovebb(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) void _membitmovehl(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) void _membitmovehb(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) void _membitmovewl(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) void _membitmovewb(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+# 6 "CustomLibs/src/Command_system.c" 2
+# 1 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 1 3
+# 91 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+    typedef unsigned short wchar_t;
+
+
+
+
+typedef struct div_t { int quot, rem; } div_t;
+
+typedef struct ldiv_t { long int quot, rem; } ldiv_t;
+
+
+typedef struct lldiv_t { long long quot, rem; } lldiv_t;
+# 139 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) int __aeabi_MB_CUR_MAX(void);
+# 158 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) double atof(const char * ) __attribute__((__nonnull__(1)));
+
+
+
+
+
+extern __attribute__((__nothrow__)) int atoi(const char * ) __attribute__((__nonnull__(1)));
+
+
+
+
+
+extern __attribute__((__nothrow__)) long int atol(const char * ) __attribute__((__nonnull__(1)));
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) long long atoll(const char * ) __attribute__((__nonnull__(1)));
+
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) double strtod(const char * __restrict , char ** __restrict ) __attribute__((__nonnull__(1)));
+# 206 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) float strtof(const char * __restrict , char ** __restrict ) __attribute__((__nonnull__(1)));
+extern __attribute__((__nothrow__)) long double strtold(const char * __restrict , char ** __restrict ) __attribute__((__nonnull__(1)));
+
+
+
+
+extern __attribute__((__nothrow__)) long int strtol(const char * __restrict ,
+                        char ** __restrict , int ) __attribute__((__nonnull__(1)));
+# 243 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) unsigned long int strtoul(const char * __restrict ,
+                                       char ** __restrict , int ) __attribute__((__nonnull__(1)));
+# 275 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) long long strtoll(const char * __restrict ,
+                                  char ** __restrict , int )
+                          __attribute__((__nonnull__(1)));
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) unsigned long long strtoull(const char * __restrict ,
+                                            char ** __restrict , int )
+                                   __attribute__((__nonnull__(1)));
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) int rand(void);
+# 303 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) void srand(unsigned int );
+# 313 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+struct _rand_state { int __x[57]; };
+extern __attribute__((__nothrow__)) int _rand_r(struct _rand_state *);
+extern __attribute__((__nothrow__)) void _srand_r(struct _rand_state *, unsigned int);
+struct _ANSI_rand_state { int __x[1]; };
+extern __attribute__((__nothrow__)) int _ANSI_rand_r(struct _ANSI_rand_state *);
+extern __attribute__((__nothrow__)) void _ANSI_srand_r(struct _ANSI_rand_state *, unsigned int);
+
+
+
+
+
+extern __attribute__((__nothrow__)) void *calloc(size_t , size_t );
+
+
+
+
+
+extern __attribute__((__nothrow__)) void free(void * );
+
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) void *malloc(size_t );
+
+
+
+
+
+extern __attribute__((__nothrow__)) void *realloc(void * , size_t );
+# 374 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+typedef int (*__heapprt)(void *, char const *, ...);
+extern __attribute__((__nothrow__)) void __heapstats(int (* )(void * ,
+                                           char const * , ...),
+                        void * ) __attribute__((__nonnull__(1)));
+# 390 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) int __heapvalid(int (* )(void * ,
+                                           char const * , ...),
+                       void * , int ) __attribute__((__nonnull__(1)));
+# 411 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) __attribute__((__noreturn__)) void abort(void);
+# 422 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) int atexit(void (* )(void)) __attribute__((__nonnull__(1)));
+# 444 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) __attribute__((__noreturn__)) void exit(int );
+# 460 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) __attribute__((__noreturn__)) void _Exit(int );
+# 471 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) char *getenv(const char * ) __attribute__((__nonnull__(1)));
+# 484 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) int system(const char * );
+# 497 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern void *bsearch(const void * , const void * ,
+              size_t , size_t ,
+              int (* )(const void *, const void *)) __attribute__((__nonnull__(1,2,5)));
+# 532 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern void qsort(void * , size_t , size_t ,
+           int (* )(const void *, const void *)) __attribute__((__nonnull__(1,4)));
+# 560 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) __attribute__((__const__)) int abs(int );
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) __attribute__((__const__)) div_t div(int , int );
+# 579 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) __attribute__((__const__)) long int labs(long int );
+# 589 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) __attribute__((__const__)) ldiv_t ldiv(long int , long int );
+# 610 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) __attribute__((__const__)) long long llabs(long long );
+# 620 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) __attribute__((__const__)) lldiv_t lldiv(long long , long long );
+# 644 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+typedef struct __sdiv32by16 { long quot, rem; } __sdiv32by16;
+typedef struct __udiv32by16 { unsigned long quot, rem; } __udiv32by16;
+
+typedef struct __sdiv64by32 { long rem, quot; } __sdiv64by32;
+
+__attribute__((__value_in_regs__)) extern __attribute__((__nothrow__)) __attribute__((__const__)) __sdiv32by16 __rt_sdiv32by16(
+     int ,
+     short int );
+
+
+
+__attribute__((__value_in_regs__)) extern __attribute__((__nothrow__)) __attribute__((__const__)) __udiv32by16 __rt_udiv32by16(
+     unsigned int ,
+     unsigned short );
+
+
+
+__attribute__((__value_in_regs__)) extern __attribute__((__nothrow__)) __attribute__((__const__)) __sdiv64by32 __rt_sdiv64by32(
+     int , unsigned int ,
+     int );
+
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) unsigned int __fp_status(unsigned int , unsigned int );
+# 705 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) int mblen(const char * , size_t );
+# 720 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) int mbtowc(wchar_t * __restrict ,
+                   const char * __restrict , size_t );
+# 739 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) int wctomb(char * , wchar_t );
+# 761 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) size_t mbstowcs(wchar_t * __restrict ,
+                      const char * __restrict , size_t ) __attribute__((__nonnull__(2)));
+# 779 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) size_t wcstombs(char * __restrict ,
+                      const wchar_t * __restrict , size_t ) __attribute__((__nonnull__(2)));
+# 798 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) void __use_realtime_heap(void);
+extern __attribute__((__nothrow__)) void __use_realtime_division(void);
+extern __attribute__((__nothrow__)) void __use_two_region_memory(void);
+extern __attribute__((__nothrow__)) void __use_no_heap(void);
+extern __attribute__((__nothrow__)) void __use_no_heap_region(void);
+
+extern __attribute__((__nothrow__)) char const *__C_library_version_string(void);
+extern __attribute__((__nothrow__)) int __C_library_version_number(void);
+# 7 "CustomLibs/src/Command_system.c" 2
+
+void execute_command(char *command) {
+  if (strstr(command, "set freq ") == command) {
+    int freq = atoi((char *)(command + strlen("set freq ")));
+    if (freq >= 100) {
+      Set_DAC_Table(freq);
     }
-    else
-    {
-        ep->EP_State = USB_EP_NAK;
-    }
-    ep->EP_Halt = USB_STALL_PROTO;
-
-    USB_EP_SetReady(EPx, val);
-
-    return USB_SUCCESS;
-}
-# 226 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_device.c"
-USB_Result USB_EP_Stall(USB_EP_TypeDef EPx, USB_StallType bHalt)
-{
-    USB_EPContext_TypeDef *ep = USB_EPContext + EPx;
-    uint32_t val = 0;
-
-    if (bHalt == USB_STALL_HALT && EPx == USB_EP0)
-    {
-
-        return USB_ERROR;
-    }
-
-    if (bHalt == USB_STALL_HALT || ep->EP_WaitSetup)
-    {
-        ep->EP_Halt = bHalt;
-        ep->EP_State = USB_EP_STALL;
-        val = (uint32_t)(1 << 3)
-            | (uint32_t)(1 << 1);
-    }
-
-    USB_EP_SetReady(EPx, val);
-
-    return USB_SUCCESS;
-}
-# 262 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_device.c"
-USB_Result USB_EP_doDataIn(USB_EP_TypeDef EPx, uint8_t* Buffer, uint32_t Length, USB_EP_IO_Handler onInDone)
-{
-    USB_EPContext_TypeDef *ep = USB_EPContext + EPx;
-
-    USB_EPData_Bit_TypeDef StartInStage = (ep->EP_WaitSetup ? USB_DATA_BIT_DATA1 : USB_DATA_BIT_TOGGLE);
-
-
-    ep->Buffer.IO_Buffer.pBuffer = Buffer;
-    ep->Buffer.IO_Buffer.length = Length;
-    ep->Buffer.IO_Buffer.bytesToAck = 64;
-    ep->Buffer.IO_Buffer.offset = 0;
-    ep->InHandler = onInDone;
-
-
-
-
-    USB_EP_sendInDataPortion(EPx, StartInStage);
-
-    ep->EP_State = USB_EP_IN;
-
-    return USB_SUCCESS;
-}
-# 300 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_device.c"
-USB_Result USB_EP_doDataOut(USB_EP_TypeDef EPx, uint8_t* Buffer, uint32_t Length, USB_EP_IO_Handler onOutDone)
-{
-    USB_EPContext_TypeDef *ep = USB_EPContext + EPx;
-
-
-    ep->Buffer.IO_Buffer.pBuffer = Buffer;
-    ep->Buffer.IO_Buffer.length = Length;
-    ep->Buffer.IO_Buffer.bytesToAck = 0;
-    ep->Buffer.IO_Buffer.offset = 0;
-    ep->OutHandler = onOutDone;
-    ep->EP_WaitOut = SET;
-
-
-    USB_EP_Idle(EPx);
-
-    return USB_SUCCESS;
-}
-# 330 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_device.c"
-USB_Result USB_EP_setSetupHandler(USB_EP_TypeDef EPx, USB_SetupPacket_TypeDef* USB_SetupPacket, USB_EP_Setup_Handler onSetupPacket)
-{
-    USB_EPContext_TypeDef *ep = USB_EPContext + EPx;
-
-
-    ep->Buffer.pSetupPacket = USB_SetupPacket;
-    ep->Buffer.IO_Buffer.length = 0;
-    ep->Buffer.IO_Buffer.bytesToAck = 0;
-    ep->Buffer.IO_Buffer.offset = 0;
-    ep->SetupHandler = onSetupPacket;
-    ep->EP_WaitSetup = onSetupPacket ? SET : RESET;
-
-
-    USB_EP_Idle(EPx);
-
-    return USB_SUCCESS;
-}
-# 358 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_device.c"
-USB_Result USB_EP_dispatchEvent(USB_EP_TypeDef EPx, uint32_t USB_IT)
-{
-    FlagStatus nextIteration = RESET;
-    USB_Result result = USB_SUCCESS;
-    uint32_t tmpSTS, tmpTS, tmpCTRL;
-    uint32_t i, count;
-    USB_EPContext_TypeDef *ep;
-
-    tmpSTS = USB_GetSEPxSTS(EPx);
-    tmpTS = (USB_GetSEPxTS(EPx) & (uint32_t)(0x00000003));
-    tmpCTRL = USB_GetSEPxCTRL(EPx);
-
-    ep = USB_EPContext + EPx;
-
-
-    if (USB_IT & ((uint32_t)0x00000001))
-    {
-        ep->EP_WasScdone = SET;
-    }
-
-    do
-    {
-        switch (ep->EP_State)
-        {
-
-            case USB_EP_NAK:
-            {
-
-                return USB_SUCCESS;
-            }
-
-
-            case USB_EP_IDLE:
-            {
-                if (!(tmpCTRL & ((uint32_t)0x00000002)) && ep->EP_WasScdone)
-                {
-
-                    if ((tmpTS == (uint32_t)(0x00000002)) && ep->EP_WaitOut)
-                    {
-
-                        ep->EP_State = USB_EP_OUT;
-                        ep->EP_WaitOut = RESET;
-                        nextIteration = SET;
-                    }
-                    else if ((tmpTS == (uint32_t)(0x00000000)) && ep->EP_WaitSetup)
-                    {
-
-                        ep->EP_State = USB_EP_SETUP;
-                        nextIteration = SET;
-                    }
-                    else
-                    {
-
-                        result = USB_ERROR;
-                        USB_EP_Stall(EPx, USB_STALL_PROTO);
-                    }
-                }
-                break;
-            }
-
-
-            case USB_EP_IN:
-            {
-
-                if ((!(tmpCTRL & ((uint32_t)0x00000002))) && ep->EP_WasScdone &&
-                    (tmpTS == (uint32_t)(0x00000001)) && (tmpSTS & ((uint32_t)0x00000040)))
-                {
-
-                    ep->Buffer.IO_Buffer.offset += ep->Buffer.IO_Buffer.bytesToAck;
-                    if (ep->Buffer.IO_Buffer.offset >= ep->Buffer.IO_Buffer.length)
-
-                    {
-
-
-                        ep->EP_State = USB_EP_NAK;
-                        if (ep->InHandler != 0)
-                        {
-                            result = ep->InHandler(EPx, ep->Buffer.IO_Buffer.pBuffer, ep->Buffer.IO_Buffer.length);
-                        }
-
-                        if (result == USB_SUCCESS)
-                        {
-
-
-                            if (ep->EP_State == USB_EP_NAK)
-                            {
-                                USB_EP_Idle(EPx);
-                            }
-                        }
-                        else
-                        {
-
-                            USB_EP_Stall(EPx, USB_STALL_PROTO);
-                        }
-                    }
-                    else
-                    {
-
-                        USB_EP_sendInDataPortion(EPx, USB_DATA_BIT_TOGGLE);
-                    }
-                }
-                else if (tmpSTS & (((uint32_t)0x00000004)
-                                | ((uint32_t)0x00000001)
-                                | ((uint32_t)0x00000002)
-                                | ((uint32_t)0x00000008)))
-                {
-
-
-                    ep->EP_State = USB_EP_NAK;
-                    if (ep->ErrorHandler != 0)
-                    {
-                        result = ep->ErrorHandler(EPx, tmpSTS, tmpTS, tmpCTRL);
-                    }
-                    if (result == USB_SUCCESS)
-                    {
-                        if (ep->EP_State == USB_EP_NAK)
-                        {
-
-
-                            ep->EP_State = USB_EP_IN;
-                            USB_EP_sendInDataPortion(EPx, USB_DATA_BIT_KEEP);
-                        }
-                    }
-                    else
-                    {
-
-                        USB_EP_Stall(EPx, USB_STALL_PROTO);
-                    }
-                }
-                break;
-            }
-
-
-            case USB_EP_OUT:
-            {
-
-                if (!(tmpCTRL & ((uint32_t)0x00000002)) && ep->EP_WasScdone)
-                {
-                    nextIteration = RESET;
-
-
-                    count = USB_GetSEPxRXFDC(EPx);
-                    for (i = 0; i < count; i++)
-                    {
-                        ep->Buffer.IO_Buffer.pBuffer[ep->Buffer.IO_Buffer.offset + i] = USB_GetSEPxRXFD(EPx);
-                    }
-                    USB_SetSEPxRXFC(EPx, 1);
-                    ep->Buffer.IO_Buffer.offset += count;
-
-
-
-                    if (ep->Buffer.IO_Buffer.offset >= ep->Buffer.IO_Buffer.length)
-                    {
-                        ep->EP_State = USB_EP_NAK;
-                        if (ep->OutHandler != 0)
-                        {
-                            result = ep->OutHandler(EPx, ep->Buffer.IO_Buffer.pBuffer, ep->Buffer.IO_Buffer.offset);
-                        }
-
-                        if (result == USB_SUCCESS)
-                        {
-
-
-                            if (ep->EP_State == USB_EP_NAK)
-                            {
-                                USB_EP_Idle(EPx);
-                            }
-                        }
-                        else
-                        {
-
-                            USB_EP_Stall(EPx, USB_STALL_PROTO);
-                        }
-                    }
-                    else
-                    {
-
-                        USB_EP_SetReady(EPx, (uint32_t)(1 << 1));
-                    }
-                }
-                break;
-            }
-
-
-            case USB_EP_SETUP:
-            {
-
-                if (ep->EP_WasScdone)
-                {
-                    ((void)0U);
-
-
-                    count = USB_GetSEPxRXFDC(EPx);
-                    if (count == 8)
-                    {
-                        for (i = 0; i < count; i++)
-                        {
-                            ((uint8_t*)ep->Buffer.pSetupPacket)[i] = USB_GetSEPxRXFD(EPx);
-                        }
-                        USB_SetSEPxRXFC(EPx, 1);
-
-
-                        result = ep->SetupHandler(EPx, ep->Buffer.pSetupPacket);
-
-                        if (result == USB_SUCCESS)
-                        {
-
-
-                            if (ep->EP_State == USB_EP_SETUP)
-                            {
-                                USB_EP_Idle(EPx);
-                            }
-                        }
-                        else
-                        {
-
-                            USB_EP_Stall(EPx, USB_STALL_PROTO);
-                        }
-                    }
-                    else
-                    {
-                        USB_SetSEPxRXFC(EPx, 1);
-                        result = USB_ERROR;
-
-                        USB_EP_Stall(EPx, USB_STALL_PROTO);
-                    }
-                }
-                nextIteration = RESET;
-                break;
-            }
-
-
-            case USB_EP_STALL:
-            {
-                if (!(tmpCTRL & ((uint32_t)0x00000002)))
-                {
-
-                    if (ep->EP_Halt == USB_STALL_HALT)
-                    {
-                        USB_EP_Stall(EPx, USB_STALL_HALT);
-                    }
-                    else
-                    {
-                        USB_EP_Idle(EPx);
-                    }
-                }
-                break;
-            }
-        }
-    } while (nextIteration);
-
-    return result;
-}
-# 624 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_device.c"
-static void USB_EP_sendInDataPortion(USB_EP_TypeDef EPx, USB_EPData_Bit_TypeDef DataBitChange)
-{
-    USB_EPContext_TypeDef *ep = USB_EPContext + EPx;
-    uint32_t i, total;
-
-    ((void)0U);
-
-
-    USB_SetSEPxTXFDC(EPx, 1);
-
-
-    switch (DataBitChange)
-    {
-        case USB_DATA_BIT_KEEP:
-            break;
-        case USB_DATA_BIT_TOGGLE:
-            USB_SEPxToggleEPDATASEQ(EPx);
-            break;
-        case USB_DATA_BIT_DATA1:
-            USB_SetSEPxCTRL(EPx, (uint32_t)(1 << 2));
-            break;
-    }
-
-
-    total = (ep->Buffer.IO_Buffer.offset + ep->Buffer.IO_Buffer.bytesToAck < ep->Buffer.IO_Buffer.length ?
-             ep->Buffer.IO_Buffer.offset + ep->Buffer.IO_Buffer.bytesToAck : ep->Buffer.IO_Buffer.length);
-    for (i = ep->Buffer.IO_Buffer.offset; i < total; i++)
-    {
-        USB_SetSEPxTXFD(EPx, ep->Buffer.IO_Buffer.pBuffer[i]);
-    };
-
-
-    USB_EP_SetReady(EPx, (uint32_t)(1 << 1));
-}
-# 671 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_device.c"
-static void USB_EP_SetReady(USB_EP_TypeDef EPx, uint32_t val)
-{
-    USB_EPContext_TypeDef *ep = USB_EPContext + EPx;
-
-
-    USB_SetSIS(((uint32_t)0x00000001) | ((uint32_t)0x00000002) | ((uint32_t)0x00000004) | ((uint32_t)0x00000008) | ((uint32_t)0x00000010));
-
-    ep->EP_WasScdone = RESET;
-
-
-    USB_SetSEPxCTRL(EPx, val);
-}
-# 697 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_device.c"
-USB_SetupPacket_TypeDef USB_CurrentSetupPacket;
-USB_DeviceContext_TypeDef USB_DeviceContext;
-static uint8_t SetupPacketData[2];
-# 708 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_device.c"
-static USB_Result USB_Device_setAddressWork(USB_EP_TypeDef EPx, uint8_t* Buffer, uint32_t Length);
-# 725 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_device.c"
-USB_Result USB_DeviceInit(const USB_Clock_TypeDef* USB_Clock_InitStruct, USB_DeviceBUSParam_TypeDef* USB_DeviceBUSParam)
-{
-
-    ((void)0U);
-    ((void)0U);
-    ((void)0U);
-
-
-    USB_BRGInit(USB_Clock_InitStruct);
-    USB_Reset();
-
-    USB_SetHSCR((uint32_t)(1 << (0 + 16)));
-    USB_SetHSCR(USB_DeviceBUSParam->PULL);
-
-    USB_SetSC(USB_DeviceBUSParam->SPEED | USB_DeviceBUSParam->MODE | (uint32_t)(1 << 0));
-
-    USB_EP_Init(USB_EP0, (uint32_t)(1 << 0) | (uint32_t)(1 << 2), 0);
-    USB_EP_setSetupHandler(USB_EP0, &USB_CurrentSetupPacket, USB_DeviceSetupPacket);
-
-    USB_DeviceContext.USB_DeviceState = USB_DEV_STATE_UNKNOWN;
-    USB_DeviceContext.Address = 0;
-
-    return USB_SUCCESS;
-}
-
-
-
-
-
-
-USB_Result USB_DevicePowerOn(void)
-{
-    USB_SetHSCR((uint32_t)(1 << 3) | (uint32_t)(1 << 2));
-    USB_DeviceContext.USB_DeviceState = USB_DEV_STATE_POWERED;
-
-    return USB_SUCCESS;
-}
-
-
-
-
-
-
-USB_Result USB_DevicePowerOff(void)
-{
- USB_SetSA(0);
-    USB_SetHSCR((uint32_t)(1 << (3 + 16)));
-    USB_DeviceContext.USB_DeviceState = USB_DEV_STATE_UNKNOWN;
-
-    return USB_SUCCESS;
-}
-# 799 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_device.c"
-USB_Result USB_DeviceReset(void)
-{
-    USB_DeviceContext.USB_DeviceState = USB_DEV_STATE_DEFAULT;
-
-    return USB_SUCCESS;
-}
-
-
-
-
-
-
-USB_Result USB_DeviceSuspend(void)
-{
-    return USB_SUCCESS;
-}
-
-
-
-
-
-
-USB_Result USB_DeviceResume(void)
-{
-    return USB_SUCCESS;
-}
-# 838 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_device.c"
-USB_Result USB_DeviceSetupPacket(USB_EP_TypeDef EPx, const USB_SetupPacket_TypeDef* USB_SetupPacket)
-{
-    USB_RequestType_TypeDef requestType;
-    USB_RequestTypeDT_TypeDef requestDirection;
-
-    USB_Result result = USB_SUCCESS;
-    uint16_t wValue, wIndex, wLength;
-
-
-    ((void)0U);
-
-
-    requestType = (USB_RequestType_TypeDef)(USB_SetupPacket->mRequestTypeData & 0x60);
-    requestDirection = (USB_RequestTypeDT_TypeDef)(USB_SetupPacket->mRequestTypeData & 0x80);
-
-
-    switch (requestType)
-    {
-
-        case USB_TYPE_STANDARD:
-        {
-            USB_RequestRecipient_TypeDef recipient;
-            USB_EP_IO_Handler statusAckHandler = 0;
-
-            wValue = USB_SetupPacket->wValue;
-            wIndex = USB_SetupPacket->wIndex;
-            wLength = USB_SetupPacket->wLength;
-
-
-            recipient = (USB_RequestRecipient_TypeDef)(USB_SetupPacket->mRequestTypeData & 0x1F);
-            if (!((recipient) <= USB_RECIPIENT_OTHER))
-            {
-                result = USB_ERR_INV_REQ;
-                break;
-            }
-
-            switch (USB_SetupPacket->bRequest)
-            {
-
-                case USB_GET_STATUS:
-                    if (requestDirection != USB_DEVICE_TO_HOST ||
-                    (USB_DeviceContext.USB_DeviceState == USB_DEV_STATE_ADDRESS && (recipient == USB_RECIPIENT_INTERFACE ||
-                    (recipient == USB_RECIPIENT_ENDPOINT && wIndex >= Num_USB_EndPoints))))
-                    {
-                        result = USB_ERROR;
-                    }
-                    else
-                    {
-
-                        result = USB_SUCCESS;
-                        if (result == USB_SUCCESS)
-                        {
-                            switch (recipient)
-                            {
-
-                                case USB_RECIPIENT_DEVICE:
-                                    SetupPacketData[0] = 0
-
-
-
-
-
-
-                                                      ;
-                                    break;
-
-                                case USB_RECIPIENT_INTERFACE:
-                                    SetupPacketData[0] = 0;
-                                    break;
-
-                                case USB_RECIPIENT_ENDPOINT:
-                                    SetupPacketData[0] = USB_EPContext[wIndex].EP_Halt;
-                                    break;
-                                default :
-                                    break;
-                            }
-                            SetupPacketData[1] = 0;
-
-                            result = USB_EP_doDataIn(EPx, SetupPacketData, 2, USB_DeviceDoStatusOutAck);
-                        }
-                    }
-                    break;
-
-                case USB_CLEAR_FEATURE:
-                    if (USB_DeviceContext.USB_DeviceState == USB_DEV_STATE_ADDRESS && (recipient == USB_RECIPIENT_INTERFACE ||
-                    (recipient == USB_RECIPIENT_ENDPOINT && wIndex >= Num_USB_EndPoints)))
-                    {
-                        result = USB_ERROR;
-                    }
-                    else
-                    {
-                        result = USB_DeviceClearFeature(recipient, wValue, wIndex);
-                    }
-                    break;
-
-                case USB_SET_FEATURE:
-                    if (USB_DeviceContext.USB_DeviceState == USB_DEV_STATE_ADDRESS && (recipient == USB_RECIPIENT_INTERFACE ||
-                    (recipient == USB_RECIPIENT_ENDPOINT && wIndex >= Num_USB_EndPoints)))
-                    {
-                        result = USB_ERROR;
-                    }
-                    else
-                    {
-                        result = USB_DeviceSetFeature(recipient, wValue, wIndex);
-                    }
-                    break;
-
-                case USB_SET_ADDRESS:
-                    result = USB_SUCCESS;
-
-                    USB_DeviceContext.Address = wValue;
-                    statusAckHandler = USB_Device_setAddressWork;
-                    break;
-
-                case USB_GET_DESCRIPTOR:
-                    result = USB_CDC_GetDescriptor(wValue, wIndex, wLength);
-                    break;
-
-                case USB_SET_DESCRIPTOR:
-                    result = USB_ERROR;
-                    break;
-
-                case USB_GET_CONFIGURATION:
-                    if (USB_DeviceContext.USB_DeviceState == USB_DEV_STATE_ADDRESS)
-                    {
-                        SetupPacketData[0] = 0;
-                    }
-                    else
-                    {
-                        SetupPacketData[0] = (uint8_t)1;
-                    }
-
-                    result = USB_EP_doDataIn(EPx, SetupPacketData, 1, USB_DeviceDoStatusOutAck);
-                    break;
-
-                case USB_SET_CONFIGURATION:
-                    if (wValue == 0)
-                    {
-                        USB_DeviceContext.USB_DeviceState = USB_DEV_STATE_ADDRESS;
-                    }
-                    else
-                    {
-                        result = ((wValue) == 1 ? USB_SUCCESS : USB_ERROR);
-                        if (result == USB_SUCCESS)
-                        {
-                            USB_DeviceContext.USB_DeviceState = USB_DEV_STATE_CONFIGURED;
-                        }
-                    }
-                    break;
-
-                case USB_GET_INTERFACE:
-                    if (USB_DeviceContext.USB_DeviceState == USB_DEV_STATE_ADDRESS)
-                    {
-                        result = USB_ERROR;
-                    }
-                    else
-                    {
-                        SetupPacketData[0] = (uint8_t)0;
-
-                        result = USB_EP_doDataIn(EPx, SetupPacketData, 1, USB_DeviceDoStatusOutAck);
-                    }
-                    break;
-
-                case USB_SET_INTERFACE:
-                    if (USB_DeviceContext.USB_DeviceState == USB_DEV_STATE_ADDRESS)
-                    {
-                        result = USB_ERROR;
-                    }
-                    else
-                    {
-                        result = ((wIndex) == 0 && (wValue) == 0 ? USB_SUCCESS : USB_ERROR);
-                    }
-                    break;
-
-                case USB_SYNCH_FRAME:
-                    if (USB_DeviceContext.USB_DeviceState == USB_DEV_STATE_ADDRESS)
-                    {
-                        result = USB_ERROR;
-                    }
-                    else
-                    {
-                        result = USB_ERROR;
-                        if (result == USB_SUCCESS)
-                        {
-
-                            result = USB_EP_doDataIn(EPx, SetupPacketData, 2, USB_DeviceDoStatusOutAck);
-                        }
-                    }
-                    break;
-                default:
-                    result = USB_ERR_INV_REQ;
-            }
-
-            if (result == USB_SUCCESS && wLength == 0)
-            {
-                result = (USB_SetupPacket->mRequestTypeData & 0x80) == USB_DEVICE_TO_HOST ?
-                            USB_EP_doDataOut(EPx, 0, 0, statusAckHandler) :
-                            USB_EP_doDataIn(EPx, 0, 0, statusAckHandler);
-            }
-            break;
-        }
-
-        case USB_TYPE_CLASS:
-            result = USB_CDC_ClassRequest();
-            break;
-
-        case USB_TYPE_VENDOR:
-            result = USB_ERROR;
-            break;
-        default:
-            result = USB_ERR_INV_REQ;
-    }
-
-    return result;
-}
-# 1074 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_device.c"
-USB_Result USB_DeviceClearFeature(USB_RequestRecipient_TypeDef Recipient, uint16_t wVALUE, uint16_t wINDEX)
-{
-    if ((Recipient == USB_RECIPIENT_ENDPOINT) && (wVALUE == USB_ENDPOINT_HALT))
-    {
-        return USB_EP_Idle((USB_EP_TypeDef)wINDEX);
-    }
-    else
-    {
-        return USB_ERROR;
-    }
-}
-# 1101 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_device.c"
-USB_Result USB_DeviceSetFeature(USB_RequestRecipient_TypeDef Recipient, uint16_t wVALUE, uint16_t wINDEX)
-{
-    if ((Recipient == USB_RECIPIENT_ENDPOINT) && (wVALUE == USB_ENDPOINT_HALT))
-    {
-        return USB_EP_Stall((USB_EP_TypeDef)wINDEX, USB_STALL_HALT);
-    }
-    else
-    {
-        return USB_ERROR;
-    }
-}
-# 1131 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_device.c"
-USB_Result USB_DeviceDoStatusInAck(USB_EP_TypeDef EPx, uint8_t* Buffer, uint32_t Length)
-{
-    return USB_SUCCESS;
-}
-# 1148 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_device.c"
-USB_Result USB_DeviceDoStatusOutAck(USB_EP_TypeDef EPx, uint8_t* Buffer, uint32_t Length)
-{
-    return USB_EP_doDataOut(EPx, 0, 0, 0);
-}
-# 1166 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_device.c"
-static USB_Result USB_Device_setAddressWork(USB_EP_TypeDef EPx, uint8_t* Buffer, uint32_t Length)
-{
-
-    USB_SetSA(USB_DeviceContext.Address);
-
-    USB_DeviceContext.USB_DeviceState = (USB_DeviceContext.Address ? USB_DEV_STATE_ADDRESS : USB_DEV_STATE_DEFAULT);
-
-    return USB_SUCCESS;
-}
-# 1185 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_device.c"
-USB_Result USB_DeviceDispatchEvent(void)
-{
-    uint32_t i;
-    uint32_t USB_IT;
-    USB_Result result = USB_SUCCESS;
-    static volatile uint32_t bHandling = RESET;
-
-
-
-    NVIC_DisableIRQ(USB_IRQn);
-
-
-    if (!bHandling)
-    {
-        bHandling = SET;
-
-        USB_IT = USB_GetSIS();
-
-        if (USB_IT & ((uint32_t)0x00000004))
-        {
-            result = USB_DeviceReset();
-            USB_DeviceContext.Address = 0;
-            USB_SetSA(USB_DeviceContext.Address);
-        }
-
-        for (i = USB_EP0; i < Num_USB_EndPoints; i++)
-        {
-            USB_EP_dispatchEvent((USB_EP_TypeDef)i, USB_IT);
-        }
-
-        USB_SetSIS(USB_IT & (~((uint32_t)0x00000001)));
-
-        bHandling = RESET;
-
-
-
-        NVIC_EnableIRQ(USB_IRQn);
-
-    }
-
-    return result;
-}
-# 1236 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_device.c"
-void USB_IRQHandler(void)
-{
-    USB_DeviceDispatchEvent();
-}
-# 1261 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_device.c"
-USB_Result USB_DeviceDummyGetStatus(USB_RequestRecipient_TypeDef Recipient, uint16_t wINDEX)
-{
-    return USB_SUCCESS;
-}
-# 1274 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_device.c"
-USB_Result USB_DeviceDummySetAddress(uint16_t wVALUE)
-{
-    return USB_SUCCESS;
-}
-# 1290 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_device.c"
-USB_Result USB_DeviceDummyGetDescriptor(uint16_t wVALUE, uint16_t wINDEX, uint16_t wLENGTH)
-{
-    return USB_ERROR;
-}
-# 1306 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_device.c"
-USB_Result USB_DeviceDummySetDescriptor(uint16_t wVALUE, uint16_t wINDEX, uint16_t wLENGTH)
-{
-    return USB_ERROR;
-}
-# 1318 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_device.c"
-uint8_t USB_DeviceDummyGetConfiguration(void)
-{
-    return 1;
-}
-# 1330 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_device.c"
-USB_Result USB_DeviceDummySetConfiguration(uint16_t wVALUE)
-{
-    return USB_ERROR;
-}
-# 1343 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_device.c"
-uint8_t USB_DeviceDummyGetInterface(uint16_t wINDEX)
-{
-    return 0;
-}
-# 1356 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_device.c"
-USB_Result USB_DeviceDummySetInterface(uint16_t wVALUE, uint16_t wINDEX)
-{
-    return USB_SUCCESS;
-}
-# 1371 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_device.c"
-USB_Result USB_DeviceDummySyncFrame(uint16_t wINDEX, uint8_t* DATA)
-{
-    return USB_ERROR;
-}
-# 1385 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_device.c"
-USB_Result USB_DeviceDummyClassRequest(void)
-{
-    return USB_ERROR;
-}
-# 1399 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_device.c"
-USB_Result USB_DeviceDummyVendorRequest(void)
-{
-    return USB_ERROR;
-}
-# 1421 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_device.c"
-USB_Result USB_DeviceDummyDataError(USB_EP_TypeDef EPx, uint32_t STS, uint32_t TS, uint32_t CTRL)
-{
-    return USB_ERROR;
+  }
 }

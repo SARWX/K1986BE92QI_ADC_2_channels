@@ -1,16 +1,10 @@
 # 1 "CustomLibs/src/DMA_for_proj.c"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
-# 379 "<built-in>" 3
+# 383 "<built-in>" 3
 # 1 "<command line>" 1
 # 1 "<built-in>" 2
 # 1 "CustomLibs/src/DMA_for_proj.c" 2
-# 1 "./CustomLibs/inc\\DMA_for_proj.h" 1
-
-
-
-void SetupDMA();
-# 2 "CustomLibs/src/DMA_for_proj.c" 2
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_dma.h" 1
 # 32 "./SPL/MDR32Fx/inc\\MDR32F9Qx_dma.h"
 # 1 "./SPL/MDR32Fx\\MDR32F9Qx_config.h" 1
@@ -1483,7 +1477,7 @@ void DMA_ClearError(void);
 uint32_t DMA_GetCurrTransferCounter(uint8_t DMA_Channel, DMA_Data_Struct_Selection DMA_CtrlData);
 
 FlagStatus DMA_GetFlagStatus(uint8_t DMA_Channel, DMA_Flags DMA_Flag);
-# 3 "CustomLibs/src/DMA_for_proj.c" 2
+# 2 "CustomLibs/src/DMA_for_proj.c" 2
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h" 1
 # 49 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h"
 typedef struct
@@ -1731,14 +1725,22 @@ void RST_CLK_PCLKcmd(uint32_t RST_CLK_PCLK, FunctionalState NewState);
 void RST_CLK_GetClocksFreq(RST_CLK_FreqTypeDef* RST_CLK_Clocks);
 
 FlagStatus RST_CLK_GetFlagStatus(RST_CLK_Flags RST_CLK_FLAG);
-# 4 "CustomLibs/src/DMA_for_proj.c" 2
+# 3 "CustomLibs/src/DMA_for_proj.c" 2
 # 1 "./CustomLibs/inc\\defines_for_proj.h" 1
+# 4 "CustomLibs/src/DMA_for_proj.c" 2
+# 1 "./CustomLibs/inc\\DMA_for_proj.h" 1
+
+
+
+extern DMA_CtrlDataInitTypeDef sDMA_PriCtrlData_ADC1;
+extern DMA_CtrlDataInitTypeDef sDMA_AltCtrlData_ADC1;
+void SetupDMA();
 # 5 "CustomLibs/src/DMA_for_proj.c" 2
 
 
 extern uint16_t DAC_table[];
-extern uint16_t MainArrayForADC[];
-extern uint16_t AlternateArrayForADC[];
+extern uint16_t ADC1_array_m[];
+extern uint16_t ADC1_array_a[];
 
 
 DMA_ChannelInitTypeDef sDMA_ADC1;
@@ -1747,7 +1749,6 @@ DMA_CtrlDataInitTypeDef sDMA_PriCtrlData_ADC1;
 DMA_CtrlDataInitTypeDef sDMA_AltCtrlData_ADC1;
 DMA_CtrlDataInitTypeDef sDMA_PriCtrlData_TIM2;
 DMA_CtrlDataInitTypeDef sDMA_AltCtrlData_TIM2;
-
 
 
 void SetupDMA()
@@ -1767,7 +1768,7 @@ void SetupDMA()
 
  sDMA_PriCtrlData_ADC1.DMA_SourceBaseAddr =
  (uint32_t)(&(((MDR_ADC_TypeDef *) (0x40088000))->ADC1_RESULT));
- sDMA_PriCtrlData_ADC1.DMA_DestBaseAddr = (uint32_t)(MainArrayForADC);
+ sDMA_PriCtrlData_ADC1.DMA_DestBaseAddr = (uint32_t)(ADC1_array_m);
  sDMA_PriCtrlData_ADC1.DMA_CycleSize = 128;
  sDMA_PriCtrlData_ADC1.DMA_SourceIncSize = DMA_SourceIncNo;
  sDMA_PriCtrlData_ADC1.DMA_DestIncSize = DMA_DestIncHalfword;
@@ -1781,7 +1782,7 @@ void SetupDMA()
 
  sDMA_AltCtrlData_ADC1.DMA_SourceBaseAddr =
  (uint32_t)(&(((MDR_ADC_TypeDef *) (0x40088000))->ADC1_RESULT));
- sDMA_AltCtrlData_ADC1.DMA_DestBaseAddr = (uint32_t) (AlternateArrayForADC);
+ sDMA_AltCtrlData_ADC1.DMA_DestBaseAddr = (uint32_t) (ADC1_array_a);
  sDMA_AltCtrlData_ADC1.DMA_CycleSize = 128;
  sDMA_AltCtrlData_ADC1.DMA_SourceIncSize = DMA_SourceIncNo;
  sDMA_AltCtrlData_ADC1.DMA_DestIncSize = DMA_DestIncHalfword;
@@ -1803,17 +1804,60 @@ void SetupDMA()
  DMA_Init(DMA_Channel_ADC1, &sDMA_ADC1);
  ((MDR_DMA_TypeDef *) (0x40028000))->CHNL_REQ_MASK_CLR = 1 << DMA_Channel_ADC1;
  ((MDR_DMA_TypeDef *) (0x40028000))->CHNL_USEBURST_CLR = 1 << DMA_Channel_ADC1;
+
+
+ DMA_StructInit (&sDMA_TIM2);
+
+ sDMA_PriCtrlData_TIM2.DMA_SourceBaseAddr =
+ (uint32_t)(DAC_table);
+ sDMA_PriCtrlData_TIM2.DMA_DestBaseAddr =
+ (uint32_t)(&(((MDR_DAC_TypeDef *) (0x40090000))->DAC2_DATA));
+ sDMA_PriCtrlData_TIM2.DMA_CycleSize = (500);
+ sDMA_PriCtrlData_TIM2.DMA_SourceIncSize = DMA_SourceIncHalfword;
+ sDMA_PriCtrlData_TIM2.DMA_DestIncSize = DMA_DestIncNo;
+ sDMA_PriCtrlData_TIM2.DMA_MemoryDataSize =
+ DMA_MemoryDataSize_HalfWord;
+ sDMA_PriCtrlData_TIM2.DMA_NumContinuous = DMA_Transfers_16;
+ sDMA_PriCtrlData_TIM2.DMA_SourceProtCtrl = DMA_SourcePrivileged;
+ sDMA_PriCtrlData_TIM2.DMA_DestProtCtrl = DMA_DestCacheable;
+ sDMA_PriCtrlData_TIM2.DMA_Mode = DMA_Mode_PingPong;
+
+
+ sDMA_AltCtrlData_TIM2.DMA_SourceBaseAddr =
+ (uint32_t)(DAC_table);
+ sDMA_AltCtrlData_TIM2.DMA_DestBaseAddr =
+ (uint32_t)(&(((MDR_DAC_TypeDef *) (0x40090000))->DAC2_DATA));
+ sDMA_AltCtrlData_TIM2.DMA_CycleSize = (500);
+ sDMA_AltCtrlData_TIM2.DMA_SourceIncSize = DMA_SourceIncHalfword;
+ sDMA_AltCtrlData_TIM2.DMA_DestIncSize = DMA_DestIncNo;
+ sDMA_AltCtrlData_TIM2.DMA_MemoryDataSize =
+ DMA_MemoryDataSize_HalfWord;
+ sDMA_AltCtrlData_TIM2.DMA_NumContinuous = DMA_Transfers_16;
+ sDMA_AltCtrlData_TIM2.DMA_SourceProtCtrl = DMA_SourcePrivileged;
+ sDMA_AltCtrlData_TIM2.DMA_DestProtCtrl = DMA_DestCacheable;
+ sDMA_AltCtrlData_TIM2.DMA_Mode = DMA_Mode_PingPong;
+
+
+ sDMA_TIM2.DMA_PriCtrlData = &sDMA_PriCtrlData_TIM2;
+ sDMA_TIM2.DMA_Priority = DMA_Priority_Default;
+ sDMA_TIM2.DMA_UseBurst = DMA_BurstClear;
+ sDMA_TIM2.DMA_SelectDataStructure = DMA_CTRL_DATA_PRIMARY;
+
+
+ DMA_Init(DMA_Channel_TIM2, &sDMA_TIM2);
+ ((MDR_DMA_TypeDef *) (0x40028000))->CHNL_REQ_MASK_CLR = 1 << DMA_Channel_TIM2;
+ ((MDR_DMA_TypeDef *) (0x40028000))->CHNL_USEBURST_CLR = 1 << DMA_Channel_TIM2;
+
+
+ NVIC_EnableIRQ(DMA_IRQn);
+ NVIC_SetPriority (DMA_IRQn, 100);
 }
 
-void DMA_IRQHandler()
-{
- if(DMA_GetFlagStatus(DMA_Channel_TIM2, DMA_FLAG_CHNL_ALT) == RESET)
- {
+void DMA_IRQHandler() {
+ if(DMA_GetFlagStatus(DMA_Channel_TIM2, DMA_FLAG_CHNL_ALT) == RESET) {
   DMA_CtrlInit(DMA_Channel_TIM2, DMA_CTRL_DATA_ALTERNATE, &sDMA_AltCtrlData_TIM2);
  }
-
- else
- {
+ else {
   DMA_CtrlInit(DMA_Channel_TIM2, DMA_CTRL_DATA_PRIMARY, &sDMA_PriCtrlData_TIM2);
  }
 }

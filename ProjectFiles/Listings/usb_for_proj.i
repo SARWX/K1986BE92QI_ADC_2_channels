@@ -1,7 +1,7 @@
 # 1 "CustomLibs/src/USB_for_proj.c"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
-# 379 "<built-in>" 3
+# 383 "<built-in>" 3
 # 1 "<command line>" 1
 # 1 "<built-in>" 2
 # 1 "CustomLibs/src/USB_for_proj.c" 2
@@ -2361,7 +2361,6 @@ void PORT_ResetBits(MDR_PORT_TypeDef* MDR_PORTx, uint32_t PORT_Pin);
 
 void PORT_Write(MDR_PORT_TypeDef* MDR_PORTx, uint32_t PortVal);
 # 8 "CustomLibs/src/USB_for_proj.c" 2
-
 # 1 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 1 3
 # 51 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
     typedef unsigned int size_t;
@@ -2485,19 +2484,18 @@ extern __attribute__((__nothrow__)) void _membitmovehl(void * , const void * , i
 extern __attribute__((__nothrow__)) void _membitmovehb(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
 extern __attribute__((__nothrow__)) void _membitmovewl(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
 extern __attribute__((__nothrow__)) void _membitmovewb(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
-# 10 "CustomLibs/src/USB_for_proj.c" 2
+# 9 "CustomLibs/src/USB_for_proj.c" 2
 
 extern PORT_InitTypeDef PORT_InitStructure;
-
 static USB_Clock_TypeDef USB_Clock_InitStruct;
 static USB_DeviceBUSParam_TypeDef USB_DeviceBUSParam;
 static MDR_SSP_TypeDef SSP_InitStruct;
 SSP_InitTypeDef sSSP;
 PORT_InitTypeDef PORT_InitStructure;
-
-uint8_t Buffer[128];
-static uint8_t RecBuf[128];
+extern uint8_t *Buffer;
+char RecBuf[128];
 static uint8_t DoubleBuf[128 * 2];
+extern int command_recived;
 
 char *start;
 char *end;
@@ -2532,7 +2530,7 @@ void VCom_Configuration(void)
 {
 
 
-  LineCoding.dwDTERate = 1000000;
+  LineCoding.dwDTERate = 10000000;
   LineCoding.bCharFormat = 0;
   LineCoding.bParityType = 0;
   LineCoding.bDataBits = 8;
@@ -2542,7 +2540,7 @@ void VCom_Configuration(void)
 USB_Result USB_CDC_RecieveData(uint8_t *Buffer, uint32_t Length)
 {
  memcpy(RecBuf, Buffer, 128);
- RecBuf[Length] = 0;
+ command_recived = 1;
  return USB_SUCCESS;
 }
 

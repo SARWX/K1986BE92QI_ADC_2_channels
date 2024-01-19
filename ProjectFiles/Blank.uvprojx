@@ -314,7 +314,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>1</Optim>
+            <Optim>5</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -774,6 +774,11 @@
               <FileType>1</FileType>
               <FilePath>.\CustomLibs\src\USB_for_proj.c</FilePath>
             </File>
+            <File>
+              <FileName>Command_system.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CustomLibs\src\Command_system.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -803,6 +808,11 @@
               <FileName>USB_for_proj.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\CustomLibs\inc\USB_for_proj.h</FilePath>
+            </File>
+            <File>
+              <FileName>Command_system.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\CustomLibs\inc\Command_system.h</FilePath>
             </File>
           </Files>
         </Group>

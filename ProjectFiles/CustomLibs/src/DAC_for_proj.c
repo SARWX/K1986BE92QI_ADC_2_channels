@@ -40,12 +40,6 @@ void SetupDAC() {
 	DAC_DeInit();												// Сбросить настройки ЦАП
 	DAC2_Init(DAC2_AVCC);										// AVcc - опорное напряжение
 	DAC2_Cmd(ENABLE);			
-	double angle_inc = 6.28318 / SIN_RES*10;						// (Пи / 4) / SIN_RES * 2
-	for (int i = 0; i < SIN_RES; i++) {
-		DAC_table[i] = (int) (sin(i*angle_inc) * SIN_AMPLITUDE) + SIN_MEDIUM_LINE;			// Вычисляем значение sin для i, с учетом средней линии
-	}
-	DAC_table[0] = SIN_MEDIUM_LINE;															// Первое значение sin - это средняя линия 
-	DAC_table[SIN_RES] = SIN_MEDIUM_LINE;													// Последнее значение sin - это средняя линия
 }
 
 void SetupTIM2() {
@@ -56,15 +50,25 @@ void SetupTIM2() {
 	TIMER_CntStructInit(&Cnt_sTim2);
 	Cnt_sTim2.TIMER_CounterMode = TIMER_CntMode_ClkFixedDir;			// Счет без направления изменения счета
 	Cnt_sTim2.TIMER_CounterDirection = TIMER_CntDir_Up;					// Счет в сторону уменьшения
-	// Cnt_sTim2.TIMER_EventSource = TIMER_EvSrc_TM2; 						// Событие по достижении TIM2 значения ARR
-	Cnt_sTim2.TIMER_FilterSampling = TIMER_FDTS_TIMER_CLK_div_4;			// Вспомогательная частота для фильтра в 4 раза меньше основной
+	// Cnt_sTim2.TIMER_EventSource = TIMER_EvSrc_TM2; 					// Событие по достижении TIM2 значения ARR
+	Cnt_sTim2.TIMER_FilterSampling = TIMER_FDTS_TIMER_CLK_div_4;		// Вспомогательная частота для фильтра в 4 раза меньше основной
 	Cnt_sTim2.TIMER_ARR_UpdateMode = TIMER_ARR_Update_Immediately;		// Изменение ARR таймера по переполнению
 	Cnt_sTim2.TIMER_IniCounter = 0;										// Инициализационное значение таймкра
-	Cnt_sTim2.TIMER_Period = PERIOD_T2 - 1;									// Значение ARR
-	Cnt_sTim2.TIMER_Prescaler = PRESCALER_T2;									// Делить системную частоту на 1000, т.е. будет 16 кГц           7
+	Cnt_sTim2.TIMER_Period = PERIOD_T2 - 1;								// Значение ARR
+	Cnt_sTim2.TIMER_Prescaler = PRESCALER_T2;							// Делить системную частоту на 1000, т.е. будет 16 кГц           7
 	TIMER_CntInit(MDR_TIMER2, &Cnt_sTim2);
 	NVIC_EnableIRQ(Timer2_IRQn);
 	TIMER_DMACmd(MDR_TIMER2, TIMER_STATUS_CNT_ARR, ENABLE);
 	// Включить таймер
 	TIMER_Cmd(MDR_TIMER2, ENABLE);
+}
+
+void Set_DAC_Table(int freq) { 																					// MIN freq = 100 Hz
+	
+			double angle_inc = 6.28318 * (SIN_RES / (DISCRET_FREQ / freq) + ((freq % 100) != 0)) / SIN_RES;		// (2*Пи * кол-во периодов) / разрешение
+			for (int i = 0; i < (SIN_RES); i++) {
+				DAC_table[i] = (int) (sin(i*angle_inc) * SIN_AMPLITUDE) + SIN_MEDIUM_LINE;						// Вычисляем значение sin для i, с учетом средней линии
+			}
+			DAC_table[0] = SIN_MEDIUM_LINE;																		// Первое значение sin - это средняя линия 
+			DAC_table[SIN_RES - 1] = SIN_MEDIUM_LINE;															// Последнее значение sin - это средняя линия
 }
