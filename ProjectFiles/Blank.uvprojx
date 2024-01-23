@@ -138,7 +138,7 @@
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3></Flash3>
+          <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -314,7 +314,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>1</Optim>
+            <Optim>5</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -750,29 +750,34 @@
           <GroupName>src</GroupName>
           <Files>
             <File>
-              <FileName>DMA_for_proj.c</FileName>
+              <FileName>ADC_init.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CustomLibs\src\DMA_for_proj.c</FilePath>
+              <FilePath>.\CustomLibs\src\ADC_init.c</FilePath>
             </File>
             <File>
-              <FileName>DAC_for_proj.c</FileName>
+              <FileName>command_system.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CustomLibs\src\DAC_for_proj.c</FilePath>
+              <FilePath>.\CustomLibs\src\command_system.c</FilePath>
             </File>
             <File>
-              <FileName>ADC_for_proj.c</FileName>
+              <FileName>DAC_init.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CustomLibs\src\ADC_for_proj.c</FilePath>
+              <FilePath>.\CustomLibs\src\DAC_init.c</FilePath>
             </File>
             <File>
-              <FileName>SysCLK_for_proj.c</FileName>
+              <FileName>DMA_init.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CustomLibs\src\SysCLK_for_proj.c</FilePath>
+              <FilePath>.\CustomLibs\src\DMA_init.c</FilePath>
             </File>
             <File>
-              <FileName>USB_for_proj.c</FileName>
+              <FileName>sys_CLK_init.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\CustomLibs\src\USB_for_proj.c</FilePath>
+              <FilePath>.\CustomLibs\src\sys_CLK_init.c</FilePath>
+            </File>
+            <File>
+              <FileName>USB_init.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CustomLibs\src\USB_init.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -780,29 +785,34 @@
           <GroupName>inc</GroupName>
           <Files>
             <File>
-              <FileName>DMA_for_proj.h</FileName>
+              <FileName>ADC_init.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\CustomLibs\inc\DMA_for_proj.h</FilePath>
+              <FilePath>.\CustomLibs\inc\ADC_init.h</FilePath>
             </File>
             <File>
-              <FileName>defines_for_proj.h</FileName>
+              <FileName>DAC_init.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\CustomLibs\inc\defines_for_proj.h</FilePath>
+              <FilePath>.\CustomLibs\inc\DAC_init.h</FilePath>
             </File>
             <File>
-              <FileName>DAC_for_proj.h</FileName>
+              <FileName>defines.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\CustomLibs\inc\DAC_for_proj.h</FilePath>
+              <FilePath>.\CustomLibs\inc\defines.h</FilePath>
             </File>
             <File>
-              <FileName>SysCLK_for_proj.h</FileName>
+              <FileName>DMA_init.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\CustomLibs\inc\SysCLK_for_proj.h</FilePath>
+              <FilePath>.\CustomLibs\inc\DMA_init.h</FilePath>
             </File>
             <File>
-              <FileName>USB_for_proj.h</FileName>
+              <FileName>sys_CLK_init.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\CustomLibs\inc\USB_for_proj.h</FilePath>
+              <FilePath>.\CustomLibs\inc\sys_CLK_init.h</FilePath>
+            </File>
+            <File>
+              <FileName>USB_init.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\CustomLibs\inc\USB_init.h</FilePath>
             </File>
           </Files>
         </Group>

@@ -1,15 +1,14 @@
-#include "SysCLK_for_proj.h"
 #include "MDR32F9Qx_rst_clk.h"
-#include "defines_for_proj.h"
 #include "MDR32F9Qx_port.h"
-
 #include <stdint.h>
+#include "sys_CLK_init.h"
+#include "defines.h"
 
 // задержка на count тактов 
-void delayTick(uint32_t count)		// Ждать count тактов процессора
+void delay_tick(uint32_t count)	// Ждать count тактов процессора
 {	
-	while (count--) {				// декремент счетчика	
-		__NOP();					// Не делать ничего
+	while (count--) {			// декремент счетчика	
+		__NOP();				// Не делать ничего
 	}
 }
 
@@ -30,10 +29,10 @@ void Setup_CPU_Clock(void)
 	// если не установилась частота, то будет светодиод мигать
 		while (1) 
 		{
-			PORT_SetBits(MDR_PORTC, PORT_Pin_2); 		// Включить светодиод
-			delayTick(10000);
-			PORT_ResetBits(MDR_PORTC, PORT_Pin_2); 		// Выключить светодиод
-			delayTick(10000);
+			PORT_SetBits(MDR_PORTC, PORT_Pin_2); 	// Включить светодиод
+			delay_tick(10000);
+			PORT_ResetBits(MDR_PORTC, PORT_Pin_2); 	// Выключить светодиод
+			delay_tick(10000);
 		}
 	}
 
@@ -53,10 +52,10 @@ void Setup_CPU_Clock(void)
 		/* Trap */ // та же ситуация, что и в предыдущем случае
 		while (1) 
 		{
-			PORT_SetBits(MDR_PORTC, PORT_Pin_2); 		// Включить светодиод
-			delayTick(10000);
-			PORT_ResetBits(MDR_PORTC, PORT_Pin_2); 		// Выключить светодиод
-			delayTick(10000);
+			PORT_SetBits(MDR_PORTC, PORT_Pin_2); 	// Включить светодиод
+			delay_tick(10000);
+			PORT_ResetBits(MDR_PORTC, PORT_Pin_2); 	// Выключить светодиод
+			delay_tick(10000);
 		}
 	}
 

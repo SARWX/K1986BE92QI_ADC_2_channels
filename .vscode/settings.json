@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "*.py": "pip-requirements",
+        "command_system.h": "c",
+        "dac_init.h": "c",
+        "sys_clk_init.h": "c",
+        "defines.h": "c",
+        "mdr32f9qx_port.h": "c"
+    }
+}

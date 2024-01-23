@@ -16,9 +16,11 @@
   SPL\MDR32Fx\inc\MDR32F9Qx_dma.h SPL\MDR32Fx\inc\MDR32F9Qx_timer.h \
   C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stddef.h \
   C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h \
+  C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdlib.h \
   C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdio.h \
   C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdarg.h \
   C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\math.h \
-  CustomLibs\inc\DMA_for_proj.h CustomLibs\inc\DAC_for_proj.h \
-  CustomLibs\inc\ADC_for_proj.h CustomLibs\inc\SysCLK_for_proj.h \
-  CustomLibs\inc\USB_for_proj.h CustomLibs\inc\defines_for_proj.h
+  CustomLibs\inc\DMA_init.h CustomLibs\inc\DAC_init.h \
+  CustomLibs\inc\ADC_init.h CustomLibs\inc\sys_CLK_init.h \
+  CustomLibs\inc\USB_init.h CustomLibs\inc\command_system.h \
+  CustomLibs\inc\defines.h

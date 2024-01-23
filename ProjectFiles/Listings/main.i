@@ -1,11 +1,10 @@
 # 1 "main.c"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
-# 379 "<built-in>" 3
+# 383 "<built-in>" 3
 # 1 "<command line>" 1
 # 1 "<built-in>" 2
 # 1 "main.c" 2
-# 10 "main.c"
 # 1 "./SPL/MDR32Fx\\MDR32F9Qx_config.h" 1
 # 54 "./SPL/MDR32Fx\\MDR32F9Qx_config.h"
 # 1 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdint.h" 1 3
@@ -1198,7 +1197,7 @@ typedef struct
 
 }MDR_EBC_TypeDef;
 # 82 "./SPL/MDR32Fx\\MDR32F9Qx_config.h" 2
-# 11 "main.c" 2
+# 2 "main.c" 2
 # 1 "./MDR32F9Qx_usb_handlers.h" 1
 # 29 "./MDR32F9Qx_usb_handlers.h"
 # 1 "./SPL/MDR32Fx/inc/USB_Library\\MDR32F9Qx_usb_default_handlers.h" 1
@@ -1771,7 +1770,7 @@ USB_Result USB_CDC_RecieveData(uint8_t* Buffer, uint32_t Length);
 
     USB_Result USB_CDC_GetLineCoding(uint16_t wINDEX, USB_CDC_LineCoding_TypeDef* DATA);
     USB_Result USB_CDC_SetLineCoding(uint16_t wINDEX, const USB_CDC_LineCoding_TypeDef* DATA);
-# 12 "main.c" 2
+# 3 "main.c" 2
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h" 1
 # 49 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h"
 typedef struct
@@ -2019,7 +2018,7 @@ void RST_CLK_PCLKcmd(uint32_t RST_CLK_PCLK, FunctionalState NewState);
 void RST_CLK_GetClocksFreq(RST_CLK_FreqTypeDef* RST_CLK_Clocks);
 
 FlagStatus RST_CLK_GetFlagStatus(RST_CLK_Flags RST_CLK_FLAG);
-# 13 "main.c" 2
+# 4 "main.c" 2
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_ssp.h" 1
 # 49 "./SPL/MDR32Fx/inc\\MDR32F9Qx_ssp.h"
 typedef enum
@@ -2169,7 +2168,7 @@ uint16_t SSP_ReceiveData(MDR_SSP_TypeDef* SSPx);
 
 FlagStatus SSP_GetFlagStatus(MDR_SSP_TypeDef* SSPx, SSP_Flags_TypeDef SSP_FLAG);
 void SSP_BRGInit(MDR_SSP_TypeDef* SSPx, SSP_Clock_BRG_TypeDef SSP_BRG);
-# 14 "main.c" 2
+# 5 "main.c" 2
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_port.h" 1
 # 49 "./SPL/MDR32Fx/inc\\MDR32F9Qx_port.h"
 typedef enum
@@ -2352,7 +2351,7 @@ void PORT_ResetBits(MDR_PORT_TypeDef* MDR_PORTx, uint32_t PORT_Pin);
 
 
 void PORT_Write(MDR_PORT_TypeDef* MDR_PORTx, uint32_t PortVal);
-# 15 "main.c" 2
+# 6 "main.c" 2
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h" 1
 # 135 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h"
 typedef enum
@@ -2677,7 +2676,7 @@ ITStatus ADC1_GetITStatus(ADC_IT_Def ADC_IT);
     void ADC2_ClearOutOfRangeFlag(void);
     void ADC2_ITConfig(ADC_IT_Def ADC_IT, FunctionalState NewState);
     ITStatus ADC2_GetITStatus(ADC_IT_Def ADC_IT);
-# 16 "main.c" 2
+# 7 "main.c" 2
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_dac.h" 1
 # 49 "./SPL/MDR32Fx/inc\\MDR32F9Qx_dac.h"
 typedef enum
@@ -2725,7 +2724,7 @@ void DAC2_SetData(uint32_t Data);
 
 uint32_t DAC1_GetData(void);
 uint32_t DAC2_GetData(void);
-# 17 "main.c" 2
+# 8 "main.c" 2
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_dma.h" 1
 # 57 "./SPL/MDR32Fx/inc\\MDR32F9Qx_dma.h"
 typedef enum
@@ -3004,7 +3003,7 @@ void DMA_ClearError(void);
 uint32_t DMA_GetCurrTransferCounter(uint8_t DMA_Channel, DMA_Data_Struct_Selection DMA_CtrlData);
 
 FlagStatus DMA_GetFlagStatus(uint8_t DMA_Channel, DMA_Flags DMA_Flag);
-# 18 "main.c" 2
+# 9 "main.c" 2
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_timer.h" 1
 # 49 "./SPL/MDR32Fx/inc\\MDR32F9Qx_timer.h"
 typedef enum
@@ -3491,7 +3490,7 @@ void TIMER_ITConfig(MDR_TIMER_TypeDef* TIMERx, uint32_t TIMER_IT, FunctionalStat
 ITStatus TIMER_GetITStatus(MDR_TIMER_TypeDef* TIMERx, TIMER_Status_Flags_TypeDef TIMER_IT);
 
 void TIMER_BRGInit(MDR_TIMER_TypeDef* TIMERx, TIMER_Clock_BRG_TypeDef TIMER_BRG);
-# 19 "main.c" 2
+# 10 "main.c" 2
 
 # 1 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stddef.h" 1 3
 # 38 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stddef.h" 3
@@ -3500,7 +3499,7 @@ void TIMER_BRGInit(MDR_TIMER_TypeDef* TIMERx, TIMER_Clock_BRG_TypeDef TIMER_BRG)
     typedef unsigned int size_t;
 # 71 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stddef.h" 3
       typedef unsigned short wchar_t;
-# 21 "main.c" 2
+# 12 "main.c" 2
 # 1 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 1 3
 # 58 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
 extern __attribute__((__nothrow__)) void *memcpy(void * __restrict ,
@@ -3617,7 +3616,210 @@ extern __attribute__((__nothrow__)) void _membitmovehl(void * , const void * , i
 extern __attribute__((__nothrow__)) void _membitmovehb(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
 extern __attribute__((__nothrow__)) void _membitmovewl(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
 extern __attribute__((__nothrow__)) void _membitmovewb(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
-# 22 "main.c" 2
+# 13 "main.c" 2
+# 1 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 1 3
+# 96 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+typedef struct div_t { int quot, rem; } div_t;
+
+typedef struct ldiv_t { long int quot, rem; } ldiv_t;
+
+
+typedef struct lldiv_t { long long quot, rem; } lldiv_t;
+# 139 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) int __aeabi_MB_CUR_MAX(void);
+# 158 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) double atof(const char * ) __attribute__((__nonnull__(1)));
+
+
+
+
+
+extern __attribute__((__nothrow__)) int atoi(const char * ) __attribute__((__nonnull__(1)));
+
+
+
+
+
+extern __attribute__((__nothrow__)) long int atol(const char * ) __attribute__((__nonnull__(1)));
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) long long atoll(const char * ) __attribute__((__nonnull__(1)));
+
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) double strtod(const char * __restrict , char ** __restrict ) __attribute__((__nonnull__(1)));
+# 206 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) float strtof(const char * __restrict , char ** __restrict ) __attribute__((__nonnull__(1)));
+extern __attribute__((__nothrow__)) long double strtold(const char * __restrict , char ** __restrict ) __attribute__((__nonnull__(1)));
+
+
+
+
+extern __attribute__((__nothrow__)) long int strtol(const char * __restrict ,
+                        char ** __restrict , int ) __attribute__((__nonnull__(1)));
+# 243 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) unsigned long int strtoul(const char * __restrict ,
+                                       char ** __restrict , int ) __attribute__((__nonnull__(1)));
+# 275 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) long long strtoll(const char * __restrict ,
+                                  char ** __restrict , int )
+                          __attribute__((__nonnull__(1)));
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) unsigned long long strtoull(const char * __restrict ,
+                                            char ** __restrict , int )
+                                   __attribute__((__nonnull__(1)));
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) int rand(void);
+# 303 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) void srand(unsigned int );
+# 313 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+struct _rand_state { int __x[57]; };
+extern __attribute__((__nothrow__)) int _rand_r(struct _rand_state *);
+extern __attribute__((__nothrow__)) void _srand_r(struct _rand_state *, unsigned int);
+struct _ANSI_rand_state { int __x[1]; };
+extern __attribute__((__nothrow__)) int _ANSI_rand_r(struct _ANSI_rand_state *);
+extern __attribute__((__nothrow__)) void _ANSI_srand_r(struct _ANSI_rand_state *, unsigned int);
+
+
+
+
+
+extern __attribute__((__nothrow__)) void *calloc(size_t , size_t );
+
+
+
+
+
+extern __attribute__((__nothrow__)) void free(void * );
+
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) void *malloc(size_t );
+
+
+
+
+
+extern __attribute__((__nothrow__)) void *realloc(void * , size_t );
+# 374 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+typedef int (*__heapprt)(void *, char const *, ...);
+extern __attribute__((__nothrow__)) void __heapstats(int (* )(void * ,
+                                           char const * , ...),
+                        void * ) __attribute__((__nonnull__(1)));
+# 390 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) int __heapvalid(int (* )(void * ,
+                                           char const * , ...),
+                       void * , int ) __attribute__((__nonnull__(1)));
+# 411 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) __attribute__((__noreturn__)) void abort(void);
+# 422 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) int atexit(void (* )(void)) __attribute__((__nonnull__(1)));
+# 444 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) __attribute__((__noreturn__)) void exit(int );
+# 460 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) __attribute__((__noreturn__)) void _Exit(int );
+# 471 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) char *getenv(const char * ) __attribute__((__nonnull__(1)));
+# 484 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) int system(const char * );
+# 497 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern void *bsearch(const void * , const void * ,
+              size_t , size_t ,
+              int (* )(const void *, const void *)) __attribute__((__nonnull__(1,2,5)));
+# 532 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern void qsort(void * , size_t , size_t ,
+           int (* )(const void *, const void *)) __attribute__((__nonnull__(1,4)));
+# 560 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) __attribute__((__const__)) int abs(int );
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) __attribute__((__const__)) div_t div(int , int );
+# 579 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) __attribute__((__const__)) long int labs(long int );
+# 589 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) __attribute__((__const__)) ldiv_t ldiv(long int , long int );
+# 610 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) __attribute__((__const__)) long long llabs(long long );
+# 620 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) __attribute__((__const__)) lldiv_t lldiv(long long , long long );
+# 644 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+typedef struct __sdiv32by16 { long quot, rem; } __sdiv32by16;
+typedef struct __udiv32by16 { unsigned long quot, rem; } __udiv32by16;
+
+typedef struct __sdiv64by32 { long rem, quot; } __sdiv64by32;
+
+__attribute__((__value_in_regs__)) extern __attribute__((__nothrow__)) __attribute__((__const__)) __sdiv32by16 __rt_sdiv32by16(
+     int ,
+     short int );
+
+
+
+__attribute__((__value_in_regs__)) extern __attribute__((__nothrow__)) __attribute__((__const__)) __udiv32by16 __rt_udiv32by16(
+     unsigned int ,
+     unsigned short );
+
+
+
+__attribute__((__value_in_regs__)) extern __attribute__((__nothrow__)) __attribute__((__const__)) __sdiv64by32 __rt_sdiv64by32(
+     int , unsigned int ,
+     int );
+
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) unsigned int __fp_status(unsigned int , unsigned int );
+# 705 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) int mblen(const char * , size_t );
+# 720 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) int mbtowc(wchar_t * __restrict ,
+                   const char * __restrict , size_t );
+# 739 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) int wctomb(char * , wchar_t );
+# 761 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) size_t mbstowcs(wchar_t * __restrict ,
+                      const char * __restrict , size_t ) __attribute__((__nonnull__(2)));
+# 779 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) size_t wcstombs(char * __restrict ,
+                      const wchar_t * __restrict , size_t ) __attribute__((__nonnull__(2)));
+# 798 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
+extern __attribute__((__nothrow__)) void __use_realtime_heap(void);
+extern __attribute__((__nothrow__)) void __use_realtime_division(void);
+extern __attribute__((__nothrow__)) void __use_two_region_memory(void);
+extern __attribute__((__nothrow__)) void __use_no_heap(void);
+extern __attribute__((__nothrow__)) void __use_no_heap_region(void);
+
+extern __attribute__((__nothrow__)) char const *__C_library_version_string(void);
+extern __attribute__((__nothrow__)) int __C_library_version_number(void);
+# 14 "main.c" 2
 # 1 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 1 3
 # 68 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
     typedef __builtin_va_list __va_list;
@@ -3937,13 +4139,13 @@ extern __attribute__((__nothrow__)) int _fisatty(FILE * ) __attribute__((__nonnu
 
 extern __attribute__((__nothrow__)) void __use_no_semihosting_swi(void);
 extern __attribute__((__nothrow__)) void __use_no_semihosting(void);
-# 23 "main.c" 2
+# 15 "main.c" 2
 # 1 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdarg.h" 1 3
 # 40 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdarg.h" 3
   typedef __builtin_va_list va_list;
 # 134 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdarg.h" 3
      typedef va_list __gnuc_va_list;
-# 24 "main.c" 2
+# 16 "main.c" 2
 # 1 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\math.h" 1 3
 # 157 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\math.h" 3
 extern __attribute__((__pcs__("aapcs"))) unsigned __ARM_dcmp4(double , double );
@@ -4460,101 +4662,105 @@ __attribute__((__nothrow__)) long double tgammal(long double );
 extern __attribute__((__nothrow__)) __attribute__((__const__)) double trunc(double );
 extern __attribute__((__nothrow__)) __attribute__((__const__)) float truncf(float );
 __attribute__((__nothrow__)) long double truncl(long double );
-# 25 "main.c" 2
+# 17 "main.c" 2
 
 
-# 1 "./CustomLibs/inc\\DMA_for_proj.h" 1
-
-
-
-void SetupDMA();
-# 28 "main.c" 2
-# 1 "./CustomLibs/inc\\DAC_for_proj.h" 1
+# 1 "./CustomLibs/inc\\DMA_init.h" 1
 
 
 
-void SetupDAC();
-void SetupTIM2();
-# 29 "main.c" 2
-# 1 "./CustomLibs/inc\\ADC_for_proj.h" 1
+extern DMA_CtrlDataInitTypeDef ADC1_primary_DMA_structure;
+extern DMA_CtrlDataInitTypeDef ADC1_alternate_DMA_structure;
+void Setup_DMA();
+# 20 "main.c" 2
+# 1 "./CustomLibs/inc\\DAC_init.h" 1
 
 
 
-void SetupADC();
-# 30 "main.c" 2
-# 1 "./CustomLibs/inc\\SysCLK_for_proj.h" 1
+void Setup_DAC();
+void Setup_TIM2();
+void set_DAC_table(int freq);
+# 21 "main.c" 2
+# 1 "./CustomLibs/inc\\ADC_init.h" 1
+
+
+
+void Setup_ADC();
+# 22 "main.c" 2
+# 1 "./CustomLibs/inc\\sys_CLK_init.h" 1
 
 
 
 
 void Setup_CPU_Clock(void);
-void delayTick(uint32_t count);
-# 31 "main.c" 2
-# 1 "./CustomLibs/inc\\USB_for_proj.h" 1
+void delay_tick(uint32_t count);
+# 23 "main.c" 2
+# 1 "./CustomLibs/inc\\USB_init.h" 1
 
 
 
 void Setup_USB(void);
 void VCom_Configuration(void);
-# 32 "main.c" 2
+# 24 "main.c" 2
+# 1 "./CustomLibs/inc\\command_system.h" 1
 
 
-# 1 "./CustomLibs/inc\\defines_for_proj.h" 1
-# 35 "main.c" 2
 
-extern uint8_t *Buffer;
-
-uint16_t MainArrayForADC[128];
-uint16_t AlternateArrayForADC[128];
+void execute_command(char *command);
+# 25 "main.c" 2
 
 
-extern DMA_ChannelInitTypeDef sDMA_ADC1;
-extern DMA_ChannelInitTypeDef sDMA_TIM2;
-extern DMA_CtrlDataInitTypeDef sDMA_PriCtrlData_ADC1;
-extern DMA_CtrlDataInitTypeDef sDMA_AltCtrlData_ADC1;
-extern DMA_CtrlDataInitTypeDef sDMA_PriCtrlData_TIM2;
-extern DMA_CtrlDataInitTypeDef sDMA_AltCtrlData_TIM2;
+# 1 "./CustomLibs/inc\\defines.h" 1
+# 28 "main.c" 2
+
+int command_recived = 0;
+char buffer[128];
+extern char rec_buf[];
+
+uint16_t main_array_for_ADC[128];
+uint16_t alternate_array_for_ADC[128];
 
 
-static void StageOneDMA();
-static void StageTwoDMA();
 
-int main(void)
-{
+int main(void) {
  VCom_Configuration();
- SetupADC();
- SetupDMA();
- USB_CDC_Init(Buffer, 1, SET);
+
+
+ Setup_ADC();
+ Setup_DMA();
+ USB_CDC_Init((uint8_t *)buffer, 1, SET);
  Setup_CPU_Clock();
  Setup_USB();
+ set_DAC_table(100);
+ Setup_DAC();
+ Setup_TIM2();
 
+ DMA_Cmd(DMA_Channel_TIM2, ENABLE);
 
  ADC1_Cmd (ENABLE);
  DMA_Cmd(DMA_Channel_ADC1, ENABLE);
 
 
- while (1)
- {
-  StageOneDMA();
-  StageTwoDMA();
+ while (1) {
+  if (command_recived == 1) {
+   ADC1_Cmd (DISABLE);
+   command_recived = 0;
+   execute_command(rec_buf);
+   for(int i = 0; i < 128; i++) {
+    buffer[i] = 0;
+   }
+   ADC1_Cmd(ENABLE);
+  }
+
+  while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) == 0)
+   ;
+  DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_PRIMARY, &ADC1_primary_DMA_structure);
+  USB_CDC_SendData((uint8_t *)(main_array_for_ADC), ((128) * 2 ));
+
+
+  while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) != 0)
+   ;
+  DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_ALTERNATE, &ADC1_alternate_DMA_structure);
+  USB_CDC_SendData((uint8_t *)(alternate_array_for_ADC), ((128) * 2 ));
  }
-}
-
-
-
-void StageOneDMA()
-{
-  while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) == 0);
-  DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_PRIMARY, &sDMA_PriCtrlData_ADC1);
-  USB_CDC_SendData((uint8_t *)(MainArrayForADC), ((128) * 2 ));
-}
-
-
-
-void StageTwoDMA()
-{
-  while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) != 0);
-  DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_ALTERNATE, &sDMA_AltCtrlData_ADC1);
-  USB_CDC_SendData((uint8_t *)(AlternateArrayForADC), ((128) * 2));
-
 }

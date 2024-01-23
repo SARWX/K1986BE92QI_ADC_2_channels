@@ -3,5 +3,5 @@
 #include <stdint.h>
 
 void Setup_CPU_Clock(void);
-void delayTick(uint32_t count);
+void delay_tick(uint32_t count);
 #endif /* SysCLK_for_proj */

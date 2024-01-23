@@ -1,24 +1,22 @@
-#include "USB_for_proj.h"
-#include "defines_for_proj.h"
 #include "MDR32F9Qx_config.h"
 #include "MDR32F9Qx_usb_handlers.h"
 #include "MDR32F9Qx_rst_clk.h"
 #include "MDR32F9Qx_ssp.h"
 #include "MDR32F9Qx_port.h"
-
 #include <string.h>
+#include "USB_init.h"
+#include "defines.h"
 
-extern PORT_InitTypeDef PORT_InitStructure;
-
+extern PORT_InitTypeDef port_init_structure;
 static USB_Clock_TypeDef USB_Clock_InitStruct;
 static USB_DeviceBUSParam_TypeDef USB_DeviceBUSParam;
 static MDR_SSP_TypeDef SSP_InitStruct;
 SSP_InitTypeDef sSSP;
-PORT_InitTypeDef PORT_InitStructure;
-
-uint8_t Buffer[BUFFER_LENGTH];
-static uint8_t RecBuf[BUFFER_LENGTH];
+PORT_InitTypeDef port_init_structure;
+extern uint8_t *buffer;
+char rec_buf[BUFFER_LENGTH];
 static uint8_t DoubleBuf[BUFFER_LENGTH * 2];
+extern int command_recived;
 
 char *start;
 char *end;
@@ -53,7 +51,7 @@ void VCom_Configuration(void)
 {
 	#ifdef USB_CDC_LINE_CODING_SUPPORTED
 		//LineCoding.dwDTERate = 9600;
-		LineCoding.dwDTERate = 1000000;
+		LineCoding.dwDTERate = 10000000;
 		LineCoding.bCharFormat = 0;
 		LineCoding.bParityType = 0;
 		LineCoding.bDataBits = 8;
@@ -62,8 +60,8 @@ void VCom_Configuration(void)
 
 USB_Result USB_CDC_RecieveData(uint8_t *Buffer, uint32_t Length) 
 {
-	memcpy(RecBuf, Buffer, BUFFER_LENGTH);
-	RecBuf[Length] = 0; //why last byte on odd wrong.
+	memcpy(rec_buf, buffer, BUFFER_LENGTH);
+	command_recived = 1;
 	return USB_SUCCESS;
 }
 

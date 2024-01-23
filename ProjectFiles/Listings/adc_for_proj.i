@@ -1,7 +1,7 @@
 # 1 "CustomLibs/src/ADC_for_proj.c"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
-# 379 "<built-in>" 3
+# 383 "<built-in>" 3
 # 1 "<command line>" 1
 # 1 "<built-in>" 2
 # 1 "CustomLibs/src/ADC_for_proj.c" 2
@@ -1965,11 +1965,11 @@ ITStatus ADC1_GetITStatus(ADC_IT_Def ADC_IT);
 # 6 "CustomLibs/src/ADC_for_proj.c" 2
 
 
-ADC_InitTypeDef sADC;
-ADCx_InitTypeDef sADCx;
+ADC_InitTypeDef ADC_structure;
+ADCx_InitTypeDef ADCx_structure;
 
 
-extern PORT_InitTypeDef PORT_InitStructure;
+extern PORT_InitTypeDef port_init_structure;
 
 void SetupADC()
 {
@@ -1977,40 +1977,34 @@ void SetupADC()
     RST_CLK_PCLKcmd((((uint32_t)(1U << ((((uint32_t)(0x40020000)) >> 15) & 0x1F))) | ((uint32_t)(1U << ((((uint32_t)(0x40088000)) >> 15) & 0x1F)))), ENABLE);
     RST_CLK_PCLKcmd((((uint32_t)(1U << ((((uint32_t)(0x400B8000)) >> 15) & 0x1F))) | ((uint32_t)(1U << ((((uint32_t)(0x400C0000)) >> 15) & 0x1F)))), ENABLE);
 
-
     ((SCB_Type *) ((0xE000E000UL) + 0x0D00UL) )->AIRCR = 0x5FA0500;
     ((SCB_Type *) ((0xE000E000UL) + 0x0D00UL) )->VTOR = 0x08000000;
 
-
     ((NVIC_Type *) ((0xE000E000UL) + 0x0100UL) )->ICPR[0] = 0xFFFFFFFF;
     ((NVIC_Type *) ((0xE000E000UL) + 0x0100UL) )->ICER[0] = 0xFFFFFFFF;
-  ((NVIC_Type *) ((0xE000E000UL) + 0x0100UL) )->ISER[0] = (1<<ADC_IRQn);
-
+ ((NVIC_Type *) ((0xE000E000UL) + 0x0100UL) )->ISER[0] = (1<<ADC_IRQn);
 
     PORT_DeInit(((MDR_PORT_TypeDef *) (0x400C0000)));
 
-
-    PORT_InitStructure.PORT_Pin = PORT_Pin_0 | PORT_Pin_1;
-    PORT_InitStructure.PORT_OE = PORT_OE_IN;
-    PORT_InitStructure.PORT_MODE = PORT_MODE_ANALOG;
-    PORT_Init(((MDR_PORT_TypeDef *) (0x400C0000)), &PORT_InitStructure);
-
+    port_init_structure.PORT_Pin = PORT_Pin_0 | PORT_Pin_1;
+    port_init_structure.PORT_OE = PORT_OE_IN;
+    port_init_structure.PORT_MODE = PORT_MODE_ANALOG;
+    PORT_Init(((MDR_PORT_TypeDef *) (0x400C0000)), &port_init_structure);
 
     ADC_DeInit();
-    ADC_StructInit(&sADC);
-  ADC_Init (&sADC);
-    ADCx_StructInit (&sADCx);
-    sADCx.ADC_ClockSource = ADC_CLOCK_SOURCE_CPU;
-    sADCx.ADC_SamplingMode = ADC_SAMPLING_MODE_CYCLIC_CONV;
-    sADCx.ADC_ChannelSwitching = ADC_CH_SWITCHING_Enable;
-    sADCx.ADC_ChannelNumber = ADC_CH_ADC0;
-    sADCx.ADC_Channels = ((((uint32_t)0x1) << ADC_CH_ADC0 ) | (((uint32_t)0x1) << ADC_CH_ADC1 ));
-    sADCx.ADC_VRefSource = ADC_VREF_SOURCE_INTERNAL;
-    sADCx.ADC_IntVRefSource = ADC_INT_VREF_SOURCE_INEXACT;
-    sADCx.ADC_Prescaler = ADC_CLK_div_32;
-  sADCx.ADC_DelayGo = 0x2;
-    ADC1_Init (&sADCx);
-
+    ADC_StructInit(&ADC_structure);
+ ADC_Init (&ADC_structure);
+    ADCx_StructInit (&ADCx_structure);
+    ADCx_structure.ADC_ClockSource = ADC_CLOCK_SOURCE_CPU;
+    ADCx_structure.ADC_SamplingMode = ADC_SAMPLING_MODE_CYCLIC_CONV;
+    ADCx_structure.ADC_ChannelSwitching = ADC_CH_SWITCHING_Enable;
+    ADCx_structure.ADC_ChannelNumber = ADC_CH_ADC0;
+    ADCx_structure.ADC_Channels = ((((uint32_t)0x1) << ADC_CH_ADC0 ) | (((uint32_t)0x1) << ADC_CH_ADC1 ));
+    ADCx_structure.ADC_VRefSource = ADC_VREF_SOURCE_INTERNAL;
+    ADCx_structure.ADC_IntVRefSource = ADC_INT_VREF_SOURCE_INEXACT;
+    ADCx_structure.ADC_Prescaler = ADC_CLK_div_32;
+ ADCx_structure.ADC_DelayGo = 0x2;
+    ADC1_Init (&ADCx_structure);
 
     ADC1_ITConfig((ADCx_IT_END_OF_CONVERSION), ENABLE);
 }

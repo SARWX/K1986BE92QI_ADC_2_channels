@@ -1,7 +1,7 @@
 # 1 "CustomLibs/src/DAC_for_proj.c"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
-# 379 "<built-in>" 3
+# 383 "<built-in>" 3
 # 1 "<command line>" 1
 # 1 "<built-in>" 2
 # 1 "CustomLibs/src/DAC_for_proj.c" 2
@@ -9,8 +9,9 @@
 
 
 
-void SetupDAC();
-void SetupTIM2();
+void Setup_DAC();
+void Setup_TIM2();
+void set_DAC_table(int freq);
 # 2 "CustomLibs/src/DAC_for_proj.c" 2
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h" 1
 # 32 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h"
@@ -2706,35 +2707,29 @@ int dac_cnt = 0;
 uint16_t DAC_table[500];
 
 
-extern PORT_InitTypeDef PORT_InitStructure;
+extern PORT_InitTypeDef port_init_structure;
 
 
 TIMER_CntInitTypeDef Cnt_sTim2;
 
-void SetupDAC() {
+void Setup_DAC() {
 
     RST_CLK_PCLKcmd((((uint32_t)(1U << ((((uint32_t)(0x40020000)) >> 15) & 0x1F))) | ((uint32_t)(1U << ((((uint32_t)(0x40090000)) >> 15) & 0x1F)))), ENABLE);
     RST_CLK_PCLKcmd((((uint32_t)(1U << ((((uint32_t)(0x400C8000)) >> 15) & 0x1F)))), ENABLE);
 
     PORT_DeInit(((MDR_PORT_TypeDef *) (0x400C8000)));
 
-    PORT_InitStructure.PORT_Pin = PORT_Pin_0;
-    PORT_InitStructure.PORT_OE = PORT_OE_IN;
-    PORT_InitStructure.PORT_MODE = PORT_MODE_ANALOG;
-    PORT_Init(((MDR_PORT_TypeDef *) (0x400C8000)), &PORT_InitStructure);
+    port_init_structure.PORT_Pin = PORT_Pin_0;
+    port_init_structure.PORT_OE = PORT_OE_IN;
+    port_init_structure.PORT_MODE = PORT_MODE_ANALOG;
+    PORT_Init(((MDR_PORT_TypeDef *) (0x400C8000)), &port_init_structure);
 
  DAC_DeInit();
  DAC2_Init(DAC2_AVCC);
  DAC2_Cmd(ENABLE);
- double angle_inc = 6.28318 / 500*10;
- for (int i = 0; i < 500; i++) {
-  DAC_table[i] = (int) (sin(i*angle_inc) * 2000) + 2000;
- }
- DAC_table[0] = 2000;
- DAC_table[500] = 2000;
 }
 
-void SetupTIM2() {
+void Setup_TIM2() {
  RST_CLK_PCLKcmd((((uint32_t)(1U << ((((uint32_t)(0x40078000)) >> 15) & 0x1F)))), ENABLE);
  TIMER_DeInit(((MDR_TIMER_TypeDef *) (0x40078000)));
  TIMER_BRGInit(((MDR_TIMER_TypeDef *) (0x40078000)), TIMER_HCLKdiv1);
@@ -2746,11 +2741,21 @@ void SetupTIM2() {
  Cnt_sTim2.TIMER_FilterSampling = TIMER_FDTS_TIMER_CLK_div_4;
  Cnt_sTim2.TIMER_ARR_UpdateMode = TIMER_ARR_Update_Immediately;
  Cnt_sTim2.TIMER_IniCounter = 0;
- Cnt_sTim2.TIMER_Period = 56 - 1;
- Cnt_sTim2.TIMER_Prescaler = 35;
+ Cnt_sTim2.TIMER_Period = 20 - 1;
+ Cnt_sTim2.TIMER_Prescaler = 16;
  TIMER_CntInit(((MDR_TIMER_TypeDef *) (0x40078000)), &Cnt_sTim2);
  NVIC_EnableIRQ(Timer2_IRQn);
  TIMER_DMACmd(((MDR_TIMER_TypeDef *) (0x40078000)), TIMER_STATUS_CNT_ARR, ENABLE);
 
  TIMER_Cmd(((MDR_TIMER_TypeDef *) (0x40078000)), ENABLE);
+}
+
+void set_DAC_table(int freq) {
+
+   double angle_inc = 6.28318 * (500 / ((16000000 / (16 * 20)) / freq) + ((freq % 100) != 0)) / 500;
+   for (int i = 0; i < (500); i++) {
+    DAC_table[i] = (int) (sin(i*angle_inc) * 2000) + 2000;
+   }
+   DAC_table[0] = 2000;
+   DAC_table[500 - 1] = 2000;
 }
