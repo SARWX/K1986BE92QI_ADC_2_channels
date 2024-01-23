@@ -35,7 +35,8 @@ uint16_t alternate_array_for_ADC[NUM_OF_MES];	// Массив измерений
 
 /* -------------------------------------------------------------------------------*/
 
-int main(void) {
+int main(void) 
+{
 	VCom_Configuration();
 
 	/* CDC layer initialization */
@@ -54,12 +55,16 @@ int main(void) {
 	DMA_Cmd(DMA_Channel_ADC1, ENABLE);		// разрешаем работу DMA с каналом ADC1
 
 	/* Main loop */
-	while (1) {
-		if (command_recived == 1) {
+	while (1) 
+	{
+		if (command_recived == 1) 
+		{
 			ADC1_Cmd (DISABLE);
 			command_recived = 0;
 			execute_command(rec_buf);
-			for(int i = 0; i < BUFFER_LENGTH; i++) {
+
+			for(int i = 0; i < BUFFER_LENGTH; i++) 
+			{
 				buffer[i] = 0;
 			}
 			ADC1_Cmd(ENABLE);

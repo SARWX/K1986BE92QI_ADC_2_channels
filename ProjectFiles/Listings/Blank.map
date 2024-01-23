@@ -7,27 +7,27 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
 
-       198          0          0          0         56       6509   adc_init.o
-        56         12          0          0          0        830   command_system.o
-       364          0          0          0       1024       6375   dac_init.o
-       434          0          0          0        176       7478   dma_init.o
-       236          0          0          0        644       3179   main.o
-       282          0          0          0          0      12181   mdr32f9qx_adc.o
-        56          0          0          0          0       2549   mdr32f9qx_dac.o
-       990         10          0          0       1024      10601   mdr32f9qx_dma.o
-       308          0          0          0          0       5148   mdr32f9qx_port.o
-       392          0          0          0          0      16323   mdr32f9qx_rst_clk.o
-       282          0          0          0          0      23030   mdr32f9qx_timer.o
-       354          0          0          0          0      11203   mdr32f9qx_usb.o
-       610         36          0         85         20       7672   mdr32f9qx_usb_cdc.o
-      2792         26          0          0        204      20975   mdr32f9qx_usb_device.o
-        64         26        192          0      24576        928   startup_mdr32f9qx.o
-       248          0          0          0          0       4660   sys_clk_init.o
-       180          0          0          4          0       1982   system_mdr32f9qx.o
-       196          0          0          0        164       6707   usb_init.o
+       198          0          0          0         56       6531   adc_init.o
+        56         12          0          0          0        856   command_system.o
+       364          0          0          0       1024       6404   dac_init.o
+       434          0          0          0        176       7500   dma_init.o
+       236          0          0          0        644       3201   main.o
+       282          0          0          0          0      12203   mdr32f9qx_adc.o
+        56          0          0          0          0       2571   mdr32f9qx_dac.o
+       990         10          0          0       1024      10623   mdr32f9qx_dma.o
+       308          0          0          0          0       5170   mdr32f9qx_port.o
+       392          0          0          0          0      16345   mdr32f9qx_rst_clk.o
+       282          0          0          0          0      23052   mdr32f9qx_timer.o
+       354          0          0          0          0      11225   mdr32f9qx_usb.o
+       610         36          0         85         20       7694   mdr32f9qx_usb_cdc.o
+      2792         26          0          0        204      20997   mdr32f9qx_usb_device.o
+        64         26        192          0      24576        936   startup_mdr32f9qx.o
+       248          0          0          0          0       4683   sys_clk_init.o
+       180          0          0          4          0       2004   system_mdr32f9qx.o
+       196          0          0          0        164       6730   usb_init.o
 
     ----------------------------------------------------------------------
-      8132        110        224         92      28536     148330   Object Totals
+      8132        110        224         92      28536     148725   Object Totals
          0          0         32          0          0          0   (incl. Generated)
         90          0          0          3        648          0   (incl. Padding)
 
@@ -111,8 +111,8 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-     13720        454        792         92      28632     149874   Grand Totals
-     13720        454        792         92      28632     149874   ELF Image Totals
+     13720        454        792         92      28632     150269   Grand Totals
+     13720        454        792         92      28632     150269   ELF Image Totals
      13720        454        792         92          0          0   ROM Totals
 
 ==============================================================================

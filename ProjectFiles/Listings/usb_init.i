@@ -2506,9 +2506,11 @@ char tempString[100];
 static USB_CDC_LineCoding_TypeDef LineCoding;
 
 
-void Setup_USB(void) {
+void Setup_USB(void)
+{
 
  RST_CLK_PCLKcmd(((uint32_t)(1U << ((((uint32_t)(0x40010000)) >> 15) & 0x1F))), ENABLE);
+
 
  USB_Clock_InitStruct.USB_USBC1_Source = USB_C1HSEdiv2;
  USB_Clock_InitStruct.USB_PLLUSBMUL = USB_PLLUSBMUL6;
@@ -2517,8 +2519,10 @@ void Setup_USB(void) {
  USB_DeviceBUSParam.PULL = (uint32_t)(1 << 4);
  USB_DeviceInit(&USB_Clock_InitStruct, &USB_DeviceBUSParam);
 
+
  USB_SetSIM(((uint32_t)0x00000001) | ((uint32_t)0x00000002) | ((uint32_t)0x00000004) | ((uint32_t)0x00000008) | ((uint32_t)0x00000010));
  USB_DevicePowerOn();
+
 
 
  NVIC_EnableIRQ(USB_IRQn);

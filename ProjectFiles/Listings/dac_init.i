@@ -2706,27 +2706,33 @@ extern PORT_InitTypeDef port_init_structure;
 
 TIMER_CntInitTypeDef Cnt_sTim2;
 
-void Setup_DAC() {
+void Setup_DAC()
+{
 
     RST_CLK_PCLKcmd((((uint32_t)(1U << ((((uint32_t)(0x40020000)) >> 15) & 0x1F))) | ((uint32_t)(1U << ((((uint32_t)(0x40090000)) >> 15) & 0x1F)))), ENABLE);
     RST_CLK_PCLKcmd((((uint32_t)(1U << ((((uint32_t)(0x400C8000)) >> 15) & 0x1F)))), ENABLE);
 
+
     PORT_DeInit(((MDR_PORT_TypeDef *) (0x400C8000)));
+
 
     port_init_structure.PORT_Pin = PORT_Pin_0;
     port_init_structure.PORT_OE = PORT_OE_IN;
     port_init_structure.PORT_MODE = PORT_MODE_ANALOG;
     PORT_Init(((MDR_PORT_TypeDef *) (0x400C8000)), &port_init_structure);
 
+
  DAC_DeInit();
  DAC2_Init(DAC2_AVCC);
  DAC2_Cmd(ENABLE);
 }
 
-void Setup_TIM2() {
+void Setup_TIM2()
+{
  RST_CLK_PCLKcmd((((uint32_t)(1U << ((((uint32_t)(0x40078000)) >> 15) & 0x1F)))), ENABLE);
  TIMER_DeInit(((MDR_TIMER_TypeDef *) (0x40078000)));
  TIMER_BRGInit(((MDR_TIMER_TypeDef *) (0x40078000)), TIMER_HCLKdiv1);
+
 
  TIMER_CntStructInit(&Cnt_sTim2);
  Cnt_sTim2.TIMER_CounterMode = TIMER_CntMode_ClkFixedDir;
@@ -2737,19 +2743,24 @@ void Setup_TIM2() {
  Cnt_sTim2.TIMER_IniCounter = 0;
  Cnt_sTim2.TIMER_Period = 20 - 1;
  Cnt_sTim2.TIMER_Prescaler = 16;
+
  TIMER_CntInit(((MDR_TIMER_TypeDef *) (0x40078000)), &Cnt_sTim2);
  NVIC_EnableIRQ(Timer2_IRQn);
  TIMER_DMACmd(((MDR_TIMER_TypeDef *) (0x40078000)), TIMER_STATUS_CNT_ARR, ENABLE);
 
+
  TIMER_Cmd(((MDR_TIMER_TypeDef *) (0x40078000)), ENABLE);
 }
 
-void set_DAC_table(int freq) {
+void set_DAC_table(int freq)
+{
 
    double angle_inc = 6.28318 * (500 / ((16000000 / (16 * 20)) / freq) + ((freq % 100) != 0)) / 500;
-   for (int i = 0; i < (500); i++) {
+   for (int i = 0; i < (500); i++)
+   {
     DAC_table[i] = (int) (sin(i*angle_inc) * 2000) + 2000;
    }
+
    DAC_table[0] = 2000;
    DAC_table[500 - 1] = 2000;
 }

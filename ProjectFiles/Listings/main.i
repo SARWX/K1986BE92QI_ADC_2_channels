@@ -4722,7 +4722,8 @@ uint16_t alternate_array_for_ADC[128];
 
 
 
-int main(void) {
+int main(void)
+{
  VCom_Configuration();
 
 
@@ -4741,25 +4742,27 @@ int main(void) {
  DMA_Cmd(DMA_Channel_ADC1, ENABLE);
 
 
- while (1) {
-  if (command_recived == 1) {
+ while (1)
+ {
+  if (command_recived == 1)
+  {
    ADC1_Cmd (DISABLE);
    command_recived = 0;
    execute_command(rec_buf);
-   for(int i = 0; i < 128; i++) {
+
+   for(int i = 0; i < 128; i++)
+   {
     buffer[i] = 0;
    }
    ADC1_Cmd(ENABLE);
   }
 
-  while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) == 0)
-   ;
+  while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) == 0) ;
   DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_PRIMARY, &ADC1_primary_DMA_structure);
   USB_CDC_SendData((uint8_t *)(main_array_for_ADC), ((128) * 2 ));
 
 
-  while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) != 0)
-   ;
+  while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) != 0) ;
   DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_ALTERNATE, &ADC1_alternate_DMA_structure);
   USB_CDC_SendData((uint8_t *)(alternate_array_for_ADC), ((128) * 2 ));
  }

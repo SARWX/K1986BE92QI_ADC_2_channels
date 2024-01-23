@@ -1977,19 +1977,24 @@ void Setup_ADC()
     RST_CLK_PCLKcmd((((uint32_t)(1U << ((((uint32_t)(0x40020000)) >> 15) & 0x1F))) | ((uint32_t)(1U << ((((uint32_t)(0x40088000)) >> 15) & 0x1F)))), ENABLE);
     RST_CLK_PCLKcmd((((uint32_t)(1U << ((((uint32_t)(0x400B8000)) >> 15) & 0x1F))) | ((uint32_t)(1U << ((((uint32_t)(0x400C0000)) >> 15) & 0x1F)))), ENABLE);
 
+
     ((SCB_Type *) ((0xE000E000UL) + 0x0D00UL) )->AIRCR = 0x5FA0500;
     ((SCB_Type *) ((0xE000E000UL) + 0x0D00UL) )->VTOR = 0x08000000;
+
 
     ((NVIC_Type *) ((0xE000E000UL) + 0x0100UL) )->ICPR[0] = 0xFFFFFFFF;
     ((NVIC_Type *) ((0xE000E000UL) + 0x0100UL) )->ICER[0] = 0xFFFFFFFF;
  ((NVIC_Type *) ((0xE000E000UL) + 0x0100UL) )->ISER[0] = (1<<ADC_IRQn);
 
+
     PORT_DeInit(((MDR_PORT_TypeDef *) (0x400C0000)));
+
 
     port_init_structure.PORT_Pin = PORT_Pin_0 | PORT_Pin_1;
     port_init_structure.PORT_OE = PORT_OE_IN;
     port_init_structure.PORT_MODE = PORT_MODE_ANALOG;
     PORT_Init(((MDR_PORT_TypeDef *) (0x400C0000)), &port_init_structure);
+
 
     ADC_DeInit();
     ADC_StructInit(&ADC_structure);
@@ -2005,6 +2010,7 @@ void Setup_ADC()
     ADCx_structure.ADC_Prescaler = ADC_CLK_div_32;
  ADCx_structure.ADC_DelayGo = 0x2;
     ADC1_Init (&ADCx_structure);
+
 
     ADC1_ITConfig((ADCx_IT_END_OF_CONVERSION), ENABLE);
 }

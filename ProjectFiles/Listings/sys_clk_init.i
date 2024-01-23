@@ -1645,7 +1645,8 @@ void delay_tick(uint32_t count);
 
 void delay_tick(uint32_t count)
 {
- while (count--) {
+ while (count--)
+ {
   __NOP();
  }
 }
@@ -1664,6 +1665,7 @@ void Setup_CPU_Clock(void)
   GPIOInitStruct.PORT_SPEED = PORT_SPEED_MAXFAST;
   GPIOInitStruct.PORT_MODE = PORT_MODE_DIGITAL;
      PORT_Init(((MDR_PORT_TypeDef *) (0x400B8000)), &GPIOInitStruct);
+
 
   while (1)
   {
