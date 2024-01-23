@@ -7,7 +7,8 @@
 // задержка на count тактов 
 void delay_tick(uint32_t count)	// Ждать count тактов процессора
 {	
-	while (count--) {			// декремент счетчика	
+	while (count--) 
+	{							// декремент счетчика	
 		__NOP();				// Не делать ничего
 	}
 }
@@ -26,7 +27,8 @@ void Setup_CPU_Clock(void)
 		GPIOInitStruct.PORT_SPEED = PORT_SPEED_MAXFAST;
 		GPIOInitStruct.PORT_MODE = PORT_MODE_DIGITAL;
    		PORT_Init(MDR_PORTC, &GPIOInitStruct);
-	// если не установилась частота, то будет светодиод мигать
+		
+		// если не установилась частота, то будет светодиод мигать
 		while (1) 
 		{
 			PORT_SetBits(MDR_PORTC, PORT_Pin_2); 	// Включить светодиод

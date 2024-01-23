@@ -5,10 +5,14 @@
 #include "defines.h"
 #include "DAC_init.h"
 
-void execute_command(char *command) {
-  if (strstr(command, "set freq ") == command) {
+void execute_command(char *command) 
+{
+  if (strstr(command, "set freq ") == command) 
+  {
     int freq = atoi((char *)(command + strlen("set freq ")));
-    if (freq >= 100) {                                          // MIN freq = 100
+
+    if (freq >= 100) // MIN freq = 100
+    {                                          
       set_DAC_table(freq);
     }
   }

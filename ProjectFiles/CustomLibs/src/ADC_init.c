@@ -16,21 +16,26 @@ void Setup_ADC()
 	// Подключаем тактирование к блоку АЦП, портам A и C 
     RST_CLK_PCLKcmd((RST_CLK_PCLK_RST_CLK | RST_CLK_PCLK_ADC), ENABLE);
     RST_CLK_PCLKcmd((RST_CLK_PCLK_PORTC | RST_CLK_PCLK_PORTD), ENABLE);
+
 	// Инициализируем контроллер прерывний (NVIC)
     SCB->AIRCR = AIRCR_SETTING;
     SCB->VTOR = VECTOR_TABLE_OFFSET;
+
     // Запрещаем все прерывания
     NVIC->ICPR[0] = WHOLE_WORD;
     NVIC->ICER[0] = WHOLE_WORD;
 	NVIC->ISER[0] = (1<<ADC_IRQn);
+
 	// Сбрасываем настройки порта D
     PORT_DeInit(MDR_PORTD);
+
 	// Конфигурируем выводы для АЦП 1 и 2
     port_init_structure.PORT_Pin   = PORT_Pin_0 | PORT_Pin_1;			    // АЦП 1 и 2 расположены на PD0 и PD1 (см. распиновку)
     port_init_structure.PORT_OE    = PORT_OE_IN;							          // Режим на вход
     port_init_structure.PORT_MODE  = PORT_MODE_ANALOG;					        // Аналоговый вход
     PORT_Init(MDR_PORTD, &port_init_structure);							          // Инициализация выводов заданной структурой
-	// Настройка АЦП    
+	
+    // Настройка АЦП    
     ADC_DeInit();														                          // Сбросить все прежние настройки АЦП
     ADC_StructInit(&ADC_structure);												                    // Проинициализировать структуру стандартными значениями
 	ADC_Init (&ADC_structure);													                          // Применить конфигурацию, занесенную в ADC_structure
@@ -45,6 +50,7 @@ void Setup_ADC()
     ADCx_structure.ADC_Prescaler        = ADC_CLK_div_32;						          // Задаем скорость работы АЦП, ИМЕННО ЭТОЙ НАСТРОЙКОЙ ЗАДАЕТСЯ СКОРОСТЬ РАБОТЫ УСТРОЙСТВА
 	ADCx_structure.ADC_DelayGo          = 0x2;									                  // Отложенный запуск, необходиим для нормальной работы
     ADC1_Init (&ADCx_structure);													                      // Применяем настройки к АЦП 1
+    
     // Разрешаем прерывания от АЦП
     ADC1_ITConfig((ADCx_IT_END_OF_CONVERSION), ENABLE);
 }

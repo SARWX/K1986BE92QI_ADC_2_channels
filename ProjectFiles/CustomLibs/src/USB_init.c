@@ -27,9 +27,11 @@ char tempString[100];			   //debug
 static USB_CDC_LineCoding_TypeDef LineCoding;
 #endif /* USB_CDC_LINE_CODING_SUPPORTED */
 
-void Setup_USB(void) {
+void Setup_USB(void) 
+{
 	/* Enables the CPU_CLK clock on USB */
 	RST_CLK_PCLKcmd(RST_CLK_PCLK_USB, ENABLE);
+
 	/* Device layer initialization */
 	USB_Clock_InitStruct.USB_USBC1_Source = USB_C1HSEdiv2; //HSE 
 	USB_Clock_InitStruct.USB_PLLUSBMUL = USB_PLLUSBMUL6;   //was 12
@@ -37,9 +39,11 @@ void Setup_USB(void) {
 	USB_DeviceBUSParam.SPEED = USB_SC_SCFSR_12Mb;
 	USB_DeviceBUSParam.PULL = USB_HSCR_DP_PULLUP_Set;
 	USB_DeviceInit(&USB_Clock_InitStruct, &USB_DeviceBUSParam);
+
 	/* Enable all USB interrupts */
 	USB_SetSIM(USB_SIS_Msk);
 	USB_DevicePowerOn();
+	
 	/* Enable interrupt on USB */
 #ifdef USB_INT_HANDLE_REQUIRED
 	NVIC_EnableIRQ(USB_IRQn);

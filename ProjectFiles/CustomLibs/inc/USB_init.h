@@ -1,7 +1,7 @@
-#ifndef USB_for_porj
-#define USB_for_porj
+#ifndef USB_init
+#define USB_init
 
 void Setup_USB(void);
 void VCom_Configuration(void); 
 
-#endif /* USB_for_porj */
+#endif /* USB_init */

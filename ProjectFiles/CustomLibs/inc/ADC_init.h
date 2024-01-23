@@ -1,6 +1,6 @@
-#ifndef ADC_for_porj
-#define ADC_for_porj
+#ifndef ADC_init
+#define ADC_init
 
 void Setup_ADC();
 
-#endif /* ADC_for_porj */
+#endif /* ADC_init */
