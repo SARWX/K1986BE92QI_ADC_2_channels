@@ -4752,14 +4752,12 @@ int main(void) {
    ADC1_Cmd(ENABLE);
   }
 
-  while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) == 0)
-   ;
+  while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) == 0) ;
   DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_PRIMARY, &ADC1_primary_DMA_structure);
   USB_CDC_SendData((uint8_t *)(main_array_for_ADC), ((128) * 2 ));
 
 
-  while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) != 0)
-   ;
+  while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) != 0) ;
   DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_ALTERNATE, &ADC1_alternate_DMA_structure);
   USB_CDC_SendData((uint8_t *)(alternate_array_for_ADC), ((128) * 2 ));
  }

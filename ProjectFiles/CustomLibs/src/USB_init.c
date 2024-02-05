@@ -58,7 +58,7 @@ void VCom_Configuration(void)
 	#endif /* USB_CDC_LINE_CODING_SUPPORTED */
 }
 
-USB_Result USB_CDC_RecieveData(uint8_t *Buffer, uint32_t Length) 
+USB_Result USB_CDC_RecieveData(uint8_t *buffer, uint32_t Length) 
 {
 	memcpy(rec_buf, buffer, BUFFER_LENGTH);
 	command_recived = 1;
