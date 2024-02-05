@@ -4731,11 +4731,12 @@ int main(void) {
  USB_CDC_Init((uint8_t *)buffer, 1, SET);
  Setup_CPU_Clock();
  Setup_USB();
- set_DAC_table(100);
+ set_DAC_table(1000);
  Setup_DAC();
  Setup_TIM2();
 
  DMA_Cmd(DMA_Channel_TIM2, ENABLE);
+
 
  ADC1_Cmd (ENABLE);
  DMA_Cmd(DMA_Channel_ADC1, ENABLE);

@@ -2111,8 +2111,8 @@ void set_DAC_table(int freq);
 void execute_command(char *command) {
   if (strstr(command, "set freq ") == command) {
     int freq = atoi((char *)(command + strlen("set freq ")));
-    if (freq >= 100) {
+
       set_DAC_table(freq);
-    }
+
   }
 }

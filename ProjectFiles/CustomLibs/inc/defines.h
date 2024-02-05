@@ -12,7 +12,9 @@
 #define PERIOD_T2 20					// Определяет период работы ЦАП
 #define PRESCALER_T2 16					// Определяет воо сколько раз будет делиться системная частота для ЦАП
 #define HSE_FREQ 16000000
-#define DISCRET_FREQ (HSE_FREQ / (PRESCALER_T2 * PERIOD_T2))	// определяет частоту дискретизации ЦАП  
+#define CPU_PLL 8
+#define CPU_DIV 1
+#define DISCRET_FREQ ((HSE_FREQ * CPU_PLL / CPU_DIV) / (PRESCALER_T2 * PERIOD_T2))	// определяет частоту дискретизации ЦАП  
 
 #define NUM_OF_MES 128			// Этот параметр задает количество измерений АЦП, которые будут составлять 1 пакет.
 								// Но контроллером USB они будут поделены на пакеты по 64 байта, поскольку 1 измерение АЦП кодируется 2 байтами,
