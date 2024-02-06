@@ -3044,5 +3044,4 @@ void set_DAC_table(int freq) {
 
  TIM2_primary_DMA_structure.DMA_CycleSize = (tics);
  TIM2_alternate_DMA_structure.DMA_CycleSize = (tics);
-# 92 "CustomLibs/src/DAC_init.c"
 }

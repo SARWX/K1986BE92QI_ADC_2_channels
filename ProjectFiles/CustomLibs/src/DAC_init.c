@@ -80,3 +80,5 @@ void set_DAC_table(int freq) {
 	TIM2_primary_DMA_structure.DMA_CycleSize = (tics);								// Сколько измерений (DMA передач) содержит 1 DMA цикл
 	TIM2_alternate_DMA_structure.DMA_CycleSize = (tics);							// Сколько измерений (DMA передач) содержит 1 DMA цикл
 }
+
+// set 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 0.1 0.11 0.12 0.13 0.14 1.1 1.2 1.3 2.3 2.4 2.5 2.6 2.7 3.1 3.2

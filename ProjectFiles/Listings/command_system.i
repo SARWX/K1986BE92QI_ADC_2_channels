@@ -1759,6 +1759,285 @@ USB_Result USB_CDC_DummyControlLineState(uint16_t wVALUE, uint16_t wINDEX);
 
 USB_Result USB_CDC_DummySendBreak(uint16_t wVALUE, uint16_t wINDEX);
 # 2 "CustomLibs/src/command_system.c" 2
+# 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_dma.h" 1
+# 57 "./SPL/MDR32Fx/inc\\MDR32F9Qx_dma.h"
+typedef enum
+{
+    DMA_ALternateDataDisabled = ((uint16_t)(0x00)),
+    DMA_ALternateDataEnabled = ((uint16_t)(0x01))
+} DMA_Alt_Data_Usage;
+
+
+
+
+
+
+
+typedef enum
+{
+
+    DMA_Channel_UART1_TX = ((uint8_t)(0)),
+    DMA_Channel_UART1_RX = ((uint8_t)(1)),
+    DMA_Channel_UART2_TX = ((uint8_t)(2)),
+    DMA_Channel_UART2_RX = ((uint8_t)(3)),
+    DMA_Channel_SSP1_TX = ((uint8_t)(4)),
+    DMA_Channel_SSP1_RX = ((uint8_t)(5)),
+    DMA_Channel_SSP2_TX = ((uint8_t)(6)),
+    DMA_Channel_SSP2_RX = ((uint8_t)(7)),
+    DMA_Channel_ADC1 = ((uint8_t)(8)),
+    DMA_Channel_ADC2 = ((uint8_t)(9)),
+    DMA_Channel_TIM1 = ((uint8_t)(10)),
+    DMA_Channel_TIM2 = ((uint8_t)(11)),
+    DMA_Channel_TIM3 = ((uint8_t)(12)),
+    DMA_Channel_SW1 = ((uint8_t)(13)),
+    DMA_Channel_SW2 = ((uint8_t)(14)),
+    DMA_Channel_SW3 = ((uint8_t)(15)),
+    DMA_Channel_SW4 = ((uint8_t)(16)),
+    DMA_Channel_SW5 = ((uint8_t)(17)),
+    DMA_Channel_SW6 = ((uint8_t)(18)),
+    DMA_Channel_SW7 = ((uint8_t)(19)),
+    DMA_Channel_SW8 = ((uint8_t)(20)),
+    DMA_Channel_SW9 = ((uint8_t)(21)),
+    DMA_Channel_SW10 = ((uint8_t)(22)),
+    DMA_Channel_SW11 = ((uint8_t)(23)),
+    DMA_Channel_SW12 = ((uint8_t)(24)),
+    DMA_Channel_SW13 = ((uint8_t)(25)),
+    DMA_Channel_SW14 = ((uint8_t)(26)),
+    DMA_Channel_SW15 = ((uint8_t)(27)),
+    DMA_Channel_SW16 = ((uint8_t)(28)),
+    DMA_Channel_SW17 = ((uint8_t)(29)),
+    DMA_Channel_SW18 = ((uint8_t)(30)),
+    DMA_Channel_SW19 = ((uint8_t)(31)),
+# 299 "./SPL/MDR32Fx/inc\\MDR32F9Qx_dma.h"
+} DMA_Valid_Channels;
+
+
+
+
+
+
+typedef enum
+{
+    DMA_SourceIncByte = ((uint32_t)0x00),
+    DMA_SourceIncHalfword = ((uint32_t)0x01),
+    DMA_SourceIncWord = ((uint32_t)0x02),
+    DMA_SourceIncNo = ((uint32_t)0x03)
+} DMA_Src_Inc_Mode;
+# 322 "./SPL/MDR32Fx/inc\\MDR32F9Qx_dma.h"
+typedef enum
+{
+    DMA_DestIncByte = ((uint32_t)0x00),
+    DMA_DestIncHalfword = ((uint32_t)0x01),
+    DMA_DestIncWord = ((uint32_t)0x02),
+    DMA_DestIncNo = ((uint32_t)0x03)
+} DMA_Dest_Inc_Mode;
+# 338 "./SPL/MDR32Fx/inc\\MDR32F9Qx_dma.h"
+typedef enum
+{
+    DMA_MemoryDataSize_Byte = ((uint32_t)(0x00 << 24)),
+    DMA_MemoryDataSize_HalfWord = ((uint32_t)(0x11 << 24)),
+    DMA_MemoryDataSize_Word = ((uint32_t)(0x22 << 24))
+} DMA_Mem_Data_Size;
+# 352 "./SPL/MDR32Fx/inc\\MDR32F9Qx_dma.h"
+typedef enum
+{
+    DMA_Mode_Stop = ((uint32_t)0x0),
+    DMA_Mode_Basic = ((uint32_t)0x1),
+    DMA_Mode_AutoRequest = ((uint32_t)0x2),
+    DMA_Mode_PingPong = ((uint32_t)0x3),
+    DMA_Mode_MemScatterPri = ((uint32_t)0x4),
+    DMA_Mode_MemScatterAlt = ((uint32_t)0x5),
+    DMA_Mode_PerScatterPri = ((uint32_t)0x6),
+    DMA_Mode_PerScatterAlt = ((uint32_t)0x7),
+    DMA_Mode_PerScatterAltBurst = ((uint32_t)0xF)
+} DMA_Operating_Mode;
+# 386 "./SPL/MDR32Fx/inc\\MDR32F9Qx_dma.h"
+typedef enum
+{
+    DMA_Priority_Default = ((uint8_t)0x00),
+    DMA_Priority_High = ((uint8_t)0x01)
+} DMA_Priority_Level;
+
+
+
+
+
+
+
+typedef enum
+{
+    DMA_BurstClear = ((uint8_t)0x00),
+    DMA_BurstSet = ((uint8_t)0x01)
+} DMA_Burst_Mode;
+
+
+
+
+
+
+
+typedef enum
+{
+    DMA_SourceCacheable = ((uint32_t)(0x01 << 20)),
+    DMA_SourceBufferable = ((uint32_t)(0x01 << 19)),
+    DMA_SourcePrivileged = ((uint32_t)(0x01 << 18))
+} DMA_Src_Protection_Control;
+
+
+
+
+
+
+typedef enum
+{
+    DMA_DestCacheable = ((uint32_t)(0x01 << 23)),
+    DMA_DestBufferable = ((uint32_t)(0x01 << 22)),
+    DMA_DestPrivileged = ((uint32_t)(0x01 << 21))
+} DMA_Dest_Protection_Control;
+# 442 "./SPL/MDR32Fx/inc\\MDR32F9Qx_dma.h"
+typedef enum
+{
+    DMA_AHB_Cacheable = ((uint32_t)(0x01 << 7)),
+    DMA_AHB_Bufferable = ((uint32_t)(0x01 << 6)),
+    DMA_AHB_Privileged = ((uint32_t)(0x01 << 5))
+} DMA_AHB_Protection_Control;
+
+
+
+
+
+
+typedef enum
+{
+    DMA_Transfers_1 = ((uint32_t)(0x00 << 14)),
+    DMA_Transfers_2 = ((uint32_t)(0x01 << 14)),
+    DMA_Transfers_4 = ((uint32_t)(0x02 << 14)),
+    DMA_Transfers_8 = ((uint32_t)(0x03 << 14)),
+    DMA_Transfers_16 = ((uint32_t)(0x04 << 14)),
+    DMA_Transfers_32 = ((uint32_t)(0x05 << 14)),
+    DMA_Transfers_64 = ((uint32_t)(0x06 << 14)),
+    DMA_Transfers_128 = ((uint32_t)(0x07 << 14)),
+    DMA_Transfers_256 = ((uint32_t)(0x08 << 14)),
+    DMA_Transfers_512 = ((uint32_t)(0x09 << 14)),
+    DMA_Transfers_1024 = ((uint32_t)(0x0A << 14))
+} DMA_Number_Continuous_Transfers;
+# 484 "./SPL/MDR32Fx/inc\\MDR32F9Qx_dma.h"
+typedef enum
+{
+    DMA_CTRL_DATA_PRIMARY = ((uint8_t)0x00),
+
+    DMA_CTRL_DATA_ALTERNATE = ((uint8_t)0x01)
+
+} DMA_Data_Struct_Selection;
+# 502 "./SPL/MDR32Fx/inc\\MDR32F9Qx_dma.h"
+typedef enum
+{
+    DMA_FLAG_DMA_ENA = ((uint8_t)0x01),
+    DMA_FLAG_DMA_ERR = ((uint8_t)0x02),
+    DMA_FLAG_CHNL_ENA = ((uint8_t)0x03),
+    DMA_FLAG_CHNL_MASK = ((uint8_t)0x04),
+    DMA_FLAG_CHNL_WAIT = ((uint8_t)0x05),
+    DMA_FLAG_CHNL_BURST = ((uint8_t)0x06),
+    DMA_FLAG_CHNL_ALT = ((uint8_t)0x07),
+    DMA_FLAG_CHNL_PRIORITY = ((uint8_t)0x08)
+} DMA_Flags;
+# 526 "./SPL/MDR32Fx/inc\\MDR32F9Qx_dma.h"
+typedef struct
+{
+    uint32_t DMA_SourceBaseAddr;
+    uint32_t DMA_DestBaseAddr;
+    DMA_Src_Inc_Mode DMA_SourceIncSize;
+
+    DMA_Dest_Inc_Mode DMA_DestIncSize;
+
+    DMA_Mem_Data_Size DMA_MemoryDataSize;
+
+    DMA_Operating_Mode DMA_Mode;
+
+    uint32_t DMA_CycleSize;
+
+    DMA_Number_Continuous_Transfers DMA_NumContinuous;
+
+    uint32_t DMA_SourceProtCtrl;
+
+    uint32_t DMA_DestProtCtrl;
+
+} DMA_CtrlDataInitTypeDef;
+
+
+
+
+typedef struct
+{
+    uint32_t DMA_SourceEndAddr;
+    uint32_t DMA_DestEndAddr;
+    uint32_t DMA_Control;
+    uint32_t DMA_Unused;
+} DMA_CtrlDataTypeDef;
+
+
+
+
+typedef struct
+{
+    DMA_CtrlDataInitTypeDef *DMA_PriCtrlData;
+
+    DMA_CtrlDataInitTypeDef *DMA_AltCtrlData;
+
+    uint32_t DMA_ProtCtrl;
+
+    DMA_Priority_Level DMA_Priority;
+
+    DMA_Burst_Mode DMA_UseBurst;
+
+    DMA_Data_Struct_Selection DMA_SelectDataStructure;
+
+} DMA_ChannelInitTypeDef;
+
+
+
+
+typedef struct
+{
+    DMA_CtrlDataTypeDef *DMA_SG_TaskArray;
+
+
+
+
+    uint32_t DMA_SG_TaskNumber;
+    uint32_t DMA_SourceProtCtrl;
+
+    uint32_t DMA_DestProtCtrl;
+
+    uint32_t DMA_ProtCtrl;
+
+    DMA_Priority_Level DMA_Priority;
+
+    DMA_Burst_Mode DMA_UseBurst;
+
+} DMA_Channel_SG_InitTypeDef;
+# 608 "./SPL/MDR32Fx/inc\\MDR32F9Qx_dma.h"
+void DMA_DeInit(void);
+
+void DMA_CtrlDataInit(DMA_CtrlDataInitTypeDef *DMA_ctrl_data_ptr, DMA_CtrlDataTypeDef *DMA_ctrl_table_ptr);
+void DMA_CtrlInit(uint8_t DMA_Channel, DMA_Data_Struct_Selection DMA_CtrlDataType, DMA_CtrlDataInitTypeDef* DMA_CtrlStruct);
+void DMA_SG_CtrlInit(uint32_t DMA_Task, DMA_CtrlDataTypeDef *DMA_SG_TaskArray, DMA_CtrlDataInitTypeDef* DMA_CtrlStruct);
+
+void DMA_SG_Init(uint8_t DMA_Channel, DMA_Channel_SG_InitTypeDef *DMA_SG_InitStruct);
+void DMA_Init(uint8_t DMA_Channel, DMA_ChannelInitTypeDef* DMA_InitStruct);
+
+void DMA_StructInit(DMA_ChannelInitTypeDef* DMA_InitStruct);
+void DMA_SG_StructInit(DMA_Channel_SG_InitTypeDef* DMA_InitStruct);
+
+void DMA_Cmd(uint8_t DMA_Channel, FunctionalState NewState);
+
+void DMA_Request(uint8_t DMA_Channel);
+void DMA_ClearError(void);
+
+uint32_t DMA_GetCurrTransferCounter(uint8_t DMA_Channel, DMA_Data_Struct_Selection DMA_CtrlData);
+
+FlagStatus DMA_GetFlagStatus(uint8_t DMA_Channel, DMA_Flags DMA_Flag);
+# 3 "CustomLibs/src/command_system.c" 2
 # 1 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 1 3
 # 51 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
     typedef unsigned int size_t;
@@ -1882,7 +2161,7 @@ extern __attribute__((__nothrow__)) void _membitmovehl(void * , const void * , i
 extern __attribute__((__nothrow__)) void _membitmovehb(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
 extern __attribute__((__nothrow__)) void _membitmovewl(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
 extern __attribute__((__nothrow__)) void _membitmovewb(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
-# 3 "CustomLibs/src/command_system.c" 2
+# 4 "CustomLibs/src/command_system.c" 2
 # 1 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 1 3
 # 91 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
     typedef unsigned short wchar_t;
@@ -2090,15 +2369,15 @@ extern __attribute__((__nothrow__)) void __use_no_heap_region(void);
 
 extern __attribute__((__nothrow__)) char const *__C_library_version_string(void);
 extern __attribute__((__nothrow__)) int __C_library_version_number(void);
-# 4 "CustomLibs/src/command_system.c" 2
+# 5 "CustomLibs/src/command_system.c" 2
 # 1 "./CustomLibs/inc\\ADC_init.h" 1
 
 
 
 void Setup_ADC();
-# 5 "CustomLibs/src/command_system.c" 2
-# 1 "./CustomLibs/inc\\defines.h" 1
 # 6 "CustomLibs/src/command_system.c" 2
+# 1 "./CustomLibs/inc\\defines.h" 1
+# 7 "CustomLibs/src/command_system.c" 2
 # 1 "./CustomLibs/inc\\DAC_init.h" 1
 
 
@@ -2106,13 +2385,85 @@ void Setup_ADC();
 void Setup_DAC();
 void Setup_TIM2();
 void set_DAC_table(int freq);
-# 7 "CustomLibs/src/command_system.c" 2
+# 8 "CustomLibs/src/command_system.c" 2
+
+
+extern uint16_t DAC_table[500];
+
+extern DMA_CtrlDataInitTypeDef TIM2_primary_DMA_structure;
+extern DMA_CtrlDataInitTypeDef TIM2_alternate_DMA_structure;
+
+float get_voltage_num(char *command, int *i);
+int convert_voltage_to_register_val(float voltage);
+
 
 void execute_command(char *command) {
+
   if (strstr(command, "set freq ") == command) {
     int freq = atoi((char *)(command + strlen("set freq ")));
-
       set_DAC_table(freq);
-
   }
+
+
+
+  else if (strstr(command, "bet ") == command) {
+    int DAC_table_buf[500];
+    int i = 4;
+    int buffer_num = 0;
+    int j = 0;
+    while ((command[i] != 0) && (command[i] != '\n') && (command[i] != '\r')) {
+      float voltage_num = get_voltage_num(command, &i);
+      if (voltage_num == -1.0) {
+        break;
+      }
+      int reg_val = convert_voltage_to_register_val(voltage_num);
+      DAC_table_buf[j] = reg_val;
+      j += 1;
+      if (command[i] == ' ') {
+        i += 1;
+      }
+    }
+    int iter = 500 / j;
+    for (int l = 0; l < iter; l++) {
+      for (int k = 0; k <= j; k++) {
+        DAC_table[((l * j) + k)] = DAC_table_buf[k];
+      }
+    }
+    TIM2_primary_DMA_structure.DMA_CycleSize = (iter * j);
+    TIM2_alternate_DMA_structure.DMA_CycleSize = (iter * j);
+  }
+
+}
+
+  float get_voltage_num(char *command, int *i) {
+  float num = 0.0;
+    if ((command[*i] >= '0') && (command[*i] <= '9')) {
+      num = (command[*i] - '0');
+      *i += 1;
+    }
+    else {
+      return(-1);
+    }
+    if (command[*i] == '.') {
+      *i += 1;
+    }
+    else {
+      return(-1);
+    }
+    float d = 10.0;
+    while ((command[*i] >= '0') && (command[*i] <= '9')) {
+      num += (float)((command[*i] - '0') / d);
+      d *= 10.0;
+      *i += 1;
+    }
+    if(num > 3.3) {
+      return(-1);
+    }
+    return(num);
+  }
+
+int convert_voltage_to_register_val(float voltage) {
+  voltage /= 3.3;
+  voltage *= 4095;
+  return((int)voltage);
 }
