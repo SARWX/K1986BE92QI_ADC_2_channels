@@ -2406,12 +2406,13 @@ void execute_command(char *command) {
 
 
 
-  else if (strstr(command, "bet ") == command) {
-    int DAC_table_buf[500];
+  else if (strstr(command, "set ") == command) {
+    static int DAC_table_buf[500];
     int i = 4;
     int buffer_num = 0;
-    int j = 0;
-    while ((command[i] != 0) && (command[i] != '\n') && (command[i] != '\r')) {
+    static int j = 0;
+    while ((command[i] != 0) && (command[i] != '\n')
+    && (command[i] != '\r') && (command[i] != '!')) {
       float voltage_num = get_voltage_num(command, &i);
       if (voltage_num == -1.0) {
         break;
@@ -2423,6 +2424,9 @@ void execute_command(char *command) {
         i += 1;
       }
     }
+
+  if(command[i] == '!') {
+
     int iter = 500 / j;
     for (int l = 0; l < iter; l++) {
       for (int k = 0; k <= j; k++) {
@@ -2431,7 +2435,12 @@ void execute_command(char *command) {
     }
     TIM2_primary_DMA_structure.DMA_CycleSize = (iter * j);
     TIM2_alternate_DMA_structure.DMA_CycleSize = (iter * j);
+
+    j = 0;
+
   }
+
+      }
 
 }
 

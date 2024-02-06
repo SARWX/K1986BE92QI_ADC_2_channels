@@ -25,12 +25,13 @@ void execute_command(char *command) {
 // ---------------------------------------------------------------------------------------------- //
 
 // ---------------- "set " command -------------------------------------------------------------- //
-  else if (strstr(command, "bet ") == command) {
-    int DAC_table_buf[SIN_RES];                                                    // буфер DAC_table_buf
+  else if (strstr(command, "set ") == command) {
+    static int DAC_table_buf[SIN_RES];                                                    // буфер DAC_table_buf
     int i = 4;                                                                    // 1ый символ числа num
     int buffer_num = 0;                                                           // буферная переменная
-    int j = 0;                                                                    // индекс таблицы DAC_table_buf
-    while ((command[i] != 0) && (command[i] != '\n') && (command[i] != '\r')) {   // пока строка не закончена
+    static int j = 0;                                                                    // индекс таблицы DAC_table_buf
+    while ((command[i] != 0) && (command[i] != '\n')                              // пока строка не закончена
+    && (command[i] != '\r') && (command[i] != '!')) {                             // пока строка не закончена
       float voltage_num = get_voltage_num(command, &i);                           // получить число в формате X.XX
       if (voltage_num == -1.0) {
         break;                                                                    // неверное значение, прекратить выполнение
@@ -42,7 +43,8 @@ void execute_command(char *command) {
         i += 1;                                                                   // то пропустить его
       }
     }
-
+  
+  if(command[i] == '!') {                                                         // передача завершена
     // ЗАПОЛНИМ ВСЮ ТАБЛИЦУ
     int iter = SIN_RES / j;                                                       // сколько периодов нашего сигнала уложится в буфер для передачи
     for (int l = 0; l < iter; l++) {
@@ -52,7 +54,12 @@ void execute_command(char *command) {
     }
     TIM2_primary_DMA_structure.DMA_CycleSize = (iter * j);								                // Сколько измерений (DMA передач) содержит 1 DMA цикл
     TIM2_alternate_DMA_structure.DMA_CycleSize = (iter * j);							                // Сколько измерений (DMA передач) содержит 1 DMA цикл
+    // ОЧИСТИМ ВСЕ НЕОБХОДИМОЕ
+    j = 0;                                                                                // сбросим индекс DAC_table_buf в 0
+//    filling_in_progress = 0;                                                              // сбросим тригер выполнения заполнения таблицы
   }
+
+      }
 // ---------------------------------------------------------------------------------------------- //
 }
 
