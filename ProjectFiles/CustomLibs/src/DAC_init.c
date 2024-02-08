@@ -62,6 +62,7 @@ void Setup_TIM2() {
 }
 
 void set_DAC_table(int freq) {
+	freq = (int)((float)freq * CORRECTION_FACTOR); 	// Поправочный коэффициент
 	int tics = (DISCRET_FREQ / freq);				// Сколько тиков таймера отвести на период синусоиды с частотой freq
 	int divider = 1;								
 	while(tics > SIN_RES) {							// Размер DAC_table ограничен SIN_RES

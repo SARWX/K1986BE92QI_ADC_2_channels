@@ -14,7 +14,8 @@
 #define HSE_FREQ 16000000
 #define CPU_PLL 8
 #define CPU_DIV 1
-#define DISCRET_FREQ ((HSE_FREQ * CPU_PLL / CPU_DIV) / (PRESCALER_T2 * PERIOD_T2))	// определяет частоту дискретизации ЦАП  
+#define DISCRET_FREQ ((HSE_FREQ * CPU_PLL / CPU_DIV) / (PRESCALER_T2 * PERIOD_T2))	// определяет частоту дискретизации ЦАП 
+#define CORRECTION_FACTOR 1.065			// поправочный коэфициент для задания точной частоты
 
 #define NUM_OF_MES 128			// Этот параметр задает количество измерений АЦП, которые будут составлять 1 пакет.
 								// Но контроллером USB они будут поделены на пакеты по 64 байта, поскольку 1 измерение АЦП кодируется 2 байтами,
