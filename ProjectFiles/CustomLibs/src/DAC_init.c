@@ -2,6 +2,7 @@
 #include "MDR32F9Qx_port.h"
 #include "MDR32F9Qx_dac.h"
 #include "MDR32F9Qx_timer.h"
+#include "MDR32F9Qx_dma.h"
 #include "DAC_init.h"
 #include "defines.h"
 #include <math.h>
@@ -9,9 +10,14 @@
 // Переменные и массивы для ЦАП
 int dac_inc_dec = 1;
 int cur_dac_val = 0;
+
 // Счетчик для ЦАП
 int dac_cnt = 0;
 uint16_t DAC_table[SIN_RES];
+
+// Внешние структуры DMA
+extern DMA_CtrlDataInitTypeDef TIM2_primary_DMA_structure;
+extern DMA_CtrlDataInitTypeDef TIM2_alternate_DMA_structure;
 
 // Структура для порта
 extern PORT_InitTypeDef port_init_structure;
@@ -66,14 +72,25 @@ void Setup_TIM2()
 }
 
 void set_DAC_table(int freq) 
-{ 																					// MIN freq = 100 Hz
-	
-			double angle_inc = 6.28318 * (SIN_RES / (DISCRET_FREQ / freq) + ((freq % 100) != 0)) / SIN_RES;		// (2*Пи * кол-во периодов) / разрешение
-			for (int i = 0; i < (SIN_RES); i++) 
-			{
-				DAC_table[i] = (int) (sin(i*angle_inc) * SIN_AMPLITUDE) + SIN_MEDIUM_LINE;						// Вычисляем значение sin для i, с учетом средней линии
-			}
+{
+	freq = (int)((float)freq * CORRECTION_FACTOR); 	// Поправочный коэффициент
+	int tics = (DISCRET_FREQ / freq);				// Сколько тиков таймера отвести на период синусоиды с частотой freq
+	int divider = 1;								
+	while(tics > SIN_RES)  							// Размер DAC_table ограничен SIN_RES
+	{
+		divider *= 2;								// Будем удваивать период таймера (разрешение будет падать) 
+		tics /= 2;									// Будем делить пополам количество точек для записи в DAC_table
+	}
+	MDR_TIMER2->ARR = (PERIOD_T2 * divider - 1);	// Установить новый период таймера
 
-			DAC_table[0] = SIN_MEDIUM_LINE;																		// Первое значение sin - это средняя линия 
-			DAC_table[SIN_RES - 1] = SIN_MEDIUM_LINE;															// Последнее значение sin - это средняя линия
+	double angle_inc = (6.28318 / tics);			// Шаг таблицы в радианах
+	for (int i = 0; i < (tics); i++)  
+	{
+		DAC_table[i] = (int) (sin(i*angle_inc) * SIN_AMPLITUDE) + SIN_MEDIUM_LINE;	// Вычисляем значение sin для i, с учетом средней линии
+	}
+	DAC_table[0] = SIN_MEDIUM_LINE;													// Первое значение sin - это средняя линия 
+	DAC_table[tics - 1] = SIN_MEDIUM_LINE;											// Последнее значение sin - это средняя линия
+
+	TIM2_primary_DMA_structure.DMA_CycleSize = (tics);								// Сколько измерений (DMA передач) содержит 1 DMA цикл
+	TIM2_alternate_DMA_structure.DMA_CycleSize = (tics);							// Сколько измерений (DMA передач) содержит 1 DMA цикл
 }
