@@ -1,7 +1,7 @@
 # 1 "CustomLibs/src/DMA_init.c"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
-# 383 "<built-in>" 3
+# 379 "<built-in>" 3
 # 1 "<command line>" 1
 # 1 "<built-in>" 2
 # 1 "CustomLibs/src/DMA_init.c" 2
@@ -1768,7 +1768,7 @@ void Setup_DMA()
  ADC1_primary_DMA_structure.DMA_SourceBaseAddr =
  (uint32_t)(&(((MDR_ADC_TypeDef *) (0x40088000))->ADC1_RESULT));
  ADC1_primary_DMA_structure.DMA_DestBaseAddr = (uint32_t)(main_array_for_ADC);
- ADC1_primary_DMA_structure.DMA_CycleSize = 128;
+ ADC1_primary_DMA_structure.DMA_CycleSize = 256;
  ADC1_primary_DMA_structure.DMA_SourceIncSize = DMA_SourceIncNo;
  ADC1_primary_DMA_structure.DMA_DestIncSize = DMA_DestIncHalfword;
  ADC1_primary_DMA_structure.DMA_MemoryDataSize =
@@ -1782,7 +1782,7 @@ void Setup_DMA()
  ADC1_alternate_DMA_structure.DMA_SourceBaseAddr =
  (uint32_t)(&(((MDR_ADC_TypeDef *) (0x40088000))->ADC1_RESULT));
  ADC1_alternate_DMA_structure.DMA_DestBaseAddr = (uint32_t) (alternate_array_for_ADC);
- ADC1_alternate_DMA_structure.DMA_CycleSize = 128;
+ ADC1_alternate_DMA_structure.DMA_CycleSize = 256;
  ADC1_alternate_DMA_structure.DMA_SourceIncSize = DMA_SourceIncNo;
  ADC1_alternate_DMA_structure.DMA_DestIncSize = DMA_DestIncHalfword;
  ADC1_alternate_DMA_structure.DMA_MemoryDataSize =

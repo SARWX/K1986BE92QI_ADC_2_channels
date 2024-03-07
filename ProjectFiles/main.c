@@ -28,6 +28,7 @@
 /* Внешние переменные ------------------------------------------------------------*/
 int command_recived = 0;
 char buffer[BUFFER_LENGTH];
+int USB_transmition_complete = 1;
 extern char rec_buf[];							// Массив в котором записана переданная команда
 // массивы для АЦП
 uint16_t main_array_for_ADC[NUM_OF_MES];		// Массив измерений АЦП для заполнения сновной структурой DMA
@@ -54,6 +55,15 @@ int main(void)
 	ADC1_Cmd (ENABLE);						// разрешаем работу ADC1
 	DMA_Cmd(DMA_Channel_ADC1, ENABLE);		// разрешаем работу DMA с каналом ADC1
 
+	// DEBUG
+	long int cnt_wait_1 = 0;
+	long int cnt_usb_1 = 0;
+	long int cnt_wait_2 = 0;
+	long int cnt_usb_2 = 0;
+	long int cnt_usb_err_1 = 0;
+	long int cnt_usb_err_2 = 0;
+	long int usb_change = 0;
+	
 	/* Main loop */
 	while (1) 
 	{
@@ -70,13 +80,43 @@ int main(void)
 			ADC1_Cmd(ENABLE);
 		}
 		// 1 стадия - заполнение буфера, с использованием основной структуры DMA, параллельная передача буфера альтернативной по USB
-		while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) == 0) ;					// ждем, когда DMA перейдет на альтернативную структуру
+		while ((DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) == 0))  
+			cnt_wait_1++;					// ждем, когда DMA перейдет на альтернативную структуру
 		DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_PRIMARY, &ADC1_primary_DMA_structure);		// реинициализируем основную структуру
-		USB_CDC_SendData((uint8_t *)(main_array_for_ADC), ((NUM_OF_MES) * 2 ));					// отправка буфера основной структуры DMA по USB
+//		for (int i = 0; i < 1000; i++)
+//			;
+//		delay_tick(300);
+		for (int i = 0; (i < 500) && USB_transmition_complete == 0; i++)
+			;
+		usb_change += USB_transmition_complete;
+		USB_transmition_complete = 0;
+		if (USB_CDC_SendData((uint8_t *)(main_array_for_ADC), ((NUM_OF_MES) * 2 ))) {
+			if (cnt_usb_1 > 1) 
+				cnt_usb_err_1++;					// отправка буфера основной структуры DMA по USB
+		}
+		else
+			cnt_usb_1++;
 
+		
+		
 		// 2 стадия - заполнение буфера, с использованием альтернативной структуры DMA, параллельная передача буфера основной по USB
-		while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) != 0) ;					// ждем, когда DMA перейдет на основную структуру
+		while ((DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) != 0))
+			cnt_wait_2++;					// ждем, когда DMA перейдет на основную структуру
 		DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_ALTERNATE, &ADC1_alternate_DMA_structure);	// реинициализируем альтернативную структуру
-		USB_CDC_SendData((uint8_t *)(alternate_array_for_ADC), ((NUM_OF_MES) * 2 ));			// отправка буфера альтернативной структуры DMA по USB
+//		for (int i = 0; i < 1000; i++)
+//			;
+//		delay_tick(300);
+		for (int i = 0; (i < 500) && USB_transmition_complete == 0; i++)
+			;
+		usb_change += USB_transmition_complete;
+		USB_transmition_complete = 0;
+		if(USB_CDC_SendData((uint8_t *)(alternate_array_for_ADC), ((NUM_OF_MES) * 2 ))) {
+			if (cnt_usb_2)
+				cnt_usb_err_2++;			// отправка буфера альтернативной структуры DMA по USB
+		}
+		else
+			cnt_usb_2++;
+		
+		
 	}	
 }

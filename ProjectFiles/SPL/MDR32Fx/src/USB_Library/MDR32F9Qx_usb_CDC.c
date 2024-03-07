@@ -23,6 +23,11 @@
 #include "MDR32F9Qx_config.h"
 #include "MDR32F9Qx_usb_handlers.h"
 
+// EXTERN IN MAIN (Timofei)
+extern int USB_transmition_complete;
+
+
+
 /** @addtogroup __MDR32Fx_StdPeriph_Driver MDR32Fx Standard Peripherial Driver
   * @{
   */
@@ -583,6 +588,11 @@ static USB_Result USB_CDC_OnDataSent(USB_EP_TypeDef EPx, uint8_t* Buffer, uint32
 {
     /* Release "busy" flag and call user's handler */
     USB_CDCContext.CDC_SendDataStatus = USB_SUCCESS;
+	
+	// œ≈–≈ Àﬁ◊»Ã ‘À¿√
+	USB_transmition_complete = 1;
+	/////////
+	
 
     return USB_CDC_HANDLE_DATA_SENT;
 }

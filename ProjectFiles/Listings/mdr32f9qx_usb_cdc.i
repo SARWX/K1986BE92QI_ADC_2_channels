@@ -1,7 +1,7 @@
 # 1 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_CDC.c"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
-# 383 "<built-in>" 3
+# 379 "<built-in>" 3
 # 1 "<command line>" 1
 # 1 "<built-in>" 2
 # 1 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_CDC.c" 2
@@ -1772,7 +1772,10 @@ USB_Result USB_CDC_RecieveData(uint8_t* Buffer, uint32_t Length);
     USB_Result USB_CDC_GetLineCoding(uint16_t wINDEX, USB_CDC_LineCoding_TypeDef* DATA);
     USB_Result USB_CDC_SetLineCoding(uint16_t wINDEX, const USB_CDC_LineCoding_TypeDef* DATA);
 # 25 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_CDC.c" 2
-# 45 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_CDC.c"
+
+
+extern int USB_transmition_complete;
+# 50 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_CDC.c"
 typedef struct
 {
     uint8_t* CDC_ReceiveBuffer;
@@ -1780,7 +1783,7 @@ typedef struct
     volatile USB_Result CDC_SendDataStatus,
                         CDC_ReceiveDataStatus;
 } USB_CDCContext_TypeDef;
-# 82 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_CDC.c"
+# 87 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_CDC.c"
 static USB_CDCContext_TypeDef USB_CDCContext;
 
 
@@ -1921,11 +1924,11 @@ static struct
     },
     0
 };
-# 231 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_CDC.c"
+# 236 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_CDC.c"
 static USB_Result USB_CDC_OnDataSent(USB_EP_TypeDef EPx, uint8_t* Buffer, uint32_t Length);
 static USB_Result USB_CDC_OnDataReceive(USB_EP_TypeDef EPx, uint8_t* Buffer, uint32_t Length);
 static USB_Result USB_CDC_DoDataOut(USB_EP_TypeDef EPx, uint8_t* Buffer, uint32_t Length);
-# 256 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_CDC.c"
+# 261 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_CDC.c"
 USB_Result USB_CDC_Init(uint8_t* ReceiveBuffer, uint32_t DataPortionLength, FlagStatus StartReceiving)
 {
     USB_CDC_SetReceiveBuffer(ReceiveBuffer, DataPortionLength);
@@ -1934,7 +1937,7 @@ USB_Result USB_CDC_Init(uint8_t* ReceiveBuffer, uint32_t DataPortionLength, Flag
 
     return USB_SUCCESS;
 }
-# 277 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_CDC.c"
+# 282 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_CDC.c"
 USB_Result USB_CDC_SetReceiveBuffer(uint8_t* ReceiveBuffer, uint32_t DataPortionLength)
 {
 
@@ -1971,7 +1974,7 @@ USB_Result USB_CDC_ReceiveStop(void)
 
     return USB_EP_Stall(USB_EP3, USB_STALL_PROTO);
 }
-# 322 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_CDC.c"
+# 327 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_CDC.c"
 USB_Result USB_CDC_SendData(uint8_t* Buffer, uint32_t Length)
 {
 
@@ -1992,14 +1995,14 @@ int check_status_cdc(void) {
   return 1;
  return 0;
 }
-# 358 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_CDC.c"
+# 363 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_CDC.c"
 USB_Result USB_CDC_ReportState(uint16_t LineState)
 {
     CDC_StateReportPacket.LineState = LineState;
 
     return USB_EP_doDataIn(USB_EP2, (uint8_t*)&CDC_StateReportPacket, sizeof(CDC_StateReportPacket), 0);
 }
-# 375 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_CDC.c"
+# 380 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_CDC.c"
 USB_Result USB_CDC_Reset(void)
 {
     USB_Result result;
@@ -2027,7 +2030,7 @@ USB_Result USB_CDC_Reset(void)
 
     return result;
 }
-# 411 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_CDC.c"
+# 416 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_CDC.c"
 USB_Result USB_CDC_GetDescriptor(uint16_t wVALUE, uint16_t wINDEX, uint16_t wLENGTH)
 {
     uint8_t* pDescr = 0;
@@ -2185,15 +2188,20 @@ USB_Result USB_CDC_ClassRequest(void)
 
     return result;
 }
-# 582 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_CDC.c"
+# 587 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_CDC.c"
 static USB_Result USB_CDC_OnDataSent(USB_EP_TypeDef EPx, uint8_t* Buffer, uint32_t Length)
 {
 
     USB_CDCContext.CDC_SendDataStatus = USB_SUCCESS;
 
+
+ USB_transmition_complete = 1;
+
+
+
     return USB_SUCCESS;
 }
-# 602 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_CDC.c"
+# 612 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_CDC.c"
 static USB_Result USB_CDC_OnDataReceive(USB_EP_TypeDef EPx, uint8_t* Buffer, uint32_t Length)
 {
 
@@ -2215,7 +2223,7 @@ static USB_Result USB_CDC_OnDataReceive(USB_EP_TypeDef EPx, uint8_t* Buffer, uin
         return USB_SUCCESS;
     }
 }
-# 637 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_CDC.c"
+# 647 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_CDC.c"
 static USB_Result USB_CDC_DoDataOut(USB_EP_TypeDef EPx, uint8_t* Buffer, uint32_t Length)
 {
     USB_Result result;
@@ -2246,7 +2254,7 @@ static USB_Result USB_CDC_DoDataOut(USB_EP_TypeDef EPx, uint8_t* Buffer, uint32_
 
     return result == USB_SUCCESS ? USB_EP_doDataIn(EPx, 0, 0, 0) : result;
 }
-# 679 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_CDC.c"
+# 689 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_CDC.c"
 USB_Result USB_CDC_DummyDataReceive(uint8_t* Buffer, uint32_t Length)
 {
     return USB_ERROR;
@@ -2261,22 +2269,22 @@ USB_Result USB_CDC_DummyDataSent(void)
 {
     return USB_ERROR;
 }
-# 704 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_CDC.c"
+# 714 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_CDC.c"
 USB_Result USB_CDC_DummySendEncapsulatedCMD(uint16_t wINDEX, uint16_t wLENGTH)
 {
     return USB_ERROR;
 }
-# 718 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_CDC.c"
+# 728 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_CDC.c"
 USB_Result USB_CDC_DummyGetEncapsulatedResp(uint16_t wINDEX, uint16_t wLENGTH)
 {
     return USB_ERROR;
 }
-# 732 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_CDC.c"
+# 742 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_CDC.c"
 USB_Result USB_CDC_DummyGetCommFeature(uint16_t wVALUE, uint16_t wINDEX, uint16_t* DATA)
 {
     return USB_ERROR;
 }
-# 744 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_CDC.c"
+# 754 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_CDC.c"
 USB_Result USB_CDC_DummySetCommFeature(uint16_t wVALUE, uint16_t wINDEX, uint16_t DATA)
 {
     return USB_ERROR;
@@ -2292,22 +2300,22 @@ USB_Result USB_CDC_DummyClearCommFeature(uint16_t wVALUE, uint16_t wINDEX)
 {
     return USB_ERROR;
 }
-# 769 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_CDC.c"
+# 779 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_CDC.c"
 USB_Result USB_CDC_DummyGetLineCoding(uint16_t wINDEX, USB_CDC_LineCoding_TypeDef* DATA)
 {
     return USB_ERROR;
 }
-# 781 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_CDC.c"
+# 791 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_CDC.c"
 USB_Result USB_CDC_DummySetLineCoding(uint16_t wINDEX, const USB_CDC_LineCoding_TypeDef* DATA)
 {
     return USB_ERROR;
 }
-# 797 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_CDC.c"
+# 807 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_CDC.c"
 USB_Result USB_CDC_DummyControlLineState(uint16_t wVALUE, uint16_t wINDEX)
 {
     return USB_ERROR;
 }
-# 810 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_CDC.c"
+# 820 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_CDC.c"
 USB_Result USB_CDC_DummySendBreak(uint16_t wVALUE, uint16_t wINDEX)
 {
     return USB_ERROR;

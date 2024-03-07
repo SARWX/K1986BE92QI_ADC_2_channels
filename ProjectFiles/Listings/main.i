@@ -1,7 +1,7 @@
 # 1 "main.c"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
-# 383 "<built-in>" 3
+# 379 "<built-in>" 3
 # 1 "<command line>" 1
 # 1 "<built-in>" 2
 # 1 "main.c" 2
@@ -4715,10 +4715,11 @@ void execute_command(char *command);
 
 int command_recived = 0;
 char buffer[128];
+int USB_transmition_complete = 1;
 extern char rec_buf[];
 
-uint16_t main_array_for_ADC[128];
-uint16_t alternate_array_for_ADC[128];
+uint16_t main_array_for_ADC[256];
+uint16_t alternate_array_for_ADC[256];
 
 
 
@@ -4742,6 +4743,15 @@ int main(void)
  DMA_Cmd(DMA_Channel_ADC1, ENABLE);
 
 
+ long int cnt_wait_1 = 0;
+ long int cnt_usb_1 = 0;
+ long int cnt_wait_2 = 0;
+ long int cnt_usb_2 = 0;
+ long int cnt_usb_err_1 = 0;
+ long int cnt_usb_err_2 = 0;
+ long int usb_change = 0;
+
+
  while (1)
  {
   if (command_recived == 1)
@@ -4757,13 +4767,43 @@ int main(void)
    ADC1_Cmd(ENABLE);
   }
 
-  while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) == 0) ;
+  while ((DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) == 0))
+   cnt_wait_1++;
   DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_PRIMARY, &ADC1_primary_DMA_structure);
-  USB_CDC_SendData((uint8_t *)(main_array_for_ADC), ((128) * 2 ));
 
 
-  while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) != 0) ;
+
+  for (int i = 0; (i < 500) && USB_transmition_complete == 0; i++)
+   ;
+  usb_change += USB_transmition_complete;
+  USB_transmition_complete = 0;
+  if (USB_CDC_SendData((uint8_t *)(main_array_for_ADC), ((256) * 2 ))) {
+   if (cnt_usb_1 > 1)
+    cnt_usb_err_1++;
+  }
+  else
+   cnt_usb_1++;
+
+
+
+
+  while ((DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) != 0))
+   cnt_wait_2++;
   DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_ALTERNATE, &ADC1_alternate_DMA_structure);
-  USB_CDC_SendData((uint8_t *)(alternate_array_for_ADC), ((128) * 2 ));
+
+
+
+  for (int i = 0; (i < 500) && USB_transmition_complete == 0; i++)
+   ;
+  usb_change += USB_transmition_complete;
+  USB_transmition_complete = 0;
+  if(USB_CDC_SendData((uint8_t *)(alternate_array_for_ADC), ((256) * 2 ))) {
+   if (cnt_usb_2)
+    cnt_usb_err_2++;
+  }
+  else
+   cnt_usb_2++;
+
+
  }
 }
