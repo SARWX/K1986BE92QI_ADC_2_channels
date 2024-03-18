@@ -18,7 +18,7 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
     """
     adc_num = 1
     
-    def __init__(self, portNumber = 8, baudrate = 2000000): 
+    def __init__(self, portNumber = 7, baudrate = 2000000): 
         """arguments to this function show up as parameters in GRC"""
         
         portName = 'COM' + str(portNumber)                  # Concatenate string and number
@@ -37,15 +37,12 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
         else:
             self.port.open()
             
-    def work(self, input_items, outputItems):
+    def work(self, input_items, output_items):
         n = 0
-        
-        while(n < len(outputItems[0])) :
-            data = int.from_bytes(self.port.read(2), "little")
-            outputItems[1][n] = data
-            
-            data = int.from_bytes(self.port.read(2), "little")
-            outputItems[2][n] = data
+        while n < len(output_items[0]):
+            data = bytearray(4)  # Creating an array of bytes to read 2 16-bit values (4 bytes)
+            self.port.readinto(data)  # We read the data directly into the byte array
+            output_items[1][n] = int.from_bytes(data[:2], 'little')  # Convert the first 2 bytes to a number
+            output_items[2][n] = int.from_bytes(data[2:], 'little')  # Convert the remaining 2 bytes to a number
             n += 1
-            
-        return len(outputItems[1])
+        return len(output_items[1])
