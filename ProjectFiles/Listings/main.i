@@ -1,7 +1,7 @@
 # 1 "main.c"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
-# 383 "<built-in>" 3
+# 379 "<built-in>" 3
 # 1 "<command line>" 1
 # 1 "<built-in>" 2
 # 1 "main.c" 2
@@ -1715,7 +1715,7 @@ USB_Result USB_CDC_SetReceiveBuffer(uint8_t* ReceiveBuffer, uint32_t DataPortion
 USB_Result USB_CDC_ReceiveStart(void);
 USB_Result USB_CDC_ReceiveStop(void);
 
-USB_Result USB_CDC_SendData(uint8_t* Buffer, uint32_t Length);
+USB_Result USB_CDC_SendData(uint8_t* Buffer, uint32_t Length)__attribute__((section(".IRAM1")));
 int check_status_cdc(void);
 
 
@@ -4708,10 +4708,35 @@ void VCom_Configuration(void);
 
 void execute_command(char *command);
 # 25 "main.c" 2
+# 1 "./CustomLibs/inc\\SPI_init.h" 1
+
+
+
+void Setup_SPI(void);
+# 26 "main.c" 2
+# 1 "./CustomLibs/inc\\ili9341.h" 1
+# 39 "./CustomLibs/inc\\ili9341.h"
+void ili9341_hard_init(void);
+void ili9341_spi_init(void);
+void ili9341_spi_send(unsigned char spi_data);
+void ili9341_writecommand8(uint8_t com);
+void ili9341_writedata8(uint8_t data);
+void ili9341_setaddress(uint16_t x1,uint16_t y1,uint16_t x2,uint16_t y2);
+void ili9341_hard_reset(void);
+void ili9341_init(void);
+void ili9341_pushcolour(uint16_t colour);
+void ili9341_clear(uint16_t colour);
+void ili9341_drawpixel(uint16_t x3,uint16_t y3,uint16_t colour1);
+void ili9341_drawvline(uint16_t x,uint16_t y,uint16_t h,uint16_t colour);
+void ili9341_drawhline(uint16_t x,uint16_t y,uint16_t w,uint16_t colour);
+void ili9341_fillrect(uint16_t x,uint16_t y,uint16_t w,uint16_t h,uint16_t colour);
+void ili9341_setRotation(uint8_t x);
+void Setup_ili9341(void);
+# 27 "main.c" 2
 
 
 # 1 "./CustomLibs/inc\\defines.h" 1
-# 28 "main.c" 2
+# 30 "main.c" 2
 
 int command_recived = 0;
 char buffer[128];
@@ -4729,6 +4754,8 @@ int main(void)
 
  Setup_ADC();
  Setup_DMA();
+ Setup_SPI();
+ Setup_ili9341();
  USB_CDC_Init((uint8_t *)buffer, 1, SET);
  Setup_CPU_Clock();
  Setup_USB();

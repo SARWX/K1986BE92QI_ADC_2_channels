@@ -22,6 +22,8 @@
 #include "sys_CLK_init.h"
 #include "USB_init.h"
 #include "command_system.h"
+#include "SPI_init.h"
+#include "ili9341.h"
 
 /* Макроподстановки --------------------------------------------------------------*/
 #include "defines.h"
@@ -42,6 +44,8 @@ int main(void)
 	/* CDC layer initialization */
 	Setup_ADC();
 	Setup_DMA();
+	Setup_SPI();
+	Setup_ili9341();
 	USB_CDC_Init((uint8_t *)buffer, 1, SET);
 	Setup_CPU_Clock();
 	Setup_USB();

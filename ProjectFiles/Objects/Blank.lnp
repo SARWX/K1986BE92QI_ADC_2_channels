@@ -38,6 +38,9 @@
 ".\objects\dma_init.o"
 ".\objects\sys_clk_init.o"
 ".\objects\usb_init.o"
+".\objects\spi_init.o"
+".\objects\ili9341.o"
+".\objects\delay.o"
 ".\objects\retarget_io.o"
 --ro-base 0x08000000 --entry 0x08000000 --rw-base 0x20000000 --entry Reset_Handler --first __Vectors --strict --summary_stderr --info summarysizes --info sizes --info totals
 --list ".\Listings\Blank.map" -o .\Objects\Blank.axf

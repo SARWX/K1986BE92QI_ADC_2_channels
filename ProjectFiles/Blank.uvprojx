@@ -314,7 +314,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>5</Optim>
+            <Optim>1</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -779,6 +779,21 @@
               <FileType>1</FileType>
               <FilePath>.\CustomLibs\src\USB_init.c</FilePath>
             </File>
+            <File>
+              <FileName>SPI_init.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CustomLibs\src\SPI_init.c</FilePath>
+            </File>
+            <File>
+              <FileName>ili9341.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CustomLibs\src\ili9341.c</FilePath>
+            </File>
+            <File>
+              <FileName>delay.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CustomLibs\inc\delay.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -813,6 +828,21 @@
               <FileName>USB_init.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\CustomLibs\inc\USB_init.h</FilePath>
+            </File>
+            <File>
+              <FileName>SPI_init.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\CustomLibs\inc\SPI_init.h</FilePath>
+            </File>
+            <File>
+              <FileName>ili9341.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\CustomLibs\inc\ili9341.h</FilePath>
+            </File>
+            <File>
+              <FileName>delay.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\CustomLibs\inc\delay.h</FilePath>
             </File>
           </Files>
         </Group>

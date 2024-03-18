@@ -1,7 +1,7 @@
 # 1 "CustomLibs/src/sys_CLK_init.c"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
-# 383 "<built-in>" 3
+# 379 "<built-in>" 3
 # 1 "<command line>" 1
 # 1 "<built-in>" 2
 # 1 "CustomLibs/src/sys_CLK_init.c" 2
@@ -1641,15 +1641,17 @@ void delay_tick(uint32_t count);
 # 5 "CustomLibs/src/sys_CLK_init.c" 2
 # 1 "./CustomLibs/inc\\defines.h" 1
 # 6 "CustomLibs/src/sys_CLK_init.c" 2
+# 1 "./CustomLibs/inc\\delay.h" 1
 
 
-void delay_tick(uint32_t count)
-{
- while (count--)
- {
-  __NOP();
- }
-}
+
+
+
+void delay_tick(uint32_t count);
+void delay_ms(uint32_t delay);
+void delay_us(uint32_t delay);
+# 7 "CustomLibs/src/sys_CLK_init.c" 2
+
 
 void Setup_CPU_Clock(void)
 {

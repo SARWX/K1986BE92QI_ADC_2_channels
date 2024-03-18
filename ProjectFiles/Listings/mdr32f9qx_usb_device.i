@@ -1,7 +1,7 @@
 # 1 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_device.c"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
-# 383 "<built-in>" 3
+# 379 "<built-in>" 3
 # 1 "<command line>" 1
 # 1 "<built-in>" 2
 # 1 "SPL/MDR32Fx/src/USB_Library/MDR32F9Qx_usb_device.c" 2
@@ -1716,7 +1716,7 @@ USB_Result USB_CDC_SetReceiveBuffer(uint8_t* ReceiveBuffer, uint32_t DataPortion
 USB_Result USB_CDC_ReceiveStart(void);
 USB_Result USB_CDC_ReceiveStop(void);
 
-USB_Result USB_CDC_SendData(uint8_t* Buffer, uint32_t Length);
+USB_Result USB_CDC_SendData(uint8_t* Buffer, uint32_t Length)__attribute__((section(".IRAM1")));
 int check_status_cdc(void);
 
 

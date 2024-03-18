@@ -3,15 +3,8 @@
 #include <stdint.h>
 #include "sys_CLK_init.h"
 #include "defines.h"
+#include "delay.h"
 
-// задержка на count тактов 
-void delay_tick(uint32_t count)	// Ждать count тактов процессора
-{	
-	while (count--) 
-	{							// декремент счетчика	
-		__NOP();				// Не делать ничего
-	}
-}
 
 void Setup_CPU_Clock(void) 
 {

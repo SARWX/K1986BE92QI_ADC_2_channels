@@ -23,4 +23,5 @@
   CustomLibs\inc\DMA_init.h CustomLibs\inc\DAC_init.h \
   CustomLibs\inc\ADC_init.h CustomLibs\inc\sys_CLK_init.h \
   CustomLibs\inc\USB_init.h CustomLibs\inc\command_system.h \
+  CustomLibs\inc\SPI_init.h CustomLibs\inc\ili9341.h \
   CustomLibs\inc\defines.h
