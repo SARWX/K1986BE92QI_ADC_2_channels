@@ -10,6 +10,7 @@
         "defines_for_proj.h": "c",
         "sysclk_for_proj.h": "c",
         "dma_for_proj.h": "c",
-        "mdr32fx.h": "c"
+        "mdr32fx.h": "c",
+        "defines.h": "c"
     }
 }

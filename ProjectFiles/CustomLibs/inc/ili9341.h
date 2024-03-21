@@ -7,7 +7,7 @@
 #define controlport PORTB
 #define controlddr DDRB
 #define controlpin PINB
-#define rstport PORTD       // Надо будет заменить на что-то вроде GPIOD->ODR
+#define rstport PORTD       // пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ-пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ GPIOD->ODR
 #define rstddr DDRD
 #define rstpin PIND
 #define dc 0
@@ -52,5 +52,8 @@ void ili9341_drawhline(uint16_t x,uint16_t y,uint16_t w,uint16_t colour);
 void ili9341_fillrect(uint16_t x,uint16_t y,uint16_t w,uint16_t h,uint16_t colour);
 void ili9341_setRotation(uint8_t x);
 void Setup_ili9341(void);
+void dysplay_points(uint16_t *arr, int size);
+void test(void);
+
 
 #endif

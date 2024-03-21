@@ -78,6 +78,8 @@ void ili9341_drawhline(uint16_t x,uint16_t y,uint16_t w,uint16_t colour);
 void ili9341_fillrect(uint16_t x,uint16_t y,uint16_t w,uint16_t h,uint16_t colour);
 void ili9341_setRotation(uint8_t x);
 void Setup_ili9341(void);
+void dysplay_points(uint16_t *arr, int size);
+void test(void);
 # 2 "CustomLibs/src/ili9341.c" 2
 
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_ssp.h" 1
@@ -1563,32 +1565,48 @@ void delay_tick(uint32_t count);
 void delay_ms(uint32_t delay);
 void delay_us(uint32_t delay);
 # 7 "CustomLibs/src/ili9341.c" 2
+# 1 "./CustomLibs/inc\\defines.h" 1
+# 8 "CustomLibs/src/ili9341.c" 2
 
 volatile uint16_t LCD_W=320;
 volatile uint16_t LCD_H=240;
-# 33 "CustomLibs/src/ili9341.c"
-void ili9341_writecommand8(uint8_t com)
+
+void test(void)
 {
 
+ for (int x = 0; x < 320; x+=10)
+ {
+  for (int y = 0; y < LCD_W; y++)
+  {
+   ili9341_drawpixel(y, x, 0xFFE0);
+  }
+ }
+
+}
+
+void dysplay_points(uint16_t *arr, int size)
+{
+ for (int i = 0; i < size; i++)
+ {
+  ili9341_drawpixel(((arr[i]) / 4095), i, 0xFFE0);
+ }
+}
+
+
+void ili9341_writecommand8(uint8_t com)
+{
  PORT_ResetBits(((MDR_PORT_TypeDef *) (0x400B0000)), PORT_Pin_6);
  PORT_ResetBits(((MDR_PORT_TypeDef *) (0x400E8000)), PORT_Pin_2);
- delay_us(5);
 
  SSP_SendData(((MDR_SSP_TypeDef *) (0x40040000)), com);
-
  PORT_SetBits(((MDR_PORT_TypeDef *) (0x400B0000)), PORT_Pin_6);
 }
 
 void ili9341_writedata8(uint8_t data)
 {
-
  PORT_SetBits(((MDR_PORT_TypeDef *) (0x400B0000)), PORT_Pin_6);
-
-
  PORT_ResetBits(((MDR_PORT_TypeDef *) (0x400E8000)), PORT_Pin_2);
-
  SSP_SendData(((MDR_SSP_TypeDef *) (0x40040000)), data);
-
  PORT_SetBits(((MDR_PORT_TypeDef *) (0x400E8000)), PORT_Pin_2);
 }
 
@@ -1611,21 +1629,16 @@ void ili9341_setaddress(uint16_t x1,uint16_t y1,uint16_t x2,uint16_t y2)
 
 void ili9341_hard_reset(void)
 {
-
  PORT_SetBits(((MDR_PORT_TypeDef *) (0x400B0000)), PORT_Pin_7);
  delay_ms(200);
-
  PORT_ResetBits(((MDR_PORT_TypeDef *) (0x400B0000)), PORT_Pin_7);
  delay_ms(200);
-
  PORT_SetBits(((MDR_PORT_TypeDef *) (0x400B0000)), PORT_Pin_7);
  delay_ms(200);
 }
 
 void ili9341_init(void)
 {
-
-
  ili9341_hard_reset();
  ili9341_writecommand8(0x01);
  delay_ms(1000);
@@ -1778,10 +1791,10 @@ void ili9341_clear(uint16_t colour)
 
 void ili9341_drawpixel(uint16_t x3,uint16_t y3,uint16_t colour1)
 {
- if ((x3 < 0) ||(x3 >= LCD_W) || (y3 < 0) || (y3 >= LCD_H))
- {
-  return;
- }
+
+
+
+
 
  ili9341_setaddress(x3,y3,x3+1,y3+1);
  ili9341_pushcolour(colour1);

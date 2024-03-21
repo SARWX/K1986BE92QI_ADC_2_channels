@@ -6,6 +6,7 @@
 #define SIN_RES 500 					// Разрешение синусоиды (точек на период)
 #define SIN_AMPLITUDE 2000				// должно быть меньше < 4096 / 2
 #define SIN_MEDIUM_LINE 2000			// Средняя линия для синусоиды на ЦАП
+#define MAX_ADC_VAL 4095				// Максимальное значение 12 битного АЦП
 #define AIRCR_SETTING 0x5FA0500			// Настройка для регистра AIRCR
 #define VECTOR_TABLE_OFFSET 0x08000000	// Смещение таблицы векторов (см. спецификацию)
 #define WHOLE_WORD 0xFFFFFFFF			// Константа отображающая 32 битное слово

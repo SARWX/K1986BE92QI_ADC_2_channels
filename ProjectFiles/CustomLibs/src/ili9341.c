@@ -4,15 +4,38 @@
 #include "MDR32F9Qx_port.h"
 #include "MDR32Fx.h"
 #include "delay.h"
+#include "defines.h"
 
 volatile uint16_t LCD_W=ILI9341_TFTWIDTH;
 volatile uint16_t LCD_H=ILI9341_TFTHEIGHT;
+
+void test(void)
+{
+	// TEST
+	for (int x = 0; x < 320; x+=10)
+	{
+		for (int y = 0; y < LCD_W; y++)
+		{
+			ili9341_drawpixel(y, x, YELLOW);
+		}
+	}
+	//
+}
+
+void dysplay_points(uint16_t *arr, int size)
+{
+	for (int i = 0; i < size; i++) 
+	{
+		ili9341_drawpixel(((arr[i]) / MAX_ADC_VAL), i, YELLOW);
+	}
+}
+
 
 void ili9341_writecommand8(uint8_t com)			// Передать команду
 {
 	PORT_ResetBits(MDR_PORTB, PORT_Pin_6);		// dc = 0
 	PORT_ResetBits(MDR_PORTF, PORT_Pin_2);		// cs = 0
-	delay_us(5);//little delay
+//	delay_us(5);//little delay
 	SSP_SendData(MDR_SSP1, com);
 	PORT_SetBits(MDR_PORTB, PORT_Pin_6); 		// cs = 1
 }
@@ -206,10 +229,10 @@ void ili9341_clear(uint16_t colour)
 // draw pixel
 void ili9341_drawpixel(uint16_t x3,uint16_t y3,uint16_t colour1) //pixels will always be counted from right side.x is representing LCD width which will always be less tha 240.Y is representing LCD height which will always be less than 320
 {
-	if ((x3 < 0) ||(x3 >= LCD_W) || (y3 < 0) || (y3 >= LCD_H))
-	{
-		return;
-	}
+	// if ((x3 < 0) ||(x3 >= LCD_W) || (y3 < 0) || (y3 >= LCD_H))
+	// {
+	// 	return;
+	// }
 
 	ili9341_setaddress(x3,y3,x3+1,y3+1);
 	ili9341_pushcolour(colour1);
