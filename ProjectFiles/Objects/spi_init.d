@@ -7,4 +7,5 @@
   CMSIS\MDR32Fx\CoreSupport\CM3\core_cmInstr.h \
   CMSIS\MDR32Fx\CoreSupport\CM3\core_cmFunc.h \
   CMSIS\MDR32Fx\DeviceSupport\MDR1986VE9x\startup\arm\system_MDR32F9Qx.h \
-  SPL\MDR32Fx\inc\MDR32F9Qx_port.h
+  SPL\MDR32Fx\inc\MDR32F9Qx_port.h SPL\MDR32Fx\inc\MDR32F9Qx_rst_clk.h \
+  CustomLibs\inc\delay.h

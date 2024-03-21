@@ -9,6 +9,7 @@
         "mdr32f9qx_rst_clk.h": "c",
         "defines_for_proj.h": "c",
         "sysclk_for_proj.h": "c",
-        "dma_for_proj.h": "c"
+        "dma_for_proj.h": "c",
+        "mdr32fx.h": "c"
     }
 }

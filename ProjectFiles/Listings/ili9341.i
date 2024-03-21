@@ -1896,7 +1896,7 @@ void ili9341_setRotation(uint8_t m)
 void Setup_ili9341(void)
 {
  ili9341_init();
- ili9341_clear(0xFFE0);
+ ili9341_clear(0xF800);
  delay_ms(1000);
  ili9341_setRotation(3);
 }
