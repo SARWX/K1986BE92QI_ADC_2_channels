@@ -4751,22 +4751,22 @@ uint16_t alternate_array_for_ADC[128];
 
 int main(void)
 {
+  Setup_SPI();
+ Setup_ili9341();
  VCom_Configuration();
 
 
  Setup_ADC();
  Setup_DMA();
- Setup_SPI();
- Setup_ili9341();
-  test();
+
  USB_CDC_Init((uint8_t *)buffer, 1, SET);
  Setup_CPU_Clock();
  Setup_USB();
  set_DAC_table(100);
- Setup_DAC();
- Setup_TIM2();
 
- DMA_Cmd(DMA_Channel_TIM2, ENABLE);
+
+
+
 
  ADC1_Cmd (ENABLE);
  DMA_Cmd(DMA_Channel_ADC1, ENABLE);

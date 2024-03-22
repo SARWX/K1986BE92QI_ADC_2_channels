@@ -26,7 +26,7 @@ void dysplay_points(uint16_t *arr, int size)
 {
 	for (int i = 0; i < size; i++) 
 	{
-		ili9341_drawpixel(((arr[i]) / MAX_ADC_VAL), i, YELLOW);
+		ili9341_drawpixel((((arr[i]) * 240) / MAX_ADC_VAL), i, YELLOW);
 	}
 }
 

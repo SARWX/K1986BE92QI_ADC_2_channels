@@ -25,6 +25,9 @@ void Setup_DMA()
 	// Запретить все прерывания, в том числе от SSP1 и SSP2
 	NVIC->ICPR[0] = WHOLE_WORD;
 	NVIC->ICER[0] = WHOLE_WORD;
+	// Отключить DMA для SPI
+	MDR_SSP1->DMACR = 0;
+	MDR_SSP2->DMACR = 0;
 
 	// Сбросить все настройки DMA
 	DMA_DeInit();

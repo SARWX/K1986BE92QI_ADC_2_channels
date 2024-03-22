@@ -1461,10 +1461,10 @@ void delay_tick(uint32_t count)
 
 void delay_ms(uint32_t delay)
 {
- delay_tick(delay * (16000000 / (1000 * 20)));
+ delay_tick(delay * (16000000 / (1000 * 10)));
 }
 
 void delay_us(uint32_t delay)
 {
- delay_tick(delay * (16000000 / (1000000 * 20)));
+ delay_tick(delay * (16000000 / (1000000 * 10)));
 }

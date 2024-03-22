@@ -1760,6 +1760,9 @@ void Setup_DMA()
  ((NVIC_Type *) ((0xE000E000UL) + 0x0100UL) )->ICPR[0] = 0xFFFFFFFF;
  ((NVIC_Type *) ((0xE000E000UL) + 0x0100UL) )->ICER[0] = 0xFFFFFFFF;
 
+ ((MDR_SSP_TypeDef *) (0x40040000))->DMACR = 0;
+ ((MDR_SSP_TypeDef *) (0x400A0000))->DMACR = 0;
+
 
  DMA_DeInit();
  DMA_StructInit (&ADC1_DMA_structure);
