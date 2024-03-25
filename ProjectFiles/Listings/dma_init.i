@@ -1851,7 +1851,7 @@ void Setup_DMA()
  ((MDR_DMA_TypeDef *) (0x40028000))->CHNL_USEBURST_CLR = 1 << DMA_Channel_TIM2;
 
 
- NVIC_EnableIRQ(DMA_IRQn);
+
  NVIC_SetPriority (DMA_IRQn, 100);
 }
 

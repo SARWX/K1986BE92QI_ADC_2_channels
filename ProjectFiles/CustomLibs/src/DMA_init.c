@@ -117,7 +117,7 @@ void Setup_DMA()
 	MDR_DMA->CHNL_USEBURST_CLR = 1 << DMA_Channel_TIM2;
 
 	// Установим значение приоретета прерывания DMA
-	NVIC_EnableIRQ(DMA_IRQn);
+// 	NVIC_EnableIRQ(DMA_IRQn);
 	NVIC_SetPriority (DMA_IRQn, 100);
 }
 

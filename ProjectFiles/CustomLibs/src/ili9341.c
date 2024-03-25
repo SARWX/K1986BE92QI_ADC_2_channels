@@ -22,12 +22,21 @@ void test(void)
 	//
 }
 
-void dysplay_points(uint16_t *arr, int size)
+void dysplay_points(uint16_t *arr, int size, int start_point)
 {
-	for (int i = 0; i < size; i++) 
+	static uint16_t clear_arr[NUM_OF_MES * 2];
+	for (int i = start_point; i < (start_point + size); i++) 
 	{
-		ili9341_drawpixel((((arr[i]) * 240) / MAX_ADC_VAL), i, YELLOW);
+		uint16_t point = ((arr[i - start_point]) * 240) / MAX_ADC_VAL;
+		ili9341_drawpixel(clear_arr[i], i, BLACK);
+		clear_arr[i] = point;
+		ili9341_drawpixel(point, i, GREEN);
 	}
+	// Очистим экран
+	// for (int i = start_point; i < (start_point + size); i++) 
+	// {
+	// 	ili9341_drawpixel((((arr[i - start_point]) * 240) / MAX_ADC_VAL), i, BLACK);
+	// }
 }
 
 
@@ -347,7 +356,7 @@ void ili9341_setRotation(uint8_t m)
 void Setup_ili9341(void)
 {
 	ili9341_init();         	// Проинициализировать ili9341
-	ili9341_clear(RED);   		// Заполнить экран одним цветом
+	ili9341_clear(BLACK);   		// Заполнить экран одним цветом
 	delay_ms(1000);
 	ili9341_setRotation(3); 	// Задать ориентацию
 }

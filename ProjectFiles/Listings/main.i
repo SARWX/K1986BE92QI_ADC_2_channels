@@ -4732,7 +4732,7 @@ void ili9341_drawhline(uint16_t x,uint16_t y,uint16_t w,uint16_t colour);
 void ili9341_fillrect(uint16_t x,uint16_t y,uint16_t w,uint16_t h,uint16_t colour);
 void ili9341_setRotation(uint8_t x);
 void Setup_ili9341(void);
-void dysplay_points(uint16_t *arr, int size);
+void dysplay_points(uint16_t *arr, int size, int start_point);
 void test(void);
 # 27 "main.c" 2
 
@@ -4759,18 +4759,21 @@ int main(void)
  Setup_ADC();
  Setup_DMA();
 
- USB_CDC_Init((uint8_t *)buffer, 1, SET);
+
  Setup_CPU_Clock();
- Setup_USB();
+
  set_DAC_table(100);
+ Setup_DAC();
+ Setup_TIM2();
 
-
-
-
+ DMA_Cmd(DMA_Channel_TIM2, ENABLE);
 
  ADC1_Cmd (ENABLE);
  DMA_Cmd(DMA_Channel_ADC1, ENABLE);
 
+
+ ili9341_setaddress(0,0,319,239);
+ NVIC_DisableIRQ(USB_IRQn);
 
  while (1)
  {
@@ -4790,12 +4793,21 @@ int main(void)
   while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) == 0) ;
   DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_PRIMARY, &ADC1_primary_DMA_structure);
 
-  dysplay_points((uint16_t *)(main_array_for_ADC), 128);
+
+
+
+
+  dysplay_points((uint16_t *)main_array_for_ADC, 128, 0);
 
 
   while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) != 0) ;
   DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_ALTERNATE, &ADC1_alternate_DMA_structure);
 
-  dysplay_points((uint16_t *)(alternate_array_for_ADC), 128);
+
+
+
+
+  dysplay_points((uint16_t *)alternate_array_for_ADC, 128, 128);
+
  }
 }

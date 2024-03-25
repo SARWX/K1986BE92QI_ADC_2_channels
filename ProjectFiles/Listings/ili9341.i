@@ -78,7 +78,7 @@ void ili9341_drawhline(uint16_t x,uint16_t y,uint16_t w,uint16_t colour);
 void ili9341_fillrect(uint16_t x,uint16_t y,uint16_t w,uint16_t h,uint16_t colour);
 void ili9341_setRotation(uint8_t x);
 void Setup_ili9341(void);
-void dysplay_points(uint16_t *arr, int size);
+void dysplay_points(uint16_t *arr, int size, int start_point);
 void test(void);
 # 2 "CustomLibs/src/ili9341.c" 2
 
@@ -1584,12 +1584,21 @@ void test(void)
 
 }
 
-void dysplay_points(uint16_t *arr, int size)
+void dysplay_points(uint16_t *arr, int size, int start_point)
 {
- for (int i = 0; i < size; i++)
+ static uint16_t clear_arr[128 * 2];
+ for (int i = start_point; i < (start_point + size); i++)
  {
-  ili9341_drawpixel((((arr[i]) * 240) / 4095), i, 0xFFE0);
+  uint16_t point = ((arr[i - start_point]) * 240) / 4095;
+  ili9341_drawpixel(clear_arr[i], i, 0x0000);
+  clear_arr[i] = point;
+  ili9341_drawpixel(point, i, 0x07E0);
  }
+
+
+
+
+
 }
 
 
@@ -1909,7 +1918,7 @@ void ili9341_setRotation(uint8_t m)
 void Setup_ili9341(void)
 {
  ili9341_init();
- ili9341_clear(0xF800);
+ ili9341_clear(0x0000);
  delay_ms(1000);
  ili9341_setRotation(3);
 }

@@ -52,7 +52,7 @@ void ili9341_drawhline(uint16_t x,uint16_t y,uint16_t w,uint16_t colour);
 void ili9341_fillrect(uint16_t x,uint16_t y,uint16_t w,uint16_t h,uint16_t colour);
 void ili9341_setRotation(uint8_t x);
 void Setup_ili9341(void);
-void dysplay_points(uint16_t *arr, int size);
+void dysplay_points(uint16_t *arr, int size, int start_point);
 void test(void);
 
 

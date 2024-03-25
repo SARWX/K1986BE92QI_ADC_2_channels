@@ -22,9 +22,9 @@ void Setup_ADC()
     SCB->VTOR = VECTOR_TABLE_OFFSET;
 
     // Запрещаем все прерывания
-    NVIC->ICPR[0] = WHOLE_WORD;
-    NVIC->ICER[0] = WHOLE_WORD;
-	NVIC->ISER[0] = (1<<ADC_IRQn);
+    NVIC->ICPR[0] = WHOLE_WORD;			// Регистр сброса состояния ожидания для прерывания ICPR
+    NVIC->ICER[0] = WHOLE_WORD;			// Регистр запрета прерываний IСER
+		NVIC->ISER[0] = (1<<ADC_IRQn);	// Регистр разрешения прерываний ISER
 
 	// Сбрасываем настройки порта D
     PORT_DeInit(MDR_PORTD);
@@ -47,7 +47,7 @@ void Setup_ADC()
     ADCx_structure.ADC_Channels         = (ADC_CH_ADC0_MSK | ADC_CH_ADC1_MSK);	// Маска для каналов 0 и 1 (АЦП 1 будет оцифровывать их поочередно)
     ADCx_structure.ADC_VRefSource       = ADC_VREF_SOURCE_INTERNAL;				    // Опорное напряжение от внутреннего источника
     ADCx_structure.ADC_IntVRefSource    = ADC_INT_VREF_SOURCE_INEXACT;			    // Выбираем неточный источник опорного напряжения
-    ADCx_structure.ADC_Prescaler        = ADC_CLK_div_32;						          // Задаем скорость работы АЦП, ИМЕННО ЭТОЙ НАСТРОЙКОЙ ЗАДАЕТСЯ СКОРОСТЬ РАБОТЫ УСТРОЙСТВА
+    ADCx_structure.ADC_Prescaler        = ADC_CLK_div_512;						          // Задаем скорость работы АЦП, ИМЕННО ЭТОЙ НАСТРОЙКОЙ ЗАДАЕТСЯ СКОРОСТЬ РАБОТЫ УСТРОЙСТВА
 	ADCx_structure.ADC_DelayGo          = 0x2;									                  // Отложенный запуск, необходиим для нормальной работы
     ADC1_Init (&ADCx_structure);													                      // Применяем настройки к АЦП 1
     
