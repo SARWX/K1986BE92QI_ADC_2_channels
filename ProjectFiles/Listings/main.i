@@ -4749,32 +4749,64 @@ uint16_t alternate_array_for_ADC[128];
 
 
 
+
+uint32_t count_dysplay = 0;
+uint32_t count_dma_interrupts = 0;
+
 int main(void)
 {
-  Setup_SPI();
- Setup_ili9341();
+
  VCom_Configuration();
 
+ count_dysplay++;
 
  Setup_ADC();
+
+ count_dysplay++;
  Setup_DMA();
 
+ count_dysplay++;
 
+ USB_CDC_Init((uint8_t *)buffer, 1, SET);
+
+ count_dysplay++;
  Setup_CPU_Clock();
 
+
+
+ count_dysplay++;
+ Setup_USB();
+ count_dysplay++;
  set_DAC_table(100);
+ count_dysplay++;
  Setup_DAC();
- Setup_TIM2();
+ count_dysplay++;
+
+ NVIC_DisableIRQ(DMA_IRQn);
+ count_dysplay++;
+
+ Setup_SPI();
+ Setup_ili9341();
+
+ count_dysplay++;
+
+ count_dysplay++;
+
+ ADC1_Cmd (ENABLE);
+ count_dysplay++;
+ DMA_Cmd(DMA_Channel_ADC1, ENABLE);
+ count_dysplay++;
 
  DMA_Cmd(DMA_Channel_TIM2, ENABLE);
 
- ADC1_Cmd (ENABLE);
- DMA_Cmd(DMA_Channel_ADC1, ENABLE);
-
 
  ili9341_setaddress(0,0,319,239);
- NVIC_DisableIRQ(USB_IRQn);
+ count_dysplay++;
 
+ NVIC_EnableIRQ(DMA_IRQn);
+
+
+ count_dysplay++;
  while (1)
  {
   if (command_recived == 1)
@@ -4789,11 +4821,13 @@ int main(void)
    }
    ADC1_Cmd(ENABLE);
   }
+  count_dysplay++;
 
   while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) == 0) ;
   DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_PRIMARY, &ADC1_primary_DMA_structure);
+  count_dysplay++;
 
-
+   count_dysplay++;
 
 
 
@@ -4801,13 +4835,16 @@ int main(void)
 
 
   while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) != 0) ;
+  count_dysplay++;
   DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_ALTERNATE, &ADC1_alternate_DMA_structure);
+  count_dysplay++;
 
-
-
+   count_dysplay++;
 
 
   dysplay_points((uint16_t *)alternate_array_for_ADC, 128, 128);
+  NVIC_EnableIRQ(DMA_IRQn);
+  count_dysplay += 2;
 
  }
 }

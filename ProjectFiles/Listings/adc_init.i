@@ -2007,7 +2007,7 @@ void Setup_ADC()
     ADCx_structure.ADC_Channels = ((((uint32_t)0x1) << ADC_CH_ADC0 ) | (((uint32_t)0x1) << ADC_CH_ADC1 ));
     ADCx_structure.ADC_VRefSource = ADC_VREF_SOURCE_INTERNAL;
     ADCx_structure.ADC_IntVRefSource = ADC_INT_VREF_SOURCE_INEXACT;
-    ADCx_structure.ADC_Prescaler = ADC_CLK_div_512;
+    ADCx_structure.ADC_Prescaler = ADC_CLK_div_128;
  ADCx_structure.ADC_DelayGo = 0x2;
     ADC1_Init (&ADCx_structure);
 

@@ -46,6 +46,11 @@ void ili9341_writecommand8(uint8_t com)			// Передать команду
 	PORT_ResetBits(MDR_PORTF, PORT_Pin_2);		// cs = 0
 //	delay_us(5);//little delay
 	SSP_SendData(MDR_SSP1, com);
+	while (MDR_SSP1->SR & SSP_SR_BSY)			// 1 – модуль SSP в настоящее время передает и/или принимает данные, либо буфер FIFO передатчика не пуст
+	{
+		;										// wait
+	}
+	
 	PORT_SetBits(MDR_PORTB, PORT_Pin_6); 		// cs = 1
 }
 
@@ -54,6 +59,10 @@ void ili9341_writedata8(uint8_t data)			// Передать данные
 	PORT_SetBits(MDR_PORTB, PORT_Pin_6);		// dc = 1
 	PORT_ResetBits(MDR_PORTF, PORT_Pin_2);		// cs = 0
 	SSP_SendData(MDR_SSP1, data);
+	while (MDR_SSP1->SR & SSP_SR_BSY)			// 1 – модуль SSP в настоящее время передает и/или принимает данные, либо буфер FIFO передатчика не пуст
+	{
+		;										// wait
+	}
 	PORT_SetBits(MDR_PORTF, PORT_Pin_2); 		// cs = 1
 }
 

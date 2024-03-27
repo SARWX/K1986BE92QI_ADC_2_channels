@@ -21,10 +21,10 @@ void Setup_SPI(void)
 	PORT_Init(MDR_PORTB, &Port_sruct);
 
 	// TEST
-	for (int i = 0; i < 10; i++) {
-			MDR_PORTB->RXTX = (MDR_PORTB->RXTX ^ PORT_Pin_7);
-			delay_ms(100);
-		}
+//	for (int i = 0; i < 10; i++) {
+//			MDR_PORTB->RXTX = (MDR_PORTB->RXTX ^ PORT_Pin_7);
+//			delay_ms(100);
+//		}
 	// TEST
 
 	// PORT F - инициализация CS

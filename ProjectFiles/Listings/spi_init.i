@@ -1807,15 +1807,7 @@ void Setup_SPI(void)
  Port_sruct.PORT_SPEED = PORT_SPEED_MAXFAST;
  Port_sruct.PORT_MODE = PORT_MODE_DIGITAL;
  PORT_Init(((MDR_PORT_TypeDef *) (0x400B0000)), &Port_sruct);
-
-
- for (int i = 0; i < 10; i++) {
-   ((MDR_PORT_TypeDef *) (0x400B0000))->RXTX = (((MDR_PORT_TypeDef *) (0x400B0000))->RXTX ^ PORT_Pin_7);
-   delay_ms(100);
-  }
-
-
-
+# 31 "CustomLibs/src/SPI_init.c"
  Port_sruct.PORT_Pin = PORT_Pin_2;
  PORT_Init(((MDR_PORT_TypeDef *) (0x400E8000)), &Port_sruct);
 

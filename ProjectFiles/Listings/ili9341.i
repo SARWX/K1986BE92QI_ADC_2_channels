@@ -1608,6 +1608,11 @@ void ili9341_writecommand8(uint8_t com)
  PORT_ResetBits(((MDR_PORT_TypeDef *) (0x400E8000)), PORT_Pin_2);
 
  SSP_SendData(((MDR_SSP_TypeDef *) (0x40040000)), com);
+ while (((MDR_SSP_TypeDef *) (0x40040000))->SR & ((uint32_t)0x00000010))
+ {
+  ;
+ }
+
  PORT_SetBits(((MDR_PORT_TypeDef *) (0x400B0000)), PORT_Pin_6);
 }
 
@@ -1616,6 +1621,10 @@ void ili9341_writedata8(uint8_t data)
  PORT_SetBits(((MDR_PORT_TypeDef *) (0x400B0000)), PORT_Pin_6);
  PORT_ResetBits(((MDR_PORT_TypeDef *) (0x400E8000)), PORT_Pin_2);
  SSP_SendData(((MDR_SSP_TypeDef *) (0x40040000)), data);
+ while (((MDR_SSP_TypeDef *) (0x40040000))->SR & ((uint32_t)0x00000010))
+ {
+  ;
+ }
  PORT_SetBits(((MDR_PORT_TypeDef *) (0x400E8000)), PORT_Pin_2);
 }
 

@@ -1738,6 +1738,10 @@ void Setup_DMA();
 # 5 "CustomLibs/src/DMA_init.c" 2
 
 
+extern uint32_t count_dma_interrupts;
+extern uint32_t count_dysplay;
+
+
 extern uint16_t DAC_table[];
 extern uint16_t main_array_for_ADC[];
 extern uint16_t alternate_array_for_ADC[];
@@ -1851,15 +1855,31 @@ void Setup_DMA()
  ((MDR_DMA_TypeDef *) (0x40028000))->CHNL_USEBURST_CLR = 1 << DMA_Channel_TIM2;
 
 
+ ((MDR_DMA_TypeDef *) (0x40028000))->CHNL_REQ_MASK_SET = (1 << DMA_Channel_SSP1_RX |
+ 1 << DMA_Channel_SSP1_TX | 1 << DMA_Channel_SSP2_RX |
+ 1 << DMA_Channel_SSP2_TX);
 
- NVIC_SetPriority (DMA_IRQn, 100);
+ ((MDR_DMA_TypeDef *) (0x40028000))->CHNL_ENABLE_CLR = (1 << DMA_Channel_SSP1_RX |
+ 1 << DMA_Channel_SSP1_TX | 1 << DMA_Channel_SSP2_RX |
+ 1 << DMA_Channel_SSP2_TX);
+
+
+ NVIC_SetPriority (DMA_IRQn, 15);
 }
 
 void DMA_IRQHandler() {
+ count_dma_interrupts++;
+
+ if ( count_dysplay > 100)
+ {
+
+
  if(DMA_GetFlagStatus(DMA_Channel_TIM2, DMA_FLAG_CHNL_ALT) == RESET) {
   DMA_CtrlInit(DMA_Channel_TIM2, DMA_CTRL_DATA_ALTERNATE, &TIM2_alternate_DMA_structure);
  }
  else {
   DMA_CtrlInit(DMA_Channel_TIM2, DMA_CTRL_DATA_PRIMARY, &TIM2_primary_DMA_structure);
  }
+}
+  NVIC_ClearPendingIRQ (DMA_IRQn);
 }
