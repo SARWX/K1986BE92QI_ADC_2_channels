@@ -33,6 +33,10 @@ extern char rec_buf[];							// Массив в котором записана 
 uint16_t main_array_for_ADC[NUM_OF_MES];		// Массив измерений АЦП для заполнения сновной структурой DMA
 uint16_t alternate_array_for_ADC[NUM_OF_MES];	// Массив измерений АЦП для заполнения альтернативной структурой DMA
 
+// OBSERVATIONS
+uint32_t count_usb_transmits = 0;		// 1 передача содержит 128 измерений
+uint32_t count_dma_interrupts = 0;		// 500 точек на период
+
 /* -------------------------------------------------------------------------------*/
 
 int main(void) 
@@ -78,5 +82,6 @@ int main(void)
 		while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) != 0) ;					// ждем, когда DMA перейдет на основную структуру
 		DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_ALTERNATE, &ADC1_alternate_DMA_structure);	// реинициализируем альтернативную структуру
 		USB_CDC_SendData((uint8_t *)(alternate_array_for_ADC), ((NUM_OF_MES) * 2 ));			// отправка буфера альтернативной структуры DMA по USB
+		count_usb_transmits += 2;
 	}	
 }

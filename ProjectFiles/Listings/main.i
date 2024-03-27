@@ -1,7 +1,7 @@
 # 1 "main.c"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
-# 383 "<built-in>" 3
+# 379 "<built-in>" 3
 # 1 "<command line>" 1
 # 1 "<built-in>" 2
 # 1 "main.c" 2
@@ -4721,6 +4721,10 @@ uint16_t main_array_for_ADC[128];
 uint16_t alternate_array_for_ADC[128];
 
 
+uint32_t count_usb_transmits = 0;
+uint32_t count_dma_interrupts = 0;
+
+
 
 int main(void)
 {
@@ -4765,5 +4769,6 @@ int main(void)
   while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) != 0) ;
   DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_ALTERNATE, &ADC1_alternate_DMA_structure);
   USB_CDC_SendData((uint8_t *)(alternate_array_for_ADC), ((128) * 2 ));
+  count_usb_transmits += 2;
  }
 }
