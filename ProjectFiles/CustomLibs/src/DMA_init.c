@@ -131,21 +131,20 @@ void Setup_DMA()
 	// Установим значение приоретета прерывания DMA
  	NVIC_EnableIRQ(DMA_IRQn);
 	NVIC_SetPriority (DMA_IRQn, 15);
+
+	// ПРОБУЕМ
+	MDR_DMA->CHNL_ENABLE_SET = (1 << DMA_Channel_TIM2);
 }
 
 void DMA_IRQHandler() {
 	count_dma_interrupts++;
-//	NVIC_DisableIRQ(DMA_IRQn);
-	if (	count_dysplay > 100)
+	if(DMA_GetFlagStatus(DMA_Channel_TIM2, DMA_FLAG_CHNL_ALT) == RESET) 
 	{
-	
-
-	if(DMA_GetFlagStatus(DMA_Channel_TIM2, DMA_FLAG_CHNL_ALT) == RESET) {
 		DMA_CtrlInit(DMA_Channel_TIM2, DMA_CTRL_DATA_ALTERNATE, &TIM2_alternate_DMA_structure);	// реинициализируем альтернативную структуру
 	}
-	else  {
+	else  
+	{
 		DMA_CtrlInit(DMA_Channel_TIM2, DMA_CTRL_DATA_PRIMARY, &TIM2_primary_DMA_structure);		// реинициализируем основную структуру
 	}
-}
-		NVIC_ClearPendingIRQ (DMA_IRQn);
+//		NVIC_ClearPendingIRQ (DMA_IRQn);
 }

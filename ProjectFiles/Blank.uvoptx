@@ -220,6 +220,10 @@
           <Name>System Viewer\MDR_SSP1</Name>
           <WinId>35905</WinId>
         </Entry>
+        <Entry>
+          <Name>System Viewer\MDR_TIMER2</Name>
+          <WinId>35901</WinId>
+        </Entry>
       </SystemViewers>
     </TargetOption>
   </Target>

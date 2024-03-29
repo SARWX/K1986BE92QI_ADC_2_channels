@@ -50,7 +50,7 @@ void Setup_TIM2()
 {
 	RST_CLK_PCLKcmd((RST_CLK_PCLK_TIMER2), ENABLE);
 	TIMER_DeInit(MDR_TIMER2);
-	TIMER_BRGInit(MDR_TIMER2, TIMER_HCLKdiv128);
+	TIMER_BRGInit(MDR_TIMER2, TIMER_HCLKdiv4);
 
 	// Заполним структуру для TIM2
 	TIMER_CntStructInit(&Cnt_sTim2);
@@ -67,8 +67,8 @@ void Setup_TIM2()
 	//NVIC_EnableIRQ(Timer2_IRQn);
 	TIMER_DMACmd(MDR_TIMER2, TIMER_STATUS_CNT_ARR, ENABLE);
 	
-	// Включить таймер
-	TIMER_Cmd(MDR_TIMER2, ENABLE);
+	// // Включить таймер
+	// TIMER_Cmd(MDR_TIMER2, ENABLE);
 }
 
 void set_DAC_table(int freq) 

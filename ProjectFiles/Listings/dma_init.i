@@ -1865,21 +1865,20 @@ void Setup_DMA()
 
   NVIC_EnableIRQ(DMA_IRQn);
  NVIC_SetPriority (DMA_IRQn, 15);
+
+
+ ((MDR_DMA_TypeDef *) (0x40028000))->CHNL_ENABLE_SET = (1 << DMA_Channel_TIM2);
 }
 
 void DMA_IRQHandler() {
  count_dma_interrupts++;
-
- if ( count_dysplay > 100)
+ if(DMA_GetFlagStatus(DMA_Channel_TIM2, DMA_FLAG_CHNL_ALT) == RESET)
  {
-
-
- if(DMA_GetFlagStatus(DMA_Channel_TIM2, DMA_FLAG_CHNL_ALT) == RESET) {
   DMA_CtrlInit(DMA_Channel_TIM2, DMA_CTRL_DATA_ALTERNATE, &TIM2_alternate_DMA_structure);
  }
- else {
+ else
+ {
   DMA_CtrlInit(DMA_Channel_TIM2, DMA_CTRL_DATA_PRIMARY, &TIM2_primary_DMA_structure);
  }
-}
-  NVIC_ClearPendingIRQ (DMA_IRQn);
+
 }

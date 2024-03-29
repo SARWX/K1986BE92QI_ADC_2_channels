@@ -78,7 +78,7 @@ void ili9341_drawhline(uint16_t x,uint16_t y,uint16_t w,uint16_t colour);
 void ili9341_fillrect(uint16_t x,uint16_t y,uint16_t w,uint16_t h,uint16_t colour);
 void ili9341_setRotation(uint8_t x);
 void Setup_ili9341(void);
-void dysplay_points(uint16_t *arr, int size, int start_point);
+void dysplay_signal(uint16_t *arr, int size, int signal_number, int skip_every);
 void test(void);
 # 2 "CustomLibs/src/ili9341.c" 2
 
@@ -1584,15 +1584,29 @@ void test(void)
 
 }
 
-void dysplay_points(uint16_t *arr, int size, int start_point)
+void dysplay_signal(uint16_t *arr, int size, int signal_number, int skip_every)
 {
- static uint16_t clear_arr[128 * 2];
- for (int i = start_point; i < (start_point + size); i++)
+ static int cur_x = 0;
+ static int skip_flag = 0;
+
+ static uint16_t clear_arr[320];
+ for (int i = (signal_number - 1); i < size; i+=2)
  {
-  uint16_t point = ((arr[i - start_point]) * 240) / 4095;
-  ili9341_drawpixel(clear_arr[i], i, 0x0000);
-  clear_arr[i] = point;
-  ili9341_drawpixel(point, i, 0x07E0);
+  if (((cur_x % skip_every) == 0) && (skip_flag == 0))
+  {
+   skip_flag = 1;
+   continue;
+  }
+  uint16_t point = ((arr[i]) * 240) / 4095;
+
+  ili9341_drawpixel(clear_arr[cur_x], cur_x, 0x0000);
+  clear_arr[cur_x] = point;
+  ili9341_drawpixel(point, cur_x, 0x07E0);
+  if (++cur_x >= LCD_W)
+  {
+   cur_x = 0;
+  }
+  skip_flag = 0;
  }
 
 

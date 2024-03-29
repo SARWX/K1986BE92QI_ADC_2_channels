@@ -40,6 +40,7 @@ uint16_t alternate_array_for_ADC[NUM_OF_MES];	// Массив измерений
 // TESTS
 uint32_t count_dysplay = 0;
 uint32_t count_dma_interrupts = 0;
+uint16_t lock_frame = 10;
 
 int main(void) 
 {
@@ -53,9 +54,9 @@ int main(void)
 	Setup_USB();		
 	set_DAC_table(100);
 	Setup_DAC();
-	Setup_TIM2();
 	Setup_SPI();
 	Setup_ili9341();
+	Setup_TIM2();
 
 
 	// Включение АЦП и DMA для АЦП
@@ -67,6 +68,8 @@ int main(void)
 	/* Main loop */
 	ili9341_setaddress(0,0,319,239);
 //	__disable_irq();
+	// Включить таймер
+	TIMER_Cmd(MDR_TIMER2, ENABLE);
 	while (1) 
 	{
 		if (command_recived == 1) 
@@ -85,19 +88,24 @@ int main(void)
 		// 1 стадия - заполнение буфера, с использованием основной структуры DMA, параллельная передача буфера альтернативной по USB
 		while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) == 0) ;					// ждем, когда DMA перейдет на альтернативную структуру
 		DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_PRIMARY, &ADC1_primary_DMA_structure);		// реинициализируем основную структуру
-//		 USB_CDC_SendData((uint8_t *)(main_array_for_ADC), ((NUM_OF_MES) * 2 ));					// отправка буфера основной структуры DMA по USB
+		 USB_CDC_SendData((uint8_t *)(main_array_for_ADC), ((NUM_OF_MES) * 2 ));					// отправка буфера основной структуры DMA по USB
 	
-
-		dysplay_points((uint16_t *)main_array_for_ADC, NUM_OF_MES, 0);
-		count_dysplay++;
+		// if ((count_dysplay % lock_frame) == 0)
+		{
+			dysplay_signal((uint16_t *)main_array_for_ADC, NUM_OF_MES, 1, (count_dysplay / 100 + 2));
+		}
+//		count_dysplay++;
 
 		// 2 стадия - заполнение буфера, с использованием альтернативной структуры DMA, параллельная передача буфера основной по USB
 		while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) != 0) ;					// ждем, когда DMA перейдет на основную структуру
 		DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_ALTERNATE, &ADC1_alternate_DMA_structure);	// реинициализируем альтернативную структуру
 
-//		 USB_CDC_SendData((uint8_t *)(alternate_array_for_ADC), ((NUM_OF_MES) * 2 ));			// отправка буфера альтернативной структуры DMA по USB
+		 USB_CDC_SendData((uint8_t *)(alternate_array_for_ADC), ((NUM_OF_MES) * 2 ));			// отправка буфера альтернативной структуры DMA по USB
 
-		dysplay_points((uint16_t *)alternate_array_for_ADC, NUM_OF_MES, NUM_OF_MES);
+		// if ((count_dysplay % lock_frame) == 0)
+		{
+			dysplay_signal((uint16_t *)alternate_array_for_ADC, NUM_OF_MES, 1, (count_dysplay / 100 + 2));
+		}
 		count_dysplay ++;
 	}	
 }

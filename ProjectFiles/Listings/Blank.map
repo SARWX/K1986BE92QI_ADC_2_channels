@@ -9,11 +9,11 @@ Image component sizes
 
        228          0          0          0         56       5759   adc_init.o
        770          0         15          0       2004       1918   command_system.o
-       464          0          0          0       1024       4597   dac_init.o
+       468          0          0          0       1024       4596   dac_init.o
         46          0          0          0          0        919   delay.o
-       698          0          0          0        176       7673   dma_init.o
-      1464          4          0          4        512       4792   ili9341.o
-       330          0          0          0        652       2328   main.o
+       652          0          0          0        176       7527   dma_init.o
+      1572          4          0          4        648       4915   ili9341.o
+       406          0          0          0        652       3150   main.o
        598          0          0          0          0      11067   mdr32f9qx_adc.o
        128          0          0          0          0       2332   mdr32f9qx_dac.o
       1056          8          0          0       1024       8058   mdr32f9qx_dma.o
@@ -22,7 +22,7 @@ Image component sizes
        298          0          0          0          0       5236   mdr32f9qx_ssp.o
        558          0          0          0          0      20029   mdr32f9qx_timer.o
        674          0          0          0          0       9731   mdr32f9qx_usb.o
-      1060         36          0         85         20       6320   mdr32f9qx_usb_cdc.o
+      1162         36          0         85         20       6320   mdr32f9qx_usb_cdc.o
       3468         38          0          0        202      13555   mdr32f9qx_usb_device.o
        176          0          0          0          0       4039   spi_init.o
         64         26        192          0      24576        924   startup_mdr32f9qx.o
@@ -31,9 +31,9 @@ Image component sizes
        294          0          0          0        162       6444   usb_init.o
 
     ----------------------------------------------------------------------
-     13716        112        240         96      31192     134792   Object Totals
+     13966        112        240         96      31328     135590   Object Totals
          0          0         32          0          0          0   (incl. Generated)
-       118          0          1          3        784          0   (incl. Padding)
+       124          0          1          3        784          0   (incl. Padding)
 
     ----------------------------------------------------------------------
 
@@ -107,8 +107,8 @@ Image component sizes
        236         12         40          0          0        128   sin_i.o
 
     ----------------------------------------------------------------------
-      7388        460        568          0         96       5184   Library Totals
-        30          0          4          0          0          0   (incl. Padding)
+      7386        460        568          0         96       5184   Library Totals
+        28          0          4          0          0          0   (incl. Padding)
 
     ----------------------------------------------------------------------
 
@@ -119,7 +119,7 @@ Image component sizes
       1796        126        292          0          0        868   m_ws.l
 
     ----------------------------------------------------------------------
-      7388        460        568          0         96       5184   Library Totals
+      7386        460        568          0         96       5184   Library Totals
 
     ----------------------------------------------------------------------
 
@@ -128,15 +128,15 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-     21104        572        808         96      31288     136816   Grand Totals
-     21104        572        808         96      31288     136816   ELF Image Totals
-     21104        572        808         96          0          0   ROM Totals
+     21352        572        808         96      31424     137614   Grand Totals
+     21352        572        808         96      31424     137614   ELF Image Totals
+     21352        572        808         96          0          0   ROM Totals
 
 ==============================================================================
 
-    Total RO  Size (Code + RO Data)                21912 (  21.40kB)
-    Total RW  Size (RW Data + ZI Data)             31384 (  30.65kB)
-    Total ROM Size (Code + RO Data + RW Data)      22008 (  21.49kB)
+    Total RO  Size (Code + RO Data)                22160 (  21.64kB)
+    Total RW  Size (RW Data + ZI Data)             31520 (  30.78kB)
+    Total ROM Size (Code + RO Data + RW Data)      22256 (  21.73kB)
 
 ==============================================================================
 
