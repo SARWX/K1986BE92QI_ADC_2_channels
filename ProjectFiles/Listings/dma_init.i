@@ -1863,7 +1863,7 @@ void Setup_DMA()
  1 << DMA_Channel_SSP1_TX | 1 << DMA_Channel_SSP2_RX |
  1 << DMA_Channel_SSP2_TX);
 
-
+  NVIC_EnableIRQ(DMA_IRQn);
  NVIC_SetPriority (DMA_IRQn, 15);
 }
 
