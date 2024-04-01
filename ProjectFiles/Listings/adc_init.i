@@ -2002,9 +2002,9 @@ void Setup_ADC()
     ADCx_StructInit (&ADCx_structure);
     ADCx_structure.ADC_ClockSource = ADC_CLOCK_SOURCE_CPU;
     ADCx_structure.ADC_SamplingMode = ADC_SAMPLING_MODE_CYCLIC_CONV;
-    ADCx_structure.ADC_ChannelSwitching = ADC_CH_SWITCHING_Enable;
+    ADCx_structure.ADC_ChannelSwitching = ADC_CH_SWITCHING_Disable;
     ADCx_structure.ADC_ChannelNumber = ADC_CH_ADC0;
-    ADCx_structure.ADC_Channels = ((((uint32_t)0x1) << ADC_CH_ADC0 ) | (((uint32_t)0x1) << ADC_CH_ADC1 ));
+
     ADCx_structure.ADC_VRefSource = ADC_VREF_SOURCE_INTERNAL;
     ADCx_structure.ADC_IntVRefSource = ADC_INT_VREF_SOURCE_INEXACT;
     ADCx_structure.ADC_Prescaler = ADC_CLK_div_256;
@@ -2012,11 +2012,13 @@ void Setup_ADC()
     ADC1_Init (&ADCx_structure);
 
 
-    ADCx_structure.ADC_SamplingMode = ADC_SAMPLING_MODE_SINGLE_CONV;
+    ADCx_structure.ADC_SamplingMode = ADC_SAMPLING_MODE_CYCLIC_CONV;
     ADCx_structure.ADC_ChannelSwitching = ADC_CH_SWITCHING_Disable;
-    ADCx_structure.ADC_ChannelNumber = ADC_CH_ADC0;
-    ADCx_structure.ADC_Channels = ((((uint32_t)0x1) << ADC_CH_ADC0 ) | (((uint32_t)0x1) << ADC_CH_ADC1 ));
+    ADCx_structure.ADC_ChannelNumber = ADC_CH_ADC1;
+
     ADCx_structure.ADC_Prescaler = ADC_CLK_div_2048;
+    ADC2_Init (&ADCx_structure);
+
 
 
 

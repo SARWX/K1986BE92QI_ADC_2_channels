@@ -34,6 +34,8 @@ extern char rec_buf[];							// Массив в котором записана 
 // массивы для АЦП
 uint16_t main_array_for_ADC[NUM_OF_MES];		// Массив измерений АЦП для заполнения сновной структурой DMA
 uint16_t alternate_array_for_ADC[NUM_OF_MES];	// Массив измерений АЦП для заполнения альтернативной структурой DMA
+// элементы управления
+uint16_t tuner = NUM_OF_MES;					// Управление разверткой
 
 /* -------------------------------------------------------------------------------*/
 
@@ -61,6 +63,7 @@ int main(void)
  
 	// Включение АЦП и DMA для АЦП
 	ADC1_Cmd (ENABLE);						// разрешаем работу ADC1
+	ADC2_Cmd (ENABLE);						// разрешаем работу ADC2
 	DMA_Cmd(DMA_Channel_ADC1, ENABLE);		// разрешаем работу DMA с каналом ADC1
 	// Включение DMA для ЦАП
 	DMA_Cmd(DMA_Channel_TIM2, ENABLE);
@@ -85,6 +88,10 @@ int main(void)
 			ADC1_Cmd(ENABLE);
 		}
 
+		// Определим значение управляющего элемента и усредним 
+		// tuner = (tuner + ((MDR_ADC->ADC2_RESULT >> 8) << 8)) / 2;
+		tuner = ((MDR_ADC->ADC2_RESULT >> 8) << 8);
+		
 		// 1 стадия - заполнение буфера, с использованием основной структуры DMA, параллельная передача буфера альтернативной по USB
 		while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) == 0) ;					// ждем, когда DMA перейдет на альтернативную структуру
 		DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_PRIMARY, &ADC1_primary_DMA_structure);		// реинициализируем основную структуру
@@ -92,7 +99,8 @@ int main(void)
 	
 		// if ((count_dysplay % lock_frame) == 0)
 		{
-			dysplay_signal((uint16_t *)main_array_for_ADC, NUM_OF_MES, 1, (count_dysplay / 100 + 2));
+			dysplay_signal((uint16_t *)main_array_for_ADC, NUM_OF_MES, 1, ((tuner >> 8)));
+//			dysplay_signal(&tuner, 1, 1, (128));
 		}
 //		count_dysplay++;
 
@@ -104,7 +112,9 @@ int main(void)
 
 		// if ((count_dysplay % lock_frame) == 0)
 		{
-			dysplay_signal((uint16_t *)alternate_array_for_ADC, NUM_OF_MES, 1, (count_dysplay / 100 + 2));
+//			uint16_t r = ((MDR_ADC->ADC2_RESULT >> 8) << 8);
+			dysplay_signal((uint16_t *)alternate_array_for_ADC, NUM_OF_MES, 1, ((tuner >> 8)));
+//			dysplay_signal(&tuner, 1, 1, (128));
 		}
 		count_dysplay ++;
 	}	

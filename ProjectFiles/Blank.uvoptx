@@ -205,6 +205,10 @@
       <pMultCmdsp></pMultCmdsp>
       <SystemViewers>
         <Entry>
+          <Name>System Viewer\MDR_ADC</Name>
+          <WinId>35900</WinId>
+        </Entry>
+        <Entry>
           <Name>System Viewer\MDR_DMA</Name>
           <WinId>35902</WinId>
         </Entry>

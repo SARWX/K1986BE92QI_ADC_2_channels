@@ -4747,6 +4747,8 @@ extern char rec_buf[];
 uint16_t main_array_for_ADC[128];
 uint16_t alternate_array_for_ADC[128];
 
+uint16_t tuner = 128;
+
 
 
 
@@ -4773,6 +4775,7 @@ int main(void)
 
 
  ADC1_Cmd (ENABLE);
+ ADC2_Cmd (ENABLE);
  DMA_Cmd(DMA_Channel_ADC1, ENABLE);
 
  DMA_Cmd(DMA_Channel_TIM2, ENABLE);
@@ -4798,13 +4801,18 @@ int main(void)
   }
 
 
+
+  tuner = ((((MDR_ADC_TypeDef *) (0x40088000))->ADC2_RESULT >> 8) << 8);
+
+
   while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) == 0) ;
   DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_PRIMARY, &ADC1_primary_DMA_structure);
    USB_CDC_SendData((uint8_t *)(main_array_for_ADC), ((128) * 2 ));
 
 
   {
-   dysplay_signal((uint16_t *)main_array_for_ADC, 128, 1, (count_dysplay / 100 + 2));
+   dysplay_signal((uint16_t *)main_array_for_ADC, 128, 1, ((tuner >> 8)));
+
   }
 
 
@@ -4816,7 +4824,9 @@ int main(void)
 
 
   {
-   dysplay_signal((uint16_t *)alternate_array_for_ADC, 128, 1, (count_dysplay / 100 + 2));
+
+   dysplay_signal((uint16_t *)alternate_array_for_ADC, 128, 1, ((tuner >> 8)));
+
   }
   count_dysplay ++;
  }
