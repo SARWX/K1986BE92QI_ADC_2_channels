@@ -35,7 +35,7 @@ void Setup_ADC()
     port_init_structure.PORT_MODE  = PORT_MODE_ANALOG;					        // Аналоговый вход
     PORT_Init(MDR_PORTD, &port_init_structure);							          // Инициализация выводов заданной структурой
 	
-    // Настройка АЦП    
+    // Настройка АЦП для осцилографа   
     ADC_DeInit();														                          // Сбросить все прежние настройки АЦП
     ADC_StructInit(&ADC_structure);												                    // Проинициализировать структуру стандартными значениями
 	ADC_Init (&ADC_structure);													                          // Применить конфигурацию, занесенную в ADC_structure
@@ -51,6 +51,13 @@ void Setup_ADC()
 	ADCx_structure.ADC_DelayGo          = 0x2;									                  // Отложенный запуск, необходиим для нормальной работы
     ADC1_Init (&ADCx_structure);													                      // Применяем настройки к АЦП 1
     
+    // Настройка АЦП для регулировки
+    ADCx_structure.ADC_SamplingMode     = ADC_SAMPLING_MODE_SINGLE_CONV;		    // Режим работы (циклические преобразования, а не одиночное)
+    ADCx_structure.ADC_ChannelSwitching = ADC_CH_SWITCHING_Disable;				      // Переключение каналов разрешено, АЦП 1 будет вссегда работать на PD0,// PD1
+    ADCx_structure.ADC_ChannelNumber    = ADC_CH_ADC0;
+    ADCx_structure.ADC_Channels         = (ADC_CH_ADC0_MSK | ADC_CH_ADC1_MSK);	// Маска для каналов 0 и 1 (АЦП 1 будет оцифровывать их поочередно)
+    ADCx_structure.ADC_Prescaler        = ADC_CLK_div_2048;						          // Задаем скорость работы АЦП, ИМЕННО ЭТОЙ НАСТРОЙКОЙ ЗАДАЕТСЯ СКОРОСТЬ РАБОТЫ УСТРОЙСТВА
+
     // Разрешаем прерывания от АЦП
-    ADC1_ITConfig((ADCx_IT_END_OF_CONVERSION), ENABLE);
+//    ADC1_ITConfig((ADCx_IT_END_OF_CONVERSION), ENABLE);
 }

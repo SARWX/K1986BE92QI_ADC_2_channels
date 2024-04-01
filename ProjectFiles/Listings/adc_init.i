@@ -2012,5 +2012,12 @@ void Setup_ADC()
     ADC1_Init (&ADCx_structure);
 
 
-    ADC1_ITConfig((ADCx_IT_END_OF_CONVERSION), ENABLE);
+    ADCx_structure.ADC_SamplingMode = ADC_SAMPLING_MODE_SINGLE_CONV;
+    ADCx_structure.ADC_ChannelSwitching = ADC_CH_SWITCHING_Disable;
+    ADCx_structure.ADC_ChannelNumber = ADC_CH_ADC0;
+    ADCx_structure.ADC_Channels = ((((uint32_t)0x1) << ADC_CH_ADC0 ) | (((uint32_t)0x1) << ADC_CH_ADC1 ));
+    ADCx_structure.ADC_Prescaler = ADC_CLK_div_2048;
+
+
+
 }

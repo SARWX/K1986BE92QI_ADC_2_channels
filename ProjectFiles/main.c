@@ -49,7 +49,7 @@ int main(void)
 	/* CDC layer initialization */
 	Setup_ADC();
 	Setup_DMA();
-//		test();			/// TETTSSSTTT
+//		test();			/// TETTSSSTTT 
 	USB_CDC_Init((uint8_t *)buffer, 1, SET);
 	Setup_USB();		
 	set_DAC_table(100);
@@ -57,8 +57,8 @@ int main(void)
 	Setup_SPI();
 	Setup_ili9341();
 	Setup_TIM2();
-
-
+ 
+ 
 	// Включение АЦП и DMA для АЦП
 	ADC1_Cmd (ENABLE);						// разрешаем работу ADC1
 	DMA_Cmd(DMA_Channel_ADC1, ENABLE);		// разрешаем работу DMA с каналом ADC1
