@@ -24,6 +24,7 @@
 #include "command_system.h"
 #include "SPI_init.h"
 #include "ili9341.h"
+#include "ili9341_interface.h"
 
 /* Макроподстановки --------------------------------------------------------------*/
 #include "defines.h"

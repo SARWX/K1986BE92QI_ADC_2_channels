@@ -896,6 +896,11 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>ili9341_interface.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CustomLibs\src\ili9341_interface.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -945,6 +950,11 @@
               <FileName>delay.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\CustomLibs\inc\delay.h</FilePath>
+            </File>
+            <File>
+              <FileName>ili9341_interface.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\CustomLibs\inc\ili9341_interface.h</FilePath>
             </File>
           </Files>
         </Group>

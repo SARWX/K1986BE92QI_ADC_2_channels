@@ -1,10 +1,10 @@
-# 1 "CustomLibs/src/ili9341.c"
+# 1 "CustomLibs/src/ili9341_interface.c"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
 # 379 "<built-in>" 3
 # 1 "<command line>" 1
 # 1 "<built-in>" 2
-# 1 "CustomLibs/src/ili9341.c" 2
+# 1 "CustomLibs/src/ili9341_interface.c" 2
 # 1 "./CustomLibs/inc\\ili9341.h" 1
 # 1 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdint.h" 1 3
 # 56 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdint.h" 3
@@ -81,7 +81,7 @@ void Setup_ili9341(void);
 
 void test(void);
 void custom_ili9341_setaddress(uint16_t x,uint16_t y);
-# 2 "CustomLibs/src/ili9341.c" 2
+# 2 "CustomLibs/src/ili9341_interface.c" 2
 
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_ssp.h" 1
 # 32 "./SPL/MDR32Fx/inc\\MDR32F9Qx_ssp.h"
@@ -1371,7 +1371,7 @@ uint16_t SSP_ReceiveData(MDR_SSP_TypeDef* SSPx);
 
 FlagStatus SSP_GetFlagStatus(MDR_SSP_TypeDef* SSPx, SSP_Flags_TypeDef SSP_FLAG);
 void SSP_BRGInit(MDR_SSP_TypeDef* SSPx, SSP_Clock_BRG_TypeDef SSP_BRG);
-# 4 "CustomLibs/src/ili9341.c" 2
+# 4 "CustomLibs/src/ili9341_interface.c" 2
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_port.h" 1
 # 49 "./SPL/MDR32Fx/inc\\MDR32F9Qx_port.h"
 typedef enum
@@ -1554,7 +1554,7 @@ void PORT_ResetBits(MDR_PORT_TypeDef* MDR_PORTx, uint32_t PORT_Pin);
 
 
 void PORT_Write(MDR_PORT_TypeDef* MDR_PORTx, uint32_t PortVal);
-# 5 "CustomLibs/src/ili9341.c" 2
+# 5 "CustomLibs/src/ili9341_interface.c" 2
 
 # 1 "./CustomLibs/inc\\delay.h" 1
 
@@ -1565,376 +1565,41 @@ void PORT_Write(MDR_PORT_TypeDef* MDR_PORTx, uint32_t PortVal);
 void delay_tick(uint32_t count);
 void delay_ms(uint32_t delay);
 void delay_us(uint32_t delay);
-# 7 "CustomLibs/src/ili9341.c" 2
+# 7 "CustomLibs/src/ili9341_interface.c" 2
 # 1 "./CustomLibs/inc\\defines.h" 1
-# 8 "CustomLibs/src/ili9341.c" 2
+# 8 "CustomLibs/src/ili9341_interface.c" 2
 
-volatile uint16_t LCD_W=320;
-volatile uint16_t LCD_H=240;
+extern uint16_t LCD_W;
+extern uint16_t LCD_H;
 
-void test(void)
+
+void dysplay_signal(uint16_t *arr, int size, int signal_number, int skip_every)
 {
+ static int cur_x = 0;
+ static int skip_flag = 0;
 
- for (int x = 0; x < 320; x+=10)
+ static uint16_t clear_arr[320];
+ for (int i = (signal_number - 1); i < size; i+=2)
  {
-  for (int y = 0; y < LCD_W; y++)
+  if (((cur_x % skip_every) == 0) && (skip_flag == 0))
   {
-   ili9341_drawpixel(y, x, 0xFFE0);
+   skip_flag = 1;
+   continue;
   }
- }
-
-}
-
-void ili9341_writecommand8(uint8_t com)
-{
-
- ((MDR_PORT_TypeDef *) (0x400B0000))->RXTX &= ~(PORT_Pin_6);
-
- ((MDR_PORT_TypeDef *) (0x400E8000))->RXTX &= ~(PORT_Pin_2);
-
-
- ((MDR_SSP_TypeDef *) (0x40040000))->DR = com;
- while (((MDR_SSP_TypeDef *) (0x40040000))->SR & ((uint32_t)0x00000010))
- {
-  ;
- }
-
-
- ((MDR_PORT_TypeDef *) (0x400E8000))->RXTX |= PORT_Pin_2;
-}
-
-void ili9341_writedata8(uint8_t data)
-{
-
- ((MDR_PORT_TypeDef *) (0x400B0000))->RXTX |= PORT_Pin_6;
-
- ((MDR_PORT_TypeDef *) (0x400E8000))->RXTX &= ~(PORT_Pin_2);
-
- ((MDR_SSP_TypeDef *) (0x40040000))->DR = data;
- while (((MDR_SSP_TypeDef *) (0x40040000))->SR & ((uint32_t)0x00000010))
- {
-  ;
- }
-
- ((MDR_PORT_TypeDef *) (0x400E8000))->RXTX |= PORT_Pin_2;
-}
-
-void custom_ili9341_setaddress(uint16_t x,uint16_t y)
-{
- ili9341_writecommand8(0x2A);
- ili9341_writedata8(x>>8);
- ili9341_writedata8(x);
-
- ili9341_writecommand8(0x2B);
-
- ili9341_writedata8(y);
-
- ili9341_writecommand8(0x2C);
-}
-
-void ili9341_setaddress(uint16_t x1,uint16_t y1,uint16_t x2,uint16_t y2)
-{
- ili9341_writecommand8(0x2A);
- ili9341_writedata8(x1>>8);
- ili9341_writedata8(x1);
- ili9341_writedata8(x2>>8);
- ili9341_writedata8(x2);
-
- ili9341_writecommand8(0x2B);
- ili9341_writedata8(y1>>8);
- ili9341_writedata8(y1);
- ili9341_writedata8(y2);
- ili9341_writedata8(y2);
-
- ili9341_writecommand8(0x2C);
-}
-
-void ili9341_hard_reset(void)
-{
- PORT_SetBits(((MDR_PORT_TypeDef *) (0x400B0000)), PORT_Pin_7);
- delay_ms(200);
- PORT_ResetBits(((MDR_PORT_TypeDef *) (0x400B0000)), PORT_Pin_7);
- delay_ms(200);
- PORT_SetBits(((MDR_PORT_TypeDef *) (0x400B0000)), PORT_Pin_7);
- delay_ms(200);
-}
-
-void ili9341_init(void)
-{
- ili9341_hard_reset();
- ili9341_writecommand8(0x01);
- delay_ms(1000);
-
-
- ili9341_writecommand8(0xCB);
- ili9341_writedata8(0x39);
- ili9341_writedata8(0x2C);
- ili9341_writedata8(0x00);
- ili9341_writedata8(0x34);
- ili9341_writedata8(0x02);
-
-
- ili9341_writecommand8(0xCF);
- ili9341_writedata8(0x00);
- ili9341_writedata8(0xC1);
- ili9341_writedata8(0x30);
-
-
- ili9341_writecommand8(0xE8);
- ili9341_writedata8(0x85);
- ili9341_writedata8(0x00);
- ili9341_writedata8(0x78);
-
-
- ili9341_writecommand8(0xEA);
- ili9341_writedata8(0x00);
- ili9341_writedata8(0x00);
-
-
- ili9341_writecommand8(0xED);
- ili9341_writedata8(0x64);
- ili9341_writedata8(0x03);
- ili9341_writedata8(0x12);
- ili9341_writedata8(0x81);
-
-
- ili9341_writecommand8(0xF7);
- ili9341_writedata8(0x20);
-
-
- ili9341_writecommand8(0xC0);
- ili9341_writedata8(0x23);
-
-
- ili9341_writecommand8(0xC1);
- ili9341_writedata8(0x10);
-
-
- ili9341_writecommand8(0xC5);
- ili9341_writedata8(0x3E);
- ili9341_writedata8(0x28);
-
-
- ili9341_writecommand8(0xC7);
- ili9341_writedata8(0x86);
-
-
- ili9341_writecommand8(0x36);
- ili9341_writedata8(0x48);
-
-
- ili9341_writecommand8(0x3A);
- ili9341_writedata8(0x55);
-
-
- ili9341_writecommand8(0xB1);
- ili9341_writedata8(0x00);
- ili9341_writedata8(0x18);
-
-
- ili9341_writecommand8(0xB6);
- ili9341_writedata8(0x08);
- ili9341_writedata8(0x82);
- ili9341_writedata8(0x27);
-
-
- ili9341_writecommand8(0xF2);
- ili9341_writedata8(0x00);
-
-
- ili9341_writecommand8(0x26);
- ili9341_writedata8(0x01);
-
-
- ili9341_writecommand8(0xE0);
- ili9341_writedata8(0x0F);
- ili9341_writedata8(0x31);
- ili9341_writedata8(0x2B);
- ili9341_writedata8(0x0C);
- ili9341_writedata8(0x0E);
- ili9341_writedata8(0x08);
- ili9341_writedata8(0x4E);
- ili9341_writedata8(0xF1);
- ili9341_writedata8(0x37);
- ili9341_writedata8(0x07);
- ili9341_writedata8(0x10);
- ili9341_writedata8(0x03);
- ili9341_writedata8(0x0E);
- ili9341_writedata8(0x09);
- ili9341_writedata8(0x00);
-
-
- ili9341_writecommand8(0xE1);
- ili9341_writedata8(0x00);
- ili9341_writedata8(0x0E);
- ili9341_writedata8(0x14);
- ili9341_writedata8(0x03);
- ili9341_writedata8(0x11);
- ili9341_writedata8(0x07);
- ili9341_writedata8(0x31);
- ili9341_writedata8(0xC1);
- ili9341_writedata8(0x48);
- ili9341_writedata8(0x08);
- ili9341_writedata8(0x0F);
- ili9341_writedata8(0x0C);
- ili9341_writedata8(0x31);
- ili9341_writedata8(0x36);
- ili9341_writedata8(0x0F);
-
-
- ili9341_writecommand8(0x11);
- delay_ms(120);
-
- ili9341_writecommand8(0x29);
-}
-
-
-void ili9341_pushcolour(uint16_t colour)
-{
- ili9341_writedata8(colour>>8);
- ili9341_writedata8(colour);
-}
-
-
-void ili9341_clear(uint16_t colour)
-{
- uint16_t i,j;
- ili9341_setaddress(0,0,LCD_W-1,LCD_H-1);
-
- for(i=0;i<LCD_W;i++)
- {
-  for(j=0;j<LCD_H;j++)
+  uint16_t point = ((arr[i]) * 240) / 4095;
+
+  ili9341_drawpixel(clear_arr[cur_x], cur_x, 0x0000);
+  clear_arr[cur_x] = point;
+  ili9341_drawpixel(point, cur_x, 0x07E0);
+  if (++cur_x >= LCD_W)
   {
-   ili9341_pushcolour(colour);
+   cur_x = 0;
   }
- }
-}
-
-
-void ili9341_drawpixel(uint16_t x3,uint16_t y3,uint16_t colour1)
-{
-
-
-
-
-
- ili9341_setaddress(x3,y3,x3+1,y3+1);
-
- ili9341_pushcolour(colour1);
- ili9341_pushcolour(colour1);
- ili9341_pushcolour(colour1);
-}
-
-
-void ili9341_drawvline(uint16_t x,uint16_t y,uint16_t h,uint16_t colour)
-{
- if ((x >= LCD_W) || (y >= LCD_H))
- {
-  return;
+  skip_flag = 0;
  }
 
- if((y+h-1) >= LCD_H)
- {
-  h=LCD_H-y;
- }
-
- ili9341_setaddress(x,y,x,y+h-1);
-
- while (h--)
- {
-  ili9341_pushcolour(colour);
- }
-}
 
 
 
 
-void ili9341_drawhline(uint16_t x,uint16_t y,uint16_t w,uint16_t colour)
-{
- if((x >=LCD_W) || (y >=LCD_H))
- {
-  return;
- }
-
- if((x+w-1) >= LCD_W)
- {
-  w=LCD_W-x;
- }
-
- ili9341_setaddress(x,y,x+w-1,y);
-
- while(w--)
- {
-  ili9341_pushcolour(colour);
- }
-}
-
-
-
-void ili9341_fillrect(uint16_t x,uint16_t y,uint16_t w,uint16_t h,uint16_t colour)
-{
- if ((x >= LCD_W) || (y >= LCD_H))
- {
-  return;
- }
-
- if ((x+w-1) >= LCD_W)
- {
-  w = LCD_W-x;
- }
-
- if ((y+h-1) >= LCD_H)
- {
-  h = LCD_H-y;
- }
-
- ili9341_setaddress(x, y, x+w-1, y+h-1);
-
- for(y=h; y>0; y--)
- {
-  for(x=w; x>0; x--)
-  {
-   ili9341_pushcolour(colour);
-  }
- }
-}
-
-void ili9341_setRotation(uint8_t m)
-{
- uint8_t rotation;
-
- ili9341_writecommand8(0x36);
- rotation=m%4;
-
- switch (rotation)
- {
-  case 0:
-   ili9341_writedata8(0x40|0x08);
-   LCD_W = 240;
-   LCD_H = 320;
-   break;
-  case 1:
-   ili9341_writedata8(0x20|0x08);
-   LCD_W = 320;
-   LCD_H = 240;
-   break;
-  case 2:
-   ili9341_writedata8(0x80|0x08);
-   LCD_W = 240;
-   LCD_H = 320;
-   break;
-  case 3:
-   ili9341_writedata8(0x40|0x80|0x20|0x08);
-   LCD_W = 320;
-   LCD_H = 240;
-   break;
- }
-}
-
-void Setup_ili9341(void)
-{
- ili9341_init();
- ili9341_clear(0x0000);
- delay_ms(1000);
- ili9341_setRotation(3);
 }

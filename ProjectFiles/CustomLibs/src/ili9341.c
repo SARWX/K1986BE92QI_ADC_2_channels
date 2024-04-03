@@ -22,62 +22,51 @@ void test(void)
 	//
 }
 
-void dysplay_signal(uint16_t *arr, int size, int signal_number, int skip_every)
-{
-	static int cur_x = 0;
-	static int skip_flag = 0;
-	// signal_number--;	// 0 = 1ый канал, 1 = 2ой канал
-	static uint16_t clear_arr[ILI9341_TFTWIDTH];
-	for (int i = (signal_number - 1); i < size; i+=2) 
-	{
-		if (((cur_x % skip_every) == 0) && (skip_flag == 0))
-		{
-			skip_flag = 1;
-			continue;
-		}
-		uint16_t point = ((arr[i]) * 240) / MAX_ADC_VAL;
-		// int j = i/2;
-		ili9341_drawpixel(clear_arr[cur_x], cur_x, BLACK);
-		clear_arr[cur_x] = point;
-		ili9341_drawpixel(point, cur_x, GREEN);
-		if (++cur_x >= LCD_W)
-		{
-			cur_x = 0;
-		}
-		skip_flag = 0;
-	}
-	// Очистим экран
-	// for (int i = start_point; i < (start_point + size); i++) 
-	// {
-	// 	ili9341_drawpixel((((arr[i - start_point]) * 240) / MAX_ADC_VAL), i, BLACK);
-	// }
-}
-
-
 void ili9341_writecommand8(uint8_t com)			// Передать команду
 {
-	PORT_ResetBits(MDR_PORTB, PORT_Pin_6);		// dc = 0
-	PORT_ResetBits(MDR_PORTF, PORT_Pin_2);		// cs = 0
+	// PORT_ResetBits(MDR_PORTB, PORT_Pin_6);		// dc = 0
+	MDR_PORTB->RXTX &= ~(PORT_Pin_6);			// dc = 0
+//	PORT_ResetBits(MDR_PORTF, PORT_Pin_2);		// cs = 0
+	MDR_PORTF->RXTX &= ~(PORT_Pin_2);			// cs = 0
 //	delay_us(5);//little delay
-	SSP_SendData(MDR_SSP1, com);
+	// SSP_SendData(MDR_SSP1, com);
+	MDR_SSP1->DR = com;
 	while (MDR_SSP1->SR & SSP_SR_BSY)			// 1 – модуль SSP в настоящее время передает и/или принимает данные, либо буфер FIFO передатчика не пуст
 	{
 		;										// wait
 	}
 	
-	PORT_SetBits(MDR_PORTB, PORT_Pin_6); 		// cs = 1
+//	PORT_SetBits(MDR_PORTB, PORT_Pin_6); 		// cs = 1
+	MDR_PORTF->RXTX |= PORT_Pin_2;			// cs = 1
 }
 
 void ili9341_writedata8(uint8_t data)			// Передать данные
 {
-	PORT_SetBits(MDR_PORTB, PORT_Pin_6);		// dc = 1
-	PORT_ResetBits(MDR_PORTF, PORT_Pin_2);		// cs = 0
-	SSP_SendData(MDR_SSP1, data);
+	// PORT_SetBits(MDR_PORTB, PORT_Pin_6);		// dc = 1
+	MDR_PORTB->RXTX |= PORT_Pin_6;				// dc = 1
+	// PORT_ResetBits(MDR_PORTF, PORT_Pin_2);		// cs = 0
+	MDR_PORTF->RXTX &= ~(PORT_Pin_2);			// cs = 0
+	// SSP_SendData(MDR_SSP1, data);
+	MDR_SSP1->DR = data;
 	while (MDR_SSP1->SR & SSP_SR_BSY)			// 1 – модуль SSP в настоящее время передает и/или принимает данные, либо буфер FIFO передатчика не пуст
 	{
 		;										// wait
 	}
-	PORT_SetBits(MDR_PORTF, PORT_Pin_2); 		// cs = 1
+	// PORT_SetBits(MDR_PORTF, PORT_Pin_2); 		// cs = 1
+	MDR_PORTF->RXTX |= PORT_Pin_2;			// cs = 1
+}
+
+void custom_ili9341_setaddress(uint16_t x,uint16_t y)	// set coordinate for print or other function
+{
+	ili9341_writecommand8(0x2A);
+	ili9341_writedata8(x>>8);
+	ili9341_writedata8(x);
+
+	ili9341_writecommand8(0x2B);
+	// ili9341_writedata8(y1>>8);
+	ili9341_writedata8(y);
+
+	ili9341_writecommand8(0x2C);	//meory write
 }
 
 void ili9341_setaddress(uint16_t x1,uint16_t y1,uint16_t x2,uint16_t y2)	// set coordinate for print or other function
@@ -267,6 +256,9 @@ void ili9341_drawpixel(uint16_t x3,uint16_t y3,uint16_t colour1) //pixels will a
 	// }
 
 	ili9341_setaddress(x3,y3,x3+1,y3+1);
+	// custom_ili9341_setaddress(x3,y3);
+	ili9341_pushcolour(colour1);
+	ili9341_pushcolour(colour1);
 	ili9341_pushcolour(colour1);
 }
 

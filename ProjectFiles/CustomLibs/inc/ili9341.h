@@ -52,8 +52,8 @@ void ili9341_drawhline(uint16_t x,uint16_t y,uint16_t w,uint16_t colour);
 void ili9341_fillrect(uint16_t x,uint16_t y,uint16_t w,uint16_t h,uint16_t colour);
 void ili9341_setRotation(uint8_t x);
 void Setup_ili9341(void);
-void dysplay_signal(uint16_t *arr, int size, int signal_number, int skip_every);
+// void dysplay_signal(uint16_t *arr, int size, int signal_number, int skip_every);
 void test(void);
-
+void custom_ili9341_setaddress(uint16_t x,uint16_t y);
 
 #endif
