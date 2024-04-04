@@ -78,6 +78,7 @@ void ili9341_drawhline(uint16_t x,uint16_t y,uint16_t w,uint16_t colour);
 void ili9341_fillrect(uint16_t x,uint16_t y,uint16_t w,uint16_t h,uint16_t colour);
 void ili9341_setRotation(uint8_t x);
 void Setup_ili9341(void);
+void ili9341_filltriangle(uint16_t x, uint16_t y, int base, int height, uint16_t colour);
 
 void test(void);
 void custom_ili9341_setaddress(uint16_t x,uint16_t y);
@@ -1579,7 +1580,7 @@ void test(void)
  {
   for (int y = 0; y < LCD_W; y++)
   {
-   ili9341_drawpixel(y, x, 0xFFE0);
+   ili9341_drawpixel(y, x, 0x0EFF);
   }
  }
 
@@ -1870,6 +1871,17 @@ void ili9341_drawhline(uint16_t x,uint16_t y,uint16_t w,uint16_t colour)
 }
 
 
+void ili9341_filltriangle(uint16_t x, uint16_t y, int base, int height, uint16_t colour)
+{
+ while (height != 0)
+ {
+  ili9341_drawvline(x, y, height, colour);
+  height = (height < 0) ? height + 1: height - 1;
+  x = (base < 0) ? x - 1: x + 1;
+ }
+
+}
+
 
 void ili9341_fillrect(uint16_t x,uint16_t y,uint16_t w,uint16_t h,uint16_t colour)
 {
@@ -1910,8 +1922,10 @@ void ili9341_setRotation(uint8_t m)
  {
   case 0:
    ili9341_writedata8(0x40|0x08);
-   LCD_W = 240;
-   LCD_H = 320;
+
+
+   LCD_W = 320;
+   LCD_H = 240;
    break;
   case 1:
    ili9341_writedata8(0x20|0x08);
@@ -1936,5 +1950,5 @@ void Setup_ili9341(void)
  ili9341_init();
  ili9341_clear(0x0000);
  delay_ms(1000);
- ili9341_setRotation(3);
+ ili9341_setRotation(0);
 }

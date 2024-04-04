@@ -78,10 +78,385 @@ void ili9341_drawhline(uint16_t x,uint16_t y,uint16_t w,uint16_t colour);
 void ili9341_fillrect(uint16_t x,uint16_t y,uint16_t w,uint16_t h,uint16_t colour);
 void ili9341_setRotation(uint8_t x);
 void Setup_ili9341(void);
+void ili9341_filltriangle(uint16_t x, uint16_t y, int base, int height, uint16_t colour);
 
 void test(void);
 void custom_ili9341_setaddress(uint16_t x,uint16_t y);
 # 2 "CustomLibs/src/ili9341_interface.c" 2
+# 1 "./CustomLibs/inc\\ili9341gfx.h" 1
+
+
+
+# 1 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 1 3
+# 53 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+    typedef unsigned int size_t;
+# 68 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+    typedef __builtin_va_list __va_list;
+# 87 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+typedef struct __fpos_t_struct {
+    unsigned long long int __pos;
+
+
+
+
+
+    struct {
+        unsigned int __state1, __state2;
+    } __mbstate;
+} fpos_t;
+# 108 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+typedef struct __FILE FILE;
+# 119 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+struct __FILE {
+    union {
+        long __FILE_alignment;
+
+
+
+        char __FILE_size[84];
+
+    } __FILE_opaque;
+};
+# 138 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern FILE __stdin, __stdout, __stderr;
+extern FILE *__aeabi_stdin, *__aeabi_stdout, *__aeabi_stderr;
+# 224 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) int remove(const char * ) __attribute__((__nonnull__(1)));
+
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) int rename(const char * , const char * ) __attribute__((__nonnull__(1,2)));
+# 243 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) FILE *tmpfile(void);
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) char *tmpnam(char * );
+# 265 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) int fclose(FILE * ) __attribute__((__nonnull__(1)));
+# 275 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) int fflush(FILE * );
+# 285 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) FILE *fopen(const char * __restrict ,
+                           const char * __restrict ) __attribute__((__nonnull__(1,2)));
+# 329 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) FILE *freopen(const char * __restrict ,
+                    const char * __restrict ,
+                    FILE * __restrict ) __attribute__((__nonnull__(2,3)));
+# 342 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) void setbuf(FILE * __restrict ,
+                    char * __restrict ) __attribute__((__nonnull__(1)));
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) int setvbuf(FILE * __restrict ,
+                   char * __restrict ,
+                   int , size_t ) __attribute__((__nonnull__(1)));
+# 370 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+#pragma __printf_args
+extern __attribute__((__nothrow__)) int fprintf(FILE * __restrict ,
+                    const char * __restrict , ...) __attribute__((__nonnull__(1,2)));
+# 393 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+#pragma __printf_args
+extern __attribute__((__nothrow__)) int _fprintf(FILE * __restrict ,
+                     const char * __restrict , ...) __attribute__((__nonnull__(1,2)));
+
+
+
+
+
+#pragma __printf_args
+extern __attribute__((__nothrow__)) int printf(const char * __restrict , ...) __attribute__((__nonnull__(1)));
+
+
+
+
+
+
+#pragma __printf_args
+extern __attribute__((__nothrow__)) int _printf(const char * __restrict , ...) __attribute__((__nonnull__(1)));
+
+
+
+
+
+#pragma __printf_args
+extern __attribute__((__nothrow__)) int sprintf(char * __restrict , const char * __restrict , ...) __attribute__((__nonnull__(1,2)));
+
+
+
+
+
+
+
+
+#pragma __printf_args
+extern __attribute__((__nothrow__)) int _sprintf(char * __restrict , const char * __restrict , ...) __attribute__((__nonnull__(1,2)));
+
+
+
+
+
+
+#pragma __printf_args
+extern __attribute__((__nothrow__)) int __ARM_snprintf(char * __restrict , size_t ,
+                     const char * __restrict , ...) __attribute__((__nonnull__(3)));
+
+
+#pragma __printf_args
+extern __attribute__((__nothrow__)) int snprintf(char * __restrict , size_t ,
+                     const char * __restrict , ...) __attribute__((__nonnull__(3)));
+# 460 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+#pragma __printf_args
+extern __attribute__((__nothrow__)) int _snprintf(char * __restrict , size_t ,
+                      const char * __restrict , ...) __attribute__((__nonnull__(3)));
+
+
+
+
+
+#pragma __scanf_args
+extern __attribute__((__nothrow__)) int fscanf(FILE * __restrict ,
+                    const char * __restrict , ...) __attribute__((__nonnull__(1,2)));
+# 503 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+#pragma __scanf_args
+extern __attribute__((__nothrow__)) int _fscanf(FILE * __restrict ,
+                     const char * __restrict , ...) __attribute__((__nonnull__(1,2)));
+
+
+
+
+
+#pragma __scanf_args
+extern __attribute__((__nothrow__)) int scanf(const char * __restrict , ...) __attribute__((__nonnull__(1)));
+
+
+
+
+
+
+
+
+#pragma __scanf_args
+extern __attribute__((__nothrow__)) int _scanf(const char * __restrict , ...) __attribute__((__nonnull__(1)));
+
+
+
+
+
+#pragma __scanf_args
+extern __attribute__((__nothrow__)) int sscanf(const char * __restrict ,
+                    const char * __restrict , ...) __attribute__((__nonnull__(1,2)));
+# 541 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+#pragma __scanf_args
+extern __attribute__((__nothrow__)) int _sscanf(const char * __restrict ,
+                     const char * __restrict , ...) __attribute__((__nonnull__(1,2)));
+
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) int vfscanf(FILE * __restrict , const char * __restrict , __va_list) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) int vscanf(const char * __restrict , __va_list) __attribute__((__nonnull__(1)));
+extern __attribute__((__nothrow__)) int vsscanf(const char * __restrict , const char * __restrict , __va_list) __attribute__((__nonnull__(1,2)));
+
+extern __attribute__((__nothrow__)) int _vfscanf(FILE * __restrict , const char * __restrict , __va_list) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) int _vscanf(const char * __restrict , __va_list) __attribute__((__nonnull__(1)));
+extern __attribute__((__nothrow__)) int _vsscanf(const char * __restrict , const char * __restrict , __va_list) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) int __ARM_vsscanf(const char * __restrict , const char * __restrict , __va_list) __attribute__((__nonnull__(1,2)));
+
+extern __attribute__((__nothrow__)) int vprintf(const char * __restrict , __va_list ) __attribute__((__nonnull__(1)));
+
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) int _vprintf(const char * __restrict , __va_list ) __attribute__((__nonnull__(1)));
+
+
+
+
+
+extern __attribute__((__nothrow__)) int vfprintf(FILE * __restrict ,
+                    const char * __restrict , __va_list ) __attribute__((__nonnull__(1,2)));
+# 584 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) int vsprintf(char * __restrict ,
+                     const char * __restrict , __va_list ) __attribute__((__nonnull__(1,2)));
+# 594 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) int __ARM_vsnprintf(char * __restrict , size_t ,
+                     const char * __restrict , __va_list ) __attribute__((__nonnull__(3)));
+
+extern __attribute__((__nothrow__)) int vsnprintf(char * __restrict , size_t ,
+                     const char * __restrict , __va_list ) __attribute__((__nonnull__(3)));
+# 609 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) int _vsprintf(char * __restrict ,
+                      const char * __restrict , __va_list ) __attribute__((__nonnull__(1,2)));
+
+
+
+
+
+extern __attribute__((__nothrow__)) int _vfprintf(FILE * __restrict ,
+                     const char * __restrict , __va_list ) __attribute__((__nonnull__(1,2)));
+
+
+
+
+
+extern __attribute__((__nothrow__)) int _vsnprintf(char * __restrict , size_t ,
+                      const char * __restrict , __va_list ) __attribute__((__nonnull__(3)));
+# 635 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+#pragma __printf_args
+extern __attribute__((__nothrow__)) int __ARM_asprintf(char ** , const char * __restrict , ...) __attribute__((__nonnull__(2)));
+extern __attribute__((__nothrow__)) int __ARM_vasprintf(char ** , const char * __restrict , __va_list ) __attribute__((__nonnull__(2)));
+# 649 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) int fgetc(FILE * ) __attribute__((__nonnull__(1)));
+# 659 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) char *fgets(char * __restrict , int ,
+                    FILE * __restrict ) __attribute__((__nonnull__(1,3)));
+# 673 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) int fputc(int , FILE * ) __attribute__((__nonnull__(2)));
+# 683 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) int fputs(const char * __restrict , FILE * __restrict ) __attribute__((__nonnull__(1,2)));
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) int getc(FILE * ) __attribute__((__nonnull__(1)));
+# 704 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+    extern __attribute__((__nothrow__)) int (getchar)(void);
+# 713 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) char *gets(char * ) __attribute__((__nonnull__(1)));
+# 725 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) int putc(int , FILE * ) __attribute__((__nonnull__(2)));
+# 737 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+    extern __attribute__((__nothrow__)) int (putchar)(int );
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) int puts(const char * ) __attribute__((__nonnull__(1)));
+
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) int ungetc(int , FILE * ) __attribute__((__nonnull__(2)));
+# 778 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) size_t fread(void * __restrict ,
+                    size_t , size_t , FILE * __restrict ) __attribute__((__nonnull__(1,4)));
+# 794 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) size_t __fread_bytes_avail(void * __restrict ,
+                    size_t , FILE * __restrict ) __attribute__((__nonnull__(1,3)));
+# 810 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) size_t fwrite(const void * __restrict ,
+                    size_t , size_t , FILE * __restrict ) __attribute__((__nonnull__(1,4)));
+# 822 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) int fgetpos(FILE * __restrict , fpos_t * __restrict ) __attribute__((__nonnull__(1,2)));
+# 833 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) int fseek(FILE * , long int , int ) __attribute__((__nonnull__(1)));
+# 850 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) int fsetpos(FILE * __restrict , const fpos_t * __restrict ) __attribute__((__nonnull__(1,2)));
+# 863 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) long int ftell(FILE * ) __attribute__((__nonnull__(1)));
+# 877 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) void rewind(FILE * ) __attribute__((__nonnull__(1)));
+# 886 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) void clearerr(FILE * ) __attribute__((__nonnull__(1)));
+
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) int feof(FILE * ) __attribute__((__nonnull__(1)));
+
+
+
+
+extern __attribute__((__nothrow__)) int ferror(FILE * ) __attribute__((__nonnull__(1)));
+
+
+
+
+extern __attribute__((__nothrow__)) void perror(const char * );
+# 917 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) int _fisatty(FILE * ) __attribute__((__nonnull__(1)));
+
+
+
+extern __attribute__((__nothrow__)) void __use_no_semihosting_swi(void);
+extern __attribute__((__nothrow__)) void __use_no_semihosting(void);
+# 5 "./CustomLibs/inc\\ili9341gfx.h" 2
+# 1 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdbool.h" 1 3
+# 6 "./CustomLibs/inc\\ili9341gfx.h" 2
+# 1 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\inttypes.h" 1 3
+# 217 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\inttypes.h" 3
+      typedef unsigned short wchar_t;
+
+
+
+
+typedef struct imaxdiv_t { intmax_t quot, rem; } imaxdiv_t;
+
+
+
+
+
+
+__attribute__((__nothrow__)) intmax_t strtoimax(const char * __restrict ,
+                   char ** __restrict , int ) __attribute__((__nonnull__(1)));
+
+__attribute__((__nothrow__)) uintmax_t strtoumax(const char * __restrict ,
+                    char ** __restrict , int ) __attribute__((__nonnull__(1)));
+
+
+__attribute__((__nothrow__)) intmax_t wcstoimax(const wchar_t * __restrict ,
+                   wchar_t ** __restrict , int ) __attribute__((__nonnull__(1)));
+__attribute__((__nothrow__)) uintmax_t wcstoumax(const wchar_t * __restrict ,
+                    wchar_t ** __restrict , int ) __attribute__((__nonnull__(1)));
+
+extern __attribute__((__nothrow__)) __attribute__((__const__)) intmax_t imaxabs(intmax_t );
+
+
+
+
+
+extern __attribute__((__nothrow__)) __attribute__((__const__)) imaxdiv_t imaxdiv(intmax_t , intmax_t );
+# 7 "./CustomLibs/inc\\ili9341gfx.h" 2
+
+void ili9341_drawchar(int16_t x, int16_t y, unsigned char c,uint16_t color, uint16_t bg, uint8_t size);
+void ili9341_setcursor(uint16_t x,uint16_t y);
+void ili9341_settextcolour(uint16_t x,uint16_t y);
+void ili9341_settextsize(uint8_t s);
+void ili9341_write(uint8_t c);
+void backuplocationvset(void);
+void backuplocationvactual(void);
+void backuplocationiset(void);
+void backuplocationiactual(void);
+void display_init(void);
+# 3 "CustomLibs/src/ili9341_interface.c" 2
 
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_ssp.h" 1
 # 32 "./SPL/MDR32Fx/inc\\MDR32F9Qx_ssp.h"
@@ -1371,7 +1746,7 @@ uint16_t SSP_ReceiveData(MDR_SSP_TypeDef* SSPx);
 
 FlagStatus SSP_GetFlagStatus(MDR_SSP_TypeDef* SSPx, SSP_Flags_TypeDef SSP_FLAG);
 void SSP_BRGInit(MDR_SSP_TypeDef* SSPx, SSP_Clock_BRG_TypeDef SSP_BRG);
-# 4 "CustomLibs/src/ili9341_interface.c" 2
+# 5 "CustomLibs/src/ili9341_interface.c" 2
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_port.h" 1
 # 49 "./SPL/MDR32Fx/inc\\MDR32F9Qx_port.h"
 typedef enum
@@ -1554,7 +1929,7 @@ void PORT_ResetBits(MDR_PORT_TypeDef* MDR_PORTx, uint32_t PORT_Pin);
 
 
 void PORT_Write(MDR_PORT_TypeDef* MDR_PORTx, uint32_t PortVal);
-# 5 "CustomLibs/src/ili9341_interface.c" 2
+# 6 "CustomLibs/src/ili9341_interface.c" 2
 
 # 1 "./CustomLibs/inc\\delay.h" 1
 
@@ -1565,15 +1940,19 @@ void PORT_Write(MDR_PORT_TypeDef* MDR_PORTx, uint32_t PortVal);
 void delay_tick(uint32_t count);
 void delay_ms(uint32_t delay);
 void delay_us(uint32_t delay);
-# 7 "CustomLibs/src/ili9341_interface.c" 2
-# 1 "./CustomLibs/inc\\defines.h" 1
 # 8 "CustomLibs/src/ili9341_interface.c" 2
+# 1 "./CustomLibs/inc\\defines.h" 1
+# 9 "CustomLibs/src/ili9341_interface.c" 2
+
+
+
+
 
 extern uint16_t LCD_W;
 extern uint16_t LCD_H;
 
 
-void dysplay_signal(uint16_t *arr, int size, int signal_number, int skip_every)
+void display_signal(uint16_t *arr, int size, int signal_number, int skip_every)
 {
  static int cur_x = 0;
  static int skip_flag = 0;
@@ -1590,7 +1969,7 @@ void dysplay_signal(uint16_t *arr, int size, int signal_number, int skip_every)
 
   ili9341_drawpixel(clear_arr[cur_x], cur_x, 0x0000);
   clear_arr[cur_x] = point;
-  ili9341_drawpixel(point, cur_x, 0x07E0);
+  ili9341_drawpixel(point, cur_x, 0x0E70);
   if (++cur_x >= LCD_W)
   {
    cur_x = 0;
@@ -1602,4 +1981,63 @@ void dysplay_signal(uint16_t *arr, int size, int signal_number, int skip_every)
 
 
 
+}
+
+
+void print_str(char* str, int x, int y, uint16_t color, uint16_t bg, uint8_t size)
+{
+ while (*str)
+ {
+  ili9341_drawchar(x, y, *str, color, bg, size);
+  x += 6 * size;
+  str++;
+ }
+
+}
+
+int draw_box(int row_num, uint16_t color)
+{
+
+ int coordinate = (row_num - 1) * (8 + 54);
+
+ ili9341_drawvline(0, coordinate, 54, color);
+ ili9341_drawvline(1, coordinate, 54, color);
+ ili9341_drawhline(0, coordinate, 250, color);
+ ili9341_drawhline(0, (coordinate+1), 250, color);
+ ili9341_drawvline(250, coordinate, 54, color);
+ ili9341_drawvline((250 -1), coordinate, 54, color);
+ ili9341_drawhline(0, (coordinate-1 + 54), 250, color);
+ ili9341_drawhline(0,( coordinate-2 + 54), 250, color);
+ return coordinate;
+}
+
+
+void draw_func_block(int row_num, char *str, int font_size)
+{
+
+ int coordinate = draw_box(row_num, 0xF100);
+
+ int len = 0;
+ while (str[len])
+  len++;
+ int x_center = 2 + ((250 - len * 6 * font_size) / 2);
+ int y_center = coordinate + (54 - 7 * font_size) / 2;
+
+ print_str(str, x_center, y_center, 0xFFFF,0x0000, font_size);
+
+}
+
+
+void display_main_menu(void)
+{
+ draw_func_block(1, "set freq", 3);
+ draw_func_block(2, "channels ctrl", 3);
+ draw_func_block(3, "scan property", 3);
+ draw_func_block(4, "ampl property", 3);
+
+
+
+
+
+ ili9341_filltriangle(0, 0, 100, 100, 0xFFFF);
 }

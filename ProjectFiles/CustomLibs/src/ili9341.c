@@ -306,6 +306,17 @@ void ili9341_drawhline(uint16_t x,uint16_t y,uint16_t w,uint16_t colour)
 	}
 }
 
+// Нарисовать прямоугольный треугольник
+void ili9341_filltriangle(uint16_t x, uint16_t y, int base, int height, uint16_t colour)
+{
+	while (height != 0)
+	{
+		ili9341_drawvline(x, y, height, colour);
+		height = (height < 0) ? height + 1: height - 1; 
+		x = (base < 0) ? x - 1: x + 1; 
+	}
+	
+}
 
 // draw colour filled rectangle
 void ili9341_fillrect(uint16_t x,uint16_t y,uint16_t w,uint16_t h,uint16_t colour)
@@ -347,8 +358,10 @@ void ili9341_setRotation(uint8_t m)
 	{
 		case 0:
 			ili9341_writedata8(0x40|0x08);
-			LCD_W = 240;
-			LCD_H = 320;
+			// LCD_W = 240;
+			// LCD_H = 320;
+			LCD_W = 320;
+			LCD_H = 240;
 			break;
 		case 1:
 			ili9341_writedata8(0x20|0x08);
@@ -373,5 +386,5 @@ void Setup_ili9341(void)
 	ili9341_init();         	// Проинициализировать ili9341
 	ili9341_clear(BLACK);   		// Заполнить экран одним цветом
 	delay_ms(1000);
-	ili9341_setRotation(3); 	// Задать ориентацию
+	ili9341_setRotation(0); 	// Задать ориентацию БЫЛА 3
 }

@@ -25,6 +25,7 @@
 #include "SPI_init.h"
 #include "ili9341.h"
 #include "ili9341_interface.h"
+#include "delay.h"
 
 /* Макроподстановки --------------------------------------------------------------*/
 #include "defines.h"
@@ -74,6 +75,40 @@ int main(void)
 //	__disable_irq();
 	// Включить таймер
 	TIMER_Cmd(MDR_TIMER2, ENABLE);
+
+
+
+
+
+
+
+
+// TEST OF GUI
+__disable_irq();
+ili9341_clear(BLACK);
+display_main_menu();
+
+// TRAP
+int row_num = 1;
+while (1)
+{
+	draw_box(row_num++, BLUE);
+	if (row_num == 5)
+		row_num = 1;
+	draw_box(row_num, GREEN);
+	delay_ms(1000);
+}
+	
+
+
+
+
+
+
+
+
+
+
 	while (1) 
 	{
 		if (command_recived == 1) 
@@ -100,8 +135,8 @@ int main(void)
 	
 		// if ((count_dysplay % lock_frame) == 0)
 		{
-			dysplay_signal((uint16_t *)main_array_for_ADC, NUM_OF_MES, 1, ((tuner >> 8)));
-//			dysplay_signal(&tuner, 1, 1, (128));
+			display_signal((uint16_t *)main_array_for_ADC, NUM_OF_MES, 1, ((tuner >> 8)));
+//			display_signal(&tuner, 1, 1, (128));
 		}
 //		count_dysplay++;
 
@@ -114,8 +149,8 @@ int main(void)
 		// if ((count_dysplay % lock_frame) == 0)
 		{
 //			uint16_t r = ((MDR_ADC->ADC2_RESULT >> 8) << 8);
-			dysplay_signal((uint16_t *)alternate_array_for_ADC, NUM_OF_MES, 1, ((tuner >> 8)));
-//			dysplay_signal(&tuner, 1, 1, (128));
+			display_signal((uint16_t *)alternate_array_for_ADC, NUM_OF_MES, 1, ((tuner >> 8)));
+//			display_signal(&tuner, 1, 1, (128));
 		}
 		count_dysplay ++;
 	}	

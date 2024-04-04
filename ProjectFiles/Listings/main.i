@@ -4732,6 +4732,7 @@ void ili9341_drawhline(uint16_t x,uint16_t y,uint16_t w,uint16_t colour);
 void ili9341_fillrect(uint16_t x,uint16_t y,uint16_t w,uint16_t h,uint16_t colour);
 void ili9341_setRotation(uint8_t x);
 void Setup_ili9341(void);
+void ili9341_filltriangle(uint16_t x, uint16_t y, int base, int height, uint16_t colour);
 
 void test(void);
 void custom_ili9341_setaddress(uint16_t x,uint16_t y);
@@ -4742,12 +4743,24 @@ void custom_ili9341_setaddress(uint16_t x,uint16_t y);
 
 
 
-void dysplay_signal(uint16_t *arr, int size, int signal_number, int skip_every);
+void display_signal(uint16_t *arr, int size, int signal_number, int skip_every);
+int draw_box(int row_num, uint16_t color);
+void display_main_menu(void);
 # 28 "main.c" 2
+# 1 "./CustomLibs/inc\\delay.h" 1
+
+
+
+
+
+void delay_tick(uint32_t count);
+void delay_ms(uint32_t delay);
+void delay_us(uint32_t delay);
+# 29 "main.c" 2
 
 
 # 1 "./CustomLibs/inc\\defines.h" 1
-# 31 "main.c" 2
+# 32 "main.c" 2
 
 int command_recived = 0;
 char buffer[128];
@@ -4794,6 +4807,22 @@ int main(void)
 
 
  TIMER_Cmd(((MDR_TIMER_TypeDef *) (0x40078000)), ENABLE);
+# 87 "main.c"
+__disable_irq();
+ili9341_clear(0x0000);
+display_main_menu();
+
+
+int row_num = 1;
+while (1)
+{
+ draw_box(row_num++, 0xF100);
+ if (row_num == 5)
+  row_num = 1;
+ draw_box(row_num, 0x0E70);
+ delay_ms(1000);
+}
+# 112 "main.c"
  while (1)
  {
   if (command_recived == 1)
@@ -4820,7 +4849,7 @@ int main(void)
 
 
   {
-   dysplay_signal((uint16_t *)main_array_for_ADC, 128, 1, ((tuner >> 8)));
+   display_signal((uint16_t *)main_array_for_ADC, 128, 1, ((tuner >> 8)));
 
   }
 
@@ -4834,7 +4863,7 @@ int main(void)
 
   {
 
-   dysplay_signal((uint16_t *)alternate_array_for_ADC, 128, 1, ((tuner >> 8)));
+   display_signal((uint16_t *)alternate_array_for_ADC, 128, 1, ((tuner >> 8)));
 
   }
   count_dysplay ++;

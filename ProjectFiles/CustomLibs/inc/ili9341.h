@@ -16,25 +16,25 @@
 #define ILI9341_TFTHEIGHT 240 
 #define ILI9341_TFTWIDTH 320
 
-#define BLACK       0x0000      
-#define NAVY        0x000F      
-#define DARKGREEN   0x03E0      
-#define DARKCYAN    0x03EF      
-#define MAROON      0x7800      
-#define PURPLE      0x780F      
-#define OLIVE       0x7BE0      
-#define LIGHTGREY   0xC618      
-#define DARKGREY    0x7BEF      
-#define BLUE        0x001F      
-#define GREEN       0x07E0      
-#define CYAN        0x07FF      
-#define RED         0xF800     
-#define MAGENTA     0xF81F      
-#define YELLOW      0xFFE0      
-#define WHITE       0xFFFF      
-#define ORANGE      0xFD20      
-#define GREENYELLOW 0xAFE5     
-#define PINK        0xF81F
+#define BLACK       0x0000     
+#define NAVY        0xF000      
+#define DARKGREEN   0x0E30      
+#define DARKCYAN    0xFE30      
+#define MAROON      0x0087      
+#define PURPLE      0xF087      
+#define OLIVE       0x0EB7      
+#define LIGHTGREY   0x816C      
+#define DARKGREY    0xFEB7     
+#define BLUE        0xF100      
+#define GREEN       0x0E70      
+#define CYAN        0xFF70      
+#define RED         0x008F     
+#define MAGENTA     0xF18F      
+#define YELLOW      0x0EFF     
+#define WHITE       0xFFFF  
+#define ORANGE      0x02DF      
+#define GREENYELLOW 0x5EFA     
+#define PINK        0xF18F
 
 void ili9341_hard_init(void);
 void ili9341_spi_init(void);
@@ -52,6 +52,7 @@ void ili9341_drawhline(uint16_t x,uint16_t y,uint16_t w,uint16_t colour);
 void ili9341_fillrect(uint16_t x,uint16_t y,uint16_t w,uint16_t h,uint16_t colour);
 void ili9341_setRotation(uint8_t x);
 void Setup_ili9341(void);
+void ili9341_filltriangle(uint16_t x, uint16_t y, int base, int height, uint16_t colour);
 // void dysplay_signal(uint16_t *arr, int size, int signal_number, int skip_every);
 void test(void);
 void custom_ili9341_setaddress(uint16_t x,uint16_t y);
