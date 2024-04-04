@@ -83,6 +83,23 @@ void ili9341_filltriangle(uint16_t x, uint16_t y, int base, int height, uint16_t
 void test(void);
 void custom_ili9341_setaddress(uint16_t x,uint16_t y);
 # 2 "CustomLibs/src/ili9341_interface.c" 2
+# 1 "./CustomLibs/inc\\ili9341_interface.h" 1
+
+
+
+
+
+enum direction
+{
+ up = -1,
+ down = 1
+};
+
+void display_signal(uint16_t *arr, int size, int signal_number, int skip_every);
+int draw_box(int row_num, uint16_t color);
+void display_main_menu(void);
+void draw_arrow(int x, int y, enum direction j, uint16_t color);
+# 3 "CustomLibs/src/ili9341_interface.c" 2
 # 1 "./CustomLibs/inc\\ili9341gfx.h" 1
 
 
@@ -456,7 +473,7 @@ void backuplocationvactual(void);
 void backuplocationiset(void);
 void backuplocationiactual(void);
 void display_init(void);
-# 3 "CustomLibs/src/ili9341_interface.c" 2
+# 4 "CustomLibs/src/ili9341_interface.c" 2
 
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_ssp.h" 1
 # 32 "./SPL/MDR32Fx/inc\\MDR32F9Qx_ssp.h"
@@ -1746,7 +1763,7 @@ uint16_t SSP_ReceiveData(MDR_SSP_TypeDef* SSPx);
 
 FlagStatus SSP_GetFlagStatus(MDR_SSP_TypeDef* SSPx, SSP_Flags_TypeDef SSP_FLAG);
 void SSP_BRGInit(MDR_SSP_TypeDef* SSPx, SSP_Clock_BRG_TypeDef SSP_BRG);
-# 5 "CustomLibs/src/ili9341_interface.c" 2
+# 6 "CustomLibs/src/ili9341_interface.c" 2
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_port.h" 1
 # 49 "./SPL/MDR32Fx/inc\\MDR32F9Qx_port.h"
 typedef enum
@@ -1929,7 +1946,7 @@ void PORT_ResetBits(MDR_PORT_TypeDef* MDR_PORTx, uint32_t PORT_Pin);
 
 
 void PORT_Write(MDR_PORT_TypeDef* MDR_PORTx, uint32_t PortVal);
-# 6 "CustomLibs/src/ili9341_interface.c" 2
+# 7 "CustomLibs/src/ili9341_interface.c" 2
 
 # 1 "./CustomLibs/inc\\delay.h" 1
 
@@ -1940,9 +1957,10 @@ void PORT_Write(MDR_PORT_TypeDef* MDR_PORTx, uint32_t PortVal);
 void delay_tick(uint32_t count);
 void delay_ms(uint32_t delay);
 void delay_us(uint32_t delay);
-# 8 "CustomLibs/src/ili9341_interface.c" 2
-# 1 "./CustomLibs/inc\\defines.h" 1
 # 9 "CustomLibs/src/ili9341_interface.c" 2
+# 1 "./CustomLibs/inc\\defines.h" 1
+# 10 "CustomLibs/src/ili9341_interface.c" 2
+
 
 
 
@@ -2027,6 +2045,28 @@ void draw_func_block(int row_num, char *str, int font_size)
 
 }
 
+void draw_arrow(int x, int y, enum direction j, uint16_t color)
+{
+
+ ili9341_drawvline(x, y, 38, 0xFFFF);
+ ili9341_drawhline(x, y, 38, 0xFFFF);
+ ili9341_drawhline(x, (y + 38), 38, 0xFFFF);
+ ili9341_drawvline((x + 38), y, 38, 0xFFFF);
+
+ ili9341_fillrect(x+1, y+1, 38 -1, 38 -1, color);
+
+ ili9341_filltriangle(x + (38/2), y + (38/2), 1, j * ((38/2) - 3), 0xFFFF);
+ ili9341_filltriangle(x + (38/2), y + (38/2), 1, j * ((38/4) - 2), color);
+ ili9341_filltriangle(x + (38/2), y + (38/2), -1, j * ((38/2) - 3), 0xFFFF);
+ ili9341_filltriangle(x + (38/2), y + (38/2), -1, j * ((38/4) - 2), color);
+ if (j == up)
+  ili9341_fillrect(x + ((38/2) - (38/6)/2), y + (38/3), (38/6), 2*(38/3) - 4, 0xFFFF);
+ else
+  ili9341_fillrect(x + ((38/2) - (38/6)/2), y + 4, (38/6), 2*(38/3), 0xFFFF);
+ ili9341_fillrect(x+1, y+1, 38/5, 38 -1, color);
+ ili9341_fillrect(x + 38 - 38/5, y + 1, 38/5, 38 -1, color);
+}
+
 
 void display_main_menu(void)
 {
@@ -2034,10 +2074,11 @@ void display_main_menu(void)
  draw_func_block(2, "channels ctrl", 3);
  draw_func_block(3, "scan property", 3);
  draw_func_block(4, "ampl property", 3);
+ draw_arrow(320 - 48, 13, up, 0xF100);
+ draw_arrow(320 - 48, 240 - 13 - 38, down, 0xF100);
 
 
 
 
 
- ili9341_filltriangle(0, 0, 100, 100, 0xFFFF);
 }

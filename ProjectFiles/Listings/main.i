@@ -4743,9 +4743,16 @@ void custom_ili9341_setaddress(uint16_t x,uint16_t y);
 
 
 
+enum direction
+{
+ up = -1,
+ down = 1
+};
+
 void display_signal(uint16_t *arr, int size, int signal_number, int skip_every);
 int draw_box(int row_num, uint16_t color);
 void display_main_menu(void);
+void draw_arrow(int x, int y, enum direction j, uint16_t color);
 # 28 "main.c" 2
 # 1 "./CustomLibs/inc\\delay.h" 1
 
@@ -4816,13 +4823,16 @@ display_main_menu();
 int row_num = 1;
 while (1)
 {
+ draw_arrow(320 - 48, 240 - 13 - 38, 1, 0x0E70);
  draw_box(row_num++, 0xF100);
  if (row_num == 5)
   row_num = 1;
  draw_box(row_num, 0x0E70);
+ delay_ms(100);
+ draw_arrow(320 - 48, 240 - 13 - 38, 1, 0xF100);
  delay_ms(1000);
 }
-# 112 "main.c"
+# 115 "main.c"
  while (1)
  {
   if (command_recived == 1)

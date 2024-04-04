@@ -311,8 +311,17 @@ void ili9341_filltriangle(uint16_t x, uint16_t y, int base, int height, uint16_t
 {
 	while (height != 0)
 	{
-		ili9341_drawvline(x, y, height, colour);
-		height = (height < 0) ? height + 1: height - 1; 
+		if (height > 0)
+		{
+			ili9341_drawvline(x, y, height, colour);
+			height--;
+		}
+		else 
+		{
+			ili9341_drawvline(x, (y + height), -height, colour);
+			height++;
+		}
+		// height = (height < 0) ? height + 1: height - 1; 
 		x = (base < 0) ? x - 1: x + 1; 
 	}
 	

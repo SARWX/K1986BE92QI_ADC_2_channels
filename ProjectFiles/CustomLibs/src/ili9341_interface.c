@@ -1,4 +1,5 @@
 #include "ili9341.h"
+#include "ili9341_interface.h"
 #include "ili9341gfx.h"
 #include <stdint.h>
 #include "MDR32F9Qx_ssp.h"
@@ -10,6 +11,7 @@
 #define GAP 8
 #define BLOCK_H 54
 #define BLOCK_W 250
+#define ARROW_SIDE 38
 
 extern uint16_t LCD_W;
 extern uint16_t LCD_H;
@@ -89,6 +91,28 @@ void draw_func_block(int row_num, char *str, int font_size)
 	print_str(str, x_center, y_center, WHITE,BLACK, font_size);
 
 }
+// Передаем левый верхний угол
+void draw_arrow(int x, int y, enum direction j, uint16_t color)		// x1 = 320 - 48;  y1 = 13  сторона = 38
+{
+	// 1 Рисуем рамку
+	ili9341_drawvline(x, y, ARROW_SIDE, WHITE);					// | 	 |=>    =====
+	ili9341_drawhline(x, y, ARROW_SIDE, WHITE);					// --	 |=>   ||   ||
+	ili9341_drawhline(x, (y + ARROW_SIDE), ARROW_SIDE, WHITE);	// __	 |=>   ||   ||
+	ili9341_drawvline((x + ARROW_SIDE), y, ARROW_SIDE, WHITE);	//   |	 |=>    =====
+	// 2 Рисуем background
+	ili9341_fillrect(x+1, y+1, ARROW_SIDE-1, ARROW_SIDE-1, color);
+	// 3 Рисуем стрелку
+	ili9341_filltriangle(x + (ARROW_SIDE/2), y + (ARROW_SIDE/2), 1, j * ((ARROW_SIDE/2) - 3), WHITE);		
+	ili9341_filltriangle(x + (ARROW_SIDE/2), y + (ARROW_SIDE/2), 1, j * ((ARROW_SIDE/4) - 2), color);		
+	ili9341_filltriangle(x + (ARROW_SIDE/2), y + (ARROW_SIDE/2), -1, j * ((ARROW_SIDE/2) - 3), WHITE);	
+	ili9341_filltriangle(x + (ARROW_SIDE/2), y + (ARROW_SIDE/2), -1, j * ((ARROW_SIDE/4) - 2), color);
+	if (j == up)	
+		ili9341_fillrect(x + ((ARROW_SIDE/2) - (ARROW_SIDE/6)/2), y + (ARROW_SIDE/3), (ARROW_SIDE/6), 2*(ARROW_SIDE/3) - 4, WHITE);	
+	else
+		ili9341_fillrect(x + ((ARROW_SIDE/2) - (ARROW_SIDE/6)/2), y + 4, (ARROW_SIDE/6), 2*(ARROW_SIDE/3), WHITE);	
+	ili9341_fillrect(x+1, y+1, ARROW_SIDE/5, ARROW_SIDE-1, color);
+	ili9341_fillrect(x + ARROW_SIDE - ARROW_SIDE/5, y + 1, ARROW_SIDE/5, ARROW_SIDE-1, color);
+}
 
 
 void display_main_menu(void)
@@ -97,10 +121,11 @@ void display_main_menu(void)
 	draw_func_block(2, "channels ctrl", 3);
 	draw_func_block(3, "scan property", 3);
 	draw_func_block(4, "ampl property", 3);
-	// draw_arrow_up();
+	draw_arrow(320 - 48, 13, up, BLUE);
+	draw_arrow(320 - 48, 240 - 13 - ARROW_SIDE, down, BLUE);
 	// draw_button_ok();
 	// draw_button_back();
 	// ili9341_drawchar(2, 2, 't', 0xffff, 0x0000, 5);
 	// print_str("hello", 2, 2, 0xffff, 0x0000, 5);
-	ili9341_filltriangle(0, 0, 100, 100, WHITE);
+	// ili9341_filltriangle(0, 0, 100, 100, WHITE);
 }

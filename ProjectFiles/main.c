@@ -92,10 +92,13 @@ display_main_menu();
 int row_num = 1;
 while (1)
 {
+	draw_arrow(320 - 48, 240 - 13 - 38, 1, GREEN);
 	draw_box(row_num++, BLUE);
 	if (row_num == 5)
 		row_num = 1;
 	draw_box(row_num, GREEN);
+	delay_ms(100);
+	draw_arrow(320 - 48, 240 - 13 - 38, 1, BLUE);
 	delay_ms(1000);
 }
 	

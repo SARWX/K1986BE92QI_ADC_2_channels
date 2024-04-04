@@ -1,7 +1,7 @@
 ./objects/ili9341_interface.o: CustomLibs\src\ili9341_interface.c \
   CustomLibs\inc\ili9341.h \
   C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdint.h \
-  CustomLibs\inc\ili9341gfx.h \
+  CustomLibs\inc\ili9341_interface.h CustomLibs\inc\ili9341gfx.h \
   C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdio.h \
   C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdbool.h \
   C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\inttypes.h \
