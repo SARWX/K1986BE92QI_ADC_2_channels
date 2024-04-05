@@ -8,13 +8,13 @@ Image component sizes
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
 
        236          0          0          0         56       5697   adc_init.o
+       770          0         15          0       2004       1918   command_system.o
        468          0          0          0       1024       4596   dac_init.o
         46          0          0          0          0        919   delay.o
        652          0          0          0        176       7527   dma_init.o
-      2110          4          0          4          0       4828   ili9341.o
-       914          0         51          0          0       2713   ili9341_interface.o
-       470          0       1275          0          0       3230   ili9341gfx.o
-       230          0          0          0        648       2913   main.o
+      1352          4          0          4          0       4828   ili9341.o
+       256          0          0          0        648       2719   ili9341_interface.o
+       404          0          0          2        652       3519   main.o
        730          0          0          0          0      11067   mdr32f9qx_adc.o
        128          0          0          0          0       2332   mdr32f9qx_dac.o
       1056          8          0          0       1024       8058   mdr32f9qx_dma.o
@@ -23,7 +23,7 @@ Image component sizes
        278          0          0          0          0       5236   mdr32f9qx_ssp.o
        558          0          0          0          0      20029   mdr32f9qx_timer.o
        674          0          0          0          0       9731   mdr32f9qx_usb.o
-      1060         36          0         85         20       6320   mdr32f9qx_usb_cdc.o
+      1162         36          0         85         20       6320   mdr32f9qx_usb_cdc.o
       3468         38          0          0        202      13555   mdr32f9qx_usb_device.o
        176          0          0          0          0       4039   spi_init.o
         64         26        192          0      24576        924   startup_mdr32f9qx.o
@@ -32,9 +32,9 @@ Image component sizes
        294          0          0          0        162       6444   usb_init.o
 
     ----------------------------------------------------------------------
-     14974        112       1552         96      28672     139229   Object Totals
+     14122        112        240         96      31328     138529   Object Totals
          0          0         32          0          0          0   (incl. Generated)
-       138          0          2          3        784          0   (incl. Padding)
+       126          0          1          1        784          0   (incl. Padding)
 
     ----------------------------------------------------------------------
 
@@ -47,34 +47,54 @@ Image component sizes
         52          8          0          0          0          0   __scatter.o
         26          0          0          0          0          0   __scatter_copy.o
         28          0          0          0          0          0   __scatter_zi.o
+        28          0          0          0          0         68   _chval.o
         22          0          0          0          0        100   _rserrno.o
+       158          0          0          0          0         92   _strtoul.o
+        26          0          0          0          0         80   atoi.o
         18          0          0          0          0         80   exit.o
          6          0          0          0          0        152   heapauxi.o
          0          0          0          0          0          0   indicate_semi.o
+        44         10        272          0          0         76   lc_ctype_c.o
          2          0          0          0          0          0   libinit.o
-         2          0          0          0          0          0   libinit2.o
+        20          0          0          0          0          0   libinit2.o
          2          0          0          0          0          0   libshutdown.o
          2          0          0          0          0          0   libshutdown2.o
          8          4          0          0         96         68   libspace.o
+        16          4          0          0          0         76   rt_ctype_table.o
          8          4          0          0          0         68   rt_errno_addr_intlibspace.o
+         8          4          0          0          0         68   rt_locale_intlibspace.o
        138          0          0          0          0         68   rt_memcpy_v6.o
        100          0          0          0          0         80   rt_memcpy_w.o
          2          0          0          0          0          0   rtexit.o
         10          0          0          0          0          0   rtexit2.o
+       128          0          0          0          0         68   strcmpv7m.o
+        36          0          0          0          0         80   strstr.o
+       112          0          0          0          0         88   strtol.o
         12          4          0          0          0         68   sys_exit.o
         74          0          0          0          0         80   sys_stackheap_outer.o
          2          0          0          0          0         68   use_no_semi.o
+        98          4          0          0          0         92   d2f.o
        834         16          0          0          0        372   daddsub_clz.o
         16          4          0          0          0         68   dcheck1.o
+        84          0          0          0          0        196   dcmp.o
+        24          0          0          0          0         68   dcmpi.o
        692        140          0          0          0        216   ddiv.o
+       120          4          0          0          0         92   deqf.o
         94          4          0          0          0         92   dfix.o
         84          0          0          0          0        136   dflt_clz.o
+       120          4          0          0          0         92   dgeqf.o
+       120          4          0          0          0         92   dleqf.o
        340         12          0          0          0        104   dmul.o
        156          4          0          0          0         92   dnaninf.o
         12          0          0          0          0         68   dretinf.o
         86          4          0          0          0         84   f2d.o
+       430          8          0          0          0        168   faddsub_clz.o
+       388         76          0          0          0         96   fdiv.o
+        54          4          0          0          0         84   ffix.o
         48          0          0          0          0         68   fflt_clz.o
+       258          4          0          0          0         84   fmul.o
        140          4          0          0          0         84   fnaninf.o
+        10          0          0          0          0         68   fretinf.o
        100          0          0          0          0         68   retnan.o
         92          0          0          0          0         68   scalbn.o
         48          0          0          0          0         68   trapv.o
@@ -88,19 +108,19 @@ Image component sizes
        236         12         40          0          0        128   sin_i.o
 
     ----------------------------------------------------------------------
-      5098        334        296          0         96       3356   Library Totals
-        20          0          4          0          0          0   (incl. Padding)
+      7390        460        568          0         96       5184   Library Totals
+        32          0          4          0          0          0   (incl. Padding)
 
     ----------------------------------------------------------------------
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Library Name
 
-       540         20          0          0         96        900   c_w.l
-      2742        188          0          0          0       1588   fz_ws.l
+      1114         38        272          0         96       1596   c_w.l
+      4448        296          0          0          0       2720   fz_ws.l
       1796        126        292          0          0        868   m_ws.l
 
     ----------------------------------------------------------------------
-      5098        334        296          0         96       3356   Library Totals
+      7390        460        568          0         96       5184   Library Totals
 
     ----------------------------------------------------------------------
 
@@ -109,15 +129,15 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-     20072        446       1848         96      28768     140497   Grand Totals
-     20072        446       1848         96      28768     140497   ELF Image Totals
-     20072        446       1848         96          0          0   ROM Totals
+     21512        572        808         96      31424     140533   Grand Totals
+     21512        572        808         96      31424     140533   ELF Image Totals
+     21512        572        808         96          0          0   ROM Totals
 
 ==============================================================================
 
-    Total RO  Size (Code + RO Data)                21920 (  21.41kB)
-    Total RW  Size (RW Data + ZI Data)             28864 (  28.19kB)
-    Total ROM Size (Code + RO Data + RW Data)      22016 (  21.50kB)
+    Total RO  Size (Code + RO Data)                22320 (  21.80kB)
+    Total RW  Size (RW Data + ZI Data)             31520 (  30.78kB)
+    Total ROM Size (Code + RO Data + RW Data)      22416 (  21.89kB)
 
 ==============================================================================
 

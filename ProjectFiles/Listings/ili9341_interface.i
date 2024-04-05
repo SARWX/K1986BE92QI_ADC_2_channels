@@ -1983,11 +1983,11 @@ void display_signal(uint16_t *arr, int size, int signal_number, int skip_every)
    skip_flag = 1;
    continue;
   }
-  uint16_t point = ((arr[i]) * 240) / 4095;
+  uint16_t point = LCD_H - ((arr[i]) * LCD_H) / 4095;
 
-  ili9341_drawpixel(clear_arr[cur_x], cur_x, 0x0000);
+  ili9341_drawpixel(cur_x, clear_arr[cur_x], 0x0000);
   clear_arr[cur_x] = point;
-  ili9341_drawpixel(point, cur_x, 0x0E70);
+  ili9341_drawpixel(cur_x, point, 0x0E70);
   if (++cur_x >= LCD_W)
   {
    cur_x = 0;

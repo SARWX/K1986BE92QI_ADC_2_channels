@@ -4814,24 +4814,6 @@ int main(void)
 
 
  TIMER_Cmd(((MDR_TIMER_TypeDef *) (0x40078000)), ENABLE);
-# 87 "main.c"
-__disable_irq();
-ili9341_clear(0x0000);
-display_main_menu();
-
-
-int row_num = 1;
-while (1)
-{
- draw_arrow(320 - 48, 240 - 13 - 38, 1, 0x0E70);
- draw_box(row_num++, 0xF100);
- if (row_num == 5)
-  row_num = 1;
- draw_box(row_num, 0x0E70);
- delay_ms(100);
- draw_arrow(320 - 48, 240 - 13 - 38, 1, 0xF100);
- delay_ms(1000);
-}
 # 115 "main.c"
  while (1)
  {
