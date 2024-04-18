@@ -11,8 +11,8 @@ void Setup_CPU_Clock(void)
 	/* Подлючаем HSE */
 	RST_CLK_HSEconfig(RST_CLK_HSE_ON);
 
-	// if (RST_CLK_HSEstatus() != SUCCESS)
-	// {
+	if (RST_CLK_HSEstatus() != SUCCESS)
+	{
 	// 	PORT_InitTypeDef GPIOInitStruct;
 	// 	RST_CLK_PCLKcmd (RST_CLK_PCLK_PORTC, ENABLE);
 	// 	GPIOInitStruct.PORT_Pin = PORT_Pin_2;
@@ -22,16 +22,16 @@ void Setup_CPU_Clock(void)
    	// 	PORT_Init(MDR_PORTC, &GPIOInitStruct);
 		
 	// 	// если не установилась частота, то будет светодиод мигать
-	// 	while (1) 
+	 	while (1);
 	// 	{
 	// 		PORT_SetBits(MDR_PORTC, PORT_Pin_2); 	// Включить светодиод
 	// 		delay_tick(10000);
 	// 		PORT_ResetBits(MDR_PORTC, PORT_Pin_2); 	// Выключить светодиод
 	// 		delay_tick(10000);
 	// 	}
-	// }
+	}
 
-	RST_CLK_CPU_PLLconfig(RST_CLK_CPU_PLLsrcHSEdiv1, RST_CLK_CPU_PLLmul8); //  16 MHz
+	RST_CLK_CPU_PLLconfig(RST_CLK_CPU_PLLsrcHSEdiv1, RST_CLK_CPU_PLLmul8); //  16 MHz * 8 = 128 MHz
 	
 	RST_CLK_CPU_PLLcmd(ENABLE);
 

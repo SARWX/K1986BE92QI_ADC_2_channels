@@ -33,8 +33,8 @@ void Setup_USB(void)
 	RST_CLK_PCLKcmd(RST_CLK_PCLK_USB, ENABLE);
 
 	/* Device layer initialization */
-	USB_Clock_InitStruct.USB_USBC1_Source = USB_C1HSEdiv2; //HSE 
-	USB_Clock_InitStruct.USB_PLLUSBMUL = USB_PLLUSBMUL6;   //was 12
+	USB_Clock_InitStruct.USB_USBC1_Source = USB_C1HSEdiv2; // HSE / 2 = 8MHz
+	USB_Clock_InitStruct.USB_PLLUSBMUL = USB_PLLUSBMUL6;   // 8MHz * 6 = 48MHz
 	USB_DeviceBUSParam.MODE = USB_SC_SCFSP_Full;
 	USB_DeviceBUSParam.SPEED = USB_SC_SCFSR_12Mb;
 	USB_DeviceBUSParam.PULL = USB_HSCR_DP_PULLUP_Set;
