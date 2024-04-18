@@ -1657,7 +1657,19 @@ void Setup_CPU_Clock(void)
 {
 
  RST_CLK_HSEconfig(RST_CLK_HSE_ON);
-# 34 "CustomLibs/src/sys_CLK_init.c"
+
+ if (RST_CLK_HSEstatus() != SUCCESS)
+ {
+# 25 "CustomLibs/src/sys_CLK_init.c"
+   while (1);
+
+
+
+
+
+
+ }
+
  RST_CLK_CPU_PLLconfig(RST_CLK_CPU_PLLsrcHSEdiv1, RST_CLK_CPU_PLLmul8);
 
  RST_CLK_CPU_PLLcmd(ENABLE);

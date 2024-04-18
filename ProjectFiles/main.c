@@ -136,12 +136,9 @@ int main(void)
 		DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_PRIMARY, &ADC1_primary_DMA_structure);		// реинициализируем основную структуру
 		 USB_CDC_SendData((uint8_t *)(main_array_for_ADC), ((NUM_OF_MES) * 2 ));					// отправка буфера основной структуры DMA по USB
 	
-		// if ((count_dysplay % lock_frame) == 0)
-		{
-			display_signal((uint16_t *)main_array_for_ADC, NUM_OF_MES, 1, ((tuner >> 8)));
-//			display_signal(&tuner, 1, 1, (128));
-		}
-//		count_dysplay++;
+		// {
+		// 	display_signal((uint16_t *)main_array_for_ADC, NUM_OF_MES, 1, ((tuner >> 8)));
+		// }
 
 		// 2 стадия - заполнение буфера, с использованием альтернативной структуры DMA, параллельная передача буфера основной по USB
 		while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) != 0) ;					// ждем, когда DMA перейдет на основную структуру
@@ -149,12 +146,9 @@ int main(void)
 
 		 USB_CDC_SendData((uint8_t *)(alternate_array_for_ADC), ((NUM_OF_MES) * 2 ));			// отправка буфера альтернативной структуры DMA по USB
 
-		// if ((count_dysplay % lock_frame) == 0)
-		{
-//			uint16_t r = ((MDR_ADC->ADC2_RESULT >> 8) << 8);
-			display_signal((uint16_t *)alternate_array_for_ADC, NUM_OF_MES, 1, ((tuner >> 8)));
-//			display_signal(&tuner, 1, 1, (128));
-		}
+		// {
+		// 	display_signal((uint16_t *)alternate_array_for_ADC, NUM_OF_MES, 1, ((tuner >> 8)));
+		// }
 		count_dysplay ++;
 	}	
 }

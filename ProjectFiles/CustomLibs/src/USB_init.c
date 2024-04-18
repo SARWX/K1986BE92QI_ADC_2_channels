@@ -55,7 +55,7 @@ void VCom_Configuration(void)
 {
 	#ifdef USB_CDC_LINE_CODING_SUPPORTED
 		//LineCoding.dwDTERate = 9600;
-		LineCoding.dwDTERate = 10000000;
+		LineCoding.dwDTERate = 16000000;
 		LineCoding.bCharFormat = 0;
 		LineCoding.bParityType = 0;
 		LineCoding.bDataBits = 8;
