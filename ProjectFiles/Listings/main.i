@@ -4785,6 +4785,33 @@ uint32_t count_dysplay = 0;
 uint32_t count_dma_interrupts = 0;
 uint16_t lock_frame = 10;
 
+
+
+
+
+int convert_to_12_bit(uint8_t *arr, int size) {
+ for (int i = 0, j = 0; i < size * 2; i++)
+ {
+  if ((i % 4) == 0)
+  {
+   continue;
+  }
+  if (j != i)
+   arr[j/2] &= 0x0F;
+
+  if ((i%2) == 0)
+  {
+
+   arr[j/2] |= (arr[i/2] | 0xF0);
+  }
+  else
+  {
+
+   arr[j/2] |= (arr[i/2] | 0x0F);
+  }
+ }
+}
+# 83 "main.c"
 int main(void)
 {
  Setup_CPU_Clock();
@@ -4805,7 +4832,7 @@ int main(void)
 
  ADC1_Cmd (ENABLE);
  ADC2_Cmd (ENABLE);
-# 115 "main.c"
+# 148 "main.c"
  while (1)
  {
   if (command_recived == 1)
@@ -4828,6 +4855,7 @@ int main(void)
 
   while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) == 0) ;
   DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_PRIMARY, &ADC1_primary_DMA_structure);
+
    USB_CDC_SendData((uint8_t *)(main_array_for_ADC), ((128) * 2 ));
 
 

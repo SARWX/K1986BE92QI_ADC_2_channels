@@ -42,22 +42,22 @@ void Setup_ADC()
     ADCx_StructInit (&ADCx_structure);											                    // Проинициализировать структуру для отдельного канала стандартными значениями
     ADCx_structure.ADC_ClockSource      = ADC_CLOCK_SOURCE_CPU;					      // Источник тактирования - ЦПУ (т.е. от HSE)
     ADCx_structure.ADC_SamplingMode     = ADC_SAMPLING_MODE_CYCLIC_CONV;		    // Режим работы (циклические преобразования, а не одиночное)
-    ADCx_structure.ADC_ChannelSwitching = ADC_CH_SWITCHING_Disable;				      // Переключение каналов разрешено, АЦП 1 будет вссегда работать на PD0,// PD1
-    ADCx_structure.ADC_ChannelNumber    = ADC_CH_ADC0;							            // Указываем канал АЦП 1 (ADC0 = АЦП 1, т.к. у Миландр он то первый, то нулевой)
-   // ADCx_structure.ADC_Channels         = (ADC_CH_ADC0_MSK);	// Маска для каналов 0 и 1 (АЦП 1 будет оцифровывать их поочередно)
+    ADCx_structure.ADC_ChannelSwitching = ADC_CH_SWITCHING_Enable;				      // Переключение каналов разрешено, АЦП 1 будет вссегда работать на PD0,// PD1
+    // ADCx_structure.ADC_ChannelNumber    = ADC_CH_ADC0;							            // Указываем канал АЦП 1 (ADC0 = АЦП 1, т.к. у Миландр он то первый, то нулевой)
+    ADCx_structure.ADC_Channels         = (ADC_CH_ADC0_MSK | ADC_CH_ADC1_MSK);	// Маска для каналов 0 и 1 (АЦП 1 будет оцифровывать их поочередно)
     ADCx_structure.ADC_VRefSource       = ADC_VREF_SOURCE_INTERNAL;				    // Опорное напряжение от внутреннего источника
     ADCx_structure.ADC_IntVRefSource    = ADC_INT_VREF_SOURCE_INEXACT;			    // Выбираем неточный источник опорного напряжения
     ADCx_structure.ADC_Prescaler        = ADC_CLK_div_16;						          // Задаем скорость работы АЦП, ИМЕННО ЭТОЙ НАСТРОЙКОЙ ЗАДАЕТСЯ СКОРОСТЬ РАБОТЫ УСТРОЙСТВА
 	ADCx_structure.ADC_DelayGo          = 0x2;									                  // Отложенный запуск, необходиим для нормальной работы
     ADC1_Init (&ADCx_structure);													                      // Применяем настройки к АЦП 1
     
-    // Настройка АЦП для регулировки
-    ADCx_structure.ADC_SamplingMode     = ADC_SAMPLING_MODE_CYCLIC_CONV;		    // Режим работы (циклические преобразования, а не одиночное)
-    ADCx_structure.ADC_ChannelSwitching = ADC_CH_SWITCHING_Disable;				      // Переключение каналов разрешено, АЦП 1 будет вссегда работать на PD0,// PD1
-    ADCx_structure.ADC_ChannelNumber    = ADC_CH_ADC1;
-   // ADCx_structure.ADC_Channels         = (ADC_CH_ADC1_MSK);	// Маска для каналов 0 и 1 (АЦП 1 будет оцифровывать их поочередно)
-    ADCx_structure.ADC_Prescaler        = ADC_CLK_div_2048;						          // Задаем скорость работы АЦП, ИМЕННО ЭТОЙ НАСТРОЙКОЙ ЗАДАЕТСЯ СКОРОСТЬ РАБОТЫ УСТРОЙСТВА
-    ADC2_Init (&ADCx_structure);													                      // Применяем настройки к АЦП 2
+//     // Настройка АЦП для регулировки
+//     ADCx_structure.ADC_SamplingMode     = ADC_SAMPLING_MODE_CYCLIC_CONV;		    // Режим работы (циклические преобразования, а не одиночное)
+//     ADCx_structure.ADC_ChannelSwitching = ADC_CH_SWITCHING_Disable;				      // Переключение каналов разрешено, АЦП 1 будет вссегда работать на PD0,// PD1
+//     ADCx_structure.ADC_ChannelNumber    = ADC_CH_ADC1;
+//    // ADCx_structure.ADC_Channels         = (ADC_CH_ADC1_MSK);	// Маска для каналов 0 и 1 (АЦП 1 будет оцифровывать их поочередно)
+//     ADCx_structure.ADC_Prescaler        = ADC_CLK_div_2048;						          // Задаем скорость работы АЦП, ИМЕННО ЭТОЙ НАСТРОЙКОЙ ЗАДАЕТСЯ СКОРОСТЬ РАБОТЫ УСТРОЙСТВА
+//     ADC2_Init (&ADCx_structure);													                      // Применяем настройки к АЦП 2
 
 
     // Разрешаем прерывания от АЦП

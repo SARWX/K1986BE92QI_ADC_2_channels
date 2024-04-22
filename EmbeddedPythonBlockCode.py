@@ -44,5 +44,6 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
             self.port.readinto(data)  # We read the data directly into the byte array
             output_items[1][n] = int.from_bytes(data[:2], 'little')  # Convert the first 2 bytes to a number
             output_items[2][n] = int.from_bytes(data[2:], 'little')  # Convert the remaining 2 bytes to a number
+            # output_items[1][n] = int.from_bytes(self.port.read(1), "little")
             n += 1
         return len(output_items[1])

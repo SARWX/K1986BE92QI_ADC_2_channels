@@ -50,27 +50,50 @@ uint16_t lock_frame = 10;
 
 
 // TEST FUNCTION
-convert_to_12_bit(uint8_t *arr, int size) { 			// size задается в количестве 16 битных элементов
-	for (int i = 0, j = 0; i < size * 2; i++)			// i - 4 бита, т.е. пол байта, j тоже, но это курсор записи, а i - курсор чтения
-	{													// Байт хранится в виде: 876543210 (т.е. первый - младший, потом старший)
-		if ((i % 4) == 0)								// Каждый 4ый полубайт надо пропустить, ведь он нулевой
-		{
-			continue;
-		}
-		if (j != i)										// Если i (чтение) ушел дальше j (записи, то надо предварительно очистить полубайт)
-			arr[j/2] &= 0x0F;							// Очистить
-		// Возможны 2 случая:
+// Компрессор (вроде работает)
+int convert_to_12_bit(uint8_t *arr, int size) { 			// size задается в количестве 16 битных элементов
+    int i = 3, j = 4; 
+    while (j < size*2)
+    {
+        if (((j+1)%4) == 0)
+        {
+            j++;
+            continue;
+        }
+        // Возможны 2 случая:
 		if ((i%2) == 0)
 		{
-			// Четный полубайт (старшее полуслово) 
-			arr[j/2] |= (arr[i/2] | 0xF0);				// Записать (старшее полуслово) 
+			// Четный полубайт (младший полубайт)                                           0 - 1, 2 - 3, 4 - 5 ...
+			arr[i/2] &= 0xF0;       // затерли младший полубайт
+			if((j%2) == 0)
+			{
+			    // j тоже младший
+			    arr[i/2] |= (arr[j/2] & 0x0F);
+			}
+			else
+			{
+			    // j старший
+			    arr[i/2] |= ((arr[j/2] >> 4) & 0x0F);
+			}
 		}
 		else
 		{
-			// Нечетный полубайт (младшее полуслово)
-			arr[j/2] |= (arr[i/2] | 0x0F);				// Записать (младшее полуслово)
+			// Нечетный полубайт (старший полубайт)
+			arr[i/2] &= 0x0F;       // затерли старший полубайт
+			if((j%2) == 0)
+			{
+			    // j младший
+			    arr[i/2] |= ((arr[j/2] << 4) & 0xF0);
+			}
+			else
+			{
+			    // j тоже старший
+			    arr[i/2] |= (arr[j/2] & 0xF0);
+			}
 		}
-	}
+		j++;
+		i++;
+    }
 }
 
 
@@ -167,8 +190,8 @@ int main(void)
 		// 1 стадия - заполнение буфера, с использованием основной структуры DMA, параллельная передача буфера альтернативной по USB
 		while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) == 0) ;					// ждем, когда DMA перейдет на альтернативную структуру
 		DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_PRIMARY, &ADC1_primary_DMA_structure);		// реинициализируем основную структуру
-		convert_to_12_bit((uint8_t *)(main_array_for_ADC), NUM_OF_MES);
-		 USB_CDC_SendData((uint8_t *)(main_array_for_ADC), ((NUM_OF_MES) * 3 / 2 ));					// отправка буфера основной структуры DMA по USB
+		// convert_to_12_bit((uint8_t *)(main_array_for_ADC), NUM_OF_MES);
+		 USB_CDC_SendData((uint8_t *)(main_array_for_ADC), ((NUM_OF_MES) * 2 ));					// отправка буфера основной структуры DMA по USB
 	
 		// {
 		// 	display_signal((uint16_t *)main_array_for_ADC, NUM_OF_MES, 1, ((tuner >> 8)));
@@ -177,8 +200,8 @@ int main(void)
 		// 2 стадия - заполнение буфера, с использованием альтернативной структуры DMA, параллельная передача буфера основной по USB
 		while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) != 0) ;					// ждем, когда DMA перейдет на основную структуру
 		DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_ALTERNATE, &ADC1_alternate_DMA_structure);	// реинициализируем альтернативную структуру
-		convert_to_12_bit((uint8_t *)(alternate_array_for_ADC), NUM_OF_MES);
-		 USB_CDC_SendData((uint8_t *)(alternate_array_for_ADC), ((NUM_OF_MES) * 3 / 2 ));			// отправка буфера альтернативной структуры DMA по USB
+		// convert_to_12_bit((uint8_t *)(alternate_array_for_ADC), NUM_OF_MES);
+		 USB_CDC_SendData((uint8_t *)(alternate_array_for_ADC), ((NUM_OF_MES) * 2 ));			// отправка буфера альтернативной структуры DMA по USB
 
 		// {
 		// 	display_signal((uint16_t *)alternate_array_for_ADC, NUM_OF_MES, 1, ((tuner >> 8)));
