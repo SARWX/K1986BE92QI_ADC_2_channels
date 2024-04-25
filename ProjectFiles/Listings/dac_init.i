@@ -3018,6 +3018,8 @@ void Setup_TIM2()
  TIMER_BRGInit(((MDR_TIMER_TypeDef *) (0x40078000)), TIMER_HCLKdiv4);
 
 
+
+
  TIMER_CntStructInit(&Cnt_sTim2);
  Cnt_sTim2.TIMER_CounterMode = TIMER_CntMode_ClkFixedDir;
  Cnt_sTim2.TIMER_CounterDirection = TIMER_CntDir_Up;
@@ -3025,28 +3027,29 @@ void Setup_TIM2()
  Cnt_sTim2.TIMER_FilterSampling = TIMER_FDTS_TIMER_CLK_div_4;
  Cnt_sTim2.TIMER_ARR_UpdateMode = TIMER_ARR_Update_Immediately;
  Cnt_sTim2.TIMER_IniCounter = 0;
- Cnt_sTim2.TIMER_Period = 30 - 1;
- Cnt_sTim2.TIMER_Prescaler = 30;
+ Cnt_sTim2.TIMER_Prescaler = 10;
+ Cnt_sTim2.TIMER_Period = 12 - 1;
+
 
  TIMER_CntInit(((MDR_TIMER_TypeDef *) (0x40078000)), &Cnt_sTim2);
 
  TIMER_DMACmd(((MDR_TIMER_TypeDef *) (0x40078000)), TIMER_STATUS_CNT_ARR, ENABLE);
 
 
-
+ TIMER_Cmd(((MDR_TIMER_TypeDef *) (0x40078000)), ENABLE);
 }
 
 void set_DAC_table(int freq)
 {
- freq = (int)((float)freq * 1.065);
- int tics = (((16000000 * 8 / 1) / (30 * 30)) / freq);
+ freq = (int)((float)freq * 1.1);
+ int tics = (((16000000 * 7 / 4) / (10 * 12)) / freq);
  int divider = 1;
  while(tics > 500)
  {
   divider *= 2;
   tics /= 2;
  }
- ((MDR_TIMER_TypeDef *) (0x40078000))->ARR = (30 * divider - 1);
+ ((MDR_TIMER_TypeDef *) (0x40078000))->ARR = (12 * divider - 1);
 
  double angle_inc = (6.28318 / tics);
  for (int i = 0; i < (tics); i++)

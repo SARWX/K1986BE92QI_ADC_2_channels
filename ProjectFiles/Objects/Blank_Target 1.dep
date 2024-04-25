@@ -1,6 +1,6 @@
 Dependencies for Project 'Blank', Target 'Target 1': (DO NOT MODIFY !)
 CompilerVersion: 6190000::V6.19::ARMCLANG
-F (.\main.c)(0x662A6749)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m3 -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__EVAL -gdwarf-4 -O3 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ./CustomLibs/src -I ./CustomLibs/inc -I ./CMSIS/MDR32Fx/CoreSupport/CM3 -I ./CMSIS/MDR32Fx/DeviceSupport/MDR1986VE9x/inc -I ./CMSIS/MDR32Fx/DeviceSupport/MDR1986VE9x/startup/arm -I ./SPL/MDR32Fx -I ./SPL/MDR32Fx/inc -I ./SPL/MDR32Fx/inc/USB_Library -I ./SPL/MDR32Fx/inc/IRQ_Handler_Template -I ./SPL/MDR32Fx/src -I ./SPL/MDR32Fx/src/USB_Library -I ./SPL/MDR32Fx/src/IRQ_Handler_Template -I ./RTE -I ../Blank-I./RTE/_Target_1-IC:/Users/PC_88/AppData/Local/Arm/Packs/ARM/CMSIS/5.9.0/CMSIS/Core/Include-IC:/Users/PC_88/AppData/Local/Arm/Packs/Milandr/MDR32FxQI/1.1/Libraries/CMSIS/MDR32FxQI/DeviceSupport/MDR32F9Q2I/inc-D__UVISION_VERSION="538" -D_RTE_ -D_RTE_-o ./objects/main.o -MD)
+F (.\main.c)(0x662A75C6)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m3 -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__EVAL -gdwarf-4 -O3 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ./CustomLibs/src -I ./CustomLibs/inc -I ./CMSIS/MDR32Fx/CoreSupport/CM3 -I ./CMSIS/MDR32Fx/DeviceSupport/MDR1986VE9x/inc -I ./CMSIS/MDR32Fx/DeviceSupport/MDR1986VE9x/startup/arm -I ./SPL/MDR32Fx -I ./SPL/MDR32Fx/inc -I ./SPL/MDR32Fx/inc/USB_Library -I ./SPL/MDR32Fx/inc/IRQ_Handler_Template -I ./SPL/MDR32Fx/src -I ./SPL/MDR32Fx/src/USB_Library -I ./SPL/MDR32Fx/src/IRQ_Handler_Template -I ./RTE -I ../Blank-I./RTE/_Target_1-IC:/Users/PC_88/AppData/Local/Arm/Packs/ARM/CMSIS/5.9.0/CMSIS/Core/Include-IC:/Users/PC_88/AppData/Local/Arm/Packs/Milandr/MDR32FxQI/1.1/Libraries/CMSIS/MDR32FxQI/DeviceSupport/MDR32F9Q2I/inc-D__UVISION_VERSION="538" -D_RTE_ -D_RTE_-o ./objects/main.o -MD)
 I (SPL\MDR32Fx\MDR32F9Qx_config.h)(0x65AA344E)
 I (C:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x63888F58)
 I (RTE\_Target_1\RTE_Components.h)(0x65E98E00)
@@ -37,7 +37,7 @@ I (CustomLibs\inc\SPI_init.h)(0x66057258)
 I (CustomLibs\inc\ili9341.h)(0x660EB2C8)
 I (CustomLibs\inc\ili9341_interface.h)(0x660ED57E)
 I (CustomLibs\inc\delay.h)(0x66057258)
-I (CustomLibs\inc\defines.h)(0x662225B0)
+I (CustomLibs\inc\defines.h)(0x662A78A2)
 F (.\MDR32F9Qx_usb_handlers.h)(0x65AA344E)()
 F (.\CMSIS\MDR32Fx\CoreSupport\CM3\core_cm3.h)(0x660691E2)()
 F (.\CMSIS\MDR32Fx\CoreSupport\CM3\core_cmFunc.h)(0x65AA344E)()
@@ -401,7 +401,7 @@ I (CMSIS\MDR32Fx\CoreSupport\CM3\core_cmFunc.h)(0x65AA344E)
 I (CMSIS\MDR32Fx\DeviceSupport\MDR1986VE9x\startup\arm\system_MDR32F9Qx.h)(0x65AA344E)
 I (SPL\MDR32Fx\inc\MDR32F9Qx_adc.h)(0x660A97DB)
 I (CustomLibs\inc\ADC_init.h)(0x6622372F)
-I (CustomLibs\inc\defines.h)(0x662225B0)
+I (CustomLibs\inc\defines.h)(0x662A78A2)
 I (SPL\MDR32Fx\inc\MDR32F9Qx_rst_clk.h)(0x65AA344E)
 F (.\CustomLibs\src\command_system.c)(0x65C5D786)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m3 -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__EVAL -gdwarf-4 -O3 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ./CustomLibs/src -I ./CustomLibs/inc -I ./CMSIS/MDR32Fx/CoreSupport/CM3 -I ./CMSIS/MDR32Fx/DeviceSupport/MDR1986VE9x/inc -I ./CMSIS/MDR32Fx/DeviceSupport/MDR1986VE9x/startup/arm -I ./SPL/MDR32Fx -I ./SPL/MDR32Fx/inc -I ./SPL/MDR32Fx/inc/USB_Library -I ./SPL/MDR32Fx/inc/IRQ_Handler_Template -I ./SPL/MDR32Fx/src -I ./SPL/MDR32Fx/src/USB_Library -I ./SPL/MDR32Fx/src/IRQ_Handler_Template -I ./RTE -I ../Blank-I./RTE/_Target_1-IC:/Users/PC_88/AppData/Local/Arm/Packs/ARM/CMSIS/5.9.0/CMSIS/Core/Include-IC:/Users/PC_88/AppData/Local/Arm/Packs/Milandr/MDR32FxQI/1.1/Libraries/CMSIS/MDR32FxQI/DeviceSupport/MDR32F9Q2I/inc-D__UVISION_VERSION="538" -D_RTE_ -D_RTE_-o ./objects/command_system.o -MD)
 I (SPL\MDR32Fx\inc\USB_Library\MDR32F9Qx_usb_CDC.h)(0x66057259)
@@ -419,9 +419,9 @@ I (SPL\MDR32Fx\inc\MDR32F9Qx_dma.h)(0x65AA344E)
 I (C:\Keil_v5\ARM\ARMCLANG\include\string.h)(0x63888F58)
 I (C:\Keil_v5\ARM\ARMCLANG\include\stdlib.h)(0x63888F58)
 I (CustomLibs\inc\ADC_init.h)(0x6622372F)
-I (CustomLibs\inc\defines.h)(0x662225B0)
+I (CustomLibs\inc\defines.h)(0x662A78A2)
 I (CustomLibs\inc\DAC_init.h)(0x660563EA)
-F (.\CustomLibs\src\DAC_init.c)(0x660698BD)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m3 -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__EVAL -gdwarf-4 -O3 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ./CustomLibs/src -I ./CustomLibs/inc -I ./CMSIS/MDR32Fx/CoreSupport/CM3 -I ./CMSIS/MDR32Fx/DeviceSupport/MDR1986VE9x/inc -I ./CMSIS/MDR32Fx/DeviceSupport/MDR1986VE9x/startup/arm -I ./SPL/MDR32Fx -I ./SPL/MDR32Fx/inc -I ./SPL/MDR32Fx/inc/USB_Library -I ./SPL/MDR32Fx/inc/IRQ_Handler_Template -I ./SPL/MDR32Fx/src -I ./SPL/MDR32Fx/src/USB_Library -I ./SPL/MDR32Fx/src/IRQ_Handler_Template -I ./RTE -I ../Blank-I./RTE/_Target_1-IC:/Users/PC_88/AppData/Local/Arm/Packs/ARM/CMSIS/5.9.0/CMSIS/Core/Include-IC:/Users/PC_88/AppData/Local/Arm/Packs/Milandr/MDR32FxQI/1.1/Libraries/CMSIS/MDR32FxQI/DeviceSupport/MDR32F9Q2I/inc-D__UVISION_VERSION="538" -D_RTE_ -D_RTE_-o ./objects/dac_init.o -MD)
+F (.\CustomLibs\src\DAC_init.c)(0x662A75BB)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m3 -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__EVAL -gdwarf-4 -O3 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ./CustomLibs/src -I ./CustomLibs/inc -I ./CMSIS/MDR32Fx/CoreSupport/CM3 -I ./CMSIS/MDR32Fx/DeviceSupport/MDR1986VE9x/inc -I ./CMSIS/MDR32Fx/DeviceSupport/MDR1986VE9x/startup/arm -I ./SPL/MDR32Fx -I ./SPL/MDR32Fx/inc -I ./SPL/MDR32Fx/inc/USB_Library -I ./SPL/MDR32Fx/inc/IRQ_Handler_Template -I ./SPL/MDR32Fx/src -I ./SPL/MDR32Fx/src/USB_Library -I ./SPL/MDR32Fx/src/IRQ_Handler_Template -I ./RTE -I ../Blank-I./RTE/_Target_1-IC:/Users/PC_88/AppData/Local/Arm/Packs/ARM/CMSIS/5.9.0/CMSIS/Core/Include-IC:/Users/PC_88/AppData/Local/Arm/Packs/Milandr/MDR32FxQI/1.1/Libraries/CMSIS/MDR32FxQI/DeviceSupport/MDR32F9Q2I/inc-D__UVISION_VERSION="538" -D_RTE_ -D_RTE_-o ./objects/dac_init.o -MD)
 I (SPL\MDR32Fx\inc\MDR32F9Qx_rst_clk.h)(0x65AA344E)
 I (SPL\MDR32Fx\MDR32F9Qx_config.h)(0x65AA344E)
 I (C:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x63888F58)
@@ -436,7 +436,7 @@ I (SPL\MDR32Fx\inc\MDR32F9Qx_dac.h)(0x65AA344E)
 I (SPL\MDR32Fx\inc\MDR32F9Qx_timer.h)(0x66068265)
 I (SPL\MDR32Fx\inc\MDR32F9Qx_dma.h)(0x65AA344E)
 I (CustomLibs\inc\DAC_init.h)(0x660563EA)
-I (CustomLibs\inc\defines.h)(0x662225B0)
+I (CustomLibs\inc\defines.h)(0x662A78A2)
 I (C:\Keil_v5\ARM\ARMCLANG\include\math.h)(0x63888F58)
 F (.\CustomLibs\src\DMA_init.c)(0x662A61BE)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m3 -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__EVAL -gdwarf-4 -O3 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ./CustomLibs/src -I ./CustomLibs/inc -I ./CMSIS/MDR32Fx/CoreSupport/CM3 -I ./CMSIS/MDR32Fx/DeviceSupport/MDR1986VE9x/inc -I ./CMSIS/MDR32Fx/DeviceSupport/MDR1986VE9x/startup/arm -I ./SPL/MDR32Fx -I ./SPL/MDR32Fx/inc -I ./SPL/MDR32Fx/inc/USB_Library -I ./SPL/MDR32Fx/inc/IRQ_Handler_Template -I ./SPL/MDR32Fx/src -I ./SPL/MDR32Fx/src/USB_Library -I ./SPL/MDR32Fx/src/IRQ_Handler_Template -I ./RTE -I ../Blank-I./RTE/_Target_1-IC:/Users/PC_88/AppData/Local/Arm/Packs/ARM/CMSIS/5.9.0/CMSIS/Core/Include-IC:/Users/PC_88/AppData/Local/Arm/Packs/Milandr/MDR32FxQI/1.1/Libraries/CMSIS/MDR32FxQI/DeviceSupport/MDR32F9Q2I/inc-D__UVISION_VERSION="538" -D_RTE_ -D_RTE_-o ./objects/dma_init.o -MD)
 I (SPL\MDR32Fx\inc\MDR32F9Qx_dma.h)(0x65AA344E)
@@ -449,9 +449,9 @@ I (CMSIS\MDR32Fx\CoreSupport\CM3\core_cmInstr.h)(0x65AA344E)
 I (CMSIS\MDR32Fx\CoreSupport\CM3\core_cmFunc.h)(0x65AA344E)
 I (CMSIS\MDR32Fx\DeviceSupport\MDR1986VE9x\startup\arm\system_MDR32F9Qx.h)(0x65AA344E)
 I (SPL\MDR32Fx\inc\MDR32F9Qx_rst_clk.h)(0x65AA344E)
-I (CustomLibs\inc\defines.h)(0x662225B0)
+I (CustomLibs\inc\defines.h)(0x662A78A2)
 I (CustomLibs\inc\DMA_init.h)(0x65C5CAA9)
-F (.\CustomLibs\src\sys_CLK_init.c)(0x662A6A83)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m3 -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__EVAL -gdwarf-4 -O3 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ./CustomLibs/src -I ./CustomLibs/inc -I ./CMSIS/MDR32Fx/CoreSupport/CM3 -I ./CMSIS/MDR32Fx/DeviceSupport/MDR1986VE9x/inc -I ./CMSIS/MDR32Fx/DeviceSupport/MDR1986VE9x/startup/arm -I ./SPL/MDR32Fx -I ./SPL/MDR32Fx/inc -I ./SPL/MDR32Fx/inc/USB_Library -I ./SPL/MDR32Fx/inc/IRQ_Handler_Template -I ./SPL/MDR32Fx/src -I ./SPL/MDR32Fx/src/USB_Library -I ./SPL/MDR32Fx/src/IRQ_Handler_Template -I ./RTE -I ../Blank-I./RTE/_Target_1-IC:/Users/PC_88/AppData/Local/Arm/Packs/ARM/CMSIS/5.9.0/CMSIS/Core/Include-IC:/Users/PC_88/AppData/Local/Arm/Packs/Milandr/MDR32FxQI/1.1/Libraries/CMSIS/MDR32FxQI/DeviceSupport/MDR32F9Q2I/inc-D__UVISION_VERSION="538" -D_RTE_ -D_RTE_-o ./objects/sys_clk_init.o -MD)
+F (.\CustomLibs\src\sys_CLK_init.c)(0x662A6CA5)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m3 -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__EVAL -gdwarf-4 -O3 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ./CustomLibs/src -I ./CustomLibs/inc -I ./CMSIS/MDR32Fx/CoreSupport/CM3 -I ./CMSIS/MDR32Fx/DeviceSupport/MDR1986VE9x/inc -I ./CMSIS/MDR32Fx/DeviceSupport/MDR1986VE9x/startup/arm -I ./SPL/MDR32Fx -I ./SPL/MDR32Fx/inc -I ./SPL/MDR32Fx/inc/USB_Library -I ./SPL/MDR32Fx/inc/IRQ_Handler_Template -I ./SPL/MDR32Fx/src -I ./SPL/MDR32Fx/src/USB_Library -I ./SPL/MDR32Fx/src/IRQ_Handler_Template -I ./RTE -I ../Blank-I./RTE/_Target_1-IC:/Users/PC_88/AppData/Local/Arm/Packs/ARM/CMSIS/5.9.0/CMSIS/Core/Include-IC:/Users/PC_88/AppData/Local/Arm/Packs/Milandr/MDR32FxQI/1.1/Libraries/CMSIS/MDR32FxQI/DeviceSupport/MDR32F9Q2I/inc-D__UVISION_VERSION="538" -D_RTE_ -D_RTE_-o ./objects/sys_clk_init.o -MD)
 I (SPL\MDR32Fx\inc\MDR32F9Qx_rst_clk.h)(0x65AA344E)
 I (SPL\MDR32Fx\MDR32F9Qx_config.h)(0x65AA344E)
 I (C:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x63888F58)
@@ -463,7 +463,7 @@ I (CMSIS\MDR32Fx\CoreSupport\CM3\core_cmFunc.h)(0x65AA344E)
 I (CMSIS\MDR32Fx\DeviceSupport\MDR1986VE9x\startup\arm\system_MDR32F9Qx.h)(0x65AA344E)
 I (SPL\MDR32Fx\inc\MDR32F9Qx_port.h)(0x65AA344E)
 I (CustomLibs\inc\sys_CLK_init.h)(0x65C5CAA9)
-I (CustomLibs\inc\defines.h)(0x662225B0)
+I (CustomLibs\inc\defines.h)(0x662A78A2)
 I (CustomLibs\inc\delay.h)(0x66057258)
 F (.\CustomLibs\src\USB_init.c)(0x662A4CCA)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m3 -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__EVAL -gdwarf-4 -O3 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ./CustomLibs/src -I ./CustomLibs/inc -I ./CMSIS/MDR32Fx/CoreSupport/CM3 -I ./CMSIS/MDR32Fx/DeviceSupport/MDR1986VE9x/inc -I ./CMSIS/MDR32Fx/DeviceSupport/MDR1986VE9x/startup/arm -I ./SPL/MDR32Fx -I ./SPL/MDR32Fx/inc -I ./SPL/MDR32Fx/inc/USB_Library -I ./SPL/MDR32Fx/inc/IRQ_Handler_Template -I ./SPL/MDR32Fx/src -I ./SPL/MDR32Fx/src/USB_Library -I ./SPL/MDR32Fx/src/IRQ_Handler_Template -I ./RTE -I ../Blank-I./RTE/_Target_1-IC:/Users/PC_88/AppData/Local/Arm/Packs/ARM/CMSIS/5.9.0/CMSIS/Core/Include-IC:/Users/PC_88/AppData/Local/Arm/Packs/Milandr/MDR32FxQI/1.1/Libraries/CMSIS/MDR32FxQI/DeviceSupport/MDR32F9Q2I/inc-D__UVISION_VERSION="538" -D_RTE_ -D_RTE_-o ./objects/usb_init.o -MD)
 I (SPL\MDR32Fx\MDR32F9Qx_config.h)(0x65AA344E)
@@ -484,7 +484,7 @@ I (SPL\MDR32Fx\inc\MDR32F9Qx_ssp.h)(0x65AA344E)
 I (SPL\MDR32Fx\inc\MDR32F9Qx_port.h)(0x65AA344E)
 I (C:\Keil_v5\ARM\ARMCLANG\include\string.h)(0x63888F58)
 I (CustomLibs\inc\USB_init.h)(0x65C5CAA9)
-I (CustomLibs\inc\defines.h)(0x662225B0)
+I (CustomLibs\inc\defines.h)(0x662A78A2)
 F (.\CustomLibs\src\SPI_init.c)(0x66057258)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m3 -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__EVAL -gdwarf-4 -O3 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ./CustomLibs/src -I ./CustomLibs/inc -I ./CMSIS/MDR32Fx/CoreSupport/CM3 -I ./CMSIS/MDR32Fx/DeviceSupport/MDR1986VE9x/inc -I ./CMSIS/MDR32Fx/DeviceSupport/MDR1986VE9x/startup/arm -I ./SPL/MDR32Fx -I ./SPL/MDR32Fx/inc -I ./SPL/MDR32Fx/inc/USB_Library -I ./SPL/MDR32Fx/inc/IRQ_Handler_Template -I ./SPL/MDR32Fx/src -I ./SPL/MDR32Fx/src/USB_Library -I ./SPL/MDR32Fx/src/IRQ_Handler_Template -I ./RTE -I ../Blank-I./RTE/_Target_1-IC:/Users/PC_88/AppData/Local/Arm/Packs/ARM/CMSIS/5.9.0/CMSIS/Core/Include-IC:/Users/PC_88/AppData/Local/Arm/Packs/Milandr/MDR32FxQI/1.1/Libraries/CMSIS/MDR32FxQI/DeviceSupport/MDR32F9Q2I/inc-D__UVISION_VERSION="538" -D_RTE_ -D_RTE_-o ./objects/spi_init.o -MD)
 I (SPL\MDR32Fx\inc\MDR32F9Qx_ssp.h)(0x65AA344E)
 I (SPL\MDR32Fx\MDR32F9Qx_config.h)(0x65AA344E)
@@ -511,9 +511,9 @@ I (CMSIS\MDR32Fx\CoreSupport\CM3\core_cmFunc.h)(0x65AA344E)
 I (CMSIS\MDR32Fx\DeviceSupport\MDR1986VE9x\startup\arm\system_MDR32F9Qx.h)(0x65AA344E)
 I (SPL\MDR32Fx\inc\MDR32F9Qx_port.h)(0x65AA344E)
 I (CustomLibs\inc\delay.h)(0x66057258)
-I (CustomLibs\inc\defines.h)(0x662225B0)
+I (CustomLibs\inc\defines.h)(0x662A78A2)
 F (.\CustomLibs\inc\delay.c)(0x66057258)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m3 -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__EVAL -gdwarf-4 -O0 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ./CustomLibs/src -I ./CustomLibs/inc -I ./CMSIS/MDR32Fx/CoreSupport/CM3 -I ./CMSIS/MDR32Fx/DeviceSupport/MDR1986VE9x/inc -I ./CMSIS/MDR32Fx/DeviceSupport/MDR1986VE9x/startup/arm -I ./SPL/MDR32Fx -I ./SPL/MDR32Fx/inc -I ./SPL/MDR32Fx/inc/USB_Library -I ./SPL/MDR32Fx/inc/IRQ_Handler_Template -I ./SPL/MDR32Fx/src -I ./SPL/MDR32Fx/src/USB_Library -I ./SPL/MDR32Fx/src/IRQ_Handler_Template -I ./RTE -I ../Blank-I./RTE/_Target_1-IC:/Users/PC_88/AppData/Local/Arm/Packs/ARM/CMSIS/5.9.0/CMSIS/Core/Include-IC:/Users/PC_88/AppData/Local/Arm/Packs/Milandr/MDR32FxQI/1.1/Libraries/CMSIS/MDR32FxQI/DeviceSupport/MDR32F9Q2I/inc-D__UVISION_VERSION="538" -D_RTE_ -D_RTE_-o ./objects/delay.o -MD)
-I (CustomLibs\inc\defines.h)(0x662225B0)
+I (CustomLibs\inc\defines.h)(0x662A78A2)
 I (SPL\MDR32Fx\inc\MDR32F9Qx_rst_clk.h)(0x65AA344E)
 I (SPL\MDR32Fx\MDR32F9Qx_config.h)(0x65AA344E)
 I (C:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x63888F58)
@@ -541,7 +541,7 @@ I (CMSIS\MDR32Fx\CoreSupport\CM3\core_cmFunc.h)(0x65AA344E)
 I (CMSIS\MDR32Fx\DeviceSupport\MDR1986VE9x\startup\arm\system_MDR32F9Qx.h)(0x65AA344E)
 I (SPL\MDR32Fx\inc\MDR32F9Qx_port.h)(0x65AA344E)
 I (CustomLibs\inc\delay.h)(0x66057258)
-I (CustomLibs\inc\defines.h)(0x662225B0)
+I (CustomLibs\inc\defines.h)(0x662A78A2)
 F (.\CustomLibs\src\ili9341gfx.c)(0x660EA2A2)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m3 -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-D__EVAL -gdwarf-4 -O3 -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ./CustomLibs/src -I ./CustomLibs/inc -I ./CMSIS/MDR32Fx/CoreSupport/CM3 -I ./CMSIS/MDR32Fx/DeviceSupport/MDR1986VE9x/inc -I ./CMSIS/MDR32Fx/DeviceSupport/MDR1986VE9x/startup/arm -I ./SPL/MDR32Fx -I ./SPL/MDR32Fx/inc -I ./SPL/MDR32Fx/inc/USB_Library -I ./SPL/MDR32Fx/inc/IRQ_Handler_Template -I ./SPL/MDR32Fx/src -I ./SPL/MDR32Fx/src/USB_Library -I ./SPL/MDR32Fx/src/IRQ_Handler_Template -I ./RTE -I ../Blank-I./RTE/_Target_1-IC:/Users/PC_88/AppData/Local/Arm/Packs/ARM/CMSIS/5.9.0/CMSIS/Core/Include-IC:/Users/PC_88/AppData/Local/Arm/Packs/Milandr/MDR32FxQI/1.1/Libraries/CMSIS/MDR32FxQI/DeviceSupport/MDR32F9Q2I/inc-D__UVISION_VERSION="538" -D_RTE_ -D_RTE_-o ./objects/ili9341gfx.o -MD)
 I (CustomLibs\inc\ili9341.h)(0x660EB2C8)
 I (C:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x63888F58)
@@ -552,7 +552,7 @@ I (C:\Keil_v5\ARM\ARMCLANG\include\stdbool.h)(0x63888F58)
 I (C:\Keil_v5\ARM\ARMCLANG\include\inttypes.h)(0x63888F58)
 F (.\CustomLibs\inc\ADC_init.h)(0x6622372F)()
 F (.\CustomLibs\inc\DAC_init.h)(0x660563EA)()
-F (.\CustomLibs\inc\defines.h)(0x662225B0)()
+F (.\CustomLibs\inc\defines.h)(0x662A78A2)()
 F (.\CustomLibs\inc\DMA_init.h)(0x65C5CAA9)()
 F (.\CustomLibs\inc\sys_CLK_init.h)(0x65C5CAA9)()
 F (.\CustomLibs\inc\USB_init.h)(0x65C5CAA9)()

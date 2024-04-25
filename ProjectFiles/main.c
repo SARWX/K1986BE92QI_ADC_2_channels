@@ -135,11 +135,11 @@ int main(void)
 //		test();			/// TETTSSSTTT 
 	USB_CDC_Init((uint8_t *)buffer, 1, SET);
 	Setup_USB();		
-	set_DAC_table(100);
-	// Setup_DAC();
+	set_DAC_table(1000);
+	Setup_DAC();
 	// Setup_SPI();
 	// Setup_ili9341();
-	// Setup_TIM2();
+	Setup_TIM2();
  
  
 	// Включение АЦП и DMA для АЦП
@@ -147,7 +147,7 @@ int main(void)
 	// ADC2_Cmd (ENABLE);						// разрешаем работу ADC2
 // 	DMA_Cmd(DMA_Channel_ADC1, ENABLE);		// разрешаем работу DMA с каналом ADC1
 // 	// Включение DMA для ЦАП
-// 	DMA_Cmd(DMA_Channel_TIM2, ENABLE);
+	DMA_Cmd(DMA_Channel_TIM2, ENABLE);
 
 // 	/* Main loop */
 // 	ili9341_setaddress(0,0,319,239);

@@ -50,7 +50,9 @@ void Setup_TIM2()
 {
 	RST_CLK_PCLKcmd((RST_CLK_PCLK_TIMER2), ENABLE);
 	TIMER_DeInit(MDR_TIMER2);
-	TIMER_BRGInit(MDR_TIMER2, TIMER_HCLKdiv4);
+	TIMER_BRGInit(MDR_TIMER2, TIMER_HCLKdiv4);			// HCLK = 16 * 7 = 112 MHz
+														// 112 / 4 = 28 MHz
+														// Тактирование АЦП у нас 500 kHz, поэтому такую же частоту зададим и в ЦАП
 
 	// Заполним структуру для TIM2
 	TIMER_CntStructInit(&Cnt_sTim2);
@@ -60,15 +62,16 @@ void Setup_TIM2()
 	Cnt_sTim2.TIMER_FilterSampling = TIMER_FDTS_TIMER_CLK_div_4;		// Вспомогательная частота для фильтра в 4 раза меньше основной
 	Cnt_sTim2.TIMER_ARR_UpdateMode = TIMER_ARR_Update_Immediately;		// Изменение ARR таймера по переполнению
 	Cnt_sTim2.TIMER_IniCounter = 0;										// Инициализационное значение таймкра
-	Cnt_sTim2.TIMER_Period = PERIOD_T2 - 1;								// Значение ARR
-	Cnt_sTim2.TIMER_Prescaler = PRESCALER_T2;							// Делить системную частоту на 1000, т.е. будет 16 кГц           7
+	Cnt_sTim2.TIMER_Prescaler = PRESCALER_T2;							// делим на 12:  112 MHz / 4 / 12 
+	Cnt_sTim2.TIMER_Period = PERIOD_T2 - 1;								// Значение ARR делим на 10:  112 MHz / 4 / 12 / 10
+																		// Итоговая частота ЦАПа будет 250 кГц
 	
 	TIMER_CntInit(MDR_TIMER2, &Cnt_sTim2);
 	//NVIC_EnableIRQ(Timer2_IRQn);
 	TIMER_DMACmd(MDR_TIMER2, TIMER_STATUS_CNT_ARR, ENABLE);
 	
 	// // Включить таймер
-	// TIMER_Cmd(MDR_TIMER2, ENABLE);
+	TIMER_Cmd(MDR_TIMER2, ENABLE);
 }
 
 void set_DAC_table(int freq) 
