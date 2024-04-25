@@ -4789,29 +4789,74 @@ uint16_t lock_frame = 10;
 
 
 
-int convert_to_12_bit(uint8_t *arr, int size) {
- for (int i = 0, j = 0; i < size * 2; i++)
+
+void convert_to_8_bit(uint8_t *arr, int size)
+{
+
+ for(int i = 0; i < (size*2); i++)
  {
-  if ((i % 4) == 0)
-  {
-   continue;
-  }
-  if (j != i)
-   arr[j/2] &= 0x0F;
+  uint8_t high_byte = 0;
+  high_byte |= ((arr[i*2] & 0xF0) >> 4);
+  high_byte |= ((arr[((i*2)+1)] & 0x0F) << 4);
+  arr[i] = high_byte;
+
+
+
+
+
+
+
+ }
+
+}
+
+
+void convert_to_12_bit(uint8_t *arr, int size)
+{
+    int i = 3, j = 4;
+    while (j < size*2)
+    {
+        if (((j+1)%4) == 0)
+        {
+            j++;
+            continue;
+        }
 
   if ((i%2) == 0)
   {
 
-   arr[j/2] |= (arr[i/2] | 0xF0);
+   arr[i/2] &= 0xF0;
+   if((j%2) == 0)
+   {
+
+       arr[i/2] |= (arr[j/2] & 0x0F);
+   }
+   else
+   {
+
+       arr[i/2] |= ((arr[j/2] >> 4) & 0x0F);
+   }
   }
   else
   {
 
-   arr[j/2] |= (arr[i/2] | 0x0F);
+   arr[i/2] &= 0x0F;
+   if((j%2) == 0)
+   {
+
+       arr[i/2] |= ((arr[j/2] << 4) & 0xF0);
+   }
+   else
+   {
+
+       arr[i/2] |= (arr[j/2] & 0xF0);
+   }
   }
- }
+  j++;
+  i++;
+    }
 }
-# 83 "main.c"
+# 128 "main.c"
 int main(void)
 {
  Setup_CPU_Clock();
@@ -4831,8 +4876,7 @@ int main(void)
 
 
  ADC1_Cmd (ENABLE);
- ADC2_Cmd (ENABLE);
-# 148 "main.c"
+# 193 "main.c"
  while (1)
  {
   if (command_recived == 1)
@@ -4856,7 +4900,10 @@ int main(void)
   while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) == 0) ;
   DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_PRIMARY, &ADC1_primary_DMA_structure);
 
-   USB_CDC_SendData((uint8_t *)(main_array_for_ADC), ((128) * 2 ));
+
+
+  convert_to_8_bit(main_array_for_ADC, 128);
+  USB_CDC_SendData((uint8_t *)main_array_for_ADC, (((128 ) ) ));
 
 
 
@@ -4866,7 +4913,9 @@ int main(void)
   while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) != 0) ;
   DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_ALTERNATE, &ADC1_alternate_DMA_structure);
 
-   USB_CDC_SendData((uint8_t *)(alternate_array_for_ADC), ((128) * 2 ));
+
+  convert_to_8_bit(alternate_array_for_ADC, 128);
+  USB_CDC_SendData((uint8_t *)alternate_array_for_ADC, ((128 )));
 
 
 

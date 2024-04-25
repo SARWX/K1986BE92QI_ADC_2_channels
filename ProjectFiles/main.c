@@ -50,8 +50,30 @@ uint16_t lock_frame = 10;
 
 
 // TEST FUNCTION
+// uint8_t *convert_to_8_bit(uint16_t *old_arr, int size)
+void convert_to_8_bit(uint8_t *arr, int size)
+{
+	// static uint8_t new_arr[NUM_OF_MES];
+	for(int i = 0; i < (size*2); i++)
+	{
+		uint8_t high_byte = 0;
+		high_byte |= ((arr[i*2] & 0xF0) >> 4);
+		high_byte |= ((arr[((i*2)+1)] & 0x0F) << 4);
+		arr[i] = high_byte;
+		// for(int i = 0; i < size; i++)
+		// {
+		// 	uint16_t buf = (old_arr[i] );
+		// 	buf >>= 4;
+		// 	new_arr[i] = (uint8_t)buf;
+		// }
+		// int a = 0;
+	}
+	// return new_arr;
+}
+
 // Компрессор (вроде работает)
-int convert_to_12_bit(uint8_t *arr, int size) { 			// size задается в количестве 16 битных элементов
+void convert_to_12_bit(uint8_t *arr, int size) 
+{ 			// size задается в количестве 16 битных элементов
     int i = 3, j = 4; 
     while (j < size*2)
     {
@@ -122,7 +144,7 @@ int main(void)
  
 	// Включение АЦП и DMA для АЦП
 	ADC1_Cmd (ENABLE);						// разрешаем работу ADC1
-	ADC2_Cmd (ENABLE);						// разрешаем работу ADC2
+	// ADC2_Cmd (ENABLE);						// разрешаем работу ADC2
 // 	DMA_Cmd(DMA_Channel_ADC1, ENABLE);		// разрешаем работу DMA с каналом ADC1
 // 	// Включение DMA для ЦАП
 // 	DMA_Cmd(DMA_Channel_TIM2, ENABLE);
@@ -188,20 +210,25 @@ int main(void)
 		tuner = ((MDR_ADC->ADC2_RESULT >> 8) << 8);
 		
 		// 1 стадия - заполнение буфера, с использованием основной структуры DMA, параллельная передача буфера альтернативной по USB
-		while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) == 0) ;					// ждем, когда DMA перейдет на альтернативную структуру
-		DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_PRIMARY, &ADC1_primary_DMA_structure);		// реинициализируем основную структуру
+		while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) == 0) ;						// ждем, когда DMA перейдет на альтернативную структуру
+		DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_PRIMARY, &ADC1_primary_DMA_structure);			// реинициализируем основную структуру
 		// convert_to_12_bit((uint8_t *)(main_array_for_ADC), NUM_OF_MES);
-		 USB_CDC_SendData((uint8_t *)(main_array_for_ADC), ((NUM_OF_MES) * 2 ));					// отправка буфера основной структуры DMA по USB
+		// convert_to_8_bit(main_array_for_ADC, (uint8_t *)(main_array_for_ADC), NUM_OF_MES);
+		// convert_to_8_bit(main_array_for_ADC, NUM_OF_MES);
+		convert_to_8_bit(main_array_for_ADC, NUM_OF_MES);
+		USB_CDC_SendData((uint8_t *)main_array_for_ADC, (((NUM_OF_MES 	) ) ));					// отправка буфера основной структуры DMA по USB
 	
 		// {
 		// 	display_signal((uint16_t *)main_array_for_ADC, NUM_OF_MES, 1, ((tuner >> 8)));
 		// }
 
 		// 2 стадия - заполнение буфера, с использованием альтернативной структуры DMA, параллельная передача буфера основной по USB
-		while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) != 0) ;					// ждем, когда DMA перейдет на основную структуру
-		DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_ALTERNATE, &ADC1_alternate_DMA_structure);	// реинициализируем альтернативную структуру
+		while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) != 0) ;						// ждем, когда DMA перейдет на основную структуру
+		DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_ALTERNATE, &ADC1_alternate_DMA_structure);		// реинициализируем альтернативную структуру
 		// convert_to_12_bit((uint8_t *)(alternate_array_for_ADC), NUM_OF_MES);
-		 USB_CDC_SendData((uint8_t *)(alternate_array_for_ADC), ((NUM_OF_MES) * 2 ));			// отправка буфера альтернативной структуры DMA по USB
+		// convert_to_8_bit(alternate_array_for_ADC, (uint8_t *)(alternate_array_for_ADC), NUM_OF_MES);
+		convert_to_8_bit(alternate_array_for_ADC, NUM_OF_MES);
+		USB_CDC_SendData((uint8_t *)alternate_array_for_ADC, ((NUM_OF_MES )));			// отправка буфера альтернативной структуры DMA по USB
 
 		// {
 		// 	display_signal((uint16_t *)alternate_array_for_ADC, NUM_OF_MES, 1, ((tuner >> 8)));
