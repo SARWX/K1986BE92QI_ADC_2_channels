@@ -3000,13 +3000,16 @@ void Setup_DAC()
     PORT_DeInit(((MDR_PORT_TypeDef *) (0x400C8000)));
 
 
-    port_init_structure.PORT_Pin = PORT_Pin_0;
+    port_init_structure.PORT_Pin = PORT_Pin_0 | PORT_Pin_1;
     port_init_structure.PORT_OE = PORT_OE_IN;
     port_init_structure.PORT_MODE = PORT_MODE_ANALOG;
     PORT_Init(((MDR_PORT_TypeDef *) (0x400C8000)), &port_init_structure);
 
-
  DAC_DeInit();
+
+ DAC1_Init(DAC1_AVCC);
+ DAC1_Cmd(ENABLE);
+
  DAC2_Init(DAC2_AVCC);
  DAC2_Cmd(ENABLE);
 }
@@ -3015,7 +3018,7 @@ void Setup_TIM2()
 {
  RST_CLK_PCLKcmd((((uint32_t)(1U << ((((uint32_t)(0x40078000)) >> 15) & 0x1F)))), ENABLE);
  TIMER_DeInit(((MDR_TIMER_TypeDef *) (0x40078000)));
- TIMER_BRGInit(((MDR_TIMER_TypeDef *) (0x40078000)), TIMER_HCLKdiv4);
+ TIMER_BRGInit(((MDR_TIMER_TypeDef *) (0x40078000)), TIMER_HCLKdiv2);
 
 
 

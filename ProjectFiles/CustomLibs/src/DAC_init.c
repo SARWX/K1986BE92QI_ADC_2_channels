@@ -35,13 +35,16 @@ void Setup_DAC()
     PORT_DeInit(MDR_PORTE);
 	
 	// Конфигурируем выводы для ЦАП
-    port_init_structure.PORT_Pin   = PORT_Pin_0;				// АЦП 1 и 2 расположены на PD0 и PD1 (см. распиновку)
+    port_init_structure.PORT_Pin   = PORT_Pin_0;				//     PE9
     port_init_structure.PORT_OE    = PORT_OE_IN;				// Режим на вход
     port_init_structure.PORT_MODE  = PORT_MODE_ANALOG;			// Аналоговый вход (согласно спецификации)
     PORT_Init(MDR_PORTE, &port_init_structure);					// Инициализация выводов заданной структурой	
 	
-	// Настройка ЦАП
 	DAC_DeInit();												// Сбросить настройки ЦАП
+	// Настройка ЦАП 1
+	DAC1_Init(DAC1_AVCC);										// AVcc - опорное напряжение
+	DAC1_Cmd(ENABLE);
+	// Настройка ЦАП 2
 	DAC2_Init(DAC2_AVCC);										// AVcc - опорное напряжение
 	DAC2_Cmd(ENABLE);			
 }
@@ -50,7 +53,7 @@ void Setup_TIM2()
 {
 	RST_CLK_PCLKcmd((RST_CLK_PCLK_TIMER2), ENABLE);
 	TIMER_DeInit(MDR_TIMER2);
-	TIMER_BRGInit(MDR_TIMER2, TIMER_HCLKdiv4);			// HCLK = 16 * 7 = 112 MHz
+	TIMER_BRGInit(MDR_TIMER2, TIMER_HCLKdiv2);			// HCLK = 16 * 7 = 112 MHz
 														// 112 / 4 = 28 MHz
 														// Тактирование АЦП у нас 500 kHz, поэтому такую же частоту зададим и в ЦАП
 
