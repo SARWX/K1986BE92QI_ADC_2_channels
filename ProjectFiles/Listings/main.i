@@ -4880,7 +4880,14 @@ int main(void)
 
 
  DMA_Cmd(DMA_Channel_TIM2, ENABLE);
-# 193 "main.c"
+# 187 "main.c"
+execute_command("set 2.0 0.0 !");
+
+
+
+
+
+
  while (1)
  {
   if (command_recived == 1)

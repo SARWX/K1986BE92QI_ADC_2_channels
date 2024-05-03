@@ -2986,9 +2986,12 @@ extern DMA_CtrlDataInitTypeDef TIM2_alternate_DMA_structure;
 
 
 extern PORT_InitTypeDef port_init_structure;
+PORT_InitTypeDef PortInitStructure;
 
 
 TIMER_CntInitTypeDef Cnt_sTim2;
+TIMER_ChnInitTypeDef TimerChnInitStructure;
+TIMER_ChnOutInitTypeDef TimerChnOutInitStructure;
 
 void Setup_DAC()
 {
@@ -3000,7 +3003,7 @@ void Setup_DAC()
     PORT_DeInit(((MDR_PORT_TypeDef *) (0x400C8000)));
 
 
-    port_init_structure.PORT_Pin = PORT_Pin_0 | PORT_Pin_1;
+    port_init_structure.PORT_Pin = PORT_Pin_0;
     port_init_structure.PORT_OE = PORT_OE_IN;
     port_init_structure.PORT_MODE = PORT_MODE_ANALOG;
     PORT_Init(((MDR_PORT_TypeDef *) (0x400C8000)), &port_init_structure);
@@ -3030,29 +3033,68 @@ void Setup_TIM2()
  Cnt_sTim2.TIMER_FilterSampling = TIMER_FDTS_TIMER_CLK_div_4;
  Cnt_sTim2.TIMER_ARR_UpdateMode = TIMER_ARR_Update_Immediately;
  Cnt_sTim2.TIMER_IniCounter = 0;
- Cnt_sTim2.TIMER_Prescaler = 10;
- Cnt_sTim2.TIMER_Period = 12 - 1;
+ Cnt_sTim2.TIMER_Prescaler = 12;
+ Cnt_sTim2.TIMER_Period = 10 - 1;
 
 
  TIMER_CntInit(((MDR_TIMER_TypeDef *) (0x40078000)), &Cnt_sTim2);
+
+
+
+ RST_CLK_PCLKcmd (((uint32_t)(1U << ((((uint32_t)(0x400C8000)) >> 15) & 0x1F))) | ((uint32_t)(1U << ((((uint32_t)(0x40078000)) >> 15) & 0x1F))), ENABLE);
+ PORT_StructInit(&PortInitStructure);
+ PortInitStructure.PORT_FUNC = PORT_FUNC_ALTER;
+ PortInitStructure.PORT_OE = PORT_OE_OUT;
+ PortInitStructure.PORT_MODE = PORT_MODE_DIGITAL;
+ PortInitStructure.PORT_Pin = (PORT_Pin_2 | PORT_Pin_1);
+ PortInitStructure.PORT_SPEED = PORT_SPEED_MAXFAST;
+ PORT_Init (((MDR_PORT_TypeDef *) (0x400C8000)), &PortInitStructure);
+
+
+ TIMER_ChnStructInit (&TimerChnInitStructure);
+ TimerChnInitStructure.TIMER_CH_Number = TIMER_CHANNEL3;
+ TimerChnInitStructure.TIMER_CH_Mode = TIMER_CH_MODE_PWM;
+ TimerChnInitStructure.TIMER_CH_REF_Format = TIMER_CH_REF_Format3;
+ TIMER_ChnInit (((MDR_TIMER_TypeDef *) (0x40078000)), &TimerChnInitStructure);
+ TimerChnInitStructure.TIMER_CH_Number = TIMER_CHANNEL1;
+ TIMER_ChnInit (((MDR_TIMER_TypeDef *) (0x40078000)), &TimerChnInitStructure);
+
+ TIMER_ChnOutStructInit (&TimerChnOutInitStructure);
+ TimerChnOutInitStructure.TIMER_CH_Number = TIMER_CHANNEL3;
+ TimerChnOutInitStructure.TIMER_CH_DirOut_Polarity =
+ TIMER_CHOPolarity_NonInverted;
+ TimerChnOutInitStructure.TIMER_CH_DirOut_Source = TIMER_CH_OutSrc_REF;
+ TimerChnOutInitStructure.TIMER_CH_DirOut_Mode = TIMER_CH_OutMode_Output;
+ TimerChnOutInitStructure.TIMER_CH_NegOut_Polarity =
+ TIMER_CHOPolarity_NonInverted;
+ TimerChnOutInitStructure.TIMER_CH_NegOut_Source = TIMER_CH_OutSrc_REF;
+ TimerChnOutInitStructure.TIMER_CH_NegOut_Mode = TIMER_CH_OutMode_Output;
+ TIMER_ChnOutInit (((MDR_TIMER_TypeDef *) (0x40078000)), &TimerChnOutInitStructure);
+
+ TimerChnOutInitStructure.TIMER_CH_Number = TIMER_CHANNEL1;
+ TIMER_ChnOutInit (((MDR_TIMER_TypeDef *) (0x40078000)), &TimerChnOutInitStructure);
 
  TIMER_DMACmd(((MDR_TIMER_TypeDef *) (0x40078000)), TIMER_STATUS_CNT_ARR, ENABLE);
 
 
  TIMER_Cmd(((MDR_TIMER_TypeDef *) (0x40078000)), ENABLE);
+
+ TIMER_SetChnCompare (((MDR_TIMER_TypeDef *) (0x40078000)), TIMER_CHANNEL3, 5);
+ TIMER_SetChnCompare (((MDR_TIMER_TypeDef *) (0x40078000)), TIMER_CHANNEL1, 9);
+
 }
 
 void set_DAC_table(int freq)
 {
  freq = (int)((float)freq * 1.1);
- int tics = (((16000000 * 7 / 4) / (10 * 12)) / freq);
+ int tics = (((16000000 * 7 / 4) / (12 * 10)) / freq);
  int divider = 1;
  while(tics > 500)
  {
   divider *= 2;
   tics /= 2;
  }
- ((MDR_TIMER_TypeDef *) (0x40078000))->ARR = (12 * divider - 1);
+ ((MDR_TIMER_TypeDef *) (0x40078000))->ARR = (10 * divider - 1);
 
  double angle_inc = (6.28318 / tics);
  for (int i = 0; i < (tics); i++)

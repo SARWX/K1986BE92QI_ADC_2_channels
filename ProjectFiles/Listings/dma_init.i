@@ -1728,6 +1728,493 @@ FlagStatus RST_CLK_GetFlagStatus(RST_CLK_Flags RST_CLK_FLAG);
 # 3 "CustomLibs/src/DMA_init.c" 2
 # 1 "./CustomLibs/inc\\defines.h" 1
 # 4 "CustomLibs/src/DMA_init.c" 2
+# 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_timer.h" 1
+# 49 "./SPL/MDR32Fx/inc\\MDR32F9Qx_timer.h"
+typedef enum
+{
+    TIMER_CntMode_ClkFixedDir = (((uint32_t)0x0) << 6),
+    TIMER_CntMode_ClkChangeDir = (((uint32_t)0x1) << 6),
+    TIMER_CntMode_EvtFixedDir = (((uint32_t)0x2) << 6),
+    TIMER_CntMode_EvtChangeDir = (((uint32_t)0x3) << 6)
+} TIMER_Counter_Mode_TypeDef;
+# 65 "./SPL/MDR32Fx/inc\\MDR32F9Qx_timer.h"
+typedef enum
+{
+    TIMER_CntDir_Up = (((uint32_t)0x0) << 3),
+    TIMER_CntDir_Dn = (((uint32_t)0x1) << 3)
+} TIMER_Counter_Dir_TypeDef;
+
+
+
+
+
+
+
+typedef enum
+{
+    TIMER_EvSrc_TIM_CLK = (((uint32_t)0x0) << 8),
+    TIMER_EvSrc_TM1 = (((uint32_t)0x1) << 8),
+    TIMER_EvSrc_TM2 = (((uint32_t)0x2) << 8),
+    TIMER_EvSrc_TM3 = (((uint32_t)0x3) << 8),
+    TIMER_EvSrc_CH1 = (((uint32_t)0x4) << 8),
+    TIMER_EvSrc_CH2 = (((uint32_t)0x5) << 8),
+    TIMER_EvSrc_CH3 = (((uint32_t)0x6) << 8),
+    TIMER_EvSrc_CH4 = (((uint32_t)0x7) << 8),
+    TIMER_EvSrc_ETR = (((uint32_t)0x8) << 8)
+} TIMER_Event_Src_TypeDef;
+# 108 "./SPL/MDR32Fx/inc\\MDR32F9Qx_timer.h"
+typedef enum
+{
+    TIMER_FDTS_TIMER_CLK_div_1 = (((uint32_t)0x0) << 4),
+    TIMER_FDTS_TIMER_CLK_div_2 = (((uint32_t)0x1) << 4),
+    TIMER_FDTS_TIMER_CLK_div_3 = (((uint32_t)0x2) << 4),
+    TIMER_FDTS_TIMER_CLK_div_4 = (((uint32_t)0x3) << 4)
+} TIMER_Filter_Sampl_Clk_TypeDef;
+# 124 "./SPL/MDR32Fx/inc\\MDR32F9Qx_timer.h"
+typedef enum
+{
+    TIMER_ARR_Update_Immediately = (((uint32_t)0x0) << 1),
+    TIMER_ARR_Update_On_CNT_Overflow = (((uint32_t)0x1) << 1)
+} TIMER_ARR_Update_Mode_TypeDef;
+
+
+
+
+
+
+
+typedef enum
+{
+    TIMER_Filter_1FF_at_TIMER_CLK = ((uint32_t)0x0),
+    TIMER_Filter_2FF_at_TIMER_CLK = ((uint32_t)0x1),
+    TIMER_Filter_4FF_at_TIMER_CLK = ((uint32_t)0x2),
+    TIMER_Filter_8FF_at_TIMER_CLK = ((uint32_t)0x3),
+    TIMER_Filter_6FF_at_FTDS_div_2 = ((uint32_t)0x4),
+    TIMER_Filter_8FF_at_FTDS_div_2 = ((uint32_t)0x5),
+    TIMER_Filter_6FF_at_FTDS_div_4 = ((uint32_t)0x6),
+    TIMER_Filter_8FF_at_FTDS_div_4 = ((uint32_t)0x7),
+    TIMER_Filter_6FF_at_FTDS_div_8 = ((uint32_t)0x8),
+    TIMER_Filter_8FF_at_FTDS_div_8 = ((uint32_t)0x9),
+    TIMER_Filter_5FF_at_FTDS_div_16 = ((uint32_t)0xA),
+    TIMER_Filter_6FF_at_FTDS_div_16 = ((uint32_t)0xB),
+    TIMER_Filter_8FF_at_FTDS_div_16 = ((uint32_t)0xC),
+    TIMER_Filter_5FF_at_FTDS_div_32 = ((uint32_t)0xD),
+    TIMER_Filter_6FF_at_FTDS_div_32 = ((uint32_t)0xE),
+    TIMER_Filter_8FF_at_FTDS_div_32 = ((uint32_t)0xF)
+} TIMER_Filter_Config_TypeDef;
+# 176 "./SPL/MDR32Fx/inc\\MDR32F9Qx_timer.h"
+typedef enum
+{
+    TIMER_ETR_Prescaler_None = (((uint32_t)0x0) << 2),
+    TIMER_ETR_Prescaler_div_2 = (((uint32_t)0x1) << 2),
+    TIMER_ETR_Prescaler_div_4 = (((uint32_t)0x2) << 2),
+    TIMER_ETR_Prescaler_div_8 = (((uint32_t)0x3) << 2)
+} TIMER_ETR_Prescaler_TypeDef;
+# 192 "./SPL/MDR32Fx/inc\\MDR32F9Qx_timer.h"
+typedef enum
+{
+   TIMER_ETRPolarity_NonInverted = (((uint32_t)0x0) << 1),
+   TIMER_ETRPolarity_Inverted = (((uint32_t)0x1) << 1)
+} TIMER_ETR_Polarity_TypeDef;
+
+
+
+
+
+
+
+typedef enum
+{
+    TIMER_BRKPolarity_NonInverted = (((uint32_t)0x0) << 0),
+    TIMER_BRKPolarity_Inverted = (((uint32_t)0x1) << 0)
+} TIMER_BRK_Polarity_TypeDef;
+
+
+
+
+
+
+
+typedef enum
+{
+    TIMER_CHANNEL1 = ((uint32_t)0x0),
+    TIMER_CHANNEL2 = ((uint32_t)0x1),
+    TIMER_CHANNEL3 = ((uint32_t)0x2),
+    TIMER_CHANNEL4 = ((uint32_t)0x3)
+} TIMER_Channel_Number_TypeDef;
+# 232 "./SPL/MDR32Fx/inc\\MDR32F9Qx_timer.h"
+typedef enum
+{
+    TIMER_CH_MODE_PWM = (((uint32_t)0x0) << 15),
+    TIMER_CH_MODE_CAPTURE = (((uint32_t)0x1) << 15)
+} TIMER_CH_Mode_TypeDef;
+
+
+
+
+
+
+
+typedef enum
+{
+    TIMER_CH_ETR_RESET_Disable = (((uint32_t)0x0) << 13),
+    TIMER_CH_ETR_RESET_Enable = (((uint32_t)0x1) << 13)
+} TIMER_CH_ETR_RESET_TypeDef;
+
+
+
+
+
+
+
+typedef enum
+{
+    TIMER_CH_BRK_RESET_Disable = (((uint32_t)0x0) << 12),
+    TIMER_CH_BRK_RESET_Enable = (((uint32_t)0x1) << 12)
+} TIMER_CH_BRK_RESET_TypeDef;
+
+
+
+
+
+
+
+typedef enum
+{
+    TIMER_CH_REF_Format0 = (((uint32_t)0x0) << 9),
+    TIMER_CH_REF_Format1 = (((uint32_t)0x1) << 9),
+
+
+
+    TIMER_CH_REF_Format2 = (((uint32_t)0x2) << 9),
+
+
+
+    TIMER_CH_REF_Format3 = (((uint32_t)0x3) << 9),
+
+
+    TIMER_CH_REF_Format4 = (((uint32_t)0x4) << 9),
+    TIMER_CH_REF_Format5 = (((uint32_t)0x5) << 9),
+    TIMER_CH_REF_Format6 = (((uint32_t)0x6) << 9),
+
+
+
+    TIMER_CH_REF_Format7 = (((uint32_t)0x7) << 9)
+
+
+
+} TIMER_CH_REF_Format_TypeDef;
+# 306 "./SPL/MDR32Fx/inc\\MDR32F9Qx_timer.h"
+typedef enum
+{
+    TIMER_CH_Prescaler_None = ((uint32_t)0x0),
+    TIMER_CH_Prescaler_div_2 = ((uint32_t)0x1),
+    TIMER_CH_Prescaler_div_4 = ((uint32_t)0x2),
+    TIMER_CH_Prescaler_div_8 = ((uint32_t)0x3)
+} TIMER_CH_Prescaler_TypeDef;
+# 322 "./SPL/MDR32Fx/inc\\MDR32F9Qx_timer.h"
+typedef enum
+{
+    TIMER_CH_EvSrc_PE = (((uint32_t)0x0) << 4),
+    TIMER_CH_EvSrc_NE = (((uint32_t)0x1) << 4),
+    TIMER_CH_EvSrc_PE_OC1 = (((uint32_t)0x2) << 4),
+    TIMER_CH_EvSrc_PE_OC2 = (((uint32_t)0x3) << 4)
+} TIMER_CH_Event_Src_TypeDef;
+# 338 "./SPL/MDR32Fx/inc\\MDR32F9Qx_timer.h"
+typedef enum
+{
+    TIMER_CH_CCR1EvSrc_PE = (((uint32_t)0x0) << 0),
+    TIMER_CH_CCR1EvSrc_NE = (((uint32_t)0x1) << 0),
+    TIMER_CH_CCR1EvSrc_NE_OC1 = (((uint32_t)0x2) << 0),
+    TIMER_CH_CCR1EvSrc_NE_OC2 = (((uint32_t)0x3) << 0)
+} TIMER_CH_CCR1_Event_Src_TypeDef;
+# 354 "./SPL/MDR32Fx/inc\\MDR32F9Qx_timer.h"
+typedef enum
+{
+    TIMER_CH_CCR_Update_Immediately = (((uint32_t)0x0) << 3),
+    TIMER_CH_CCR_Update_On_CNT_eq_0 = (((uint32_t)0x1) << 3)
+} TIMER_CH_CCR_Update_Mode_TypeDef;
+
+
+
+
+
+
+
+typedef enum
+{
+    TIMER_CHOPolarity_NonInverted = ((uint32_t)0x0),
+    TIMER_CHOPolarity_Inverted = ((uint32_t)0x1)
+} TIMER_CH_OUT_Polarity_TypeDef;
+
+
+
+
+
+
+
+typedef enum
+{
+    TIMER_CH_OutSrc_Only_0 = ((uint32_t)0x0),
+    TIMER_CH_OutSrc_Only_1 = ((uint32_t)0x1),
+    TIMER_CH_OutSrc_REF = ((uint32_t)0x2),
+    TIMER_CH_OutSrc_DTG = ((uint32_t)0x3)
+} TIMER_CH_OUT_Src_TypeDef;
+# 394 "./SPL/MDR32Fx/inc\\MDR32F9Qx_timer.h"
+typedef enum
+{
+    TIMER_CH_OutMode_Input = ((uint32_t)0x0),
+    TIMER_CH_OutMode_Output = ((uint32_t)0x1),
+    TIMER_CH_OutMode_REF_as_OE = ((uint32_t)0x2),
+    TIMER_CH_OutMode_DTG_as_OE = ((uint32_t)0x3)
+} TIMER_CH_OUT_Mode_TypeDef;
+# 410 "./SPL/MDR32Fx/inc\\MDR32F9Qx_timer.h"
+typedef enum
+{
+    TIMER_CH_DTG_ClkSrc_TIMER_CLK = (((uint32_t)0x0) << 4),
+    TIMER_CH_DTG_ClkSrc_FDTS = (((uint32_t)0x1) << 4)
+} TIMER_CH_DTG_Clk_Src_TypeDef;
+
+
+
+
+
+
+
+typedef enum
+{
+    TIMER_STATUS_CNT_ZERO = (((uint32_t)0x1) << 0),
+    TIMER_STATUS_CNT_ARR = (((uint32_t)0x1) << 1),
+    TIMER_STATUS_ETR_RISING_EDGE = (((uint32_t)0x1) << 2),
+    TIMER_STATUS_ETR_FALLING_EDGE = (((uint32_t)0x1) << 3),
+    TIMER_STATUS_BRK = (((uint32_t)0x1) << 4),
+    TIMER_STATUS_CCR_CAP_CH1 = (((uint32_t)0x1) << 5),
+    TIMER_STATUS_CCR_CAP_CH2 = (((uint32_t)0x1) << 6),
+    TIMER_STATUS_CCR_CAP_CH3 = (((uint32_t)0x1) << 7),
+    TIMER_STATUS_CCR_CAP_CH4 = (((uint32_t)0x1) << 8),
+    TIMER_STATUS_CCR_REF_CH1 = (((uint32_t)0x1) << 9),
+    TIMER_STATUS_CCR_REF_CH2 = (((uint32_t)0x1) << 10),
+    TIMER_STATUS_CCR_REF_CH3 = (((uint32_t)0x1) << 11),
+    TIMER_STATUS_CCR_REF_CH4 = (((uint32_t)0x1) << 12),
+    TIMER_STATUS_CCR_CAP1_CH1 = (((uint32_t)0x1) << 13),
+    TIMER_STATUS_CCR_CAP1_CH2 = (((uint32_t)0x1) << 14),
+    TIMER_STATUS_CCR_CAP1_CH3 = (((uint32_t)0x1) << 15),
+    TIMER_STATUS_CCR_CAP1_CH4 = (((uint32_t)0x1) << 16)
+} TIMER_Status_Flags_TypeDef;
+# 506 "./SPL/MDR32Fx/inc\\MDR32F9Qx_timer.h"
+typedef enum
+{
+    TIMER_HCLKdiv1 = ((uint32_t)0x00),
+    TIMER_HCLKdiv2 = ((uint32_t)0x01),
+    TIMER_HCLKdiv4 = ((uint32_t)0x02),
+    TIMER_HCLKdiv8 = ((uint32_t)0x03),
+    TIMER_HCLKdiv16 = ((uint32_t)0x04),
+    TIMER_HCLKdiv32 = ((uint32_t)0x05),
+    TIMER_HCLKdiv64 = ((uint32_t)0x06),
+    TIMER_HCLKdiv128 = ((uint32_t)0x07)
+} TIMER_Clock_BRG_TypeDef;
+# 531 "./SPL/MDR32Fx/inc\\MDR32F9Qx_timer.h"
+typedef struct
+{
+
+    uint16_t TIMER_IniCounter;
+
+
+
+
+
+    uint16_t TIMER_Prescaler;
+
+
+
+    uint16_t TIMER_Period;
+
+
+
+
+
+
+
+    uint16_t TIMER_CounterMode;
+
+    uint16_t TIMER_CounterDirection;
+
+    uint16_t TIMER_EventSource;
+
+    uint16_t TIMER_FilterSampling;
+
+    uint16_t TIMER_ARR_UpdateMode;
+
+    uint16_t TIMER_ETR_FilterConf;
+
+    uint16_t TIMER_ETR_Prescaler;
+
+    uint16_t TIMER_ETR_Polarity;
+
+    uint16_t TIMER_BRK_Polarity;
+
+} TIMER_CntInitTypeDef;
+
+
+
+
+typedef struct
+{
+    uint16_t TIMER_CH_Number;
+
+    uint16_t TIMER_CH_Mode;
+
+    uint16_t TIMER_CH_ETR_Ena;
+
+    uint16_t TIMER_CH_ETR_Reset;
+
+    uint16_t TIMER_CH_BRK_Reset;
+
+    uint16_t TIMER_CH_REF_Format;
+
+    uint16_t TIMER_CH_Prescaler;
+
+    uint16_t TIMER_CH_EventSource;
+
+    uint16_t TIMER_CH_FilterConf;
+
+    uint16_t TIMER_CH_CCR_UpdateMode;
+
+    uint16_t TIMER_CH_CCR1_Ena;
+
+    uint16_t TIMER_CH_CCR1_EventSource;
+
+} TIMER_ChnInitTypeDef;
+
+
+
+
+typedef struct
+{
+    uint16_t TIMER_CH_Number;
+
+    uint16_t TIMER_CH_DirOut_Polarity;
+
+    uint16_t TIMER_CH_DirOut_Source;
+
+    uint16_t TIMER_CH_DirOut_Mode;
+
+    uint16_t TIMER_CH_NegOut_Polarity;
+
+    uint16_t TIMER_CH_NegOut_Source;
+
+    uint16_t TIMER_CH_NegOut_Mode;
+
+    uint16_t TIMER_CH_DTG_MainPrescaler;
+
+
+    uint16_t TIMER_CH_DTG_AuxPrescaler;
+
+
+    uint16_t TIMER_CH_DTG_ClockSource;
+
+} TIMER_ChnOutInitTypeDef;
+# 669 "./SPL/MDR32Fx/inc\\MDR32F9Qx_timer.h"
+void TIMER_DeInit(MDR_TIMER_TypeDef* TIMERx);
+
+void TIMER_CntInit(MDR_TIMER_TypeDef* TIMERx, const TIMER_CntInitTypeDef* TIMER_CntInitStruct);
+void TIMER_CntStructInit(TIMER_CntInitTypeDef* TIMER_CntInitStruct);
+
+void TIMER_Cmd(MDR_TIMER_TypeDef* TIMERx, FunctionalState NewState);
+
+
+
+
+
+    void TIMER_SetCounter(MDR_TIMER_TypeDef* TIMERx, uint16_t Counter);
+    uint16_t TIMER_GetCounter(MDR_TIMER_TypeDef* TIMERx);
+
+
+void TIMER_SetCntPrescaler(MDR_TIMER_TypeDef* TIMERx, uint16_t Prescaler);
+uint16_t TIMER_GetCntPrescaler(MDR_TIMER_TypeDef* TIMERx);
+
+
+
+
+
+
+    void TIMER_SetCntAutoreload(MDR_TIMER_TypeDef* TIMERx, uint16_t Autoreload);
+    void TIMER_CntAutoreloadConfig(MDR_TIMER_TypeDef* TIMERx, uint16_t Autoreload, TIMER_ARR_Update_Mode_TypeDef UpdateMode);
+    uint16_t TIMER_GetCntAutoreload(MDR_TIMER_TypeDef* TIMERx);
+
+
+void TIMER_CntEventSourceConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_Event_Src_TypeDef EventSource);
+void TIMER_FilterSamplingConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_Filter_Sampl_Clk_TypeDef Prescaler);
+void TIMER_CounterModeConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_Counter_Mode_TypeDef Mode);
+void TIMER_SetCounterDirection(MDR_TIMER_TypeDef* TIMERx, TIMER_Counter_Dir_TypeDef Direction);
+void TIMER_ETRInputConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_ETR_Prescaler_TypeDef Prescaler, TIMER_ETR_Polarity_TypeDef Polarity, TIMER_Filter_Config_TypeDef Filter);
+void TIMER_ETRFilterConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_Filter_Config_TypeDef Filter);
+void TIMER_ETRPrescalerConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_ETR_Prescaler_TypeDef Prescaler);
+void TIMER_ETRPolarityConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_ETR_Polarity_TypeDef Polarity);
+void TIMER_BRKPolarityConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_BRK_Polarity_TypeDef Polarity);
+TIMER_Counter_Dir_TypeDef TIMER_GetCounterDirection(MDR_TIMER_TypeDef* TIMERx);
+FlagStatus TIMER_GetCntWriteComplete(MDR_TIMER_TypeDef* TIMERx);
+
+void TIMER_ChnInit(MDR_TIMER_TypeDef* TIMERx, const TIMER_ChnInitTypeDef* TIMER_ChnInitStruct);
+void TIMER_ChnStructInit(TIMER_ChnInitTypeDef* TIMER_ChnInitStruct);
+
+
+
+
+
+
+    void TIMER_SetChnCompare(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel, uint16_t Compare);
+    void TIMER_ChnCompareConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel, uint16_t Compare, TIMER_CH_CCR_Update_Mode_TypeDef UpdateMode);
+    uint16_t TIMER_GetChnCapture(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel);
+
+
+
+
+
+
+
+    void TIMER_SetChnCompare1(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel, uint16_t Compare);
+    void TIMER_ChnCompare1Config(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel, uint16_t Compare, TIMER_CH_CCR_Update_Mode_TypeDef UpdateMode);
+    uint16_t TIMER_GetChnCapture1(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel);
+
+
+void TIMER_ChnETR_Cmd(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel, FunctionalState NewState);
+void TIMER_ChnETRResetConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel, TIMER_CH_ETR_RESET_TypeDef NewState);
+void TIMER_ChnBRKResetConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel, TIMER_CH_BRK_RESET_TypeDef NewState);
+void TIMER_ChnREFFormatConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel, TIMER_CH_REF_Format_TypeDef Format);
+void TIMER_ChnCapturePrescalerConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel, TIMER_CH_Prescaler_TypeDef Prescaler);
+void TIMER_ChnEventSourceConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel, TIMER_CH_Event_Src_TypeDef EventSource);
+void TIMER_ChnFilterConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel, TIMER_Filter_Config_TypeDef Filter);
+FlagStatus TIMER_GetChnWriteComplete(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel);
+void TIMER_ChnCCR1_EventSourceConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel, TIMER_CH_CCR1_Event_Src_TypeDef EventSource);
+void TIMER_ChnCCR1_Cmd(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel, FunctionalState NewState);
+
+void TIMER_ChnOutInit(MDR_TIMER_TypeDef* TIMERx, const TIMER_ChnOutInitTypeDef* TIMER_ChnOutInitStruct);
+void TIMER_ChnOutStructInit(TIMER_ChnOutInitTypeDef* TIMER_ChnOutInitStruct);
+void TIMER_ChnOutConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel, TIMER_CH_OUT_Src_TypeDef OutSource, TIMER_CH_OUT_Mode_TypeDef Mode, TIMER_CH_OUT_Polarity_TypeDef Polarity);
+void TIMER_ChnOutSourceConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel, TIMER_CH_OUT_Src_TypeDef OutSource);
+void TIMER_ChnOutModeConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel, TIMER_CH_OUT_Mode_TypeDef Mode);
+void TIMER_ChnOutPolarityConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel, TIMER_CH_OUT_Polarity_TypeDef Polarity);
+void TIMER_ChnNOutConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel, TIMER_CH_OUT_Src_TypeDef OutSource, TIMER_CH_OUT_Mode_TypeDef Mode, TIMER_CH_OUT_Polarity_TypeDef Polarity);
+void TIMER_ChnNOutSourceConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel, TIMER_CH_OUT_Src_TypeDef OutSource);
+void TIMER_ChnNOutModeConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel, TIMER_CH_OUT_Mode_TypeDef Mode);
+void TIMER_ChnNOutPolarityConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel, TIMER_CH_OUT_Polarity_TypeDef Polarity);
+void TIMER_ChnOutDTGConfig(MDR_TIMER_TypeDef* TIMERx, TIMER_Channel_Number_TypeDef Channel, uint32_t MainPrescaler, uint32_t AuxPrescaler, TIMER_CH_DTG_Clk_Src_TypeDef ClockSource);
+
+uint32_t TIMER_GetStatus(MDR_TIMER_TypeDef* TIMERx);
+FlagStatus TIMER_GetFlagStatus(MDR_TIMER_TypeDef* TIMERx, TIMER_Status_Flags_TypeDef Flag);
+void TIMER_ClearFlag(MDR_TIMER_TypeDef* TIMERx, uint32_t Flags);
+
+
+
+    void TIMER_DMACmd(MDR_TIMER_TypeDef* TIMERx, uint32_t TIMER_DMASource, FunctionalState NewState);
+
+
+void TIMER_ITConfig(MDR_TIMER_TypeDef* TIMERx, uint32_t TIMER_IT, FunctionalState NewState);
+ITStatus TIMER_GetITStatus(MDR_TIMER_TypeDef* TIMERx, TIMER_Status_Flags_TypeDef TIMER_IT);
+
+void TIMER_BRGInit(MDR_TIMER_TypeDef* TIMERx, TIMER_Clock_BRG_TypeDef TIMER_BRG);
+# 5 "CustomLibs/src/DMA_init.c" 2
 # 1 "./CustomLibs/inc\\DMA_init.h" 1
 
 
@@ -1735,7 +2222,7 @@ FlagStatus RST_CLK_GetFlagStatus(RST_CLK_Flags RST_CLK_FLAG);
 extern DMA_CtrlDataInitTypeDef ADC1_primary_DMA_structure;
 extern DMA_CtrlDataInitTypeDef ADC1_alternate_DMA_structure;
 void Setup_DMA();
-# 5 "CustomLibs/src/DMA_init.c" 2
+# 6 "CustomLibs/src/DMA_init.c" 2
 
 
 extern uint32_t count_dma_interrupts;
@@ -1845,8 +2332,8 @@ void Setup_DMA()
 
 
  TIM2_DMA_structure.DMA_PriCtrlData = &TIM2_primary_DMA_structure;
- TIM2_DMA_structure.DMA_Priority = DMA_Priority_Default;
- TIM2_DMA_structure.DMA_UseBurst = DMA_BurstClear;
+ TIM2_DMA_structure.DMA_Priority = DMA_Priority_High;
+ TIM2_DMA_structure.DMA_UseBurst = DMA_BurstSet;
  TIM2_DMA_structure.DMA_SelectDataStructure = DMA_CTRL_DATA_PRIMARY;
 
 
@@ -1864,15 +2351,15 @@ void Setup_DMA()
  1 << DMA_Channel_SSP2_TX);
 
   NVIC_EnableIRQ(DMA_IRQn);
- NVIC_SetPriority (DMA_IRQn, 15);
+ NVIC_SetPriority (DMA_IRQn, 0);
 
 
  ((MDR_DMA_TypeDef *) (0x40028000))->CHNL_ENABLE_SET = (1 << DMA_Channel_TIM2);
 }
 
 void DMA_IRQHandler() {
- count_dma_interrupts++;
- if(DMA_GetFlagStatus(DMA_Channel_TIM2, DMA_FLAG_CHNL_ALT) == RESET)
+# 152 "CustomLibs/src/DMA_init.c"
+          if(DMA_GetFlagStatus(DMA_Channel_TIM2, DMA_FLAG_CHNL_ALT) == RESET)
  {
   DMA_CtrlInit(DMA_Channel_TIM2, DMA_CTRL_DATA_ALTERNATE, &TIM2_alternate_DMA_structure);
  }

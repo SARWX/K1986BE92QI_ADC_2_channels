@@ -10,8 +10,8 @@
 #define AIRCR_SETTING 0x5FA0500			// Настройка для регистра AIRCR
 #define VECTOR_TABLE_OFFSET 0x08000000	// Смещение таблицы векторов (см. спецификацию)
 #define WHOLE_WORD 0xFFFFFFFF			// Константа отображающая 32 битное слово
-#define PRESCALER_T2 10					// Определяет воо сколько раз будет делиться системная частота для ЦАП
-#define PERIOD_T2 12					// Определяет период работы ЦАП
+#define PRESCALER_T2 12					// Определяет воо сколько раз будет делиться системная частота для ЦАП
+#define PERIOD_T2 10					// Определяет период работы ЦАП
 #define HSE_FREQ 16000000
 #define CPU_PLL 7
 #define CPU_DIV 4

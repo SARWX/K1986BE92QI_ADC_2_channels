@@ -183,7 +183,8 @@ int main(void)
 	
 
 
-
+// TEST
+execute_command("set 2.0 0.0 !");
 
 
 
