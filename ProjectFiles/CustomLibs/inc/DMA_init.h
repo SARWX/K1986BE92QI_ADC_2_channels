@@ -1,3 +1,14 @@
+/**
+  ******************************************************************************
+  * @file    DMA_init.c
+  * @author  ICV
+  * @version V1.0.0
+  * @date    08/05/2024
+  * @brief   DMA initialization Header File.
+  * ******************************************************************************
+  */
+
+/* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef DMA_init
 #define DMA_init
 // Структуры для DMA

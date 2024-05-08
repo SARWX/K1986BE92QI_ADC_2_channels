@@ -1,5 +1,5 @@
 #include <stdint.h>
-
+/* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef _ILI9341_INTERFACE_H_
 #define _ILI9341_INTERFACE_H_
 

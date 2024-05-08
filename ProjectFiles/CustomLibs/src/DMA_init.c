@@ -1,3 +1,14 @@
+/**
+  ******************************************************************************
+  * @file    DMA_init.c
+  * @author  ICV
+  * @version V1.0.0
+  * @date    08/05/2024
+  * @brief   This file contains initialization of DMA also DMA_IRQHandler
+  * ******************************************************************************
+  */
+
+/* Includes ------------------------------------------------------------------*/
 #include "MDR32F9Qx_dma.h"
 #include "MDR32F9Qx_rst_clk.h"
 #include "defines.h"
@@ -21,6 +32,13 @@ DMA_CtrlDataInitTypeDef ADC1_alternate_DMA_structure;				// Альтернати
 DMA_CtrlDataInitTypeDef TIM2_primary_DMA_structure;
 DMA_CtrlDataInitTypeDef TIM2_alternate_DMA_structure;
 
+/**
+  * @brief  Configure DMA for: \n 
+  * 1) ADC - automaticly collect ADC mesurenments into main_array_for_ADC and alternate_array_for_ADC \n
+  * 2) DAC - automaticaly set new DAC value, every TIM2 tick 
+  * @param  None
+  * @retval None
+  */
 void Setup_DMA() 
 {
 	// Разрешить тактирование DMA
@@ -137,6 +155,12 @@ void Setup_DMA()
 	MDR_DMA->CHNL_ENABLE_SET = (1 << DMA_Channel_TIM2);
 }
 
+/**
+  * @brief  Interrupt handler for: DMA \n 
+  * this function rised every time when DMA cycle ends, currently this handler devoted to reinit the TIM2 DMA structures
+  * @param  None
+  * @retval None
+  */
 void DMA_IRQHandler() {	
 	// count_dma_interrupts++;
 	// if (count_dma_interrupts > 100)
@@ -159,3 +183,7 @@ void DMA_IRQHandler() {
 	}
 //		NVIC_ClearPendingIRQ (DMA_IRQn);
 }
+
+/*********************** (C) COPYRIGHT 2024 ICV ****************************
+*
+* END OF FILE DMA_init.c */

@@ -1,3 +1,14 @@
+/**
+  ******************************************************************************
+  * @file    sys_CLK_init.c
+  * @author  ICV
+  * @version V1.0.0
+  * @date    08/05/2024
+  * @brief   This file contains initialization of System Core Clock
+  * ******************************************************************************
+  */
+
+/* Includes ------------------------------------------------------------------*/
 #include "MDR32F9Qx_rst_clk.h"
 #include "MDR32F9Qx_port.h"
 #include <stdint.h>
@@ -5,7 +16,11 @@
 #include "defines.h"
 #include "delay.h"
 
-
+/**
+  * @brief  Switch to the HSE, configure and enable PLL 
+  * @param  None
+  * @retval None
+  */
 void Setup_CPU_Clock(void) 
 {
 	/* Подлючаем HSE */
@@ -58,3 +73,7 @@ void Setup_CPU_Clock(void)
 	RST_CLK_CPU_PLLuse(ENABLE);
 	RST_CLK_CPUclkSelection(RST_CLK_CPUclkCPU_C3);
 }
+
+/*********************** (C) COPYRIGHT 2024 ICV ****************************
+*
+* END OF FILE sys_CLK_init.c */

@@ -1,3 +1,14 @@
+/**
+  ******************************************************************************
+  * @file    ADC_init.c
+  * @author  ICV
+  * @version V1.0.0
+  * @date    08/05/2024
+  * @brief   This file contains initialization of ADC.
+  * ******************************************************************************
+  */
+ 
+/* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef _ILI9341GFX_H_
 #define _ILI9341GFX_H_
 

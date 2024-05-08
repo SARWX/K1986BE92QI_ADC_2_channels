@@ -1,3 +1,16 @@
+/**
+  ******************************************************************************
+  * @file    DAC_init.c
+  * @author  ICV
+  * @version V1.0.0
+  * @date    08/05/2024
+  * @brief   This file contains initialization of DAC, TIM2
+  * and set_sin_DAC_table() function for initializing table of 
+  * values for DAC with sinusoid.
+  * ******************************************************************************
+  */
+
+/* Includes ------------------------------------------------------------------*/
 #include "MDR32F9Qx_rst_clk.h"
 #include "MDR32F9Qx_port.h"
 #include "MDR32F9Qx_dac.h"
@@ -28,6 +41,12 @@ TIMER_CntInitTypeDef Cnt_sTim2;
 TIMER_ChnInitTypeDef TimerChnInitStructure;
 TIMER_ChnOutInitTypeDef TimerChnOutInitStructure;
 
+/**
+  * @brief  Init DAC: 
+  * Setup and enable DAC
+  * @param  None
+  * @retval None
+  */
 void Setup_DAC() 
 {
 	// Подключаем тактирование к блоку ЦАП, и порту E 
@@ -52,6 +71,14 @@ void Setup_DAC()
 	DAC2_Cmd(ENABLE);			
 }
 
+/**
+  * @brief  Init IIM2: 
+  * Configure TIM2 frequence, also function configures
+  * PE1 and PE2 to work as demultiplexing control outputs
+  * at the end function enables timer
+  * @param  None
+  * @retval None
+  */
 void Setup_TIM2() 
 {
 	RST_CLK_PCLKcmd((RST_CLK_PCLK_TIMER2), ENABLE);
@@ -119,7 +146,14 @@ void Setup_TIM2()
 	
 }
 
-void set_DAC_table(int freq) 
+/**
+  * @brief  Init DAC: 
+  * This function set DAC table so that DAC will give us
+  * sinusoid with specified frequence.
+  * @param  int
+  * @retval None
+  */
+void set_sin_DAC_table(int freq) 
 {
 	freq = (int)((float)freq * CORRECTION_FACTOR); 	// Поправочный коэффициент
 	int tics = (DISCRET_FREQ / freq);				// Сколько тиков таймера отвести на период синусоиды с частотой freq
@@ -142,3 +176,7 @@ void set_DAC_table(int freq)
 	TIM2_primary_DMA_structure.DMA_CycleSize = (tics);								// Сколько измерений (DMA передач) содержит 1 DMA цикл
 	TIM2_alternate_DMA_structure.DMA_CycleSize = (tics);							// Сколько измерений (DMA передач) содержит 1 DMA цикл
 }
+
+/*********************** (C) COPYRIGHT 2024 ICV ****************************
+*
+* END OF FILE DAC_init.c */

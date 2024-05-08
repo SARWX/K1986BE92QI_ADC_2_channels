@@ -1,3 +1,14 @@
+/**
+  ******************************************************************************
+  * @file    USB_init.c
+  * @author  ICV
+  * @version V1.0.0
+  * @date    08/05/2024
+  * @brief   This file contains initialization of USB CDC
+  * ******************************************************************************
+  */
+
+/* Includes ------------------------------------------------------------------*/
 #include "MDR32F9Qx_config.h"
 #include "MDR32F9Qx_usb_handlers.h"
 #include "MDR32F9Qx_rst_clk.h"
@@ -27,6 +38,11 @@ char tempString[100];			   //debug
 static USB_CDC_LineCoding_TypeDef LineCoding;
 #endif /* USB_CDC_LINE_CODING_SUPPORTED */
 
+/**
+  * @brief  Configures and enables USB peripheral
+  * @param  None
+  * @retval None
+  */
 void Setup_USB(void) 
 {
 	/* Enables the CPU_CLK clock on USB */
@@ -51,6 +67,11 @@ void Setup_USB(void)
 	USB_DEVICE_HANDLE_RESET;
 }
 
+/**
+  * @brief  Configures Communications Device Class 
+  * @param  None
+  * @retval None
+  */
 void VCom_Configuration(void) 
 {
 	#ifdef USB_CDC_LINE_CODING_SUPPORTED
@@ -62,6 +83,11 @@ void VCom_Configuration(void)
 	#endif /* USB_CDC_LINE_CODING_SUPPORTED */
 }
 
+/**
+  * @brief  Callback function for reciving data through USB CDC 
+  * @param  None
+  * @retval result of the reception @ref USB_Result
+  */
 USB_Result USB_CDC_RecieveData(uint8_t *buffer, uint32_t Length) 
 {
 	memcpy(rec_buf, buffer, BUFFER_LENGTH);
@@ -99,3 +125,7 @@ USB_Result USB_CDC_SetLineCoding(uint16_t wINDEX, const USB_CDC_LineCoding_TypeD
 }
 
 #endif /* USB_CDC_LINE_CODING_SUPPORTED */
+
+/*********************** (C) COPYRIGHT 2024 ICV ****************************
+*
+* END OF FILE USB_init.c */
