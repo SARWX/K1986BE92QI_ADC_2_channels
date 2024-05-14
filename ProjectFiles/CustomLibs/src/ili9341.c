@@ -6,6 +6,14 @@
 #include "delay.h"
 #include "defines.h"
 
+// Для touch screen команды на чтение координат
+#define READ_X 0xD0
+#define READ_Y 0x90
+
+// Для USB отладки
+char tempString[100];
+
+
 volatile uint16_t LCD_W=ILI9341_TFTWIDTH;
 volatile uint16_t LCD_H=ILI9341_TFTHEIGHT;
 
@@ -24,19 +32,13 @@ void test(void)
 
 void ili9341_writecommand8(uint8_t com)			// Передать команду
 {
-	// PORT_ResetBits(MDR_PORTB, PORT_Pin_6);		// dc = 0
 	MDR_PORTB->RXTX &= ~(PORT_Pin_6);			// dc = 0
-//	PORT_ResetBits(MDR_PORTF, PORT_Pin_2);		// cs = 0
 	MDR_PORTF->RXTX &= ~(PORT_Pin_2);			// cs = 0
-//	delay_us(5);//little delay
-	// SSP_SendData(MDR_SSP1, com);
 	MDR_SSP1->DR = com;
 	while (MDR_SSP1->SR & SSP_SR_BSY)			// 1 – модуль SSP в настоящее время передает и/или принимает данные, либо буфер FIFO передатчика не пуст
 	{
 		;										// wait
 	}
-	
-//	PORT_SetBits(MDR_PORTB, PORT_Pin_6); 		// cs = 1
 	MDR_PORTF->RXTX |= PORT_Pin_2;			// cs = 1
 }
 
@@ -395,5 +397,85 @@ void Setup_ili9341(void)
 	ili9341_init();         	// Проинициализировать ili9341
 	ili9341_clear(BLACK);   		// Заполнить экран одним цветом
 	delay_ms(1000);
-	ili9341_setRotation(0); 	// Задать ориентацию БЫЛА 3
+	ili9341_setRotation(1); 	// Задать ориентацию БЫЛА 3
+}
+
+////// TOUCH ///////
+bool ILI9341_TouchGetCoordinates(uint16_t* x, uint16_t* y) {
+    static const uint8_t cmd_read_x[] = { READ_X };
+    static const uint8_t cmd_read_y[] = { READ_Y };
+    static const uint8_t zeroes_tx[] = { 0x00, 0x00 };
+
+    // ILI9341_TouchSelect();		// Это CS = 0, а я сделал это в самой функции
+
+    uint32_t avg_x = 0;
+    uint32_t avg_y = 0;
+    uint8_t nsamples = 0;
+    for(uint8_t i = 0; i < 16; i++) {
+        if(!ILI9341_TouchPressed())		// Проверяем пин с прерыванием
+            break;
+
+        nsamples++;
+
+		// 1 - посылаем команду для чтения Y
+        // HAL_SPI_Transmit(&ILI9341_TOUCH_SPI_PORT,
+        //     (uint8_t*)cmd_read_y, sizeof(cmd_read_y), HAL_MAX_DELAY);
+		ili9341_touch_writecommand8(READ_Y);
+
+		// 2 - прочитаем полученный Y
+        // uint8_t y_raw[2];
+        uint16_t y_raw;
+        // HAL_SPI_TransmitReceive(&ILI9341_TOUCH_SPI_PORT,
+        //     (uint8_t*)zeroes_tx, y_raw, sizeof(y_raw), HAL_MAX_DELAY);
+		y_raw = SSP_ReceiveData(MDR_SSP1);
+
+		// 3 - Аналогично для X (команда чтения)
+        // HAL_SPI_Transmit(&ILI9341_TOUCH_SPI_PORT,
+        //     (uint8_t*)cmd_read_x, sizeof(cmd_read_x), HAL_MAX_DELAY);
+		ili9341_touch_writecommand8(READ_X);
+
+		// 4 - Прочитаем X
+        // uint8_t x_raw[2];
+        uint16_t x_raw;
+        // HAL_SPI_TransmitReceive(&ILI9341_TOUCH_SPI_PORT,
+        //     (uint8_t*)zeroes_tx, x_raw, sizeof(x_raw), HAL_MAX_DELAY);
+		y_raw = SSP_ReceiveData(MDR_SSP1);
+
+
+        // avg_x += (((uint16_t)x_raw[0]) << 8) | ((uint16_t)x_raw[1]);
+        // avg_y += (((uint16_t)y_raw[0]) << 8) | ((uint16_t)y_raw[1]);
+
+		USB_Print("raw_x = %d, raw_y = %d\r\n", x_raw, y_raw);
+    }
+}
+
+// Передача команды
+void ili9341_touch_writecommand8(uint8_t com)			// Передать команду
+{
+	// MDR_PORTB->RXTX &= ~(PORT_Pin_6);			// dc = 0
+	MDR_PORTB->RXTX &= ~(PORT_Pin_10);			// cs = 0 PB10 для touch
+	MDR_SSP1->DR = com;
+	while (MDR_SSP1->SR & SSP_SR_BSY)			// 1 – модуль SSP в настоящее время передает и/или принимает данные, либо буфер FIFO передатчика не пуст
+	{
+		;										// wait
+	}
+	MDR_PORTB->RXTX |= PORT_Pin_10;				// cs = 1
+}
+
+bool ILI9341_TouchPressed()
+{
+	return ((bool)( PORT_ReadInputDataBit(MDR_PORTB, PORT_Pin_TypeDef PORT_Pin_9)) );
+}
+
+// Отладка
+void USB_Print(char *format, ...)
+{
+	va_list argptr;
+	va_start(argptr, format);
+
+	vsprintf(tempString, format, argptr);
+	va_end(argptr);
+	USB_CDC_SendData((uint8_t *)tempString, strlen(tempString));
+	
+	//delayTick(timeout);
 }

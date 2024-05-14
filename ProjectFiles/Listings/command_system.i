@@ -5,6 +5,7 @@
 # 1 "<command line>" 1
 # 1 "<built-in>" 2
 # 1 "CustomLibs/src/command_system.c" 2
+# 12 "CustomLibs/src/command_system.c"
 # 1 "./SPL/MDR32Fx/inc/USB_Library\\MDR32F9Qx_usb_CDC.h" 1
 # 32 "./SPL/MDR32Fx/inc/USB_Library\\MDR32F9Qx_usb_CDC.h"
 # 1 "./SPL/MDR32Fx\\MDR32F9Qx_config.h" 1
@@ -1758,7 +1759,7 @@ USB_Result USB_CDC_DummyControlLineState(uint16_t wVALUE, uint16_t wINDEX);
 
 
 USB_Result USB_CDC_DummySendBreak(uint16_t wVALUE, uint16_t wINDEX);
-# 2 "CustomLibs/src/command_system.c" 2
+# 13 "CustomLibs/src/command_system.c" 2
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_dma.h" 1
 # 57 "./SPL/MDR32Fx/inc\\MDR32F9Qx_dma.h"
 typedef enum
@@ -2037,7 +2038,7 @@ void DMA_ClearError(void);
 uint32_t DMA_GetCurrTransferCounter(uint8_t DMA_Channel, DMA_Data_Struct_Selection DMA_CtrlData);
 
 FlagStatus DMA_GetFlagStatus(uint8_t DMA_Channel, DMA_Flags DMA_Flag);
-# 3 "CustomLibs/src/command_system.c" 2
+# 14 "CustomLibs/src/command_system.c" 2
 # 1 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 1 3
 # 51 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
     typedef unsigned int size_t;
@@ -2161,7 +2162,7 @@ extern __attribute__((__nothrow__)) void _membitmovehl(void * , const void * , i
 extern __attribute__((__nothrow__)) void _membitmovehb(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
 extern __attribute__((__nothrow__)) void _membitmovewl(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
 extern __attribute__((__nothrow__)) void _membitmovewb(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
-# 4 "CustomLibs/src/command_system.c" 2
+# 15 "CustomLibs/src/command_system.c" 2
 # 1 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 1 3
 # 91 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdlib.h" 3
     typedef unsigned short wchar_t;
@@ -2369,23 +2370,19 @@ extern __attribute__((__nothrow__)) void __use_no_heap_region(void);
 
 extern __attribute__((__nothrow__)) char const *__C_library_version_string(void);
 extern __attribute__((__nothrow__)) int __C_library_version_number(void);
-# 5 "CustomLibs/src/command_system.c" 2
+# 16 "CustomLibs/src/command_system.c" 2
 # 1 "./CustomLibs/inc\\ADC_init.h" 1
-
-
-
+# 15 "./CustomLibs/inc\\ADC_init.h"
 void Setup_ADC();
-# 6 "CustomLibs/src/command_system.c" 2
+# 17 "CustomLibs/src/command_system.c" 2
 # 1 "./CustomLibs/inc\\defines.h" 1
-# 7 "CustomLibs/src/command_system.c" 2
+# 18 "CustomLibs/src/command_system.c" 2
 # 1 "./CustomLibs/inc\\DAC_init.h" 1
-
-
-
+# 14 "./CustomLibs/inc\\DAC_init.h"
 void Setup_DAC();
 void Setup_TIM2();
-void set_DAC_table(int freq);
-# 8 "CustomLibs/src/command_system.c" 2
+void set_sin_DAC_table(int freq);
+# 19 "CustomLibs/src/command_system.c" 2
 
 extern uint16_t DAC_table[500];
 extern DMA_CtrlDataInitTypeDef TIM2_primary_DMA_structure;
@@ -2393,15 +2390,14 @@ extern DMA_CtrlDataInitTypeDef TIM2_alternate_DMA_structure;
 
 float get_voltage_num(char *command, int *i);
 int convert_voltage_to_register_val(float voltage);
-
-
+# 34 "CustomLibs/src/command_system.c"
 void execute_command(char *command)
 {
 
   if (strstr(command, "set freq ") == command)
   {
     int freq = atoi((char *)(command + strlen("set freq ")));
-      set_DAC_table(freq);
+      set_sin_DAC_table(freq);
   }
 
 
@@ -2446,7 +2442,7 @@ void execute_command(char *command)
   }
 
 }
-
+# 106 "CustomLibs/src/command_system.c"
   float get_voltage_num(char *command, int *i)
   {
   float num = 0.0;
@@ -2480,7 +2476,7 @@ void execute_command(char *command)
     }
     return(num);
   }
-
+# 147 "CustomLibs/src/command_system.c"
 int convert_voltage_to_register_val(float voltage)
 {
   voltage /= 3.3;

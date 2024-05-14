@@ -5,6 +5,7 @@
 # 1 "<command line>" 1
 # 1 "<built-in>" 2
 # 1 "CustomLibs/src/DMA_init.c" 2
+# 12 "CustomLibs/src/DMA_init.c"
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_dma.h" 1
 # 32 "./SPL/MDR32Fx/inc\\MDR32F9Qx_dma.h"
 # 1 "./SPL/MDR32Fx\\MDR32F9Qx_config.h" 1
@@ -1477,7 +1478,7 @@ void DMA_ClearError(void);
 uint32_t DMA_GetCurrTransferCounter(uint8_t DMA_Channel, DMA_Data_Struct_Selection DMA_CtrlData);
 
 FlagStatus DMA_GetFlagStatus(uint8_t DMA_Channel, DMA_Flags DMA_Flag);
-# 2 "CustomLibs/src/DMA_init.c" 2
+# 13 "CustomLibs/src/DMA_init.c" 2
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h" 1
 # 49 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h"
 typedef struct
@@ -1725,9 +1726,9 @@ void RST_CLK_PCLKcmd(uint32_t RST_CLK_PCLK, FunctionalState NewState);
 void RST_CLK_GetClocksFreq(RST_CLK_FreqTypeDef* RST_CLK_Clocks);
 
 FlagStatus RST_CLK_GetFlagStatus(RST_CLK_Flags RST_CLK_FLAG);
-# 3 "CustomLibs/src/DMA_init.c" 2
+# 14 "CustomLibs/src/DMA_init.c" 2
 # 1 "./CustomLibs/inc\\defines.h" 1
-# 4 "CustomLibs/src/DMA_init.c" 2
+# 15 "CustomLibs/src/DMA_init.c" 2
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_timer.h" 1
 # 49 "./SPL/MDR32Fx/inc\\MDR32F9Qx_timer.h"
 typedef enum
@@ -2214,15 +2215,13 @@ void TIMER_ITConfig(MDR_TIMER_TypeDef* TIMERx, uint32_t TIMER_IT, FunctionalStat
 ITStatus TIMER_GetITStatus(MDR_TIMER_TypeDef* TIMERx, TIMER_Status_Flags_TypeDef TIMER_IT);
 
 void TIMER_BRGInit(MDR_TIMER_TypeDef* TIMERx, TIMER_Clock_BRG_TypeDef TIMER_BRG);
-# 5 "CustomLibs/src/DMA_init.c" 2
+# 16 "CustomLibs/src/DMA_init.c" 2
 # 1 "./CustomLibs/inc\\DMA_init.h" 1
-
-
-
+# 15 "./CustomLibs/inc\\DMA_init.h"
 extern DMA_CtrlDataInitTypeDef ADC1_primary_DMA_structure;
 extern DMA_CtrlDataInitTypeDef ADC1_alternate_DMA_structure;
 void Setup_DMA();
-# 6 "CustomLibs/src/DMA_init.c" 2
+# 17 "CustomLibs/src/DMA_init.c" 2
 
 
 extern uint32_t count_dma_interrupts;
@@ -2240,7 +2239,7 @@ DMA_CtrlDataInitTypeDef ADC1_primary_DMA_structure;
 DMA_CtrlDataInitTypeDef ADC1_alternate_DMA_structure;
 DMA_CtrlDataInitTypeDef TIM2_primary_DMA_structure;
 DMA_CtrlDataInitTypeDef TIM2_alternate_DMA_structure;
-
+# 42 "CustomLibs/src/DMA_init.c"
 void Setup_DMA()
 {
 
@@ -2357,8 +2356,14 @@ void Setup_DMA()
  ((MDR_DMA_TypeDef *) (0x40028000))->CHNL_ENABLE_SET = (1 << DMA_Channel_TIM2);
 }
 
+
+
+
+
+
+
 void DMA_IRQHandler() {
-# 152 "CustomLibs/src/DMA_init.c"
+# 176 "CustomLibs/src/DMA_init.c"
           if(DMA_GetFlagStatus(DMA_Channel_TIM2, DMA_FLAG_CHNL_ALT) == RESET)
  {
   DMA_CtrlInit(DMA_Channel_TIM2, DMA_CTRL_DATA_ALTERNATE, &TIM2_alternate_DMA_structure);

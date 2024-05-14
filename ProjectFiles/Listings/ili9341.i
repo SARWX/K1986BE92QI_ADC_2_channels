@@ -1959,5 +1959,5 @@ void Setup_ili9341(void)
  ili9341_init();
  ili9341_clear(0x0000);
  delay_ms(1000);
- ili9341_setRotation(0);
+ ili9341_setRotation(1);
 }

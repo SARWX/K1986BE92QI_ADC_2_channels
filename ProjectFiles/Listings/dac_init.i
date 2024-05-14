@@ -5,6 +5,7 @@
 # 1 "<command line>" 1
 # 1 "<built-in>" 2
 # 1 "CustomLibs/src/DAC_init.c" 2
+# 14 "CustomLibs/src/DAC_init.c"
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h" 1
 # 32 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h"
 # 1 "./SPL/MDR32Fx\\MDR32F9Qx_config.h" 1
@@ -1446,7 +1447,7 @@ void RST_CLK_PCLKcmd(uint32_t RST_CLK_PCLK, FunctionalState NewState);
 void RST_CLK_GetClocksFreq(RST_CLK_FreqTypeDef* RST_CLK_Clocks);
 
 FlagStatus RST_CLK_GetFlagStatus(RST_CLK_Flags RST_CLK_FLAG);
-# 2 "CustomLibs/src/DAC_init.c" 2
+# 15 "CustomLibs/src/DAC_init.c" 2
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_port.h" 1
 # 49 "./SPL/MDR32Fx/inc\\MDR32F9Qx_port.h"
 typedef enum
@@ -1629,7 +1630,7 @@ void PORT_ResetBits(MDR_PORT_TypeDef* MDR_PORTx, uint32_t PORT_Pin);
 
 
 void PORT_Write(MDR_PORT_TypeDef* MDR_PORTx, uint32_t PortVal);
-# 3 "CustomLibs/src/DAC_init.c" 2
+# 16 "CustomLibs/src/DAC_init.c" 2
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_dac.h" 1
 # 49 "./SPL/MDR32Fx/inc\\MDR32F9Qx_dac.h"
 typedef enum
@@ -1677,7 +1678,7 @@ void DAC2_SetData(uint32_t Data);
 
 uint32_t DAC1_GetData(void);
 uint32_t DAC2_GetData(void);
-# 4 "CustomLibs/src/DAC_init.c" 2
+# 17 "CustomLibs/src/DAC_init.c" 2
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_timer.h" 1
 # 49 "./SPL/MDR32Fx/inc\\MDR32F9Qx_timer.h"
 typedef enum
@@ -2164,7 +2165,7 @@ void TIMER_ITConfig(MDR_TIMER_TypeDef* TIMERx, uint32_t TIMER_IT, FunctionalStat
 ITStatus TIMER_GetITStatus(MDR_TIMER_TypeDef* TIMERx, TIMER_Status_Flags_TypeDef TIMER_IT);
 
 void TIMER_BRGInit(MDR_TIMER_TypeDef* TIMERx, TIMER_Clock_BRG_TypeDef TIMER_BRG);
-# 5 "CustomLibs/src/DAC_init.c" 2
+# 18 "CustomLibs/src/DAC_init.c" 2
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_dma.h" 1
 # 57 "./SPL/MDR32Fx/inc\\MDR32F9Qx_dma.h"
 typedef enum
@@ -2443,17 +2444,15 @@ void DMA_ClearError(void);
 uint32_t DMA_GetCurrTransferCounter(uint8_t DMA_Channel, DMA_Data_Struct_Selection DMA_CtrlData);
 
 FlagStatus DMA_GetFlagStatus(uint8_t DMA_Channel, DMA_Flags DMA_Flag);
-# 6 "CustomLibs/src/DAC_init.c" 2
+# 19 "CustomLibs/src/DAC_init.c" 2
 # 1 "./CustomLibs/inc\\DAC_init.h" 1
-
-
-
+# 14 "./CustomLibs/inc\\DAC_init.h"
 void Setup_DAC();
 void Setup_TIM2();
-void set_DAC_table(int freq);
-# 7 "CustomLibs/src/DAC_init.c" 2
+void set_sin_DAC_table(int freq);
+# 20 "CustomLibs/src/DAC_init.c" 2
 # 1 "./CustomLibs/inc\\defines.h" 1
-# 8 "CustomLibs/src/DAC_init.c" 2
+# 21 "CustomLibs/src/DAC_init.c" 2
 # 1 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\math.h" 1 3
 # 157 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\math.h" 3
 extern __attribute__((__pcs__("aapcs"))) unsigned __ARM_dcmp4(double , double );
@@ -2970,7 +2969,7 @@ __attribute__((__nothrow__)) long double tgammal(long double );
 extern __attribute__((__nothrow__)) __attribute__((__const__)) double trunc(double );
 extern __attribute__((__nothrow__)) __attribute__((__const__)) float truncf(float );
 __attribute__((__nothrow__)) long double truncl(long double );
-# 9 "CustomLibs/src/DAC_init.c" 2
+# 22 "CustomLibs/src/DAC_init.c" 2
 
 
 int dac_inc_dec = 1;
@@ -2992,6 +2991,12 @@ PORT_InitTypeDef PortInitStructure;
 TIMER_CntInitTypeDef Cnt_sTim2;
 TIMER_ChnInitTypeDef TimerChnInitStructure;
 TIMER_ChnOutInitTypeDef TimerChnOutInitStructure;
+
+
+
+
+
+
 
 void Setup_DAC()
 {
@@ -3016,7 +3021,7 @@ void Setup_DAC()
  DAC2_Init(DAC2_AVCC);
  DAC2_Cmd(ENABLE);
 }
-
+# 82 "CustomLibs/src/DAC_init.c"
 void Setup_TIM2()
 {
  RST_CLK_PCLKcmd((((uint32_t)(1U << ((((uint32_t)(0x40078000)) >> 15) & 0x1F)))), ENABLE);
@@ -3083,8 +3088,8 @@ void Setup_TIM2()
  TIMER_SetChnCompare (((MDR_TIMER_TypeDef *) (0x40078000)), TIMER_CHANNEL1, 9);
 
 }
-
-void set_DAC_table(int freq)
+# 156 "CustomLibs/src/DAC_init.c"
+void set_sin_DAC_table(int freq)
 {
  freq = (int)((float)freq * 1.1);
  int tics = (((16000000 * 7 / 4) / (12 * 10)) / freq);

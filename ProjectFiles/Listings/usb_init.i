@@ -5,6 +5,7 @@
 # 1 "<command line>" 1
 # 1 "<built-in>" 2
 # 1 "CustomLibs/src/USB_init.c" 2
+# 12 "CustomLibs/src/USB_init.c"
 # 1 "./SPL/MDR32Fx\\MDR32F9Qx_config.h" 1
 # 54 "./SPL/MDR32Fx\\MDR32F9Qx_config.h"
 # 1 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdint.h" 1 3
@@ -1197,7 +1198,7 @@ typedef struct
 
 }MDR_EBC_TypeDef;
 # 82 "./SPL/MDR32Fx\\MDR32F9Qx_config.h" 2
-# 2 "CustomLibs/src/USB_init.c" 2
+# 13 "CustomLibs/src/USB_init.c" 2
 # 1 "./SPL/MDR32Fx/inc/USB_Library\\MDR32F9Qx_usb_handlers.h" 1
 # 31 "./SPL/MDR32Fx/inc/USB_Library\\MDR32F9Qx_usb_handlers.h"
 # 1 "./SPL/MDR32Fx/inc/USB_Library/MDR32F9Qx_usb_default_handlers.h" 1
@@ -1770,7 +1771,7 @@ USB_Result USB_CDC_RecieveData(uint8_t* Buffer, uint32_t Length);
 
     USB_Result USB_CDC_GetLineCoding(uint16_t wINDEX, USB_CDC_LineCoding_TypeDef* DATA);
     USB_Result USB_CDC_SetLineCoding(uint16_t wINDEX, const USB_CDC_LineCoding_TypeDef* DATA);
-# 3 "CustomLibs/src/USB_init.c" 2
+# 14 "CustomLibs/src/USB_init.c" 2
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h" 1
 # 49 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h"
 typedef struct
@@ -2018,7 +2019,7 @@ void RST_CLK_PCLKcmd(uint32_t RST_CLK_PCLK, FunctionalState NewState);
 void RST_CLK_GetClocksFreq(RST_CLK_FreqTypeDef* RST_CLK_Clocks);
 
 FlagStatus RST_CLK_GetFlagStatus(RST_CLK_Flags RST_CLK_FLAG);
-# 4 "CustomLibs/src/USB_init.c" 2
+# 15 "CustomLibs/src/USB_init.c" 2
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_ssp.h" 1
 # 49 "./SPL/MDR32Fx/inc\\MDR32F9Qx_ssp.h"
 typedef enum
@@ -2168,7 +2169,7 @@ uint16_t SSP_ReceiveData(MDR_SSP_TypeDef* SSPx);
 
 FlagStatus SSP_GetFlagStatus(MDR_SSP_TypeDef* SSPx, SSP_Flags_TypeDef SSP_FLAG);
 void SSP_BRGInit(MDR_SSP_TypeDef* SSPx, SSP_Clock_BRG_TypeDef SSP_BRG);
-# 5 "CustomLibs/src/USB_init.c" 2
+# 16 "CustomLibs/src/USB_init.c" 2
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_port.h" 1
 # 49 "./SPL/MDR32Fx/inc\\MDR32F9Qx_port.h"
 typedef enum
@@ -2351,7 +2352,7 @@ void PORT_ResetBits(MDR_PORT_TypeDef* MDR_PORTx, uint32_t PORT_Pin);
 
 
 void PORT_Write(MDR_PORT_TypeDef* MDR_PORTx, uint32_t PortVal);
-# 6 "CustomLibs/src/USB_init.c" 2
+# 17 "CustomLibs/src/USB_init.c" 2
 # 1 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 1 3
 # 51 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
     typedef unsigned int size_t;
@@ -2475,16 +2476,14 @@ extern __attribute__((__nothrow__)) void _membitmovehl(void * , const void * , i
 extern __attribute__((__nothrow__)) void _membitmovehb(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
 extern __attribute__((__nothrow__)) void _membitmovewl(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
 extern __attribute__((__nothrow__)) void _membitmovewb(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
-# 7 "CustomLibs/src/USB_init.c" 2
+# 18 "CustomLibs/src/USB_init.c" 2
 # 1 "./CustomLibs/inc\\USB_init.h" 1
-
-
-
+# 15 "./CustomLibs/inc\\USB_init.h"
 void Setup_USB(void);
 void VCom_Configuration(void);
-# 8 "CustomLibs/src/USB_init.c" 2
+# 19 "CustomLibs/src/USB_init.c" 2
 # 1 "./CustomLibs/inc\\defines.h" 1
-# 9 "CustomLibs/src/USB_init.c" 2
+# 20 "CustomLibs/src/USB_init.c" 2
 
 extern PORT_InitTypeDef port_init_structure;
 static USB_Clock_TypeDef USB_Clock_InitStruct;
@@ -2504,6 +2503,11 @@ char tempString[100];
 
 
 static USB_CDC_LineCoding_TypeDef LineCoding;
+
+
+
+
+
 
 
 void Setup_USB(void)
@@ -2530,6 +2534,11 @@ void Setup_USB(void)
  USB_CDC_Reset();
 }
 
+
+
+
+
+
 void VCom_Configuration(void)
 {
 
@@ -2540,6 +2549,11 @@ void VCom_Configuration(void)
   LineCoding.bDataBits = 8;
 
 }
+
+
+
+
+
 
 USB_Result USB_CDC_RecieveData(uint8_t *buffer, uint32_t Length)
 {

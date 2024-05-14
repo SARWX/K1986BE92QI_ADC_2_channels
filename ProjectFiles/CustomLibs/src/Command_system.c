@@ -37,7 +37,7 @@ void execute_command(char *command)
   if (strstr(command, "set freq ") == command) 
   {                    // проверить: команда начинается с "set freq "?
     int freq = atoi((char *)(command + strlen("set freq ")));       // перевести freq из строкового формата в int
-      set_DAC_table(freq);                                          // задать синусоиду требуемой частоты в DAC_table
+      set_sin_DAC_table(freq);                                          // задать синусоиду требуемой частоты в DAC_table
   }
 // ---------------------------------------------------------------------------------------------- //
 

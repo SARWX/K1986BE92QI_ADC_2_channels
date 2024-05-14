@@ -4666,52 +4666,37 @@ __attribute__((__nothrow__)) long double truncl(long double );
 
 
 # 1 "./CustomLibs/inc\\DMA_init.h" 1
-
-
-
+# 15 "./CustomLibs/inc\\DMA_init.h"
 extern DMA_CtrlDataInitTypeDef ADC1_primary_DMA_structure;
 extern DMA_CtrlDataInitTypeDef ADC1_alternate_DMA_structure;
 void Setup_DMA();
 # 20 "main.c" 2
 # 1 "./CustomLibs/inc\\DAC_init.h" 1
-
-
-
+# 14 "./CustomLibs/inc\\DAC_init.h"
 void Setup_DAC();
 void Setup_TIM2();
-void set_DAC_table(int freq);
+void set_sin_DAC_table(int freq);
 # 21 "main.c" 2
 # 1 "./CustomLibs/inc\\ADC_init.h" 1
-
-
-
+# 15 "./CustomLibs/inc\\ADC_init.h"
 void Setup_ADC();
 # 22 "main.c" 2
 # 1 "./CustomLibs/inc\\sys_CLK_init.h" 1
-
-
-
-
+# 16 "./CustomLibs/inc\\sys_CLK_init.h"
 void Setup_CPU_Clock(void);
 void delay_tick(uint32_t count);
 # 23 "main.c" 2
 # 1 "./CustomLibs/inc\\USB_init.h" 1
-
-
-
+# 15 "./CustomLibs/inc\\USB_init.h"
 void Setup_USB(void);
 void VCom_Configuration(void);
 # 24 "main.c" 2
 # 1 "./CustomLibs/inc\\command_system.h" 1
-
-
-
+# 15 "./CustomLibs/inc\\command_system.h"
 void execute_command(char *command);
 # 25 "main.c" 2
 # 1 "./CustomLibs/inc\\SPI_init.h" 1
-
-
-
+# 15 "./CustomLibs/inc\\SPI_init.h"
 void Setup_SPI(void);
 # 26 "main.c" 2
 # 1 "./CustomLibs/inc\\ili9341.h" 1
@@ -4862,32 +4847,37 @@ int main(void)
  Setup_CPU_Clock();
  VCom_Configuration();
 
- Setup_ADC();
- Setup_DMA();
+
+
 
  USB_CDC_Init((uint8_t *)buffer, 1, SET);
  Setup_USB();
- set_DAC_table(1000);
- Setup_DAC();
 
 
- Setup_TIM2();
+ Setup_SPI();
+ Setup_ili9341();
+# 153 "main.c"
+ ili9341_setaddress(0,0,319,239);
+ __disable_irq();
+# 166 "main.c"
+__disable_irq();
+ili9341_clear(0x0000);
+display_main_menu();
 
 
-
- ADC1_Cmd (ENABLE);
-
-
-
- DMA_Cmd(DMA_Channel_TIM2, ENABLE);
-# 187 "main.c"
-execute_command("set 2.0 0.0 !");
-
-
-
-
-
-
+int row_num = 1;
+while (1)
+{
+ draw_arrow(320 - 48, 240 - 13 - 38, 1, 0x0E70);
+ draw_box(row_num++, 0xF100);
+ if (row_num == 5)
+  row_num = 1;
+ draw_box(row_num, 0x0E70);
+ delay_ms(100);
+ draw_arrow(320 - 48, 240 - 13 - 38, 1, 0xF100);
+ delay_ms(1000);
+}
+# 194 "main.c"
  while (1)
  {
   if (command_recived == 1)

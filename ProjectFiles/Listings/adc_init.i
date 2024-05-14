@@ -5,6 +5,7 @@
 # 1 "<command line>" 1
 # 1 "<built-in>" 2
 # 1 "CustomLibs/src/ADC_init.c" 2
+# 12 "CustomLibs/src/ADC_init.c"
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_port.h" 1
 # 32 "./SPL/MDR32Fx/inc\\MDR32F9Qx_port.h"
 # 1 "./SPL/MDR32Fx\\MDR32F9Qx_config.h" 1
@@ -1381,7 +1382,7 @@ void PORT_ResetBits(MDR_PORT_TypeDef* MDR_PORTx, uint32_t PORT_Pin);
 
 
 void PORT_Write(MDR_PORT_TypeDef* MDR_PORTx, uint32_t PortVal);
-# 2 "CustomLibs/src/ADC_init.c" 2
+# 13 "CustomLibs/src/ADC_init.c" 2
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h" 1
 # 135 "./SPL/MDR32Fx/inc\\MDR32F9Qx_adc.h"
 typedef enum
@@ -1706,15 +1707,13 @@ ITStatus ADC1_GetITStatus(ADC_IT_Def ADC_IT);
     void ADC2_ClearOutOfRangeFlag(void);
     void ADC2_ITConfig(ADC_IT_Def ADC_IT, FunctionalState NewState);
     ITStatus ADC2_GetITStatus(ADC_IT_Def ADC_IT);
-# 3 "CustomLibs/src/ADC_init.c" 2
+# 14 "CustomLibs/src/ADC_init.c" 2
 # 1 "./CustomLibs/inc\\ADC_init.h" 1
-
-
-
+# 15 "./CustomLibs/inc\\ADC_init.h"
 void Setup_ADC();
-# 4 "CustomLibs/src/ADC_init.c" 2
+# 15 "CustomLibs/src/ADC_init.c" 2
 # 1 "./CustomLibs/inc\\defines.h" 1
-# 5 "CustomLibs/src/ADC_init.c" 2
+# 16 "CustomLibs/src/ADC_init.c" 2
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h" 1
 # 49 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h"
 typedef struct
@@ -1962,7 +1961,7 @@ void RST_CLK_PCLKcmd(uint32_t RST_CLK_PCLK, FunctionalState NewState);
 void RST_CLK_GetClocksFreq(RST_CLK_FreqTypeDef* RST_CLK_Clocks);
 
 FlagStatus RST_CLK_GetFlagStatus(RST_CLK_Flags RST_CLK_FLAG);
-# 6 "CustomLibs/src/ADC_init.c" 2
+# 17 "CustomLibs/src/ADC_init.c" 2
 
 
 ADC_InitTypeDef ADC_structure;
@@ -1970,7 +1969,7 @@ ADCx_InitTypeDef ADCx_structure;
 
 
 extern PORT_InitTypeDef port_init_structure;
-
+# 34 "CustomLibs/src/ADC_init.c"
 void Setup_ADC()
 {
 
@@ -2010,5 +2009,5 @@ void Setup_ADC()
     ADCx_structure.ADC_Prescaler = ADC_CLK_div_8;
  ADCx_structure.ADC_DelayGo = 0x2;
     ADC1_Init (&ADCx_structure);
-# 65 "CustomLibs/src/ADC_init.c"
+# 85 "CustomLibs/src/ADC_init.c"
 }

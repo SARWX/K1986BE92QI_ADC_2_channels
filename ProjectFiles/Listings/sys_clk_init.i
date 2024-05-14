@@ -5,6 +5,7 @@
 # 1 "<command line>" 1
 # 1 "<built-in>" 2
 # 1 "CustomLibs/src/sys_CLK_init.c" 2
+# 12 "CustomLibs/src/sys_CLK_init.c"
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h" 1
 # 32 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h"
 # 1 "./SPL/MDR32Fx\\MDR32F9Qx_config.h" 1
@@ -1446,7 +1447,7 @@ void RST_CLK_PCLKcmd(uint32_t RST_CLK_PCLK, FunctionalState NewState);
 void RST_CLK_GetClocksFreq(RST_CLK_FreqTypeDef* RST_CLK_Clocks);
 
 FlagStatus RST_CLK_GetFlagStatus(RST_CLK_Flags RST_CLK_FLAG);
-# 2 "CustomLibs/src/sys_CLK_init.c" 2
+# 13 "CustomLibs/src/sys_CLK_init.c" 2
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_port.h" 1
 # 49 "./SPL/MDR32Fx/inc\\MDR32F9Qx_port.h"
 typedef enum
@@ -1629,18 +1630,15 @@ void PORT_ResetBits(MDR_PORT_TypeDef* MDR_PORTx, uint32_t PORT_Pin);
 
 
 void PORT_Write(MDR_PORT_TypeDef* MDR_PORTx, uint32_t PortVal);
-# 3 "CustomLibs/src/sys_CLK_init.c" 2
+# 14 "CustomLibs/src/sys_CLK_init.c" 2
 
 # 1 "./CustomLibs/inc\\sys_CLK_init.h" 1
-
-
-
-
+# 16 "./CustomLibs/inc\\sys_CLK_init.h"
 void Setup_CPU_Clock(void);
 void delay_tick(uint32_t count);
-# 5 "CustomLibs/src/sys_CLK_init.c" 2
+# 16 "CustomLibs/src/sys_CLK_init.c" 2
 # 1 "./CustomLibs/inc\\defines.h" 1
-# 6 "CustomLibs/src/sys_CLK_init.c" 2
+# 17 "CustomLibs/src/sys_CLK_init.c" 2
 # 1 "./CustomLibs/inc\\delay.h" 1
 
 
@@ -1650,7 +1648,11 @@ void delay_tick(uint32_t count);
 void delay_tick(uint32_t count);
 void delay_ms(uint32_t delay);
 void delay_us(uint32_t delay);
-# 7 "CustomLibs/src/sys_CLK_init.c" 2
+# 18 "CustomLibs/src/sys_CLK_init.c" 2
+
+
+
+
 
 
 void Setup_CPU_Clock(void)
@@ -1660,7 +1662,7 @@ void Setup_CPU_Clock(void)
 
  if (RST_CLK_HSEstatus() != SUCCESS)
  {
-# 25 "CustomLibs/src/sys_CLK_init.c"
+# 40 "CustomLibs/src/sys_CLK_init.c"
    while (1);
 
 
@@ -1673,7 +1675,7 @@ void Setup_CPU_Clock(void)
  RST_CLK_CPU_PLLconfig(RST_CLK_CPU_PLLsrcHSEdiv1, RST_CLK_CPU_PLLmul7);
 
  RST_CLK_CPU_PLLcmd(ENABLE);
-# 57 "CustomLibs/src/sys_CLK_init.c"
+# 72 "CustomLibs/src/sys_CLK_init.c"
  RST_CLK_CPUclkPrescaler(RST_CLK_CPUclkDIV1);
  RST_CLK_CPU_PLLuse(ENABLE);
  RST_CLK_CPUclkSelection(RST_CLK_CPUclkCPU_C3);
