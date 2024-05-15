@@ -82,6 +82,7 @@ void ili9341_filltriangle(uint16_t x, uint16_t y, int base, int height, uint16_t
 
 void test(void);
 void custom_ili9341_setaddress(uint16_t x,uint16_t y);
+uint8_t ILI9341_TouchGetCoordinates(uint16_t* x, uint16_t* y);
 # 2 "CustomLibs/src/ili9341.c" 2
 
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_ssp.h" 1
@@ -1556,6 +1557,579 @@ void PORT_ResetBits(MDR_PORT_TypeDef* MDR_PORTx, uint32_t PORT_Pin);
 
 void PORT_Write(MDR_PORT_TypeDef* MDR_PORTx, uint32_t PortVal);
 # 5 "CustomLibs/src/ili9341.c" 2
+# 1 "./SPL/MDR32Fx/inc/USB_Library\\MDR32F9Qx_usb_handlers.h" 1
+# 31 "./SPL/MDR32Fx/inc/USB_Library\\MDR32F9Qx_usb_handlers.h"
+# 1 "./SPL/MDR32Fx/inc/USB_Library/MDR32F9Qx_usb_default_handlers.h" 1
+# 32 "./SPL/MDR32Fx/inc/USB_Library/MDR32F9Qx_usb_default_handlers.h"
+# 1 "./SPL/MDR32Fx/inc/USB_Library/MDR32F9Qx_usb_CDC.h" 1
+# 33 "./SPL/MDR32Fx/inc/USB_Library/MDR32F9Qx_usb_CDC.h"
+# 1 "./SPL/MDR32Fx/inc\\USB_Library/MDR32F9Qx_usb_device.h" 1
+# 33 "./SPL/MDR32Fx/inc\\USB_Library/MDR32F9Qx_usb_device.h"
+# 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_usb.h" 1
+# 49 "./SPL/MDR32Fx/inc\\MDR32F9Qx_usb.h"
+typedef enum
+{
+    USB_EP0 = 0,
+    USB_EP1 = 1,
+    USB_EP2 = 2,
+    USB_EP3 = 3,
+    Num_USB_EndPoints
+} USB_EP_TypeDef;
+
+
+
+
+
+
+typedef enum
+{
+    USB_C1HSIdiv1 = ((uint32_t)0x00),
+    USB_C1HSIdiv2 = ((uint32_t)0x01),
+    USB_C1HSEdiv1 = ((uint32_t)0x02),
+    USB_C1HSEdiv2 = ((uint32_t)0x03)
+} USB_C1_Source_TypeDef;
+
+
+
+
+
+
+typedef enum
+{
+    USB_PLLUSBMUL1 = ((uint32_t)0x00),
+    USB_PLLUSBMUL2 = ((uint32_t)0x01),
+    USB_PLLUSBMUL3 = ((uint32_t)0x02),
+    USB_PLLUSBMUL4 = ((uint32_t)0x03),
+    USB_PLLUSBMUL5 = ((uint32_t)0x04),
+    USB_PLLUSBMUL6 = ((uint32_t)0x05),
+    USB_PLLUSBMUL7 = ((uint32_t)0x06),
+    USB_PLLUSBMUL8 = ((uint32_t)0x07),
+    USB_PLLUSBMUL9 = ((uint32_t)0x08),
+    USB_PLLUSBMUL10 = ((uint32_t)0x09),
+    USB_PLLUSBMUL11 = ((uint32_t)0x0A),
+    USB_PLLUSBMUL12 = ((uint32_t)0x0B),
+    USB_PLLUSBMUL13 = ((uint32_t)0x0C),
+    USB_PLLUSBMUL14 = ((uint32_t)0x0D),
+    USB_PLLUSBMUL15 = ((uint32_t)0x0E),
+    USB_PLLUSBMUL16 = ((uint32_t)0x0F)
+} USB_PLL_Source_TypeDef;
+
+
+
+
+
+
+
+typedef struct
+{
+    USB_C1_Source_TypeDef USB_USBC1_Source;
+
+    USB_PLL_Source_TypeDef USB_PLLUSBMUL;
+
+} USB_Clock_TypeDef;
+
+
+
+
+typedef struct
+{
+    uint8_t USB_Version;
+    uint8_t USB_Revision;
+} USB_Version_TypeDef;
+# 637 "./SPL/MDR32Fx/inc\\MDR32F9Qx_usb.h"
+void USB_BRGInit(const USB_Clock_TypeDef* USB_Clock_InitStruct);
+void USB_Reset(void);
+
+
+
+
+
+uint32_t USB_GetHSCR(void);
+void USB_SetHSCR(uint32_t RegValue);
+
+USB_Version_TypeDef USB_GetHSVR(void);
+
+
+
+
+
+uint32_t USB_GetHTXC(void);
+void USB_SetHTXC(uint32_t RegValue);
+uint32_t USB_GetHTXT(void);
+void USB_SetHTXT(uint32_t RegValue);
+uint32_t USB_GetHTXLC(void);
+void USB_SetHTXLC(uint32_t RegValue);
+uint32_t USB_GetHTXSE(void);
+void USB_SetHTXSE(uint32_t RegValue);
+uint32_t USB_GetHTXA(void);
+void USB_SetHTXA(uint32_t RegValue);
+uint32_t USB_GetHTXE(void);
+void USB_SetHTXE(uint32_t RegValue);
+uint32_t USB_GetHFN(void);
+uint32_t USB_GetHIS(void);
+void USB_SetHIS(uint32_t RegValue);
+uint32_t USB_GetHIM(void);
+void USB_SetHIM(uint32_t RegValue);
+uint32_t USB_GetHRXS(void);
+uint32_t USB_GetHRXP(void);
+uint32_t USB_GetHRXA(void);
+uint32_t USB_GetHRXE(void);
+uint32_t USB_GetHRXCS(void);
+uint32_t USB_GetHSTM(void);
+uint32_t USB_GetHRXFD(void);
+uint32_t USB_GetHRXFDC(void);
+uint32_t USB_GetHRXFC(void);
+void USB_SetHRXFC(uint32_t RegValue);
+uint32_t USB_GetHTXFD(void);
+void USB_SetHTXFD(uint32_t RegValue);
+uint32_t USB_GetHTXFC(void);
+void USB_SetHTXFC(uint32_t RegValue);
+
+
+
+
+
+uint32_t USB_GetSEPxCTRL(USB_EP_TypeDef EndPointNumber);
+void USB_SetSEPxCTRL(USB_EP_TypeDef EndPointNumber, uint32_t RegValue);
+uint32_t USB_GetSEPxSTS(USB_EP_TypeDef EndPointNumber);
+uint32_t USB_GetSEPxTS(USB_EP_TypeDef EndPointNumber);
+uint32_t USB_GetSEPxNTS(USB_EP_TypeDef EndPointNumber);
+uint32_t USB_GetSC(void);
+void USB_SetSC(uint32_t RegValue);
+uint32_t USB_GetSLS(void);
+uint32_t USB_GetSIS(void);
+void USB_SetSIS(uint32_t RegValue);
+uint32_t USB_GetSIM(void);
+void USB_SetSIM(uint32_t RegValue);
+uint32_t USB_GetSA(void);
+void USB_SetSA(uint32_t RegValue);
+uint32_t USB_GetSFN(void);
+uint32_t USB_GetSEPxRXFD(USB_EP_TypeDef EndPointNumber);
+uint32_t USB_GetSEPxRXFDC(USB_EP_TypeDef EndPointNumber);
+uint32_t USB_GetSEPxRXFC(USB_EP_TypeDef EndPointNumber);
+void USB_SetSEPxRXFC(USB_EP_TypeDef EndPointNumber, uint32_t RegValue);
+uint32_t USB_GetSEPxTXFD(USB_EP_TypeDef EndPointNumber);
+void USB_SetSEPxTXFD(USB_EP_TypeDef EndPointNumber, uint32_t RegValue);
+uint32_t USB_GetSEPxTXFDC(USB_EP_TypeDef EndPointNumber);
+void USB_SetSEPxTXFDC(USB_EP_TypeDef EndPointNumber, uint32_t RegValue);
+void USB_SEPxToggleEPDATASEQ(USB_EP_TypeDef EndPointNumber);
+# 34 "./SPL/MDR32Fx/inc\\USB_Library/MDR32F9Qx_usb_device.h" 2
+# 50 "./SPL/MDR32Fx/inc\\USB_Library/MDR32F9Qx_usb_device.h"
+typedef enum
+{
+    USB_HOST_TO_DEVICE = 0x00,
+    USB_DEVICE_TO_HOST = 0x80
+}USB_RequestTypeDT_TypeDef;
+
+
+
+
+typedef enum
+{
+    USB_TYPE_STANDARD = 0x00,
+    USB_TYPE_CLASS = 0x20,
+    USB_TYPE_VENDOR = 0x40
+} USB_RequestType_TypeDef;
+
+
+
+
+
+
+
+typedef enum
+{
+    USB_GET_STATUS = 0,
+    USB_CLEAR_FEATURE,
+    USB_Reserved0,
+    USB_SET_FEATURE,
+    USB_Reserved1,
+    USB_SET_ADDRESS,
+    USB_GET_DESCRIPTOR,
+    USB_SET_DESCRIPTOR,
+    USB_GET_CONFIGURATION,
+    USB_SET_CONFIGURATION,
+    USB_GET_INTERFACE,
+    USB_SET_INTERFACE,
+    USB_SYNCH_FRAME
+} USB_Standard_Setup_TypeDef;
+
+
+
+
+typedef enum
+{
+    USB_DEVICE = 1,
+    USB_CONFIGURATION,
+    USB_STRING,
+    USB_INTERFACE,
+    USB_ENDPOINT,
+    USB_DEVICE_QUALIFIER,
+    USB_OTHER_SPEED_CONFIGURATION,
+    USB_INTERFACE_POWER
+} USB_Standard_Descriptor_TypeDef;
+
+
+
+
+typedef enum
+{
+    USB_ENDPOINT_HALT = 0,
+    USB_DEVICE_REMOTE_WAKEUP,
+    USB_TEST_MODE
+} USB_Standard_Festure_Selector_TypeDef;
+
+
+
+
+typedef enum
+{
+    USB_RECIPIENT_DEVICE = 0x00,
+    USB_RECIPIENT_INTERFACE = 0x01,
+    USB_RECIPIENT_ENDPOINT = 0x02,
+    USB_RECIPIENT_OTHER = 0x03
+} USB_RequestRecipient_TypeDef;
+# 132 "./SPL/MDR32Fx/inc\\USB_Library/MDR32F9Qx_usb_device.h"
+typedef struct
+{
+    uint8_t mRequestTypeData;
+
+
+
+    uint8_t bRequest;
+    uint16_t wValue;
+    uint16_t wIndex;
+    uint16_t wLength;
+} USB_SetupPacket_TypeDef;
+# 157 "./SPL/MDR32Fx/inc\\USB_Library/MDR32F9Qx_usb_device.h"
+typedef enum
+{
+    USB_SUCCESS = 0x0000,
+    USB_ERROR = 0x0001,
+    USB_ERR_INV_REQ = 0x0002,
+    USB_ERR_BUSY = 0x0200,
+} USB_Result;
+
+
+
+
+typedef enum {USB_STALL_PROTO = 0x0, USB_STALL_HALT = 0x1} USB_StallType;
+
+
+
+
+
+typedef USB_Result (*USB_EP_IO_Handler)(USB_EP_TypeDef EPx, uint8_t* Buffer, uint32_t Length);
+typedef USB_Result (*USB_EP_Setup_Handler)(USB_EP_TypeDef EPx, const USB_SetupPacket_TypeDef* USB_SetupPacket);
+typedef USB_Result (*USB_EP_Error_Handler)(USB_EP_TypeDef EPx, uint32_t STS, uint32_t TS, uint32_t CTRL);
+# 200 "./SPL/MDR32Fx/inc\\USB_Library/MDR32F9Qx_usb_device.h"
+USB_Result USB_EP_Init(USB_EP_TypeDef EPx, uint32_t USB_EP_Ctrl, USB_EP_Error_Handler onError);
+USB_Result USB_EP_Reset(USB_EP_TypeDef EPx);
+USB_Result USB_EP_Idle(USB_EP_TypeDef EPx);
+USB_Result USB_EP_Stall(USB_EP_TypeDef EPx, USB_StallType bHalt);
+
+USB_Result USB_EP_doDataIn(USB_EP_TypeDef EPx, uint8_t* Buffer, uint32_t Length, USB_EP_IO_Handler onInDone);
+USB_Result USB_EP_doDataOut(USB_EP_TypeDef EPx, uint8_t* Buffer, uint32_t Length, USB_EP_IO_Handler onOutDone);
+
+USB_Result USB_EP_setSetupHandler(USB_EP_TypeDef EPx, USB_SetupPacket_TypeDef* USB_SetupPacket, USB_EP_Setup_Handler onSetupPacket);
+
+USB_Result USB_EP_dispatchEvent(USB_EP_TypeDef EPx, uint32_t USB_IT);
+# 227 "./SPL/MDR32Fx/inc\\USB_Library/MDR32F9Qx_usb_device.h"
+typedef enum
+{
+    USB_DEV_STATE_UNKNOWN = 0,
+    USB_DEV_STATE_ATTACHED,
+    USB_DEV_STATE_POWERED,
+    USB_DEV_STATE_DEFAULT,
+    USB_DEV_STATE_ADDRESS,
+    USB_DEV_STATE_CONFIGURED,
+    Num_USB_DEV_STATE
+} USB_DeviceState_TypeDef;
+
+
+
+
+typedef enum
+{
+    USB_DEV_SELF_POWERED_OFF = 0,
+    USB_DEV_SELF_POWERED_ON = 1
+} USB_DeviceSelfPoweredState_TypeDef;
+
+
+
+
+typedef enum
+{
+    USB_DEV_REMOTE_WAKEUP_DISABLED = 0,
+    USB_DEV_REMOTE_WAKEUP_ENABLED = 1
+} USB_DeviceRemoteWakeup_TypeDef;
+
+
+
+
+typedef struct
+{
+
+
+
+
+
+
+
+    uint32_t Reserved;
+
+} Usb_DeviceStatus_TypeDef;
+
+
+
+
+typedef struct
+{
+    USB_DeviceState_TypeDef USB_DeviceState;
+    Usb_DeviceStatus_TypeDef USB_DeviceStatus;
+    uint32_t Address;
+} USB_DeviceContext_TypeDef;
+
+
+
+
+typedef struct {
+    uint32_t PULL;
+
+
+
+
+
+    uint32_t SPEED;
+
+
+
+    uint32_t MODE;
+
+
+
+} USB_DeviceBUSParam_TypeDef;
+# 323 "./SPL/MDR32Fx/inc\\USB_Library/MDR32F9Qx_usb_device.h"
+extern USB_SetupPacket_TypeDef USB_CurrentSetupPacket;
+
+
+
+
+extern USB_DeviceContext_TypeDef USB_DeviceContext;
+# 337 "./SPL/MDR32Fx/inc\\USB_Library/MDR32F9Qx_usb_device.h"
+USB_Result USB_DeviceInit(const USB_Clock_TypeDef* USB_Clock_InitStruct, USB_DeviceBUSParam_TypeDef* USB_DeviceBUSParam);
+USB_Result USB_DevicePowerOn(void);
+USB_Result USB_DevicePowerOff(void);
+
+
+
+
+USB_Result USB_DeviceReset(void);
+USB_Result USB_DeviceSuspend(void);
+USB_Result USB_DeviceResume(void);
+
+USB_Result USB_DeviceSetupPacket(USB_EP_TypeDef EPx, const USB_SetupPacket_TypeDef* USB_SetupPacket);
+
+USB_Result USB_DeviceClearFeature(USB_RequestRecipient_TypeDef Recipient, uint16_t wVALUE, uint16_t wINDEX);
+USB_Result USB_DeviceSetFeature(USB_RequestRecipient_TypeDef Recipient, uint16_t wVALUE, uint16_t wINDEX);
+
+USB_Result USB_DeviceDoStatusInAck(USB_EP_TypeDef EPx, uint8_t* Buffer, uint32_t Length);
+USB_Result USB_DeviceDoStatusOutAck(USB_EP_TypeDef EPx, uint8_t* Buffer, uint32_t Length);
+
+USB_Result USB_DeviceDispatchEvent(void);
+
+
+    void USB_IRQHandler(void);
+
+
+
+
+
+
+USB_Result USB_DeviceDummyGetStatus(USB_RequestRecipient_TypeDef Recipient, uint16_t wINDEX);
+USB_Result USB_DeviceDummySetAddress(uint16_t wVALUE);
+USB_Result USB_DeviceDummyGetDescriptor(uint16_t wVALUE, uint16_t wINDEX, uint16_t wLENGTH);
+USB_Result USB_DeviceDummySetDescriptor(uint16_t wVALUE, uint16_t wINDEX, uint16_t wLENGTH);
+uint8_t USB_DeviceDummyGetConfiguration(void);
+USB_Result USB_DeviceDummySetConfiguration(uint16_t wVALUE);
+uint8_t USB_DeviceDummyGetInterface(uint16_t wINDEX);
+USB_Result USB_DeviceDummySetInterface(uint16_t wVALUE, uint16_t wINDEX);
+USB_Result USB_DeviceDummySyncFrame(uint16_t wINDEX, uint8_t* DATA);
+USB_Result USB_DeviceDummyClassRequest(void);
+USB_Result USB_DeviceDummyVendorRequest(void);
+USB_Result USB_DeviceDummyDataError(USB_EP_TypeDef EPx, uint32_t STS, uint32_t TS, uint32_t CTRL);
+# 34 "./SPL/MDR32Fx/inc/USB_Library/MDR32F9Qx_usb_CDC.h" 2
+# 54 "./SPL/MDR32Fx/inc/USB_Library/MDR32F9Qx_usb_CDC.h"
+typedef enum
+{
+    USB_CDC_SEND_ENCAPSULATED_COMMAND = 0x00,
+    USB_CDC_GET_ENCAPSULATED_RESPONSE,
+    USB_CDC_SET_COMM_FEATURE,
+    USB_CDC_GET_COMM_FEATURE,
+    USB_CDC_CLEAR_COMM_FEATURE,
+    USB_CDC_SET_AUX_LINE_STATE = 0x10,
+    USB_CDC_SET_HOOK_STATE,
+    USB_CDC_PULSE_SETUP,
+    USB_CDC_SEND_PULSE,
+    USB_CDC_SET_PULSE_TIME,
+    USB_CDC_RING_AUX_JACK,
+    USB_CDC_SET_LINE_CODING = 0x20,
+    USB_CDC_GET_LINE_CODING,
+    USB_CDC_SET_CONTROL_LINE_STATE,
+    USB_CDC_SEND_BREAK,
+    USB_CDC_SET_RINGER_PARAMS = 0x30,
+    USB_CDC_GET_RINGER_PARAMS,
+    USB_CDC_SET_OPERATION_PARAMS,
+    USB_CDC_GET_OPERATION_PARAMS,
+    USB_CDC_SET_LINE_PARAMS,
+    USB_CDC_GET_LINE_PARAMS,
+    USB_CDC_DIAL_DIGITS
+} USB_CDC_Class_Setup_TypeDef;
+
+
+
+
+
+typedef enum
+{
+    USB_CDC_bRxCarrier = 0x01,
+    USB_CDC_bTxCarrier = 0x02,
+    USB_CDC_bBreak = 0x04,
+    USB_CDC_bRingSignal = 0x08,
+    USB_CDC_bFraming = 0x10,
+    USB_CDC_bParity = 0x20,
+    USB_CDC_bOverRun = 0x40
+} USB_CDCSerialState_TypeDef;
+
+
+
+
+typedef enum
+{
+    USB_CDC_STOP_BITS1 = 0x00,
+    USB_CDC_STOP_BITS1_5 = 0x01,
+    USB_CDC_STOP_BITS2 = 0x02,
+} USB_CDC_CharFormat_TypeDef;
+
+
+
+
+typedef enum
+{
+    USB_CDC_PARITY_NONE = 0x00,
+    USB_CDC_PARITY_ODD = 0x01,
+    USB_CDC_PARITY_EVEN = 0x02,
+    USB_CDC_PARITY_MARK = 0x03,
+    USB_CDC_PARITY_SPACE = 0x04
+} USB_CDC_ParityType_TypeDef;
+
+
+
+
+typedef enum
+{
+    USB_CDC_DATA_BITS5 = 0x05,
+    USB_CDC_DATA_BITS6 = 0x06,
+    USB_CDC_DATA_BITS7 = 0x07,
+    USB_CDC_DATA_BITS8 = 0x08,
+    USB_CDC_DATA_BITS16 = 0x0A
+} USB_CDC_DataBits_TypeDef;
+
+
+
+
+typedef struct
+{
+    uint32_t dwDTERate;
+    uint8_t bCharFormat;
+    uint8_t bParityType;
+    uint8_t bDataBits;
+} USB_CDC_LineCoding_TypeDef;
+
+
+
+
+typedef enum
+{
+    USB_CDC_DTR_PRESENT = 0x01,
+    USB_CDC_RTS_ACTIVATE_CARRIER = 0x02
+} USB_CDC_ControlLineState_TypeDef;
+
+
+
+
+
+typedef enum
+{
+    USB_CDC_RING_DETECT = 0x09,
+    USB_CDC_SERIAL_STATE = 0x20,
+    USB_CDC_CALL_STATE_CHANGE = 0x28,
+    USB_CDC_LINE_STATE_CHANGE = 0x29,
+    USB_CDC_CONNECTION_SPEED_CHANGE = 0x2A
+} USB_CDC_LineStateReport_TypeDef;
+# 186 "./SPL/MDR32Fx/inc/USB_Library/MDR32F9Qx_usb_CDC.h"
+USB_Result USB_CDC_Init(uint8_t* ReceiveBuffer, uint32_t DataPortionLength, FlagStatus StartReceiving);
+
+USB_Result USB_CDC_SetReceiveBuffer(uint8_t* ReceiveBuffer, uint32_t DataPortionLength);
+USB_Result USB_CDC_ReceiveStart(void);
+USB_Result USB_CDC_ReceiveStop(void);
+
+USB_Result USB_CDC_SendData(uint8_t* Buffer, uint32_t Length)__attribute__((section(".IRAM1")));
+int check_status_cdc(void);
+
+
+
+USB_Result USB_CDC_ReportState(uint16_t LineState);
+
+
+
+
+
+
+USB_Result USB_CDC_Reset(void);
+USB_Result USB_CDC_GetDescriptor(uint16_t wVALUE, uint16_t wINDEX, uint16_t wLENGTH);
+USB_Result USB_CDC_ClassRequest(void);
+
+
+
+
+
+
+
+USB_Result USB_CDC_DummyDataReceive(uint8_t* Buffer, uint32_t Length);
+USB_Result USB_CDC_DummyDataSent(void);
+
+
+USB_Result USB_CDC_DummySendEncapsulatedCMD(uint16_t wINDEX, uint16_t wLENGTH);
+USB_Result USB_CDC_DummyGetEncapsulatedResp(uint16_t wINDEX, uint16_t wLENGTH);
+
+
+
+USB_Result USB_CDC_DummyGetCommFeature(uint16_t wVALUE, uint16_t wINDEX, uint16_t* DATA);
+USB_Result USB_CDC_DummySetCommFeature(uint16_t wVALUE, uint16_t wINDEX, uint16_t DATA);
+USB_Result USB_CDC_DummyClearCommFeature(uint16_t wVALUE, uint16_t wINDEX);
+
+
+
+USB_Result USB_CDC_DummyGetLineCoding(uint16_t wINDEX, USB_CDC_LineCoding_TypeDef* DATA);
+USB_Result USB_CDC_DummySetLineCoding(uint16_t wINDEX, const USB_CDC_LineCoding_TypeDef* DATA);
+
+
+
+USB_Result USB_CDC_DummyControlLineState(uint16_t wVALUE, uint16_t wINDEX);
+
+
+
+USB_Result USB_CDC_DummySendBreak(uint16_t wVALUE, uint16_t wINDEX);
+# 33 "./SPL/MDR32Fx/inc/USB_Library/MDR32F9Qx_usb_default_handlers.h" 2
+# 32 "./SPL/MDR32Fx/inc/USB_Library\\MDR32F9Qx_usb_handlers.h" 2
+# 83 "./SPL/MDR32Fx/inc/USB_Library\\MDR32F9Qx_usb_handlers.h"
+USB_Result USB_CDC_RecieveData(uint8_t* Buffer, uint32_t Length);
+
+
+    USB_Result USB_CDC_GetLineCoding(uint16_t wINDEX, USB_CDC_LineCoding_TypeDef* DATA);
+    USB_Result USB_CDC_SetLineCoding(uint16_t wINDEX, const USB_CDC_LineCoding_TypeDef* DATA);
+# 6 "CustomLibs/src/ili9341.c" 2
 
 # 1 "./CustomLibs/inc\\delay.h" 1
 
@@ -1566,9 +2140,468 @@ void PORT_Write(MDR_PORT_TypeDef* MDR_PORTx, uint32_t PortVal);
 void delay_tick(uint32_t count);
 void delay_ms(uint32_t delay);
 void delay_us(uint32_t delay);
-# 7 "CustomLibs/src/ili9341.c" 2
-# 1 "./CustomLibs/inc\\defines.h" 1
 # 8 "CustomLibs/src/ili9341.c" 2
+# 1 "./CustomLibs/inc\\defines.h" 1
+# 9 "CustomLibs/src/ili9341.c" 2
+# 1 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stddef.h" 1 3
+# 38 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stddef.h" 3
+  typedef signed int ptrdiff_t;
+# 53 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stddef.h" 3
+    typedef unsigned int size_t;
+# 71 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stddef.h" 3
+      typedef unsigned short wchar_t;
+# 10 "CustomLibs/src/ili9341.c" 2
+# 1 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 1 3
+# 58 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) void *memcpy(void * __restrict ,
+                    const void * __restrict , size_t ) __attribute__((__nonnull__(1,2)));
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) void *memmove(void * ,
+                    const void * , size_t ) __attribute__((__nonnull__(1,2)));
+# 77 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) char *strcpy(char * __restrict , const char * __restrict ) __attribute__((__nonnull__(1,2)));
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) char *strncpy(char * __restrict , const char * __restrict , size_t ) __attribute__((__nonnull__(1,2)));
+# 93 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) char *strcat(char * __restrict , const char * __restrict ) __attribute__((__nonnull__(1,2)));
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) char *strncat(char * __restrict , const char * __restrict , size_t ) __attribute__((__nonnull__(1,2)));
+# 117 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) int memcmp(const void * , const void * , size_t ) __attribute__((__nonnull__(1,2)));
+
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) int strcmp(const char * , const char * ) __attribute__((__nonnull__(1,2)));
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) int strncmp(const char * , const char * , size_t ) __attribute__((__nonnull__(1,2)));
+# 141 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) int strcasecmp(const char * , const char * ) __attribute__((__nonnull__(1,2)));
+
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) int strncasecmp(const char * , const char * , size_t ) __attribute__((__nonnull__(1,2)));
+# 158 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) int strcoll(const char * , const char * ) __attribute__((__nonnull__(1,2)));
+# 169 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) size_t strxfrm(char * __restrict , const char * __restrict , size_t ) __attribute__((__nonnull__(2)));
+# 193 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) void *memchr(const void * , int , size_t ) __attribute__((__nonnull__(1)));
+# 209 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) char *strchr(const char * , int ) __attribute__((__nonnull__(1)));
+# 218 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) size_t strcspn(const char * , const char * ) __attribute__((__nonnull__(1,2)));
+# 232 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) char *strpbrk(const char * , const char * ) __attribute__((__nonnull__(1,2)));
+# 247 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) char *strrchr(const char * , int ) __attribute__((__nonnull__(1)));
+# 257 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) size_t strspn(const char * , const char * ) __attribute__((__nonnull__(1,2)));
+# 270 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) char *strstr(const char * , const char * ) __attribute__((__nonnull__(1,2)));
+# 280 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) char *strtok(char * __restrict , const char * __restrict ) __attribute__((__nonnull__(2)));
+extern __attribute__((__nothrow__)) char *_strtok_r(char * , const char * , char ** ) __attribute__((__nonnull__(2,3)));
+# 321 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) void *memset(void * , int , size_t ) __attribute__((__nonnull__(1)));
+
+
+
+
+
+extern __attribute__((__nothrow__)) char *strerror(int );
+
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) size_t strlen(const char * ) __attribute__((__nonnull__(1)));
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) size_t strlcpy(char * , const char * , size_t ) __attribute__((__nonnull__(1,2)));
+# 362 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) size_t strlcat(char * , const char * , size_t ) __attribute__((__nonnull__(1,2)));
+# 388 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
+extern __attribute__((__nothrow__)) void _membitcpybl(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) void _membitcpybb(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) void _membitcpyhl(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) void _membitcpyhb(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) void _membitcpywl(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) void _membitcpywb(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) void _membitmovebl(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) void _membitmovebb(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) void _membitmovehl(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) void _membitmovehb(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) void _membitmovewl(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) void _membitmovewb(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
+# 11 "CustomLibs/src/ili9341.c" 2
+# 1 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 1 3
+# 68 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+    typedef __builtin_va_list __va_list;
+# 87 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+typedef struct __fpos_t_struct {
+    unsigned long long int __pos;
+
+
+
+
+
+    struct {
+        unsigned int __state1, __state2;
+    } __mbstate;
+} fpos_t;
+# 108 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+typedef struct __FILE FILE;
+# 119 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+struct __FILE {
+    union {
+        long __FILE_alignment;
+
+
+
+        char __FILE_size[84];
+
+    } __FILE_opaque;
+};
+# 138 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern FILE __stdin, __stdout, __stderr;
+extern FILE *__aeabi_stdin, *__aeabi_stdout, *__aeabi_stderr;
+# 224 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) int remove(const char * ) __attribute__((__nonnull__(1)));
+
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) int rename(const char * , const char * ) __attribute__((__nonnull__(1,2)));
+# 243 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) FILE *tmpfile(void);
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) char *tmpnam(char * );
+# 265 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) int fclose(FILE * ) __attribute__((__nonnull__(1)));
+# 275 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) int fflush(FILE * );
+# 285 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) FILE *fopen(const char * __restrict ,
+                           const char * __restrict ) __attribute__((__nonnull__(1,2)));
+# 329 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) FILE *freopen(const char * __restrict ,
+                    const char * __restrict ,
+                    FILE * __restrict ) __attribute__((__nonnull__(2,3)));
+# 342 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) void setbuf(FILE * __restrict ,
+                    char * __restrict ) __attribute__((__nonnull__(1)));
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) int setvbuf(FILE * __restrict ,
+                   char * __restrict ,
+                   int , size_t ) __attribute__((__nonnull__(1)));
+# 370 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+#pragma __printf_args
+extern __attribute__((__nothrow__)) int fprintf(FILE * __restrict ,
+                    const char * __restrict , ...) __attribute__((__nonnull__(1,2)));
+# 393 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+#pragma __printf_args
+extern __attribute__((__nothrow__)) int _fprintf(FILE * __restrict ,
+                     const char * __restrict , ...) __attribute__((__nonnull__(1,2)));
+
+
+
+
+
+#pragma __printf_args
+extern __attribute__((__nothrow__)) int printf(const char * __restrict , ...) __attribute__((__nonnull__(1)));
+
+
+
+
+
+
+#pragma __printf_args
+extern __attribute__((__nothrow__)) int _printf(const char * __restrict , ...) __attribute__((__nonnull__(1)));
+
+
+
+
+
+#pragma __printf_args
+extern __attribute__((__nothrow__)) int sprintf(char * __restrict , const char * __restrict , ...) __attribute__((__nonnull__(1,2)));
+
+
+
+
+
+
+
+
+#pragma __printf_args
+extern __attribute__((__nothrow__)) int _sprintf(char * __restrict , const char * __restrict , ...) __attribute__((__nonnull__(1,2)));
+
+
+
+
+
+
+#pragma __printf_args
+extern __attribute__((__nothrow__)) int __ARM_snprintf(char * __restrict , size_t ,
+                     const char * __restrict , ...) __attribute__((__nonnull__(3)));
+
+
+#pragma __printf_args
+extern __attribute__((__nothrow__)) int snprintf(char * __restrict , size_t ,
+                     const char * __restrict , ...) __attribute__((__nonnull__(3)));
+# 460 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+#pragma __printf_args
+extern __attribute__((__nothrow__)) int _snprintf(char * __restrict , size_t ,
+                      const char * __restrict , ...) __attribute__((__nonnull__(3)));
+
+
+
+
+
+#pragma __scanf_args
+extern __attribute__((__nothrow__)) int fscanf(FILE * __restrict ,
+                    const char * __restrict , ...) __attribute__((__nonnull__(1,2)));
+# 503 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+#pragma __scanf_args
+extern __attribute__((__nothrow__)) int _fscanf(FILE * __restrict ,
+                     const char * __restrict , ...) __attribute__((__nonnull__(1,2)));
+
+
+
+
+
+#pragma __scanf_args
+extern __attribute__((__nothrow__)) int scanf(const char * __restrict , ...) __attribute__((__nonnull__(1)));
+
+
+
+
+
+
+
+
+#pragma __scanf_args
+extern __attribute__((__nothrow__)) int _scanf(const char * __restrict , ...) __attribute__((__nonnull__(1)));
+
+
+
+
+
+#pragma __scanf_args
+extern __attribute__((__nothrow__)) int sscanf(const char * __restrict ,
+                    const char * __restrict , ...) __attribute__((__nonnull__(1,2)));
+# 541 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+#pragma __scanf_args
+extern __attribute__((__nothrow__)) int _sscanf(const char * __restrict ,
+                     const char * __restrict , ...) __attribute__((__nonnull__(1,2)));
+
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) int vfscanf(FILE * __restrict , const char * __restrict , __va_list) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) int vscanf(const char * __restrict , __va_list) __attribute__((__nonnull__(1)));
+extern __attribute__((__nothrow__)) int vsscanf(const char * __restrict , const char * __restrict , __va_list) __attribute__((__nonnull__(1,2)));
+
+extern __attribute__((__nothrow__)) int _vfscanf(FILE * __restrict , const char * __restrict , __va_list) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) int _vscanf(const char * __restrict , __va_list) __attribute__((__nonnull__(1)));
+extern __attribute__((__nothrow__)) int _vsscanf(const char * __restrict , const char * __restrict , __va_list) __attribute__((__nonnull__(1,2)));
+extern __attribute__((__nothrow__)) int __ARM_vsscanf(const char * __restrict , const char * __restrict , __va_list) __attribute__((__nonnull__(1,2)));
+
+extern __attribute__((__nothrow__)) int vprintf(const char * __restrict , __va_list ) __attribute__((__nonnull__(1)));
+
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) int _vprintf(const char * __restrict , __va_list ) __attribute__((__nonnull__(1)));
+
+
+
+
+
+extern __attribute__((__nothrow__)) int vfprintf(FILE * __restrict ,
+                    const char * __restrict , __va_list ) __attribute__((__nonnull__(1,2)));
+# 584 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) int vsprintf(char * __restrict ,
+                     const char * __restrict , __va_list ) __attribute__((__nonnull__(1,2)));
+# 594 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) int __ARM_vsnprintf(char * __restrict , size_t ,
+                     const char * __restrict , __va_list ) __attribute__((__nonnull__(3)));
+
+extern __attribute__((__nothrow__)) int vsnprintf(char * __restrict , size_t ,
+                     const char * __restrict , __va_list ) __attribute__((__nonnull__(3)));
+# 609 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) int _vsprintf(char * __restrict ,
+                      const char * __restrict , __va_list ) __attribute__((__nonnull__(1,2)));
+
+
+
+
+
+extern __attribute__((__nothrow__)) int _vfprintf(FILE * __restrict ,
+                     const char * __restrict , __va_list ) __attribute__((__nonnull__(1,2)));
+
+
+
+
+
+extern __attribute__((__nothrow__)) int _vsnprintf(char * __restrict , size_t ,
+                      const char * __restrict , __va_list ) __attribute__((__nonnull__(3)));
+# 635 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+#pragma __printf_args
+extern __attribute__((__nothrow__)) int __ARM_asprintf(char ** , const char * __restrict , ...) __attribute__((__nonnull__(2)));
+extern __attribute__((__nothrow__)) int __ARM_vasprintf(char ** , const char * __restrict , __va_list ) __attribute__((__nonnull__(2)));
+# 649 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) int fgetc(FILE * ) __attribute__((__nonnull__(1)));
+# 659 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) char *fgets(char * __restrict , int ,
+                    FILE * __restrict ) __attribute__((__nonnull__(1,3)));
+# 673 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) int fputc(int , FILE * ) __attribute__((__nonnull__(2)));
+# 683 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) int fputs(const char * __restrict , FILE * __restrict ) __attribute__((__nonnull__(1,2)));
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) int getc(FILE * ) __attribute__((__nonnull__(1)));
+# 704 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+    extern __attribute__((__nothrow__)) int (getchar)(void);
+# 713 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) char *gets(char * ) __attribute__((__nonnull__(1)));
+# 725 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) int putc(int , FILE * ) __attribute__((__nonnull__(2)));
+# 737 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+    extern __attribute__((__nothrow__)) int (putchar)(int );
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) int puts(const char * ) __attribute__((__nonnull__(1)));
+
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) int ungetc(int , FILE * ) __attribute__((__nonnull__(2)));
+# 778 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) size_t fread(void * __restrict ,
+                    size_t , size_t , FILE * __restrict ) __attribute__((__nonnull__(1,4)));
+# 794 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) size_t __fread_bytes_avail(void * __restrict ,
+                    size_t , FILE * __restrict ) __attribute__((__nonnull__(1,3)));
+# 810 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) size_t fwrite(const void * __restrict ,
+                    size_t , size_t , FILE * __restrict ) __attribute__((__nonnull__(1,4)));
+# 822 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) int fgetpos(FILE * __restrict , fpos_t * __restrict ) __attribute__((__nonnull__(1,2)));
+# 833 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) int fseek(FILE * , long int , int ) __attribute__((__nonnull__(1)));
+# 850 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) int fsetpos(FILE * __restrict , const fpos_t * __restrict ) __attribute__((__nonnull__(1,2)));
+# 863 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) long int ftell(FILE * ) __attribute__((__nonnull__(1)));
+# 877 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) void rewind(FILE * ) __attribute__((__nonnull__(1)));
+# 886 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) void clearerr(FILE * ) __attribute__((__nonnull__(1)));
+
+
+
+
+
+
+
+extern __attribute__((__nothrow__)) int feof(FILE * ) __attribute__((__nonnull__(1)));
+
+
+
+
+extern __attribute__((__nothrow__)) int ferror(FILE * ) __attribute__((__nonnull__(1)));
+
+
+
+
+extern __attribute__((__nothrow__)) void perror(const char * );
+# 917 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
+extern __attribute__((__nothrow__)) int _fisatty(FILE * ) __attribute__((__nonnull__(1)));
+
+
+
+extern __attribute__((__nothrow__)) void __use_no_semihosting_swi(void);
+extern __attribute__((__nothrow__)) void __use_no_semihosting(void);
+# 12 "CustomLibs/src/ili9341.c" 2
+# 1 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdarg.h" 1 3
+# 40 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdarg.h" 3
+  typedef __builtin_va_list va_list;
+# 134 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdarg.h" 3
+     typedef va_list __gnuc_va_list;
+# 13 "CustomLibs/src/ili9341.c" 2
+
+
+
+
+
+
+char debugString[100];
+
 
 volatile uint16_t LCD_W=320;
 volatile uint16_t LCD_H=240;
@@ -1588,19 +2621,13 @@ void test(void)
 
 void ili9341_writecommand8(uint8_t com)
 {
-
  ((MDR_PORT_TypeDef *) (0x400B0000))->RXTX &= ~(PORT_Pin_6);
-
  ((MDR_PORT_TypeDef *) (0x400E8000))->RXTX &= ~(PORT_Pin_2);
-
-
  ((MDR_SSP_TypeDef *) (0x40040000))->DR = com;
  while (((MDR_SSP_TypeDef *) (0x40040000))->SR & ((uint32_t)0x00000010))
  {
   ;
  }
-
-
  ((MDR_PORT_TypeDef *) (0x400E8000))->RXTX |= PORT_Pin_2;
 }
 
@@ -1960,4 +2987,99 @@ void Setup_ili9341(void)
  ili9341_clear(0x0000);
  delay_ms(1000);
  ili9341_setRotation(1);
+}
+
+
+
+uint16_t ili9341_touch_writecommand8(uint8_t com)
+{
+
+ ((MDR_PORT_TypeDef *) (0x400B0000))->RXTX &= ~(PORT_Pin_10);
+ ((MDR_SSP_TypeDef *) (0x40040000))->DR = com;
+ while (((MDR_SSP_TypeDef *) (0x40040000))->SR & ((uint32_t)0x00000010))
+ {
+  ;
+ }
+ ((MDR_SSP_TypeDef *) (0x40040000))->DR = (uint16_t) 0;
+
+
+
+
+
+ ((MDR_PORT_TypeDef *) (0x400B0000))->RXTX |= PORT_Pin_10;
+
+}
+
+uint8_t ILI9341_TouchPressed()
+{
+ return ( PORT_ReadInputDataBit(((MDR_PORT_TypeDef *) (0x400B0000)), PORT_Pin_9));
+}
+
+
+void USB_Print(char *format, ...)
+{
+ va_list argptr;
+ __builtin_va_start(argptr, format);
+
+ vsprintf(debugString, format, argptr);
+ __builtin_va_end(argptr);
+ USB_CDC_SendData((uint8_t *)debugString, strlen(debugString));
+
+
+}
+
+uint8_t ILI9341_TouchGetCoordinates(uint16_t* x, uint16_t* y) {
+    static const uint8_t cmd_read_x[] = { 0xD0 };
+    static const uint8_t cmd_read_y[] = { 0x90 };
+    static const uint8_t zeroes_tx[] = { 0x00, 0x00 };
+
+
+
+    uint32_t avg_x = 0;
+    uint32_t avg_y = 0;
+    uint8_t nsamples = 0;
+
+
+        if(!ILI9341_TouchPressed())
+
+   return 0;
+
+        nsamples++;
+
+
+
+
+  ili9341_touch_writecommand8(0x90);
+  ((MDR_SSP_TypeDef *) (0x40040000))->DR = (uint16_t) 0;
+
+
+
+
+
+        uint16_t y_raw;
+
+
+  y_raw = SSP_ReceiveData(((MDR_SSP_TypeDef *) (0x40040000)));
+
+
+
+
+  ili9341_touch_writecommand8(0xD0);
+  ((MDR_SSP_TypeDef *) (0x40040000))->DR = (uint16_t) 0;
+
+
+
+        uint16_t x_raw;
+
+
+  y_raw = SSP_ReceiveData(((MDR_SSP_TypeDef *) (0x40040000)));
+
+
+
+
+  *x = x_raw;
+  *y = y_raw;
+  USB_Print("raw_x = %d, raw_y = %d\r\n", x_raw, y_raw);
+
+
 }

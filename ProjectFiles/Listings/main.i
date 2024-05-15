@@ -4721,6 +4721,7 @@ void ili9341_filltriangle(uint16_t x, uint16_t y, int base, int height, uint16_t
 
 void test(void);
 void custom_ili9341_setaddress(uint16_t x,uint16_t y);
+uint8_t ILI9341_TouchGetCoordinates(uint16_t* x, uint16_t* y);
 # 27 "main.c" 2
 # 1 "./CustomLibs/inc\\ili9341_interface.h" 1
 
@@ -4762,6 +4763,8 @@ uint16_t main_array_for_ADC[128];
 uint16_t alternate_array_for_ADC[128];
 
 uint16_t tuner = 128;
+uint16_t coordinate_x = 0;
+uint16_t coordinate_y = 0;
 
 
 
@@ -4841,7 +4844,7 @@ void convert_to_12_bit(uint8_t *arr, int size)
   i++;
     }
 }
-# 128 "main.c"
+# 130 "main.c"
 int main(void)
 {
  Setup_CPU_Clock();
@@ -4856,11 +4859,9 @@ int main(void)
 
  Setup_SPI();
  Setup_ili9341();
-# 153 "main.c"
+# 155 "main.c"
  ili9341_setaddress(0,0,319,239);
- __disable_irq();
-# 166 "main.c"
-__disable_irq();
+# 170 "main.c"
 ili9341_clear(0x0000);
 display_main_menu();
 
@@ -4876,8 +4877,9 @@ while (1)
  delay_ms(100);
  draw_arrow(320 - 48, 240 - 13 - 38, 1, 0xF100);
  delay_ms(1000);
+ ILI9341_TouchGetCoordinates(&coordinate_x, &coordinate_y);
 }
-# 194 "main.c"
+# 198 "main.c"
  while (1)
  {
   if (command_recived == 1)

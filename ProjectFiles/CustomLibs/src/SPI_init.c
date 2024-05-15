@@ -28,14 +28,21 @@ void Setup_SPI(void)
 	// TEST
 
 	// PORT F - инициализация CS
-	Port_sruct.PORT_Pin       = PORT_Pin_2;		// PF2 = CS
+	Port_sruct.PORT_Pin       = PORT_Pin_2;		// PF2 = CS дисплея
 	PORT_Init(MDR_PORTF, &Port_sruct);
+	Port_sruct.PORT_Pin       = PORT_Pin_10;	// PB10 = CS тача
+	PORT_Init(MDR_PORTB, &Port_sruct);
+	
 	// PORT F - инициализация MOSI, SCK
 	Port_sruct.PORT_Pin       = (PORT_Pin_0 | PORT_Pin_1);
 	Port_sruct.PORT_FUNC	   = PORT_FUNC_ALTER;
 	PORT_Init(MDR_PORTF, &Port_sruct);
 	// MISO	Port_sruct->PORT_Pin       = (PORT_Pin_0 | PORT_Pin_1 | PORT_Pin_2);                // PF2 = CS
 	Port_sruct.PORT_Pin       = (PORT_Pin_3);                // MISO
+	Port_sruct.PORT_OE        = PORT_OE_IN;
+	PORT_Init(MDR_PORTF, &Port_sruct);
+	// Настройка для Touch
+	Port_sruct.PORT_Pin       = (PORT_Pin_9);                // IRQn
 	Port_sruct.PORT_OE        = PORT_OE_IN;
 	PORT_Init(MDR_PORTF, &Port_sruct);
 
@@ -48,4 +55,5 @@ void Setup_SPI(void)
 
 	// uint16_t data = 0;
 	// SSP_SendData(MDR_SSP1, data);
+	
 };

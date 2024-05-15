@@ -38,6 +38,8 @@ uint16_t main_array_for_ADC[NUM_OF_MES];		// Массив измерений А�
 uint16_t alternate_array_for_ADC[NUM_OF_MES];	// Массив измерений АЦП для заполнения альтернативной структурой DMA
 // элементы управления
 uint16_t tuner = NUM_OF_MES;					// Управление разверткой
+uint16_t coordinate_x = 0;
+uint16_t coordinate_y = 0;
 
 /* -------------------------------------------------------------------------------*/
 
@@ -151,7 +153,9 @@ int main(void)
 
 // 	/* Main loop */
 	ili9341_setaddress(0,0,319,239);
-	__disable_irq();
+	// Тест с отключением прерываний
+	// __disable_irq();
+	// NVIC_EnableIRQ(USB_IRQn);
 // 	// Включить таймер
 // 	TIMER_Cmd(MDR_TIMER2, ENABLE);
 
@@ -163,7 +167,6 @@ int main(void)
 
 
 // // TEST OF GUI
-__disable_irq();
 ili9341_clear(BLACK);
 display_main_menu();
 
@@ -179,6 +182,7 @@ while (1)
 	delay_ms(100);
 	draw_arrow(320 - 48, 240 - 13 - 38, 1, BLUE);
 	delay_ms(1000);
+	ILI9341_TouchGetCoordinates(&coordinate_x, &coordinate_y);
 }
 	
 

@@ -56,5 +56,6 @@ void ili9341_filltriangle(uint16_t x, uint16_t y, int base, int height, uint16_t
 // void dysplay_signal(uint16_t *arr, int size, int signal_number, int skip_every);
 void test(void);
 void custom_ili9341_setaddress(uint16_t x,uint16_t y);
+uint8_t ILI9341_TouchGetCoordinates(uint16_t* x, uint16_t* y);
 
 #endif

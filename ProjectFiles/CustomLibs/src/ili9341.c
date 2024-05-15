@@ -2,16 +2,21 @@
 #include <stdint.h>
 #include "MDR32F9Qx_ssp.h"
 #include "MDR32F9Qx_port.h"
+#include "MDR32F9Qx_usb_handlers.h"
 #include "MDR32Fx.h"
 #include "delay.h"
 #include "defines.h"
+#include <stddef.h>
+#include <string.h>
+#include <stdio.h>
+#include <stdarg.h>
 
 // Для touch screen команды на чтение координат
 #define READ_X 0xD0
 #define READ_Y 0x90
 
 // Для USB отладки
-char tempString[100];
+char debugString[100];
 
 
 volatile uint16_t LCD_W=ILI9341_TFTWIDTH;
@@ -401,7 +406,45 @@ void Setup_ili9341(void)
 }
 
 ////// TOUCH ///////
-bool ILI9341_TouchGetCoordinates(uint16_t* x, uint16_t* y) {
+// Передача команды на получение координаты и ее получение
+uint16_t ili9341_touch_writecommand8(uint8_t com)			// Передать команду
+{
+	// MDR_PORTB->RXTX &= ~(PORT_Pin_6);			// dc = 0
+	MDR_PORTB->RXTX &= ~(PORT_Pin_10);			// cs = 0 PB10 для touch
+	MDR_SSP1->DR = com;
+	while (MDR_SSP1->SR & SSP_SR_BSY)			// 1 – модуль SSP в настоящее время передает и/или принимает данные, либо буфер FIFO передатчика не пуст
+	{
+		;										// wait
+	}
+	MDR_SSP1->DR = (uint16_t) 0;
+	// while (MDR_SSP1->SR & SSP_SR_BSY)			// 1 – модуль SSP в настоящее время передает и/или принимает данные, либо буфер FIFO передатчика не пуст
+	// {
+	// 	;										// wait
+	// }
+	// uint16_t coordinate = SSP_ReceiveData(MDR_SSP1);
+	MDR_PORTB->RXTX |= PORT_Pin_10;				// cs = 1
+	// return coordinate;
+}
+
+uint8_t ILI9341_TouchPressed()
+{
+	return ( PORT_ReadInputDataBit(MDR_PORTB, PORT_Pin_9));
+}
+
+// Отладка
+void USB_Print(char *format, ...)
+{
+	va_list argptr;
+	va_start(argptr, format);
+
+	vsprintf(debugString, format, argptr);
+	va_end(argptr);
+	USB_CDC_SendData((uint8_t *)debugString, strlen(debugString));
+	
+	//delayTick(timeout);
+}
+
+uint8_t ILI9341_TouchGetCoordinates(uint16_t* x, uint16_t* y) {
     static const uint8_t cmd_read_x[] = { READ_X };
     static const uint8_t cmd_read_y[] = { READ_Y };
     static const uint8_t zeroes_tx[] = { 0x00, 0x00 };
@@ -411,9 +454,11 @@ bool ILI9341_TouchGetCoordinates(uint16_t* x, uint16_t* y) {
     uint32_t avg_x = 0;
     uint32_t avg_y = 0;
     uint8_t nsamples = 0;
-    for(uint8_t i = 0; i < 16; i++) {
+    // for(uint8_t i = 0; i < 16; i++) {
+		// USB_Print("TEST\n");
         if(!ILI9341_TouchPressed())		// Проверяем пин с прерыванием
-            break;
+            // break;
+			return 0;
 
         nsamples++;
 
@@ -421,6 +466,9 @@ bool ILI9341_TouchGetCoordinates(uint16_t* x, uint16_t* y) {
         // HAL_SPI_Transmit(&ILI9341_TOUCH_SPI_PORT,
         //     (uint8_t*)cmd_read_y, sizeof(cmd_read_y), HAL_MAX_DELAY);
 		ili9341_touch_writecommand8(READ_Y);
+		MDR_SSP1->DR = (uint16_t) 0;
+		// uint16_t coordinate = SSP_ReceiveData(MDR_SSP1);
+		// MDR_PORTB->RXTX |= PORT_Pin_10;				// cs = 1
 
 		// 2 - прочитаем полученный Y
         // uint8_t y_raw[2];
@@ -433,6 +481,7 @@ bool ILI9341_TouchGetCoordinates(uint16_t* x, uint16_t* y) {
         // HAL_SPI_Transmit(&ILI9341_TOUCH_SPI_PORT,
         //     (uint8_t*)cmd_read_x, sizeof(cmd_read_x), HAL_MAX_DELAY);
 		ili9341_touch_writecommand8(READ_X);
+		MDR_SSP1->DR = (uint16_t) 0;
 
 		// 4 - Прочитаем X
         // uint8_t x_raw[2];
@@ -444,38 +493,9 @@ bool ILI9341_TouchGetCoordinates(uint16_t* x, uint16_t* y) {
 
         // avg_x += (((uint16_t)x_raw[0]) << 8) | ((uint16_t)x_raw[1]);
         // avg_y += (((uint16_t)y_raw[0]) << 8) | ((uint16_t)y_raw[1]);
-
+		*x = x_raw;
+		*y = y_raw;
 		USB_Print("raw_x = %d, raw_y = %d\r\n", x_raw, y_raw);
-    }
-}
-
-// Передача команды
-void ili9341_touch_writecommand8(uint8_t com)			// Передать команду
-{
-	// MDR_PORTB->RXTX &= ~(PORT_Pin_6);			// dc = 0
-	MDR_PORTB->RXTX &= ~(PORT_Pin_10);			// cs = 0 PB10 для touch
-	MDR_SSP1->DR = com;
-	while (MDR_SSP1->SR & SSP_SR_BSY)			// 1 – модуль SSP в настоящее время передает и/или принимает данные, либо буфер FIFO передатчика не пуст
-	{
-		;										// wait
-	}
-	MDR_PORTB->RXTX |= PORT_Pin_10;				// cs = 1
-}
-
-bool ILI9341_TouchPressed()
-{
-	return ((bool)( PORT_ReadInputDataBit(MDR_PORTB, PORT_Pin_TypeDef PORT_Pin_9)) );
-}
-
-// Отладка
-void USB_Print(char *format, ...)
-{
-	va_list argptr;
-	va_start(argptr, format);
-
-	vsprintf(tempString, format, argptr);
-	va_end(argptr);
-	USB_CDC_SendData((uint8_t *)tempString, strlen(tempString));
+    // }
 	
-	//delayTick(timeout);
 }

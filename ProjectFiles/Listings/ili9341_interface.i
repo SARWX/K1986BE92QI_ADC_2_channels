@@ -82,6 +82,7 @@ void ili9341_filltriangle(uint16_t x, uint16_t y, int base, int height, uint16_t
 
 void test(void);
 void custom_ili9341_setaddress(uint16_t x,uint16_t y);
+uint8_t ILI9341_TouchGetCoordinates(uint16_t* x, uint16_t* y);
 # 2 "CustomLibs/src/ili9341_interface.c" 2
 # 1 "./CustomLibs/inc\\ili9341_interface.h" 1
 
