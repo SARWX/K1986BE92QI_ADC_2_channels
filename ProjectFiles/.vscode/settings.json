@@ -15,6 +15,10 @@
         "compare": "c",
         "mdr32f9qx_adc.h": "c",
         "mdr32f9qx_dac.h": "c",
-        "dac_init.h": "c"
+        "dac_init.h": "c",
+        "mdr32f9qx_dma.h": "c",
+        "stdint.h": "c",
+        "mdr32f9qx_usb_cdc.h": "c",
+        "command_system.h": "c"
     }
 }

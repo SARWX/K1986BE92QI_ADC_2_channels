@@ -8,28 +8,28 @@ Image component sizes
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
 
         46          0          0          0          0        919   delay.o
-        56          0          0          0         72       7639   dma_init.o
-      2414          4         25          4        100       6056   ili9341.o
-      1774          0          0          0          0       6638   ili9341_interface.o
-      1666          0       1275          0          0       7235   ili9341gfx.o
-       158          0          0          0        136       3006   main.o
-       488         10          0          0       1024      10601   mdr32f9qx_dma.o
-       318          0          0          0          0       5148   mdr32f9qx_port.o
-       282          0          0          0          0      16323   mdr32f9qx_rst_clk.o
-       158          0          0          0          0       5614   mdr32f9qx_ssp.o
-       354          0          0          0          0      11203   mdr32f9qx_usb.o
-       610         36          0         85         20       7672   mdr32f9qx_usb_cdc.o
-      2792         26          0          0        204      20975   mdr32f9qx_usb_device.o
-       202          0          0          0          0       4120   spi_init.o
+        52          0          0          0         72       7525   dma_init.o
+      2878          4         25          4        100       6518   ili9341.o
+       914          0         51          0          0       2719   ili9341_interface.o
+       470          0       1275          0          0       3230   ili9341gfx.o
+       184          0          0          0        136       1936   main.o
+       492          8          0          0       1024       8058   mdr32f9qx_dma.o
+       472          0          0          0          0       4631   mdr32f9qx_port.o
+       556          0          0          0          0      11263   mdr32f9qx_rst_clk.o
+       278          0          0          0          0       5236   mdr32f9qx_ssp.o
+       674          0          0          0          0       9731   mdr32f9qx_usb.o
+      1162         36          0         85         20       6320   mdr32f9qx_usb_cdc.o
+      3468         38          0          0        202      13555   mdr32f9qx_usb_device.o
+       258          0          0          0         10       4085   spi_init.o
         64         26        192          0      24576        924   startup_mdr32f9qx.o
-        58          0          0          0          0       1817   sys_clk_init.o
-       180          0          0          4          0       1982   system_mdr32f9qx.o
-       188          0          0          0        152       6701   usb_init.o
+        64          0          0          0          0       1696   sys_clk_init.o
+       338          0          0          4          0       1534   system_mdr32f9qx.o
+       294          0          0          0        150       6445   usb_init.o
 
     ----------------------------------------------------------------------
-     11910        102       1524         96      27088     124573   Object Totals
+     12770        112       1576         96      27216      96325   Object Totals
          0          0         32          0          0          0   (incl. Generated)
-       102          0          0          3        804          0   (incl. Padding)
+       106          0          1          3        926          0   (incl. Padding)
 
     ----------------------------------------------------------------------
 
@@ -138,15 +138,15 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-     18972        366       2076         96      27184     126213   Grand Totals
-     18972        366       2076         96      27184     126213   ELF Image Totals
-     18972        366       2076         96          0          0   ROM Totals
+     19832        376       2128         96      27312      97965   Grand Totals
+     19832        376       2128         96      27312      97965   ELF Image Totals
+     19832        376       2128         96          0          0   ROM Totals
 
 ==============================================================================
 
-    Total RO  Size (Code + RO Data)                21048 (  20.55kB)
-    Total RW  Size (RW Data + ZI Data)             27280 (  26.64kB)
-    Total ROM Size (Code + RO Data + RW Data)      21144 (  20.65kB)
+    Total RO  Size (Code + RO Data)                21960 (  21.45kB)
+    Total RW  Size (RW Data + ZI Data)             27408 (  26.77kB)
+    Total ROM Size (Code + RO Data + RW Data)      22056 (  21.54kB)
 
 ==============================================================================
 
