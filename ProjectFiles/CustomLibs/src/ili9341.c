@@ -568,5 +568,5 @@ uint8_t ILI9341_TouchGetCoordinates(uint16_t* x, uint16_t* y) {
 
 		USB_Print("raw_x = %d, raw_y = %d\r\n", avg_x, avg_y);
     // }
-	
+
 }
