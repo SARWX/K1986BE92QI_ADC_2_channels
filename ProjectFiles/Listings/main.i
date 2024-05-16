@@ -4876,7 +4876,7 @@ while (1)
  draw_box(row_num, 0x0E70);
  delay_ms(100);
  draw_arrow(320 - 48, 240 - 13 - 38, 1, 0xF100);
- delay_ms(1000);
+ delay_ms(100);
  ILI9341_TouchGetCoordinates(&coordinate_x, &coordinate_y);
 }
 # 198 "main.c"

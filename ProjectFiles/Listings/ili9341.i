@@ -84,6 +84,10 @@ void test(void);
 void custom_ili9341_setaddress(uint16_t x,uint16_t y);
 uint8_t ILI9341_TouchGetCoordinates(uint16_t* x, uint16_t* y);
 # 2 "CustomLibs/src/ili9341.c" 2
+# 1 "./CustomLibs/inc\\SPI_init.h" 1
+# 15 "./CustomLibs/inc\\SPI_init.h"
+void Setup_SPI(void);
+# 3 "CustomLibs/src/ili9341.c" 2
 
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_ssp.h" 1
 # 32 "./SPL/MDR32Fx/inc\\MDR32F9Qx_ssp.h"
@@ -1373,7 +1377,7 @@ uint16_t SSP_ReceiveData(MDR_SSP_TypeDef* SSPx);
 
 FlagStatus SSP_GetFlagStatus(MDR_SSP_TypeDef* SSPx, SSP_Flags_TypeDef SSP_FLAG);
 void SSP_BRGInit(MDR_SSP_TypeDef* SSPx, SSP_Clock_BRG_TypeDef SSP_BRG);
-# 4 "CustomLibs/src/ili9341.c" 2
+# 5 "CustomLibs/src/ili9341.c" 2
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_port.h" 1
 # 49 "./SPL/MDR32Fx/inc\\MDR32F9Qx_port.h"
 typedef enum
@@ -1556,7 +1560,7 @@ void PORT_ResetBits(MDR_PORT_TypeDef* MDR_PORTx, uint32_t PORT_Pin);
 
 
 void PORT_Write(MDR_PORT_TypeDef* MDR_PORTx, uint32_t PortVal);
-# 5 "CustomLibs/src/ili9341.c" 2
+# 6 "CustomLibs/src/ili9341.c" 2
 # 1 "./SPL/MDR32Fx/inc/USB_Library\\MDR32F9Qx_usb_handlers.h" 1
 # 31 "./SPL/MDR32Fx/inc/USB_Library\\MDR32F9Qx_usb_handlers.h"
 # 1 "./SPL/MDR32Fx/inc/USB_Library/MDR32F9Qx_usb_default_handlers.h" 1
@@ -2129,7 +2133,7 @@ USB_Result USB_CDC_RecieveData(uint8_t* Buffer, uint32_t Length);
 
     USB_Result USB_CDC_GetLineCoding(uint16_t wINDEX, USB_CDC_LineCoding_TypeDef* DATA);
     USB_Result USB_CDC_SetLineCoding(uint16_t wINDEX, const USB_CDC_LineCoding_TypeDef* DATA);
-# 6 "CustomLibs/src/ili9341.c" 2
+# 7 "CustomLibs/src/ili9341.c" 2
 
 # 1 "./CustomLibs/inc\\delay.h" 1
 
@@ -2140,9 +2144,9 @@ USB_Result USB_CDC_RecieveData(uint8_t* Buffer, uint32_t Length);
 void delay_tick(uint32_t count);
 void delay_ms(uint32_t delay);
 void delay_us(uint32_t delay);
-# 8 "CustomLibs/src/ili9341.c" 2
-# 1 "./CustomLibs/inc\\defines.h" 1
 # 9 "CustomLibs/src/ili9341.c" 2
+# 1 "./CustomLibs/inc\\defines.h" 1
+# 10 "CustomLibs/src/ili9341.c" 2
 # 1 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stddef.h" 1 3
 # 38 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stddef.h" 3
   typedef signed int ptrdiff_t;
@@ -2150,7 +2154,7 @@ void delay_us(uint32_t delay);
     typedef unsigned int size_t;
 # 71 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stddef.h" 3
       typedef unsigned short wchar_t;
-# 10 "CustomLibs/src/ili9341.c" 2
+# 11 "CustomLibs/src/ili9341.c" 2
 # 1 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 1 3
 # 58 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\string.h" 3
 extern __attribute__((__nothrow__)) void *memcpy(void * __restrict ,
@@ -2267,7 +2271,7 @@ extern __attribute__((__nothrow__)) void _membitmovehl(void * , const void * , i
 extern __attribute__((__nothrow__)) void _membitmovehb(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
 extern __attribute__((__nothrow__)) void _membitmovewl(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
 extern __attribute__((__nothrow__)) void _membitmovewb(void * , const void * , int , int , size_t ) __attribute__((__nonnull__(1,2)));
-# 11 "CustomLibs/src/ili9341.c" 2
+# 12 "CustomLibs/src/ili9341.c" 2
 # 1 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 1 3
 # 68 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
     typedef __builtin_va_list __va_list;
@@ -2587,24 +2591,22 @@ extern __attribute__((__nothrow__)) int _fisatty(FILE * ) __attribute__((__nonnu
 
 extern __attribute__((__nothrow__)) void __use_no_semihosting_swi(void);
 extern __attribute__((__nothrow__)) void __use_no_semihosting(void);
-# 12 "CustomLibs/src/ili9341.c" 2
+# 13 "CustomLibs/src/ili9341.c" 2
 # 1 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdarg.h" 1 3
 # 40 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdarg.h" 3
   typedef __builtin_va_list va_list;
 # 134 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdarg.h" 3
      typedef va_list __gnuc_va_list;
-# 13 "CustomLibs/src/ili9341.c" 2
-
-
-
-
-
-
+# 14 "CustomLibs/src/ili9341.c" 2
+# 26 "CustomLibs/src/ili9341.c"
 char debugString[100];
 
 
 volatile uint16_t LCD_W=320;
 volatile uint16_t LCD_H=240;
+
+
+extern SSP_InitTypeDef SSP1_struct;
 
 void test(void)
 {
@@ -2994,13 +2996,44 @@ void Setup_ili9341(void)
 uint16_t ili9341_touch_writecommand8(uint8_t com)
 {
 
+ SSP_Cmd(((MDR_SSP_TypeDef *) (0x40040000)), DISABLE);
+ SSP1_struct.SSP_CPSDVSR = 128;
+    SSP1_struct.SSP_SCR = 32;
+ SSP_Init(((MDR_SSP_TypeDef *) (0x40040000)), &SSP1_struct);
+ SSP_Cmd(((MDR_SSP_TypeDef *) (0x40040000)), ENABLE);
+
+
  ((MDR_PORT_TypeDef *) (0x400B0000))->RXTX &= ~(PORT_Pin_10);
+
  ((MDR_SSP_TypeDef *) (0x40040000))->DR = com;
  while (((MDR_SSP_TypeDef *) (0x40040000))->SR & ((uint32_t)0x00000010))
  {
   ;
  }
- ((MDR_SSP_TypeDef *) (0x40040000))->DR = (uint16_t) 0;
+
+ for (int i = 0; i < 8; i++)
+ {
+  uint16_t foo = ((MDR_SSP_TypeDef *) (0x40040000))->DR;
+ }
+
+ ((MDR_SSP_TypeDef *) (0x40040000))->DR = 0;
+ while (((MDR_SSP_TypeDef *) (0x40040000))->SR & ((uint32_t)0x00000010))
+ {
+  ;
+ }
+
+ uint16_t temp = 0;
+ temp = (uint16_t)(((MDR_SSP_TypeDef *) (0x40040000))->DR);
+ temp = temp << 8;
+
+ ((MDR_SSP_TypeDef *) (0x40040000))->DR = 0;
+ while (((MDR_SSP_TypeDef *) (0x40040000))->SR & ((uint32_t)0x00000010))
+ {
+  ;
+ }
+ temp |= (uint16_t)(((MDR_SSP_TypeDef *) (0x40040000))->DR);
+ ((MDR_PORT_TypeDef *) (0x400B0000))->RXTX |= PORT_Pin_10;
+
 
 
 
@@ -3008,11 +3041,22 @@ uint16_t ili9341_touch_writecommand8(uint8_t com)
 
  ((MDR_PORT_TypeDef *) (0x400B0000))->RXTX |= PORT_Pin_10;
 
-}
 
+
+ SSP_Cmd(((MDR_SSP_TypeDef *) (0x40040000)), DISABLE);
+ SSP1_struct.SSP_CPSDVSR = 2;
+    SSP1_struct.SSP_SCR = 0;
+ SSP_Init(((MDR_SSP_TypeDef *) (0x40040000)), &SSP1_struct);
+ SSP_Cmd(((MDR_SSP_TypeDef *) (0x40040000)), ENABLE);
+ return(temp);
+}
+# 515 "CustomLibs/src/ili9341.c"
 uint8_t ILI9341_TouchPressed()
 {
- return ( PORT_ReadInputDataBit(((MDR_PORT_TypeDef *) (0x400B0000)), PORT_Pin_9));
+ if ( (uint8_t)PORT_ReadInputDataBit(((MDR_PORT_TypeDef *) (0x400B0000)), PORT_Pin_9))
+  return (0);
+ else
+  return (1);
 }
 
 
@@ -3029,57 +3073,39 @@ void USB_Print(char *format, ...)
 }
 
 uint8_t ILI9341_TouchGetCoordinates(uint16_t* x, uint16_t* y) {
-    static const uint8_t cmd_read_x[] = { 0xD0 };
-    static const uint8_t cmd_read_y[] = { 0x90 };
-    static const uint8_t zeroes_tx[] = { 0x00, 0x00 };
-
 
 
     uint32_t avg_x = 0;
     uint32_t avg_y = 0;
-    uint8_t nsamples = 0;
+ uint16_t num_good_x = 0;
+ uint16_t num_good_y = 0;
+
 
 
         if(!ILI9341_TouchPressed())
 
    return 0;
 
-        nsamples++;
+  for(int i = 0; i < 16; i++)
+  {
+   uint16_t raw_y = ili9341_touch_writecommand8(0xD0);
+   uint8_t good_y = ((raw_y > 2000) && (raw_y < 32000)) ? 1 : 0;
+   avg_y += raw_y * good_y;
+   num_good_y += good_y;
 
+   uint16_t raw_x = ili9341_touch_writecommand8(0x90);
+   uint8_t good_x = ((raw_x > 1500) && (raw_x < 30000)) ? 1 : 0;
+   avg_x += raw_x * good_x;
+   num_good_x += good_x;
+  }
 
+  avg_y = avg_y / num_good_y;
+  avg_x = avg_x / num_good_y;
 
+  avg_y = (((avg_y - 2000) * 100) / (32000 - 2000)) * 240 / 100;
+  avg_x = (((avg_x - 2000) * 100) / (32000 - 2000)) * 320 / 100;
 
-  ili9341_touch_writecommand8(0x90);
-  ((MDR_SSP_TypeDef *) (0x40040000))->DR = (uint16_t) 0;
-
-
-
-
-
-        uint16_t y_raw;
-
-
-  y_raw = SSP_ReceiveData(((MDR_SSP_TypeDef *) (0x40040000)));
-
-
-
-
-  ili9341_touch_writecommand8(0xD0);
-  ((MDR_SSP_TypeDef *) (0x40040000))->DR = (uint16_t) 0;
-
-
-
-        uint16_t x_raw;
-
-
-  y_raw = SSP_ReceiveData(((MDR_SSP_TypeDef *) (0x40040000)));
-
-
-
-
-  *x = x_raw;
-  *y = y_raw;
-  USB_Print("raw_x = %d, raw_y = %d\r\n", x_raw, y_raw);
+  USB_Print("raw_x = %d, raw_y = %d\r\n", avg_x, avg_y);
 
 
 }
