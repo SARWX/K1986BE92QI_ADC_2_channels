@@ -1791,6 +1791,10 @@ void delay_tick(uint32_t count);
 void delay_ms(uint32_t delay);
 void delay_us(uint32_t delay);
 # 6 "CustomLibs/src/SPI_init.c" 2
+# 1 "./CustomLibs/inc\\SPI_init.h" 1
+# 33 "./CustomLibs/inc\\SPI_init.h"
+void Setup_SPI(void);
+# 7 "CustomLibs/src/SPI_init.c" 2
 
 SSP_InitTypeDef SSP1_struct;
 
@@ -1809,7 +1813,8 @@ void Setup_SPI(void)
  Port_sruct.PORT_SPEED = PORT_SPEED_MAXFAST;
  Port_sruct.PORT_MODE = PORT_MODE_DIGITAL;
  PORT_Init(((MDR_PORT_TypeDef *) (0x400B0000)), &Port_sruct);
-# 33 "CustomLibs/src/SPI_init.c"
+
+
  Port_sruct.PORT_Pin = PORT_Pin_2;
  PORT_Init(((MDR_PORT_TypeDef *) (0x400E8000)), &Port_sruct);
  ((MDR_PORT_TypeDef *) (0x400E8000))->RXTX |= PORT_Pin_2;
@@ -1821,7 +1826,6 @@ void Setup_SPI(void)
  Port_sruct.PORT_Pin = (PORT_Pin_0 | PORT_Pin_1);
  Port_sruct.PORT_FUNC = PORT_FUNC_ALTER;
  PORT_Init(((MDR_PORT_TypeDef *) (0x400E8000)), &Port_sruct);
-
  Port_sruct.PORT_Pin = (PORT_Pin_3);
  Port_sruct.PORT_OE = PORT_OE_IN;
  PORT_Init(((MDR_PORT_TypeDef *) (0x400E8000)), &Port_sruct);
@@ -1839,9 +1843,4 @@ void Setup_SPI(void)
  SSP_StructInit(&SSP1_struct);
  SSP_Init(((MDR_SSP_TypeDef *) (0x40040000)), &SSP1_struct);
  SSP_Cmd(((MDR_SSP_TypeDef *) (0x40040000)), ENABLE);
-
-
-
-
-
 };

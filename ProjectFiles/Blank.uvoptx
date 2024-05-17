@@ -168,22 +168,6 @@
         <Bp>
           <Number>1</Number>
           <Type>0</Type>
-          <LineNumber>457</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134234964</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>.\CustomLibs\src\ili9341.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\Blank\CustomLibs/src/ili9341.c\457</Expression>
-        </Bp>
-        <Bp>
-          <Number>2</Number>
-          <Type>0</Type>
           <LineNumber>219</LineNumber>
           <EnabledFlag>1</EnabledFlag>
           <Address>114</Address>
@@ -198,7 +182,7 @@
           <Expression>\\Blank\SPL/MDR32Fx/src/MDR32F9Qx_rst_clk.c\219</Expression>
         </Bp>
         <Bp>
-          <Number>3</Number>
+          <Number>2</Number>
           <Type>0</Type>
           <LineNumber>1476</LineNumber>
           <EnabledFlag>1</EnabledFlag>
@@ -212,6 +196,54 @@
           <Filename>.\SPL\MDR32Fx\src\MDR32F9Qx_rst_clk.c</Filename>
           <ExecCommand></ExecCommand>
           <Expression>\\Blank\SPL/MDR32Fx/src/MDR32F9Qx_rst_clk.c\1476</Expression>
+        </Bp>
+        <Bp>
+          <Number>3</Number>
+          <Type>0</Type>
+          <LineNumber>147</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>134232592</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>.\CustomLibs\src\ili9341_interface.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\Blank\CustomLibs/src/ili9341_interface.c\147</Expression>
+        </Bp>
+        <Bp>
+          <Number>4</Number>
+          <Type>0</Type>
+          <LineNumber>185</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>134235642</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>.\main.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\Blank\main.c\185</Expression>
+        </Bp>
+        <Bp>
+          <Number>5</Number>
+          <Type>0</Type>
+          <LineNumber>546</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>134223602</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>.\CustomLibs\src\ili9341.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\Blank\CustomLibs/src/ili9341.c\546</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
@@ -274,6 +306,11 @@
           <count>11</count>
           <WinNumber>1</WinNumber>
           <ItemText>null_fifo_read</ItemText>
+        </Ww>
+        <Ww>
+          <count>12</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>coordinate_x</ItemText>
         </Ww>
       </WatchWindow1>
       <Tracepoint>

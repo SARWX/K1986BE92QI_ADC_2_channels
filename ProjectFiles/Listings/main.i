@@ -4696,7 +4696,7 @@ void VCom_Configuration(void);
 void execute_command(char *command);
 # 25 "main.c" 2
 # 1 "./CustomLibs/inc\\SPI_init.h" 1
-# 15 "./CustomLibs/inc\\SPI_init.h"
+# 33 "./CustomLibs/inc\\SPI_init.h"
 void Setup_SPI(void);
 # 26 "main.c" 2
 # 1 "./CustomLibs/inc\\ili9341.h" 1
@@ -4739,6 +4739,7 @@ void display_signal(uint16_t *arr, int size, int signal_number, int skip_every);
 int draw_box(int row_num, uint16_t color);
 void display_main_menu(void);
 void draw_arrow(int x, int y, enum direction j, uint16_t color);
+void draw_touch_cursor(uint16_t x, uint16_t y);
 # 28 "main.c" 2
 # 1 "./CustomLibs/inc\\delay.h" 1
 
@@ -4869,17 +4870,12 @@ display_main_menu();
 int row_num = 1;
 while (1)
 {
- draw_arrow(320 - 48, 240 - 13 - 38, 1, 0x0E70);
- draw_box(row_num++, 0xF100);
- if (row_num == 5)
-  row_num = 1;
- draw_box(row_num, 0x0E70);
- delay_ms(100);
- draw_arrow(320 - 48, 240 - 13 - 38, 1, 0xF100);
- delay_ms(100);
+# 185 "main.c"
  ILI9341_TouchGetCoordinates(&coordinate_x, &coordinate_y);
+ if ((coordinate_x * coordinate_y) != 0)
+  draw_touch_cursor(coordinate_x, coordinate_y);
 }
-# 198 "main.c"
+# 200 "main.c"
  while (1)
  {
   if (command_recived == 1)

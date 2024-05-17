@@ -100,6 +100,7 @@ void display_signal(uint16_t *arr, int size, int signal_number, int skip_every);
 int draw_box(int row_num, uint16_t color);
 void display_main_menu(void);
 void draw_arrow(int x, int y, enum direction j, uint16_t color);
+void draw_touch_cursor(uint16_t x, uint16_t y);
 # 3 "CustomLibs/src/ili9341_interface.c" 2
 # 1 "./CustomLibs/inc\\ili9341gfx.h" 1
 # 15 "./CustomLibs/inc\\ili9341gfx.h"
@@ -2080,4 +2081,19 @@ void display_main_menu(void)
 
 
 
+}
+# 141 "CustomLibs/src/ili9341_interface.c"
+void draw_touch_cursor(uint16_t x, uint16_t y)
+{
+ static uint16_t prev_x = 0, prev_y = 0;
+ static uint16_t color_under_cursor = 0x0EFF;
+
+ ili9341_drawpixel(prev_x, prev_y, color_under_cursor);
+
+ prev_x = x;
+ prev_y = y;
+
+ color_under_cursor = 0x0EFF;
+
+ ili9341_drawpixel(x, y, color_under_cursor);
 }
