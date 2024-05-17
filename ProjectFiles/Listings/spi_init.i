@@ -5,6 +5,7 @@
 # 1 "<command line>" 1
 # 1 "<built-in>" 2
 # 1 "CustomLibs/src/SPI_init.c" 2
+# 13 "CustomLibs/src/SPI_init.c"
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_ssp.h" 1
 # 32 "./SPL/MDR32Fx/inc\\MDR32F9Qx_ssp.h"
 # 1 "./SPL/MDR32Fx\\MDR32F9Qx_config.h" 1
@@ -1348,7 +1349,7 @@ uint16_t SSP_ReceiveData(MDR_SSP_TypeDef* SSPx);
 
 FlagStatus SSP_GetFlagStatus(MDR_SSP_TypeDef* SSPx, SSP_Flags_TypeDef SSP_FLAG);
 void SSP_BRGInit(MDR_SSP_TypeDef* SSPx, SSP_Clock_BRG_TypeDef SSP_BRG);
-# 2 "CustomLibs/src/SPI_init.c" 2
+# 14 "CustomLibs/src/SPI_init.c" 2
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_port.h" 1
 # 49 "./SPL/MDR32Fx/inc\\MDR32F9Qx_port.h"
 typedef enum
@@ -1531,7 +1532,7 @@ void PORT_ResetBits(MDR_PORT_TypeDef* MDR_PORTx, uint32_t PORT_Pin);
 
 
 void PORT_Write(MDR_PORT_TypeDef* MDR_PORTx, uint32_t PortVal);
-# 3 "CustomLibs/src/SPI_init.c" 2
+# 15 "CustomLibs/src/SPI_init.c" 2
 
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h" 1
 # 49 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h"
@@ -1780,7 +1781,7 @@ void RST_CLK_PCLKcmd(uint32_t RST_CLK_PCLK, FunctionalState NewState);
 void RST_CLK_GetClocksFreq(RST_CLK_FreqTypeDef* RST_CLK_Clocks);
 
 FlagStatus RST_CLK_GetFlagStatus(RST_CLK_Flags RST_CLK_FLAG);
-# 5 "CustomLibs/src/SPI_init.c" 2
+# 17 "CustomLibs/src/SPI_init.c" 2
 # 1 "./CustomLibs/inc\\delay.h" 1
 
 
@@ -1790,14 +1791,14 @@ FlagStatus RST_CLK_GetFlagStatus(RST_CLK_Flags RST_CLK_FLAG);
 void delay_tick(uint32_t count);
 void delay_ms(uint32_t delay);
 void delay_us(uint32_t delay);
-# 6 "CustomLibs/src/SPI_init.c" 2
+# 18 "CustomLibs/src/SPI_init.c" 2
 # 1 "./CustomLibs/inc\\SPI_init.h" 1
 # 33 "./CustomLibs/inc\\SPI_init.h"
 void Setup_SPI(void);
-# 7 "CustomLibs/src/SPI_init.c" 2
+# 19 "CustomLibs/src/SPI_init.c" 2
 
 SSP_InitTypeDef SSP1_struct;
-
+# 29 "CustomLibs/src/SPI_init.c"
 void Setup_SPI(void)
 {
  PORT_InitTypeDef Port_sruct;

@@ -17,6 +17,10 @@
 #include <string.h>
 #include "USB_init.h"
 #include "defines.h"
+#include <stddef.h>
+#include <string.h>
+#include <stdio.h>
+#include <stdarg.h>
 
 extern PORT_InitTypeDef port_init_structure;
 static USB_Clock_TypeDef USB_Clock_InitStruct;
@@ -32,7 +36,7 @@ extern int command_recived;
 char *start;
 char *end;
 char tokens[5][BUFFER_LENGTH * 2]; //usb parsing tokens pointers array
-char tempString[100];			   //debug
+char debugString[100];			   //debug
 
 #ifdef USB_CDC_LINE_CODING_SUPPORTED
 static USB_CDC_LineCoding_TypeDef LineCoding;
@@ -126,6 +130,21 @@ USB_Result USB_CDC_SetLineCoding(uint16_t wINDEX, const USB_CDC_LineCoding_TypeD
 
 #endif /* USB_CDC_LINE_CODING_SUPPORTED */
 
+/**
+  * @brief  this function makes formated string and
+  * 		transmits it via USB, helpful for debug
+  * @param  format - formated string 
+  * @retval None
+  */
+void USB_Print(char *format, ...)
+{
+	va_list argptr;
+	va_start(argptr, format);
+
+	vsprintf(debugString, format, argptr);
+	va_end(argptr);
+	USB_CDC_SendData((uint8_t *)debugString, strlen(debugString));
+}
 /*********************** (C) COPYRIGHT 2024 ICV ****************************
 *
 * END OF FILE USB_init.c */

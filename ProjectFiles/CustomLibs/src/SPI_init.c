@@ -1,3 +1,15 @@
+/**
+  ******************************************************************************
+  * @file    SPI_init.c
+  * @author  ICV
+  * @version V1.0.0
+  * @date    17/05/2024
+  * @brief   This file contains initialization of SPI (SSP1)
+  * 		 also, initialize pins, that we need to use
+  * 		 display and touch screen
+  * ******************************************************************************
+  */
+
 #include "MDR32F9Qx_ssp.h"
 #include "MDR32F9Qx_port.h"
 #include "MDR32Fx.h"
@@ -7,6 +19,13 @@
 
 SSP_InitTypeDef SSP1_struct;	
 
+/**
+  * @brief  Configure SPI for: \n 
+  * 1) Display ili9341 (plus RESET, DC, CS) \n
+  * 2) Touch XPT2046 (plus IRQ, CS) 
+  * @param  None
+  * @retval None
+  */
 void Setup_SPI(void)
 {
 	PORT_InitTypeDef Port_sruct;
@@ -30,7 +49,7 @@ void Setup_SPI(void)
 	Port_sruct.PORT_Pin     = Pin_SPI_CS_Touch;
 	PORT_Init(Port_SPI_CS_Touch, &Port_sruct);
 	Port_SPI_CS_Touch->RXTX |= Pin_SPI_CS_Touch;
-	
+
 	// инициализация MOSI, SCK, MISO
 	Port_sruct.PORT_Pin     = (Pin_SPI_MOSI | Pin_SPI_CLK);
 	Port_sruct.PORT_FUNC	= PORT_FUNC_ALTER;
@@ -45,7 +64,6 @@ void Setup_SPI(void)
 	Port_sruct.PORT_Pin		= (Pin_IRQ_Touch);
 	Port_sruct.PORT_OE		= PORT_OE_IN;
 	PORT_Init(Port_IRQ_Touch, &Port_sruct);
-	
 
 	// инициализация SPI
 	SSP_BRGInit(MDR_SSP1, SSP_HCLKdiv1);		// Подключить SSP1 peripheral clock	

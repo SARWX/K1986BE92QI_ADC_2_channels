@@ -7,14 +7,5 @@
   CMSIS\MDR32Fx\CoreSupport\CM3\core_cmInstr.h \
   CMSIS\MDR32Fx\CoreSupport\CM3\core_cmFunc.h \
   CMSIS\MDR32Fx\DeviceSupport\MDR1986VE9x\startup\arm\system_MDR32F9Qx.h \
-  SPL\MDR32Fx\inc\MDR32F9Qx_port.h \
-  SPL\MDR32Fx\inc\USB_Library\MDR32F9Qx_usb_handlers.h \
-  SPL\MDR32Fx\inc\USB_Library\MDR32F9Qx_usb_default_handlers.h \
-  SPL\MDR32Fx\inc\USB_Library\MDR32F9Qx_usb_CDC.h \
-  SPL\MDR32Fx\inc\USB_Library\MDR32F9Qx_usb_device.h \
-  SPL\MDR32Fx\inc\MDR32F9Qx_usb.h CustomLibs\inc\delay.h \
-  CustomLibs\inc\defines.h \
-  C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stddef.h \
-  C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h \
-  C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdio.h \
-  C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdarg.h
+  SPL\MDR32Fx\inc\MDR32F9Qx_port.h CustomLibs\inc\delay.h \
+  CustomLibs\inc\defines.h

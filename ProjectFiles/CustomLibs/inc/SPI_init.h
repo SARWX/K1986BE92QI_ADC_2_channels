@@ -21,7 +21,6 @@
 #define Port_DC_Reset_Display   MDR_PORTB
 #define Pin_DC_Display          PORT_Pin_6
 #define Pin_Reset_Display       PORT_Pin_7
-  
 #define Port_SPI_CS_Display     MDR_PORTF
 #define Pin_SPI_CS_Display      PORT_Pin_2
 // Touch  

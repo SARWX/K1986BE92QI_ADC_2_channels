@@ -14,14 +14,10 @@
 #include <stdint.h>
 #include "MDR32F9Qx_ssp.h"
 #include "MDR32F9Qx_port.h"
-#include "MDR32F9Qx_usb_handlers.h"
 #include "MDR32Fx.h"
 #include "delay.h"
 #include "defines.h"
-#include <stddef.h>
-#include <string.h>
-#include <stdio.h>
-#include <stdarg.h>
+
 
 // Для touch screen команды на чтение координат
 #define READ_Y 0xD0
@@ -32,10 +28,6 @@
 #define XPT2046_MIN_RAW_Y 2000		//		//
 #define XPT2046_MAX_RAW_Y 30000		//		//
 #define AVG_NUM 64
-
-// Для USB отладки
-char debugString[100];
-
 
 volatile uint16_t LCD_W=ILI9341_TFTWIDTH;
 volatile uint16_t LCD_H=ILI9341_TFTHEIGHT;
@@ -496,22 +488,6 @@ uint8_t ILI9341_TouchPressed()
 		return (0);
 	else
 		return (1);
-}
-
-/**
-  * @brief  this function makes formated string and
-  * 		transmits it via USB, helpful for debug
-  * @param  format - formated string 
-  * @retval None
-  */
-void USB_Print(char *format, ...)
-{
-	va_list argptr;
-	va_start(argptr, format);
-
-	vsprintf(debugString, format, argptr);
-	va_end(argptr);
-	USB_CDC_SendData((uint8_t *)debugString, strlen(debugString));
 }
 
 /**
