@@ -1,7 +1,7 @@
 # 1 "CustomLibs/src/ADC_init.c"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
-# 379 "<built-in>" 3
+# 383 "<built-in>" 3
 # 1 "<command line>" 1
 # 1 "<built-in>" 2
 # 1 "CustomLibs/src/ADC_init.c" 2
@@ -2007,7 +2007,7 @@ void Setup_ADC()
     ADCx_structure.ADC_Channels = ((((uint32_t)0x1) << ADC_CH_ADC0 ) | (((uint32_t)0x1) << ADC_CH_ADC1 ));
     ADCx_structure.ADC_VRefSource = ADC_VREF_SOURCE_INTERNAL;
     ADCx_structure.ADC_IntVRefSource = ADC_INT_VREF_SOURCE_INEXACT;
-    ADCx_structure.ADC_Prescaler = ADC_CLK_div_8;
+    ADCx_structure.ADC_Prescaler = ADC_CLK_div_64;
  ADCx_structure.ADC_DelayGo = 0x2;
     ADC1_Init (&ADCx_structure);
 # 65 "CustomLibs/src/ADC_init.c"

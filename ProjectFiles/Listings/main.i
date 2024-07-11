@@ -1,7 +1,7 @@
 # 1 "main.c"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
-# 379 "<built-in>" 3
+# 383 "<built-in>" 3
 # 1 "<command line>" 1
 # 1 "<built-in>" 2
 # 1 "main.c" 2
@@ -4867,7 +4867,7 @@ int main(void)
 
  USB_CDC_Init((uint8_t *)buffer, 1, SET);
  Setup_USB();
- set_DAC_table(1000);
+ set_DAC_table(100);
  Setup_DAC();
 
 

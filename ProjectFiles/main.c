@@ -135,7 +135,7 @@ int main(void)
 //		test();			/// TETTSSSTTT 
 	USB_CDC_Init((uint8_t *)buffer, 1, SET);
 	Setup_USB();		
-	set_DAC_table(1000);
+	set_DAC_table(100);
 	Setup_DAC();
 	// Setup_SPI();
 	// Setup_ili9341();

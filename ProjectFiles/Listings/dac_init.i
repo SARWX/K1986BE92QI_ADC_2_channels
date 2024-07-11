@@ -1,7 +1,7 @@
 # 1 "CustomLibs/src/DAC_init.c"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
-# 379 "<built-in>" 3
+# 383 "<built-in>" 3
 # 1 "<command line>" 1
 # 1 "<built-in>" 2
 # 1 "CustomLibs/src/DAC_init.c" 2
@@ -3000,7 +3000,7 @@ void Setup_DAC()
     PORT_DeInit(((MDR_PORT_TypeDef *) (0x400C8000)));
 
 
-    port_init_structure.PORT_Pin = PORT_Pin_0 | PORT_Pin_1;
+    port_init_structure.PORT_Pin = PORT_Pin_0;
     port_init_structure.PORT_OE = PORT_OE_IN;
     port_init_structure.PORT_MODE = PORT_MODE_ANALOG;
     PORT_Init(((MDR_PORT_TypeDef *) (0x400C8000)), &port_init_structure);
@@ -3030,8 +3030,8 @@ void Setup_TIM2()
  Cnt_sTim2.TIMER_FilterSampling = TIMER_FDTS_TIMER_CLK_div_4;
  Cnt_sTim2.TIMER_ARR_UpdateMode = TIMER_ARR_Update_Immediately;
  Cnt_sTim2.TIMER_IniCounter = 0;
- Cnt_sTim2.TIMER_Prescaler = 10;
- Cnt_sTim2.TIMER_Period = 12 - 1;
+ Cnt_sTim2.TIMER_Prescaler = (10*4);
+ Cnt_sTim2.TIMER_Period = (12*4) - 1;
 
 
  TIMER_CntInit(((MDR_TIMER_TypeDef *) (0x40078000)), &Cnt_sTim2);
@@ -3045,14 +3045,14 @@ void Setup_TIM2()
 void set_DAC_table(int freq)
 {
  freq = (int)((float)freq * 1.1);
- int tics = (((16000000 * 7 / 4) / (10 * 12)) / freq);
+ int tics = (((16000000 * 7 / 4) / ((10*4) * (12*4))) / freq);
  int divider = 1;
  while(tics > 500)
  {
   divider *= 2;
   tics /= 2;
  }
- ((MDR_TIMER_TypeDef *) (0x40078000))->ARR = (12 * divider - 1);
+ ((MDR_TIMER_TypeDef *) (0x40078000))->ARR = ((12*4) * divider - 1);
 
  double angle_inc = (6.28318 / tics);
  for (int i = 0; i < (tics); i++)
