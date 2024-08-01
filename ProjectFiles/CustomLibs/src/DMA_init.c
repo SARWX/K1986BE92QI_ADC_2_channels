@@ -1,6 +1,18 @@
+/**
+  ******************************************************************************
+  * @file    DMA_init.c
+  * @author  ICV
+  * @version V1.0.0
+  * @date    08/05/2024
+  * @brief   This file contains initialization of DMA also DMA_IRQHandler
+  * ******************************************************************************
+  */
+
+/* Includes ------------------------------------------------------------------*/
 #include "MDR32F9Qx_dma.h"
 #include "MDR32F9Qx_rst_clk.h"
 #include "defines.h"
+#include "MDR32F9Qx_timer.h"
 #include "DMA_init.h"
 
 // Внешние переменные
@@ -16,6 +28,13 @@ DMA_CtrlDataInitTypeDef ADC1_alternate_DMA_structure;				// Альтернати
 DMA_CtrlDataInitTypeDef TIM2_primary_DMA_structure;
 DMA_CtrlDataInitTypeDef TIM2_alternate_DMA_structure;
 
+/**
+  * @brief  Configure DMA for: \n 
+  * 1) ADC - automaticly collect ADC mesurenments into main_array_for_ADC and alternate_array_for_ADC \n
+  * 2) DAC - automaticaly set new DAC value, every TIM2 tick 
+  * @param  None
+  * @retval None
+  */
 void Setup_DMA() 
 {
 	// Разрешить тактирование DMA
@@ -107,8 +126,8 @@ void Setup_DMA()
 	
 	// Заполним структуру для канала TIM2 
 	TIM2_DMA_structure.DMA_PriCtrlData = &TIM2_primary_DMA_structure;						// Укажем основную структуру
-	TIM2_DMA_structure.DMA_Priority = DMA_Priority_Default;							// Обычный уровень приоритетности (нужен для арбитража)
-	TIM2_DMA_structure.DMA_UseBurst = DMA_BurstClear;
+	TIM2_DMA_structure.DMA_Priority = DMA_Priority_High;							// Высокий уровень приоритетности (нужен для арбитража)
+	TIM2_DMA_structure.DMA_UseBurst = DMA_BurstSet;
 	TIM2_DMA_structure.DMA_SelectDataStructure =	DMA_CTRL_DATA_PRIMARY;				// в качестве базовой берем основную структуру
 	
 	// Проинициализируем первый канал
@@ -126,14 +145,31 @@ void Setup_DMA()
 	1 << DMA_Channel_SSP2_TX);
 	// Установим значение приоретета прерывания DMA
  	NVIC_EnableIRQ(DMA_IRQn);
-	NVIC_SetPriority (DMA_IRQn, 15);
+	NVIC_SetPriority (DMA_IRQn, 0);		// was 15
 
 	// ПРОБУЕМ
 	MDR_DMA->CHNL_ENABLE_SET = (1 << DMA_Channel_TIM2);
 }
 
-void DMA_IRQHandler() {
-	if(DMA_GetFlagStatus(DMA_Channel_TIM2, DMA_FLAG_CHNL_ALT) == RESET) 
+/**
+  * @brief  Interrupt handler for: DMA \n 
+  * this function rised every time when DMA cycle ends, currently this handler devoted to reinit the TIM2 DMA structures
+  * @param  None
+  * @retval None
+  */
+void DMA_IRQHandler() {	
+	// count_dma_interrupts++;
+	// if (count_dma_interrupts > 100)
+	// {
+	// 	TIMER_Cmd(MDR_TIMER2, DISABLE);
+	// 	DMA_GetCurrTransferCounter();
+	// 	MDR_TIMER2->CNT = 0;	// Синхронизировать таймер и DMA
+	// 	DMA_CtrlInit(DMA_Channel_TIM2, DMA_CTRL_DATA_ALTERNATE, &TIM2_alternate_DMA_structure);	// реинициализируем альтернативную структуру
+	// 	DMA_CtrlInit(DMA_Channel_TIM2, DMA_CTRL_DATA_PRIMARY, &TIM2_primary_DMA_structure);		// реинициализируем основную структуру
+	// 	TIMER_Cmd(MDR_TIMER2, ENABLE);
+	// 	count_dma_interrupts = 0;
+	// }
+	/*else*/ if(DMA_GetFlagStatus(DMA_Channel_TIM2, DMA_FLAG_CHNL_ALT) == RESET) 
 	{ 
 		DMA_CtrlInit(DMA_Channel_TIM2, DMA_CTRL_DATA_ALTERNATE, &TIM2_alternate_DMA_structure);	// реинициализируем альтернативную структуру
 	}
@@ -143,3 +179,7 @@ void DMA_IRQHandler() {
 	}
 //		NVIC_ClearPendingIRQ (DMA_IRQn);
 }
+
+/*********************** (C) COPYRIGHT 2024 ICV ****************************
+*
+* END OF FILE DMA_init.c */

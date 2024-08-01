@@ -5,6 +5,7 @@
 # 1 "<command line>" 1
 # 1 "<built-in>" 2
 # 1 "CustomLibs/src/SPI_init.c" 2
+# 13 "CustomLibs/src/SPI_init.c"
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_ssp.h" 1
 # 32 "./SPL/MDR32Fx/inc\\MDR32F9Qx_ssp.h"
 # 1 "./SPL/MDR32Fx\\MDR32F9Qx_config.h" 1
@@ -1348,7 +1349,7 @@ uint16_t SSP_ReceiveData(MDR_SSP_TypeDef* SSPx);
 
 FlagStatus SSP_GetFlagStatus(MDR_SSP_TypeDef* SSPx, SSP_Flags_TypeDef SSP_FLAG);
 void SSP_BRGInit(MDR_SSP_TypeDef* SSPx, SSP_Clock_BRG_TypeDef SSP_BRG);
-# 2 "CustomLibs/src/SPI_init.c" 2
+# 14 "CustomLibs/src/SPI_init.c" 2
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_port.h" 1
 # 49 "./SPL/MDR32Fx/inc\\MDR32F9Qx_port.h"
 typedef enum
@@ -1531,7 +1532,7 @@ void PORT_ResetBits(MDR_PORT_TypeDef* MDR_PORTx, uint32_t PORT_Pin);
 
 
 void PORT_Write(MDR_PORT_TypeDef* MDR_PORTx, uint32_t PortVal);
-# 3 "CustomLibs/src/SPI_init.c" 2
+# 15 "CustomLibs/src/SPI_init.c" 2
 
 # 1 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h" 1
 # 49 "./SPL/MDR32Fx/inc\\MDR32F9Qx_rst_clk.h"
@@ -1780,7 +1781,7 @@ void RST_CLK_PCLKcmd(uint32_t RST_CLK_PCLK, FunctionalState NewState);
 void RST_CLK_GetClocksFreq(RST_CLK_FreqTypeDef* RST_CLK_Clocks);
 
 FlagStatus RST_CLK_GetFlagStatus(RST_CLK_Flags RST_CLK_FLAG);
-# 5 "CustomLibs/src/SPI_init.c" 2
+# 17 "CustomLibs/src/SPI_init.c" 2
 # 1 "./CustomLibs/inc\\delay.h" 1
 
 
@@ -1790,8 +1791,14 @@ FlagStatus RST_CLK_GetFlagStatus(RST_CLK_Flags RST_CLK_FLAG);
 void delay_tick(uint32_t count);
 void delay_ms(uint32_t delay);
 void delay_us(uint32_t delay);
-# 6 "CustomLibs/src/SPI_init.c" 2
+# 18 "CustomLibs/src/SPI_init.c" 2
+# 1 "./CustomLibs/inc\\SPI_init.h" 1
+# 33 "./CustomLibs/inc\\SPI_init.h"
+void Setup_SPI(void);
+# 19 "CustomLibs/src/SPI_init.c" 2
 
+SSP_InitTypeDef SSP1_struct;
+# 29 "CustomLibs/src/SPI_init.c"
 void Setup_SPI(void)
 {
  PORT_InitTypeDef Port_sruct;
@@ -1807,25 +1814,34 @@ void Setup_SPI(void)
  Port_sruct.PORT_SPEED = PORT_SPEED_MAXFAST;
  Port_sruct.PORT_MODE = PORT_MODE_DIGITAL;
  PORT_Init(((MDR_PORT_TypeDef *) (0x400B0000)), &Port_sruct);
-# 31 "CustomLibs/src/SPI_init.c"
+
+
  Port_sruct.PORT_Pin = PORT_Pin_2;
  PORT_Init(((MDR_PORT_TypeDef *) (0x400E8000)), &Port_sruct);
+ ((MDR_PORT_TypeDef *) (0x400E8000))->RXTX |= PORT_Pin_2;
+ Port_sruct.PORT_Pin = PORT_Pin_10;
+ PORT_Init(((MDR_PORT_TypeDef *) (0x400B0000)), &Port_sruct);
+ ((MDR_PORT_TypeDef *) (0x400B0000))->RXTX |= PORT_Pin_10;
+
 
  Port_sruct.PORT_Pin = (PORT_Pin_0 | PORT_Pin_1);
  Port_sruct.PORT_FUNC = PORT_FUNC_ALTER;
  PORT_Init(((MDR_PORT_TypeDef *) (0x400E8000)), &Port_sruct);
-
  Port_sruct.PORT_Pin = (PORT_Pin_3);
  Port_sruct.PORT_OE = PORT_OE_IN;
  PORT_Init(((MDR_PORT_TypeDef *) (0x400E8000)), &Port_sruct);
 
 
+ Port_sruct.PORT_FUNC = PORT_FUNC_PORT;
+ Port_sruct.PORT_MODE = PORT_MODE_DIGITAL;
+ Port_sruct.PORT_Pin = (PORT_Pin_9);
+ Port_sruct.PORT_OE = PORT_OE_IN;
+ PORT_Init(((MDR_PORT_TypeDef *) (0x400B0000)), &Port_sruct);
+
+
+
  SSP_BRGInit(((MDR_SSP_TypeDef *) (0x40040000)), SSP_HCLKdiv1);
- SSP_InitTypeDef SSP1_struct;
  SSP_StructInit(&SSP1_struct);
  SSP_Init(((MDR_SSP_TypeDef *) (0x40040000)), &SSP1_struct);
  SSP_Cmd(((MDR_SSP_TypeDef *) (0x40040000)), ENABLE);
-
-
-
 };

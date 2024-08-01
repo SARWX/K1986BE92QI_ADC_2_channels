@@ -82,6 +82,7 @@ void ili9341_filltriangle(uint16_t x, uint16_t y, int base, int height, uint16_t
 
 void test(void);
 void custom_ili9341_setaddress(uint16_t x,uint16_t y);
+uint8_t ILI9341_TouchGetCoordinates(uint16_t* x, uint16_t* y);
 # 2 "CustomLibs/src/ili9341gfx.c" 2
 # 1 "./CustomLibs/inc\\delay.h" 1
 
@@ -94,9 +95,7 @@ void delay_ms(uint32_t delay);
 void delay_us(uint32_t delay);
 # 3 "CustomLibs/src/ili9341gfx.c" 2
 # 1 "./CustomLibs/inc\\ili9341gfx.h" 1
-
-
-
+# 15 "./CustomLibs/inc\\ili9341gfx.h"
 # 1 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 1 3
 # 53 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdio.h" 3
     typedef unsigned int size_t;
@@ -418,9 +417,9 @@ extern __attribute__((__nothrow__)) int _fisatty(FILE * ) __attribute__((__nonnu
 
 extern __attribute__((__nothrow__)) void __use_no_semihosting_swi(void);
 extern __attribute__((__nothrow__)) void __use_no_semihosting(void);
-# 5 "./CustomLibs/inc\\ili9341gfx.h" 2
+# 16 "./CustomLibs/inc\\ili9341gfx.h" 2
 # 1 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\stdbool.h" 1 3
-# 6 "./CustomLibs/inc\\ili9341gfx.h" 2
+# 17 "./CustomLibs/inc\\ili9341gfx.h" 2
 # 1 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\inttypes.h" 1 3
 # 217 "C:\\Keil_v5\\ARM\\ARMCLANG\\Bin\\..\\include\\inttypes.h" 3
       typedef unsigned short wchar_t;
@@ -454,7 +453,7 @@ extern __attribute__((__nothrow__)) __attribute__((__const__)) intmax_t imaxabs(
 
 
 extern __attribute__((__nothrow__)) __attribute__((__const__)) imaxdiv_t imaxdiv(intmax_t , intmax_t );
-# 7 "./CustomLibs/inc\\ili9341gfx.h" 2
+# 18 "./CustomLibs/inc\\ili9341gfx.h" 2
 
 void ili9341_drawchar(int16_t x, int16_t y, unsigned char c,uint16_t color, uint16_t bg, uint8_t size);
 void ili9341_setcursor(uint16_t x,uint16_t y);

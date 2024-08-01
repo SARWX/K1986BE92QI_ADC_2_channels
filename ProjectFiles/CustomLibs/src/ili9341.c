@@ -1,4 +1,16 @@
+/**
+  ******************************************************************************
+  * @file    ili9341.c
+  * @author  ICV
+  * @version V1.0.0
+  * @date    17/05/2024
+  * @brief   This file contains functions to communicate with ili9341
+  * 		 file based on https://github.com/Matiasus/ILI9341/ library
+  * ******************************************************************************
+  */
+
 #include "ili9341.h"
+#include "SPI_init.h"
 #include <stdint.h>
 #include "MDR32F9Qx_ssp.h"
 #include "MDR32F9Qx_port.h"
@@ -6,8 +18,22 @@
 #include "delay.h"
 #include "defines.h"
 
+
+// Для touch screen команды на чтение координат
+#define READ_Y 0xD0
+#define READ_X 0x90
+// Для touch screen максимальные и минимальные значения
+#define XPT2046_MIN_RAW_X 2500		//		// 1500
+#define XPT2046_MAX_RAW_X 31000		// 		// 31000
+#define XPT2046_MIN_RAW_Y 2000		//		//
+#define XPT2046_MAX_RAW_Y 30000		//		//
+#define AVG_NUM 64
+
 volatile uint16_t LCD_W=ILI9341_TFTWIDTH;
 volatile uint16_t LCD_H=ILI9341_TFTHEIGHT;
+
+// SSP control structure
+extern SSP_InitTypeDef SSP1_struct;
 
 void test(void)
 {
@@ -24,19 +50,13 @@ void test(void)
 
 void ili9341_writecommand8(uint8_t com)			// Передать команду
 {
-	// PORT_ResetBits(MDR_PORTB, PORT_Pin_6);		// dc = 0
 	MDR_PORTB->RXTX &= ~(PORT_Pin_6);			// dc = 0
-//	PORT_ResetBits(MDR_PORTF, PORT_Pin_2);		// cs = 0
 	MDR_PORTF->RXTX &= ~(PORT_Pin_2);			// cs = 0
-//	delay_us(5);//little delay
-	// SSP_SendData(MDR_SSP1, com);
 	MDR_SSP1->DR = com;
 	while (MDR_SSP1->SR & SSP_SR_BSY)			// 1 – модуль SSP в настоящее время передает и/или принимает данные, либо буфер FIFO передатчика не пуст
 	{
 		;										// wait
 	}
-	
-//	PORT_SetBits(MDR_PORTB, PORT_Pin_6); 		// cs = 1
 	MDR_PORTF->RXTX |= PORT_Pin_2;			// cs = 1
 }
 
@@ -395,5 +415,130 @@ void Setup_ili9341(void)
 	ili9341_init();         	// Проинициализировать ili9341
 	ili9341_clear(BLACK);   		// Заполнить экран одним цветом
 	delay_ms(1000);
-	ili9341_setRotation(0); 	// Задать ориентацию БЫЛА 3
+	ili9341_setRotation(1); 	// Задать ориентацию БЫЛА 3
+}
+
+////// TOUCH ///////
+/**
+  * @brief  this function transmits command to the touch controller
+  * 		and gets the answer
+  * @param  com: 8 bit command.
+  *         This parameter can be READ_Y or READ_X
+  * 		(look at defines)
+  * @retval 16 bit answer
+  */
+// Передача команды на получение координаты и ее получение
+uint16_t ili9341_touch_writecommand8(uint8_t com)			// Передать команду
+{
+	// Занижаем скорость работы SSP для тачскрина
+	SSP_Cmd(MDR_SSP1, DISABLE);
+	SSP1_struct.SSP_CPSDVSR = 8;
+    SSP1_struct.SSP_SCR = 4;
+	SSP_Init(MDR_SSP1, &SSP1_struct);
+	SSP_Cmd(MDR_SSP1, ENABLE);
+
+	MDR_PORTB->RXTX &= ~(PORT_Pin_10);			// cs = 0 PB10 для touch
+	MDR_SSP1->DR = com;
+	while (MDR_SSP1->SR & SSP_SR_BSY)			// 1 – модуль SSP в настоящее время передает и/или принимает данные, либо буфер FIFO передатчика не пуст
+	{
+		;										// ждать
+	}
+	// Почистить буфер (SSP использует FIFO буфер размером 8 ячеек, они очищаются чтением)
+	for (int i = 0; i < 8; i++) 
+	{
+		uint16_t foo = MDR_SSP1->DR; 
+	}
+	// Передаем 0, это нужно, чтобы контроллер SSP генерировал тактовый сигнал для ведомого устройства
+	MDR_SSP1->DR = 0;
+	while (MDR_SSP1->SR & SSP_SR_BSY)			// 1 – модуль SSP в настоящее время передает и/или принимает данные, либо буфер FIFO передатчика не пуст
+	{
+		;										// ждать
+	}
+	// Прочитаем первый переданный байт
+	uint16_t temp = 0;
+	temp = (uint16_t)(MDR_SSP1->DR);
+	temp = temp << 8;							// первый байт старший
+	// Еще раз передаем 0 (ведомое устройство посылает второй байт)
+	MDR_SSP1->DR = 0;
+	while (MDR_SSP1->SR & SSP_SR_BSY)			// 1 – модуль SSP в настоящее время передает и/или принимает данные, либо буфер FIFO передатчика не пуст
+	{
+		;										// ждать
+	}
+	temp |= (uint16_t)(MDR_SSP1->DR);			// второй переданый бит младший
+	MDR_PORTB->RXTX |= PORT_Pin_10;				// cs = 1	
+	// Повышаем скорость работы SSP для дисплея
+	SSP_Cmd(MDR_SSP1, DISABLE);
+	SSP1_struct.SSP_CPSDVSR = 2;
+    SSP1_struct.SSP_SCR = 0;
+	SSP_Init(MDR_SSP1, &SSP1_struct);
+	SSP_Cmd(MDR_SSP1, ENABLE);
+	return(temp);
+}
+
+/**
+  * @brief  this function finds out either user touches the
+  * 		screen or not
+  * @param  None
+  * @retval 0 - doesn't touch
+  * 		1 - touches
+  */
+uint8_t ILI9341_TouchPressed()
+{
+	if ( (uint8_t)PORT_ReadInputDataBit(MDR_PORTB, PORT_Pin_9))
+		return (0);
+	else
+		return (1);
+}
+
+/**
+  * @brief  this function finds out whether user touches the screen
+  * 		or not, and if touches gets coordnates, and places them
+  * 		into variables x, y.
+  * 		In other case, places into variables zeros 
+  * @param  x - variable to contain x coordinate
+  * @param  y - variable to contain y coordinate
+  * @retval None
+  */
+uint8_t ILI9341_TouchGetCoordinates(uint16_t* x, uint16_t* y) 
+{
+    uint32_t avg_x = 0;
+    uint32_t avg_y = 0;
+	uint16_t num_good_x = 0;
+	uint16_t num_good_y = 0;
+	// Если пользователь не нажимает на экран
+	if(!ILI9341_TouchPressed())
+	{
+		*x = 0;			// Обнуляем координаты, чтобы
+		*y = 0;			// не передавать неактуальные
+		return 0;		// выходим из функции
+	}
+	// Если пользователь нажимает на экран нажимает
+	for(int i = 0; i < AVG_NUM; i++)
+	{
+		uint16_t raw_y = ili9341_touch_writecommand8(READ_Y); 
+		// Проверяем адекватные ли получены значения
+		uint8_t good_y = ((raw_y >  XPT2046_MIN_RAW_Y) && (raw_y < XPT2046_MAX_RAW_Y)) ? 1 : 0;
+		// учитывать только адекватные
+		avg_y += raw_y * good_y;
+		// посчитаем, сколько значений стоит учесть
+		num_good_y += good_y;
+
+		uint16_t raw_x = ili9341_touch_writecommand8(READ_X); 
+		// Проверяем адекватные ли получены значения
+		uint8_t good_x = ((raw_x >  XPT2046_MIN_RAW_X) && (raw_x < XPT2046_MAX_RAW_X)) ? 1 : 0;
+		// учитывать только адекватные
+		avg_x += raw_x * good_x;
+		// посчитаем, сколько значений стоит учесть
+		num_good_x += good_x;
+	}
+	// Найдем среднее
+	avg_y = avg_y / num_good_y;
+	avg_x = avg_x / num_good_y;
+	// Переведем в пиксели
+	avg_y = (((avg_y - XPT2046_MIN_RAW_Y) * 100) / (XPT2046_MAX_RAW_Y - XPT2046_MIN_RAW_Y)) * ILI9341_TFTHEIGHT / 100;
+	avg_x = (((avg_x - XPT2046_MIN_RAW_X) * 100) / (XPT2046_MAX_RAW_X - XPT2046_MIN_RAW_X)) * ILI9341_TFTWIDTH / 100;
+
+	*x = (ILI9341_TFTWIDTH - avg_x);
+	*y = (ILI9341_TFTHEIGHT - avg_y);
+	// USB_Print("raw_x = %d, raw_y = %d\r\n", avg_x, avg_y);		// Для отладки
 }

@@ -1,5 +1,5 @@
 #include <stdint.h>
-
+/* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef _DELAY_H_
 #define _DELAY_H_
 

@@ -14,4 +14,7 @@
   SPL\MDR32Fx\inc\MDR32F9Qx_usb.h SPL\MDR32Fx\inc\MDR32F9Qx_rst_clk.h \
   SPL\MDR32Fx\inc\MDR32F9Qx_ssp.h SPL\MDR32Fx\inc\MDR32F9Qx_port.h \
   C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\string.h \
-  CustomLibs\inc\USB_init.h CustomLibs\inc\defines.h
+  CustomLibs\inc\USB_init.h CustomLibs\inc\defines.h \
+  C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stddef.h \
+  C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdio.h \
+  C:\Keil_v5\ARM\ARMCLANG\Bin\..\include\stdarg.h

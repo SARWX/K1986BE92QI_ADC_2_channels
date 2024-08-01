@@ -129,3 +129,26 @@ void display_main_menu(void)
 	// print_str("hello", 2, 2, 0xffff, 0x0000, 5);
 	// ili9341_filltriangle(0, 0, 100, 100, WHITE);
 }
+
+
+// TOUCH Features
+/**
+  * @brief  this function draws cursor on the screen 
+  * @param  x - x coordinate
+  * @param  y - y coordinate
+  * @retval None
+  */
+void draw_touch_cursor(uint16_t x, uint16_t y)
+{
+	static uint16_t prev_x = 0, prev_y = 0;
+	static uint16_t color_under_cursor = YELLOW;
+	// 1 - возвращаем предыдущий цвет
+	ili9341_drawpixel(prev_x, prev_y, color_under_cursor);
+	// 2 - запоминаем новые координаты курсора
+	prev_x = x;
+	prev_y = y;
+	// 3 -  запоминаем цвет под курсором 
+	color_under_cursor = YELLOW;		// рисовалка
+	// 4 - рисуем курсор
+	ili9341_drawpixel(x, y, color_under_cursor);
+}

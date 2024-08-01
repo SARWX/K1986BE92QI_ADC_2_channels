@@ -1,3 +1,14 @@
+/**
+  ******************************************************************************
+  * @file    Command_system.c
+  * @author  ICV
+  * @version V1.0.0
+  * @date    08/05/2024
+  * @brief   This file contains command system for project.
+  * ******************************************************************************
+  */
+
+/* Includes ------------------------------------------------------------------*/
 #include "MDR32F9Qx_usb_CDC.h"
 #include "MDR32F9Qx_dma.h"
 #include <string.h>
@@ -13,6 +24,12 @@ extern DMA_CtrlDataInitTypeDef TIM2_alternate_DMA_structure;        // Внеш�
 float get_voltage_num(char *command, int *i);                       // функция преобразования числа строкового формата в число с плавающей точкой
 int convert_voltage_to_register_val(float voltage);                 // функция переводящая значение в вольтах в значение регистра ЦАП
 
+/**
+  * @brief : 
+  * function for execution the command.
+  * @param  command - command to excute.
+  * @retval None
+  */
 
 void execute_command(char *command) 
 {
@@ -20,7 +37,7 @@ void execute_command(char *command)
   if (strstr(command, "set freq ") == command) 
   {                    // проверить: команда начинается с "set freq "?
     int freq = atoi((char *)(command + strlen("set freq ")));       // перевести freq из строкового формата в int
-      set_DAC_table(freq);                                          // задать синусоиду требуемой частоты в DAC_table
+      set_sin_DAC_table(freq);                                          // задать синусоиду требуемой частоты в DAC_table
   }
 // ---------------------------------------------------------------------------------------------- //
 
@@ -65,7 +82,27 @@ void execute_command(char *command)
   }
 // ---------------------------------------------------------------------------------------------- //
 }
+/** @example Commands 
+ *  command can be sent to the MCU through USB or specified in code \n
+  * \n List of the commands: \n
+  * \n \b "set \b freq \b X"      this command will set sinusoid with specified frequence in DAC table \n
+  * \b "set \b freq \b 100" configures DAC to 100 HZ \n
+  * \n \b "set \b X.X \b Y.Y \b ... \b Z.Z \b !"      this command will set specified voltage values in DAC table \n
+  * \b "set \b 2.0 \b 0.0 \b !" configures DAC repetitively transmit 2.0 V and then 0.0 V \n
+  * \n Notice, that if you transmit command through USB MAX command length = 64 bytes, \n
+  * So that transmit this command in separate messages, it won't be executed while you \n
+  * won't transmit ! at the end of set command 
+  */
 
+
+/**
+  * @brief :
+  *  
+  * function for extraction voltage value from command and converting it from str to float.
+  * @param  command - command string from where to extract the voltage value.
+  * @param  i - index of the value to be extracted.
+  * @retval value of the extracted voltage 
+  */
   float get_voltage_num(char *command, int *i)                      // передаем i по ссылке, а не по значению
   {
   float num = 0.0;
@@ -100,9 +137,20 @@ void execute_command(char *command)
     return(num);
   }
 
+/**
+  * @brief : 
+  * function for convertion voltage value from float to 
+  * K1986BE92QI specific register value.
+  * @param  voltage - voltage value.
+  * @retval register value - voltage converted to the K1986BE92QI DAC specific type
+  */
 int convert_voltage_to_register_val(float voltage) 
 {
-  voltage /= 3.3;                                                   // перевод в проценты от 3.3 вольт (максимума)
-  voltage *= 4095;                                                  // перевод в регистровое значение (4095 - максимум)
-  return((int)voltage);                                             // преобразование к типу int
+  voltage /= 3.3;           // перевод в проценты от 3.3 вольт (максимума)
+  voltage *= 4095;          // перевод в регистровое значение (4095 - максимум)
+  return((int)voltage);     // преобразование к типу int
 }
+
+/*********************** (C) COPYRIGHT 2024 ICV ****************************
+*
+* END OF FILE Command_system.c */

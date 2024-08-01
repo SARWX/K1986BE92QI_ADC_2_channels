@@ -4666,52 +4666,37 @@ __attribute__((__nothrow__)) long double truncl(long double );
 
 
 # 1 "./CustomLibs/inc\\DMA_init.h" 1
-
-
-
+# 15 "./CustomLibs/inc\\DMA_init.h"
 extern DMA_CtrlDataInitTypeDef ADC1_primary_DMA_structure;
 extern DMA_CtrlDataInitTypeDef ADC1_alternate_DMA_structure;
 void Setup_DMA();
 # 20 "main.c" 2
 # 1 "./CustomLibs/inc\\DAC_init.h" 1
-
-
-
+# 14 "./CustomLibs/inc\\DAC_init.h"
 void Setup_DAC();
 void Setup_TIM2();
-void set_DAC_table(int freq);
+void set_sin_DAC_table(int freq);
 # 21 "main.c" 2
 # 1 "./CustomLibs/inc\\ADC_init.h" 1
-
-
-
+# 15 "./CustomLibs/inc\\ADC_init.h"
 void Setup_ADC();
 # 22 "main.c" 2
 # 1 "./CustomLibs/inc\\sys_CLK_init.h" 1
-
-
-
-
+# 16 "./CustomLibs/inc\\sys_CLK_init.h"
 void Setup_CPU_Clock(void);
 void delay_tick(uint32_t count);
 # 23 "main.c" 2
 # 1 "./CustomLibs/inc\\USB_init.h" 1
-
-
-
+# 15 "./CustomLibs/inc\\USB_init.h"
 void Setup_USB(void);
 void VCom_Configuration(void);
 # 24 "main.c" 2
 # 1 "./CustomLibs/inc\\command_system.h" 1
-
-
-
+# 15 "./CustomLibs/inc\\command_system.h"
 void execute_command(char *command);
 # 25 "main.c" 2
 # 1 "./CustomLibs/inc\\SPI_init.h" 1
-
-
-
+# 33 "./CustomLibs/inc\\SPI_init.h"
 void Setup_SPI(void);
 # 26 "main.c" 2
 # 1 "./CustomLibs/inc\\ili9341.h" 1
@@ -4736,6 +4721,7 @@ void ili9341_filltriangle(uint16_t x, uint16_t y, int base, int height, uint16_t
 
 void test(void);
 void custom_ili9341_setaddress(uint16_t x,uint16_t y);
+uint8_t ILI9341_TouchGetCoordinates(uint16_t* x, uint16_t* y);
 # 27 "main.c" 2
 # 1 "./CustomLibs/inc\\ili9341_interface.h" 1
 
@@ -4753,6 +4739,7 @@ void display_signal(uint16_t *arr, int size, int signal_number, int skip_every);
 int draw_box(int row_num, uint16_t color);
 void display_main_menu(void);
 void draw_arrow(int x, int y, enum direction j, uint16_t color);
+void draw_touch_cursor(uint16_t x, uint16_t y);
 # 28 "main.c" 2
 # 1 "./CustomLibs/inc\\delay.h" 1
 
@@ -4786,6 +4773,8 @@ uint16_t main_array_for_ADC[128];
 uint16_t alternate_array_for_ADC[128];
 
 uint16_t tuner = 128;
+uint16_t coordinate_x = 0;
+uint16_t coordinate_y = 0;
 
 
 int main(void)
@@ -4793,16 +4782,20 @@ int main(void)
  Setup_CPU_Clock();
  VCom_Configuration();
 
- Setup_ADC();
- Setup_DMA();
+
+
 
  USB_CDC_Init((uint8_t *)buffer, 1, SET);
  Setup_USB();
- set_DAC_table(1000);
- Setup_DAC();
 
 
- Setup_TIM2();
+ Setup_SPI();
+ Setup_ili9341();
+# 155 "main.c"
+ ili9341_setaddress(0,0,319,239);
+# 170 "main.c"
+ili9341_clear(0x0000);
+display_main_menu();
 
 
 

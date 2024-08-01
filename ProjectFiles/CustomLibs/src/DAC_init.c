@@ -1,3 +1,16 @@
+/**
+  ******************************************************************************
+  * @file    DAC_init.c
+  * @author  ICV
+  * @version V1.0.0
+  * @date    08/05/2024
+  * @brief   This file contains initialization of DAC, TIM2
+  * and set_sin_DAC_table() function for initializing table of 
+  * values for DAC with sinusoid.
+  * ******************************************************************************
+  */
+
+/* Includes ------------------------------------------------------------------*/
 #include "MDR32F9Qx_rst_clk.h"
 #include "MDR32F9Qx_port.h"
 #include "MDR32F9Qx_dac.h"
@@ -21,10 +34,19 @@ extern DMA_CtrlDataInitTypeDef TIM2_alternate_DMA_structure;
 
 // Структура для порта
 extern PORT_InitTypeDef port_init_structure;
+PORT_InitTypeDef PortInitStructure;
 
 // Структура для таймера
 TIMER_CntInitTypeDef Cnt_sTim2;
+TIMER_ChnInitTypeDef TimerChnInitStructure;
+TIMER_ChnOutInitTypeDef TimerChnOutInitStructure;
 
+/**
+  * @brief  Init DAC: 
+  * Setup and enable DAC
+  * @param  None
+  * @retval None
+  */
 void Setup_DAC() 
 {
 	// Подключаем тактирование к блоку ЦАП, и порту E 
@@ -49,6 +71,14 @@ void Setup_DAC()
 	DAC2_Cmd(ENABLE);			
 }
 
+/**
+  * @brief  Init IIM2: 
+  * Configure TIM2 frequence, also function configures
+  * PE1 and PE2 to work as demultiplexing control outputs
+  * at the end function enables timer
+  * @param  None
+  * @retval None
+  */
 void Setup_TIM2() 
 {
 	RST_CLK_PCLKcmd((RST_CLK_PCLK_TIMER2), ENABLE);
@@ -70,14 +100,60 @@ void Setup_TIM2()
 																		// Итоговая частота ЦАПа будет 250 кГц
 	
 	TIMER_CntInit(MDR_TIMER2, &Cnt_sTim2);
+
+
+	// Сконфигурируем пин PE2 и PE1 для управления демультиплексором
+	RST_CLK_PCLKcmd (RST_CLK_PCLK_PORTE | RST_CLK_PCLK_TIMER2, ENABLE);
+	PORT_StructInit(&PortInitStructure);
+	PortInitStructure.PORT_FUNC = PORT_FUNC_ALTER;
+	PortInitStructure.PORT_OE = PORT_OE_OUT;
+	PortInitStructure.PORT_MODE = PORT_MODE_DIGITAL;
+	PortInitStructure.PORT_Pin = (PORT_Pin_2 | PORT_Pin_1);		// PE1 и PE2
+	PortInitStructure.PORT_SPEED = PORT_SPEED_MAXFAST;
+	PORT_Init (MDR_PORTE, &PortInitStructure);
+ 
+	// Сконфигурируем управление демультиплексором
+	TIMER_ChnStructInit (&TimerChnInitStructure);
+	TimerChnInitStructure.TIMER_CH_Number = TIMER_CHANNEL3;					// PE2 - 3 канал альтернативная функция (прямой канал)
+	TimerChnInitStructure.TIMER_CH_Mode = TIMER_CH_MODE_PWM;
+	TimerChnInitStructure.TIMER_CH_REF_Format = TIMER_CH_REF_Format3;
+	TIMER_ChnInit (MDR_TIMER2, &TimerChnInitStructure);
+	TimerChnInitStructure.TIMER_CH_Number = TIMER_CHANNEL1;					// PE1 - 1 канал альтернативная функция (инвертированный канал)
+	TIMER_ChnInit (MDR_TIMER2, &TimerChnInitStructure);
+	//
+	TIMER_ChnOutStructInit (&TimerChnOutInitStructure);
+	TimerChnOutInitStructure.TIMER_CH_Number = TIMER_CHANNEL3;
+	TimerChnOutInitStructure.TIMER_CH_DirOut_Polarity =
+	TIMER_CHOPolarity_NonInverted;
+	TimerChnOutInitStructure.TIMER_CH_DirOut_Source = TIMER_CH_OutSrc_REF;
+	TimerChnOutInitStructure.TIMER_CH_DirOut_Mode = TIMER_CH_OutMode_Output;
+	TimerChnOutInitStructure.TIMER_CH_NegOut_Polarity =
+	TIMER_CHOPolarity_NonInverted;
+	TimerChnOutInitStructure.TIMER_CH_NegOut_Source = TIMER_CH_OutSrc_REF;
+	TimerChnOutInitStructure.TIMER_CH_NegOut_Mode = TIMER_CH_OutMode_Output;
+	TIMER_ChnOutInit (MDR_TIMER2, &TimerChnOutInitStructure);
+	// Копируем конфигурацию для канала 1 (PE1)
+	TimerChnOutInitStructure.TIMER_CH_Number = TIMER_CHANNEL1;
+	TIMER_ChnOutInit (MDR_TIMER2, &TimerChnOutInitStructure);
 	//NVIC_EnableIRQ(Timer2_IRQn);
 	TIMER_DMACmd(MDR_TIMER2, TIMER_STATUS_CNT_ARR, ENABLE);
 	
 	// // Включить таймер
 	TIMER_Cmd(MDR_TIMER2, ENABLE);
+
+	TIMER_SetChnCompare (MDR_TIMER2, TIMER_CHANNEL3, 5);
+	TIMER_SetChnCompare (MDR_TIMER2, TIMER_CHANNEL1, 9);
+	
 }
 
-void set_DAC_table(int freq) 
+/**
+  * @brief  Init DAC: 
+  * This function set DAC table so that DAC will give us
+  * sinusoid with specified frequence.
+  * @param  int
+  * @retval None
+  */
+void set_sin_DAC_table(int freq) 
 {
 	freq = (int)((float)freq * CORRECTION_FACTOR); 	// Поправочный коэффициент
 	int tics = (DISCRET_FREQ / freq);				// Сколько тиков таймера отвести на период синусоиды с частотой freq
@@ -100,3 +176,7 @@ void set_DAC_table(int freq)
 	TIM2_primary_DMA_structure.DMA_CycleSize = (tics);								// Сколько измерений (DMA передач) содержит 1 DMA цикл
 	TIM2_alternate_DMA_structure.DMA_CycleSize = (tics);							// Сколько измерений (DMA передач) содержит 1 DMA цикл
 }
+
+/*********************** (C) COPYRIGHT 2024 ICV ****************************
+*
+* END OF FILE DAC_init.c */

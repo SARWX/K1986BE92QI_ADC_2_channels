@@ -16,6 +16,10 @@
         "mdr32f9qx_adc.h": "c",
         "mdr32f9qx_dac.h": "c",
         "dac_init.h": "c",
-        "ili9341_interface.h": "c"
+        "ili9341_interface.h": "c",
+        "mdr32f9qx_dma.h": "c",
+        "stdint.h": "c",
+        "mdr32f9qx_usb_cdc.h": "c",
+        "command_system.h": "c"
     }
 }

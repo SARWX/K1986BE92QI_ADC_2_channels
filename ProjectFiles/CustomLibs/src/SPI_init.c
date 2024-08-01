@@ -1,9 +1,31 @@
+/**
+  ******************************************************************************
+  * @file    SPI_init.c
+  * @author  ICV
+  * @version V1.0.0
+  * @date    17/05/2024
+  * @brief   This file contains initialization of SPI (SSP1)
+  * 		 also, initialize pins, that we need to use
+  * 		 display and touch screen
+  * ******************************************************************************
+  */
+
 #include "MDR32F9Qx_ssp.h"
 #include "MDR32F9Qx_port.h"
 #include "MDR32Fx.h"
 #include "MDR32F9Qx_rst_clk.h"
 #include "delay.h"
+#include "SPI_init.h"
 
+SSP_InitTypeDef SSP1_struct;	
+
+/**
+  * @brief  Configure SPI for: \n 
+  * 1) Display ili9341 (plus RESET, DC, CS) \n
+  * 2) Touch XPT2046 (plus IRQ, CS) 
+  * @param  None
+  * @retval None
+  */
 void Setup_SPI(void)
 {
 	PORT_InitTypeDef Port_sruct;
@@ -12,40 +34,40 @@ void Setup_SPI(void)
     RST_CLK_PCLKcmd((RST_CLK_PCLK_RST_CLK | RST_CLK_PCLK_SSP1), ENABLE);
     RST_CLK_PCLKcmd((RST_CLK_PCLK_PORTB | RST_CLK_PCLK_PORTF), ENABLE);
 
-	// POT B - инициализация RESET и DC
+	// инициализация RESET и DC
 	PORT_StructInit(&Port_sruct);
-	Port_sruct.PORT_Pin       = (PORT_Pin_6 | PORT_Pin_7); // PB6 = DC, PB7 = RESET
-	Port_sruct.PORT_OE        = PORT_OE_OUT;
-	Port_sruct.PORT_SPEED     = PORT_SPEED_MAXFAST;
-	Port_sruct.PORT_MODE      = PORT_MODE_DIGITAL;         // ???
-	PORT_Init(MDR_PORTB, &Port_sruct);
+	Port_sruct.PORT_Pin		= (Pin_DC_Display | Pin_Reset_Display);
+	Port_sruct.PORT_OE		= PORT_OE_OUT;
+	Port_sruct.PORT_SPEED	= PORT_SPEED_MAXFAST;
+	Port_sruct.PORT_MODE	= PORT_MODE_DIGITAL;
+	PORT_Init(Port_DC_Reset_Display, &Port_sruct);
 
-	// TEST
-//	for (int i = 0; i < 10; i++) {
-//			MDR_PORTB->RXTX = (MDR_PORTB->RXTX ^ PORT_Pin_7);
-//			delay_ms(100);
-//		}
-	// TEST
+	// инициализация CS
+	Port_sruct.PORT_Pin     = Pin_SPI_CS_Display;
+	PORT_Init(Port_SPI_CS_Display, &Port_sruct);
+	Port_SPI_CS_Display->RXTX |= Pin_SPI_CS_Display;
+	Port_sruct.PORT_Pin     = Pin_SPI_CS_Touch;
+	PORT_Init(Port_SPI_CS_Touch, &Port_sruct);
+	Port_SPI_CS_Touch->RXTX |= Pin_SPI_CS_Touch;
 
-	// PORT F - инициализация CS
-	Port_sruct.PORT_Pin       = PORT_Pin_2;		// PF2 = CS
-	PORT_Init(MDR_PORTF, &Port_sruct);
-	// PORT F - инициализация MOSI, SCK
-	Port_sruct.PORT_Pin       = (PORT_Pin_0 | PORT_Pin_1);
-	Port_sruct.PORT_FUNC	   = PORT_FUNC_ALTER;
-	PORT_Init(MDR_PORTF, &Port_sruct);
-	// MISO	Port_sruct->PORT_Pin       = (PORT_Pin_0 | PORT_Pin_1 | PORT_Pin_2);                // PF2 = CS
-	Port_sruct.PORT_Pin       = (PORT_Pin_3);                // MISO
-	Port_sruct.PORT_OE        = PORT_OE_IN;
-	PORT_Init(MDR_PORTF, &Port_sruct);
+	// инициализация MOSI, SCK, MISO
+	Port_sruct.PORT_Pin     = (Pin_SPI_MOSI | Pin_SPI_CLK);
+	Port_sruct.PORT_FUNC	= PORT_FUNC_ALTER;
+	PORT_Init(Port_SPI, &Port_sruct);
+	Port_sruct.PORT_Pin		= (Pin_SPI_MISO);
+	Port_sruct.PORT_OE      = PORT_OE_IN;
+	PORT_Init(Port_SPI, &Port_sruct);
+	
+	// Настройка для Touch
+	Port_sruct.PORT_FUNC	= PORT_FUNC_PORT;
+	Port_sruct.PORT_MODE	= PORT_MODE_DIGITAL;
+	Port_sruct.PORT_Pin		= (Pin_IRQ_Touch);
+	Port_sruct.PORT_OE		= PORT_OE_IN;
+	PORT_Init(Port_IRQ_Touch, &Port_sruct);
 
 	// инициализация SPI
-	SSP_BRGInit(MDR_SSP1, SSP_HCLKdiv1);		// Подключить SSP1 peripheral clock
-	SSP_InitTypeDef SSP1_struct;		
+	SSP_BRGInit(MDR_SSP1, SSP_HCLKdiv1);		// Подключить SSP1 peripheral clock	
 	SSP_StructInit(&SSP1_struct);
 	SSP_Init(MDR_SSP1, &SSP1_struct);
 	SSP_Cmd(MDR_SSP1, ENABLE); 
-
-	// uint16_t data = 0;
-	// SSP_SendData(MDR_SSP1, data);
 };
