@@ -4764,10 +4764,19 @@ void delay_tick(uint32_t count);
 void delay_ms(uint32_t delay);
 void delay_us(uint32_t delay);
 # 29 "main.c" 2
+# 1 "./CustomLibs/inc\\compress.h" 1
+
+
+
+
+
+void convert_to_8_bit(uint8_t *arr, int size);
+void convert_to_12_bit(uint8_t *arr, int size);
+# 30 "main.c" 2
 
 
 # 1 "./CustomLibs/inc\\defines.h" 1
-# 32 "main.c" 2
+# 33 "main.c" 2
 
 int command_recived = 0;
 char buffer[128];
@@ -4779,84 +4788,6 @@ uint16_t alternate_array_for_ADC[128];
 uint16_t tuner = 128;
 
 
-
-
-uint32_t count_dysplay = 0;
-uint32_t count_dma_interrupts = 0;
-uint16_t lock_frame = 10;
-
-
-
-
-
-
-void convert_to_8_bit(uint8_t *arr, int size)
-{
-
- for(int i = 0; i < (size*2); i++)
- {
-  uint8_t high_byte = 0;
-  high_byte |= ((arr[i*2] & 0xF0) >> 4);
-  high_byte |= ((arr[((i*2)+1)] & 0x0F) << 4);
-  arr[i] = high_byte;
-
-
-
-
-
-
-
- }
-
-}
-
-
-void convert_to_12_bit(uint8_t *arr, int size)
-{
-    int i = 3, j = 4;
-    while (j < size*2)
-    {
-        if (((j+1)%4) == 0)
-        {
-            j++;
-            continue;
-        }
-
-  if ((i%2) == 0)
-  {
-
-   arr[i/2] &= 0xF0;
-   if((j%2) == 0)
-   {
-
-       arr[i/2] |= (arr[j/2] & 0x0F);
-   }
-   else
-   {
-
-       arr[i/2] |= ((arr[j/2] >> 4) & 0x0F);
-   }
-  }
-  else
-  {
-
-   arr[i/2] &= 0x0F;
-   if((j%2) == 0)
-   {
-
-       arr[i/2] |= ((arr[j/2] << 4) & 0xF0);
-   }
-   else
-   {
-
-       arr[i/2] |= (arr[j/2] & 0xF0);
-   }
-  }
-  j++;
-  i++;
-    }
-}
-# 128 "main.c"
 int main(void)
 {
  Setup_CPU_Clock();
@@ -4880,12 +4811,12 @@ int main(void)
 
 
  DMA_Cmd(DMA_Channel_TIM2, ENABLE);
-# 193 "main.c"
+# 109 "main.c"
  while (1)
  {
   if (command_recived == 1)
   {
-   ADC1_Cmd (DISABLE);
+   ADC1_Cmd(DISABLE);
    command_recived = 0;
    execute_command(rec_buf);
 
@@ -4903,9 +4834,6 @@ int main(void)
 
   while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) == 0) ;
   DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_PRIMARY, &ADC1_primary_DMA_structure);
-
-
-
   convert_to_8_bit(main_array_for_ADC, 128);
   USB_CDC_SendData((uint8_t *)main_array_for_ADC, (((128 ) ) ));
 
@@ -4916,14 +4844,11 @@ int main(void)
 
   while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) != 0) ;
   DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_ALTERNATE, &ADC1_alternate_DMA_structure);
-
-
   convert_to_8_bit(alternate_array_for_ADC, 128);
   USB_CDC_SendData((uint8_t *)alternate_array_for_ADC, ((128 )));
 
 
 
 
-  count_dysplay ++;
  }
 }

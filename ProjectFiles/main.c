@@ -26,6 +26,7 @@
 #include "ili9341.h"
 #include "ili9341_interface.h"
 #include "delay.h"
+#include "compress.h"
 
 /* Макроподстановки --------------------------------------------------------------*/
 #include "defines.h"
@@ -39,82 +40,6 @@ uint16_t alternate_array_for_ADC[NUM_OF_MES];	// Массив измерений
 // элементы управления
 uint16_t tuner = NUM_OF_MES;					// Управление разверткой
 /* -------------------------------------------------------------------------------*/
-
-// TESTS
-uint32_t count_dysplay = 0;
-uint32_t count_dma_interrupts = 0;
-uint16_t lock_frame = 10;
-
-
-
-
-// TEST FUNCTION
-// uint8_t *convert_to_8_bit(uint16_t *old_arr, int size)
-void convert_to_8_bit(uint8_t *arr, int size)
-{
-	// static uint8_t new_arr[NUM_OF_MES];
-	for(int i = 0; i < (size*2); i++)
-	{
-		uint8_t high_byte = 0;
-		high_byte |= ((arr[i*2] & 0xF0) >> 4);
-		high_byte |= ((arr[((i*2)+1)] & 0x0F) << 4);
-		arr[i] = high_byte;
-	}
-}
-
-// Компрессор (ужимает 12 битные измерения из 2 байт в 12 бит)
-void convert_to_12_bit(uint8_t *arr, int size) 
-{ 			// size задается в количестве 16 битных элементов
-    int i = 3, j = 4; 
-    while (j < size*2)
-    {
-        if (((j+1)%4) == 0)
-        {
-            j++;
-            continue;
-        }
-        // Возможны 2 случая:
-		if ((i%2) == 0)
-		{
-			// Четный полубайт (младший полубайт)                                           0 - 1, 2 - 3, 4 - 5 ...
-			arr[i/2] &= 0xF0;       // затерли младший полубайт
-			if((j%2) == 0)
-			{
-			    // j тоже младший
-			    arr[i/2] |= (arr[j/2] & 0x0F);
-			}
-			else
-			{
-			    // j старший
-			    arr[i/2] |= ((arr[j/2] >> 4) & 0x0F);
-			}
-		}
-		else
-		{
-			// Нечетный полубайт (старший полубайт)
-			arr[i/2] &= 0x0F;       // затерли старший полубайт
-			if((j%2) == 0)
-			{
-			    // j младший
-			    arr[i/2] |= ((arr[j/2] << 4) & 0xF0);
-			}
-			else
-			{
-			    // j тоже старший
-			    arr[i/2] |= (arr[j/2] & 0xF0);
-			}
-		}
-		j++;
-		i++;
-    }
-}
-
-
-
-
-
-
-
 
 int main(void) 
 {
@@ -185,7 +110,7 @@ int main(void)
 	{
 		if (command_recived == 1) 
 		{
-			ADC1_Cmd (DISABLE);
+			ADC1_Cmd(DISABLE);
 			command_recived = 0;
 			execute_command(rec_buf);
 
@@ -203,9 +128,6 @@ int main(void)
 		// 1 стадия - заполнение буфера, с использованием основной структуры DMA, параллельная передача буфера альтернативной по USB
 		while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) == 0) ;						// ждем, когда DMA перейдет на альтернативную структуру
 		DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_PRIMARY, &ADC1_primary_DMA_structure);			// реинициализируем основную структуру
-		// convert_to_12_bit((uint8_t *)(main_array_for_ADC), NUM_OF_MES);
-		// convert_to_8_bit(main_array_for_ADC, (uint8_t *)(main_array_for_ADC), NUM_OF_MES);
-		// convert_to_8_bit(main_array_for_ADC, NUM_OF_MES);
 		convert_to_8_bit(main_array_for_ADC, NUM_OF_MES);
 		USB_CDC_SendData((uint8_t *)main_array_for_ADC, (((NUM_OF_MES 	) ) ));					// отправка буфера основной структуры DMA по USB
 	
@@ -216,14 +138,11 @@ int main(void)
 		// 2 стадия - заполнение буфера, с использованием альтернативной структуры DMA, параллельная передача буфера основной по USB
 		while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) != 0) ;						// ждем, когда DMA перейдет на основную структуру
 		DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_ALTERNATE, &ADC1_alternate_DMA_structure);		// реинициализируем альтернативную структуру
-		// convert_to_12_bit((uint8_t *)(alternate_array_for_ADC), NUM_OF_MES);
-		// convert_to_8_bit(alternate_array_for_ADC, (uint8_t *)(alternate_array_for_ADC), NUM_OF_MES);
 		convert_to_8_bit(alternate_array_for_ADC, NUM_OF_MES);
 		USB_CDC_SendData((uint8_t *)alternate_array_for_ADC, ((NUM_OF_MES )));			// отправка буфера альтернативной структуры DMA по USB
 
 		// {
 		// 	display_signal((uint16_t *)alternate_array_for_ADC, NUM_OF_MES, 1, ((tuner >> 8)));
 		// }
-		count_dysplay ++;
 	}	
 }

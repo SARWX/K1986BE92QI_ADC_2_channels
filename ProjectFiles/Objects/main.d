@@ -25,4 +25,4 @@
   CustomLibs\inc\USB_init.h CustomLibs\inc\command_system.h \
   CustomLibs\inc\SPI_init.h CustomLibs\inc\ili9341.h \
   CustomLibs\inc\ili9341_interface.h CustomLibs\inc\delay.h \
-  CustomLibs\inc\defines.h
+  CustomLibs\inc\compress.h CustomLibs\inc\defines.h

@@ -3,10 +3,6 @@
 #include "defines.h"
 #include "DMA_init.h"
 
-// TESTS
-extern uint32_t count_dma_interrupts;
-extern uint32_t count_dysplay;
-
 // Внешние переменные
 extern uint16_t DAC_table[];
 extern uint16_t main_array_for_ADC[];
@@ -137,7 +133,6 @@ void Setup_DMA()
 }
 
 void DMA_IRQHandler() {
-	count_dma_interrupts++;
 	if(DMA_GetFlagStatus(DMA_Channel_TIM2, DMA_FLAG_CHNL_ALT) == RESET) 
 	{ 
 		DMA_CtrlInit(DMA_Channel_TIM2, DMA_CTRL_DATA_ALTERNATE, &TIM2_alternate_DMA_structure);	// реинициализируем альтернативную структуру

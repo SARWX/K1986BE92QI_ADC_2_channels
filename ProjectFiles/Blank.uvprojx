@@ -906,6 +906,11 @@
               <FileType>1</FileType>
               <FilePath>.\CustomLibs\src\ili9341gfx.c</FilePath>
             </File>
+            <File>
+              <FileName>compress.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CustomLibs\src\compress.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -965,6 +970,11 @@
               <FileName>ili9341gfx.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\CustomLibs\inc\ili9341gfx.h</FilePath>
+            </File>
+            <File>
+              <FileName>compress.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\CustomLibs\inc\compress.h</FilePath>
             </File>
           </Files>
         </Group>
