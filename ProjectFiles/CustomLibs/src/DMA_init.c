@@ -145,7 +145,7 @@ void Setup_DMA()
 	1 << DMA_Channel_SSP2_TX);
 	// Установим значение приоретета прерывания DMA
  	NVIC_EnableIRQ(DMA_IRQn);
-	NVIC_SetPriority (DMA_IRQn, 0);		// was 15
+	NVIC_SetPriority (DMA_IRQn, 15);		// was 15
 
 	// ПРОБУЕМ
 	MDR_DMA->CHNL_ENABLE_SET = (1 << DMA_Channel_TIM2);

@@ -49,27 +49,24 @@ int main(void)
 	Setup_CPU_Clock();
 	VCom_Configuration();
 	/* CDC layer initialization */
-	// Setup_ADC();
-	// Setup_DMA();
+	Setup_ADC();
+	Setup_DMA();
 //		test();			/// TETTSSSTTT 
 	USB_CDC_Init((uint8_t *)buffer, 1, SET);
 	Setup_USB();		
-	// set_DAC_table(1000);
-	// Setup_DAC();
+	set_sin_DAC_table(1000);
+	Setup_DAC();
 	Setup_SPI();
 	Setup_ili9341();
-	// Setup_TIM2();
+	Setup_TIM2();
  
  
 	// Включение АЦП и DMA для АЦП
-	// ADC1_Cmd (ENABLE);						// разрешаем работу ADC1
-	// ADC2_Cmd (ENABLE);						// разрешаем работу ADC2
-// 	DMA_Cmd(DMA_Channel_ADC1, ENABLE);		// разрешаем работу DMA с каналом ADC1
-// 	// Включение DMA для ЦАП
-	// DMA_Cmd(DMA_Channel_TIM2, ENABLE);
+	ADC1_Cmd (ENABLE);						// разрешаем работу ADC1
+	ADC2_Cmd (ENABLE);						// разрешаем работу ADC2
 
 // 	/* Main loop */
-	ili9341_setaddress(0,0,319,239);
+//	ili9341_setaddress(0,0,319,239);
 	// Тест с отключением прерываний
 	// __disable_irq();
 	// NVIC_EnableIRQ(USB_IRQn);
@@ -83,26 +80,28 @@ int main(void)
 
 
 
-// // TEST OF GUI
-ili9341_clear(BLACK);
-display_main_menu();
+// // // TEST OF GUI
+// ili9341_clear(BLACK);
+// display_main_menu();
 
-// TRAP
-int row_num = 1;
-while (1)
-{
-	// draw_arrow(320 - 48, 240 - 13 - 38, 1, GREEN);
-	// draw_box(row_num++, BLUE);
-	// if (row_num == 5)
-	// 	row_num = 1;
-	// draw_box(row_num, GREEN);
-	// delay_ms(100);
-	// draw_arrow(320 - 48, 240 - 13 - 38, 1, BLUE);
-	// delay_ms(100);
-	ILI9341_TouchGetCoordinates(&coordinate_x, &coordinate_y);
-	if ((coordinate_x * coordinate_y) != 0)
-		draw_touch_cursor(coordinate_x, coordinate_y);
-}
+// // TRAP
+// int row_num = 1;
+// while (1)
+// {
+// 	// draw_arrow(320 - 48, 240 - 13 - 38, 1, GREEN);
+// 	// draw_box(row_num++, BLUE);
+// 	// if (row_num == 5)
+// 	// 	row_num = 1;
+// 	// draw_box(row_num, GREEN);
+// 	// delay_ms(100);
+// 	// draw_arrow(320 - 48, 240 - 13 - 38, 1, BLUE);
+// 	// delay_ms(100);
+
+// 	// Тест рисования
+// 	ILI9341_TouchGetCoordinates(&coordinate_x, &coordinate_y);
+// 	if ((coordinate_x * coordinate_y) != 0)
+// 		draw_touch_cursor(coordinate_x, coordinate_y);
+// }
 	
 
 
@@ -131,7 +130,7 @@ while (1)
 
 		// Определим значение управляющего элемента и усредним 
 		// tuner = (tuner + ((MDR_ADC->ADC2_RESULT >> 8) << 8)) / 2;
-		tuner = ((MDR_ADC->ADC2_RESULT >> 8) << 8);
+//		tuner = ((MDR_ADC->ADC2_RESULT >> 8) << 8);
 		
 		// 1 стадия - заполнение буфера, с использованием основной структуры DMA, параллельная передача буфера альтернативной по USB
 		while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) == 0) ;						// ждем, когда DMA перейдет на альтернативную структуру

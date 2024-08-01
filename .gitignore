@@ -1,8 +1,10 @@
-ProjectFiles/Objects/
-ProjectFiles/Listings/
+ProjectFiles/Objects/*
+ProjectFiles/Listings/*
 ProjectFiles/EventRecorderStub.scvd
 # ProjectFiles/my_project.mil 
 # ProjectFiles/.project
 ProjectFiles/Blank.uvguix.PC_88
 # ProjectFiles/Blank.uvprojx 
 ProjectFiles/.vscode
+*.o
+*.i
