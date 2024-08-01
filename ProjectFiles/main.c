@@ -41,14 +41,12 @@ uint16_t alternate_array_for_ADC[NUM_OF_MES];	// Массив измерений
 uint16_t tuner = NUM_OF_MES;					// Управление разверткой
 uint16_t coordinate_x = 0;
 uint16_t coordinate_y = 0;
-
 /* -------------------------------------------------------------------------------*/
 
 int main(void) 
 {
 	Setup_CPU_Clock();
 	VCom_Configuration();
-	/* CDC layer initialization */
 	Setup_ADC();
 	Setup_DMA();
 //		test();			/// TETTSSSTTT 
@@ -59,7 +57,6 @@ int main(void)
 	Setup_SPI();
 	Setup_ili9341();
 	Setup_TIM2();
- 
  
 	// Включение АЦП и DMA для АЦП
 	ADC1_Cmd (ENABLE);						// разрешаем работу ADC1
@@ -109,22 +106,21 @@ int main(void)
 // execute_command("set 2.0 0.0 !");
 
 
-
-
-
-
 	while (1) 
 	{
+		// Проверим, не ожидает ли исполнения команда
 		if (command_recived == 1) 
 		{
+			// Надо приостановить работу АЦП
 			ADC1_Cmd(DISABLE);
 			command_recived = 0;
 			execute_command(rec_buf);
-
+			// Почистим буфер
 			for(int i = 0; i < BUFFER_LENGTH; i++) 
 			{
 				buffer[i] = 0;
 			}
+			// Восстанавливаем работу АЦП
 			ADC1_Cmd(ENABLE);
 		}
 
@@ -136,7 +132,7 @@ int main(void)
 		while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) == 0) ;						// ждем, когда DMA перейдет на альтернативную структуру
 		DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_PRIMARY, &ADC1_primary_DMA_structure);			// реинициализируем основную структуру
 		convert_to_8_bit(main_array_for_ADC, NUM_OF_MES);
-		USB_CDC_SendData((uint8_t *)main_array_for_ADC, (((NUM_OF_MES 	) ) ));					// отправка буфера основной структуры DMA по USB
+		USB_CDC_SendData((uint8_t *)main_array_for_ADC, NUM_OF_MES);					// отправка буфера основной структуры DMA по USB
 	
 		// {
 		// 	display_signal((uint16_t *)main_array_for_ADC, NUM_OF_MES, 1, ((tuner >> 8)));
@@ -146,7 +142,7 @@ int main(void)
 		while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) != 0) ;						// ждем, когда DMA перейдет на основную структуру
 		DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_ALTERNATE, &ADC1_alternate_DMA_structure);		// реинициализируем альтернативную структуру
 		convert_to_8_bit(alternate_array_for_ADC, NUM_OF_MES);
-		USB_CDC_SendData((uint8_t *)alternate_array_for_ADC, ((NUM_OF_MES )));			// отправка буфера альтернативной структуры DMA по USB
+		USB_CDC_SendData((uint8_t *)alternate_array_for_ADC, NUM_OF_MES );			// отправка буфера альтернативной структуры DMA по USB
 
 		// {
 		// 	display_signal((uint16_t *)alternate_array_for_ADC, NUM_OF_MES, 1, ((tuner >> 8)));

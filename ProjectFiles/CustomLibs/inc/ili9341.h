@@ -7,7 +7,7 @@
 #define controlport PORTB
 #define controlddr DDRB
 #define controlpin PINB
-#define rstport PORTD       // ���� ����� �������� �� ���-�� ����� GPIOD->ODR
+#define rstport PORTD
 #define rstddr DDRD
 #define rstpin PIND
 #define dc 0

@@ -4,7 +4,7 @@
   * @author  ICV
   * @version V1.0.0
   * @date    08/05/2024
-  * @brief   This file contains initialization of ADC.
+  * @brief   This file contains .
   * ******************************************************************************
   */
  

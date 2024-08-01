@@ -83,7 +83,7 @@ void Setup_TIM2()
 {
 	RST_CLK_PCLKcmd((RST_CLK_PCLK_TIMER2), ENABLE);
 	TIMER_DeInit(MDR_TIMER2);
-	TIMER_BRGInit(MDR_TIMER2, TIMER_HCLKdiv2);			// HCLK = 16 * 7 = 112 MHz
+	TIMER_BRGInit(MDR_TIMER2, TIMER_HCLKdiv1);			// HCLK = 16 * 7 = 112 MHz
 														// 112 / 4 = 28 MHz
 														// Тактирование АЦП у нас 500 kHz, поэтому такую же частоту зададим и в ЦАП
 
@@ -92,7 +92,7 @@ void Setup_TIM2()
 	Cnt_sTim2.TIMER_CounterMode = TIMER_CntMode_ClkFixedDir;			// Счет без направления изменения счета
 	Cnt_sTim2.TIMER_CounterDirection = TIMER_CntDir_Up;					// Счет в сторону увеличения
 	// Cnt_sTim2.TIMER_EventSource = TIMER_EvSrc_TM2; 					// Событие по достижении TIM2 значения ARR
-	Cnt_sTim2.TIMER_FilterSampling = TIMER_FDTS_TIMER_CLK_div_4;		// Вспомогательная частота для фильтра в 4 раза меньше основной
+	Cnt_sTim2.TIMER_FilterSampling = TIMER_FDTS_TIMER_CLK_div_2;		// Вспомогательная частота для фильтра в 4 раза меньше основной
 	Cnt_sTim2.TIMER_ARR_UpdateMode = TIMER_ARR_Update_Immediately;		// Изменение ARR таймера по переполнению
 	Cnt_sTim2.TIMER_IniCounter = 0;										// Инициализационное значение таймера
 	Cnt_sTim2.TIMER_Prescaler = PRESCALER_T2;							// делим на 12:  112 MHz / 4 / 12 
@@ -141,8 +141,8 @@ void Setup_TIM2()
 	// Включить таймер
 	TIMER_Cmd(MDR_TIMER2, ENABLE);
 
-	TIMER_SetChnCompare (MDR_TIMER2, TIMER_CHANNEL3, 5);
-	TIMER_SetChnCompare (MDR_TIMER2, TIMER_CHANNEL1, 9);
+	TIMER_SetChnCompare (MDR_TIMER2, TIMER_CHANNEL3, 5);	// 4
+	TIMER_SetChnCompare (MDR_TIMER2, TIMER_CHANNEL1, 9);	// 10
 	
 }
 

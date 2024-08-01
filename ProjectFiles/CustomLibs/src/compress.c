@@ -1,9 +1,10 @@
 #include <stdint.h>
 
 /**
- * @brief Функция для того, чтобы оставить только старшие 8 бит
- * в массиве 2ух байтных данных, с целью сжатия массива в 2 раза 
- * @param size - задается в количестве 16 битных элементов
+ * @brief Function to leave only the high 8 bits
+ * in the array of 2 byte data, in order to compress the array by 2 times 
+ * @param size - set in the number of 16 bit elements
+ * @retval None
 */
 void convert_to_8_bit(uint8_t *arr, int size)
 {
@@ -18,9 +19,10 @@ void convert_to_8_bit(uint8_t *arr, int size)
 }
 
 /**
- * @brief Функция-Компрессор 
- * ужимает 12 битные измерения из 2 байт в 12 бит
- * @param size - задается в количестве 16 битных элементов
+ * @brief Function-Compressor 
+ * compresses 12 bit measurements from 2 bytes into 12 bits
+ * @param size - set in number of 16 bit elements
+ * @retval None
 */
 void convert_to_12_bit(uint8_t *arr, int size) 
 {
