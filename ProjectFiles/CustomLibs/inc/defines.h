@@ -14,7 +14,7 @@
 #define PERIOD_T2 12					// Определяет период работы ЦАП
 #define HSE_FREQ 16000000
 #define CPU_PLL 7
-#define CPU_DIV 4
+#define CPU_DIV 2
 #define DISCRET_FREQ ((HSE_FREQ * CPU_PLL / CPU_DIV) / (PRESCALER_T2 * PERIOD_T2))	// определяет частоту дискретизации ЦАП 
 // #define CORRECTION_FACTOR 1.065			// поправочный коэфициент для задания точной частоты
 #define CORRECTION_FACTOR 1.1			// поправочный коэфициент для задания точной частоты

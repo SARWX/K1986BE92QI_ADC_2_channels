@@ -3000,7 +3000,7 @@ void Setup_DAC()
     PORT_DeInit(((MDR_PORT_TypeDef *) (0x400C8000)));
 
 
-    port_init_structure.PORT_Pin = PORT_Pin_0 | PORT_Pin_1;
+    port_init_structure.PORT_Pin = PORT_Pin_0;
     port_init_structure.PORT_OE = PORT_OE_IN;
     port_init_structure.PORT_MODE = PORT_MODE_ANALOG;
     PORT_Init(((MDR_PORT_TypeDef *) (0x400C8000)), &port_init_structure);
@@ -3045,7 +3045,7 @@ void Setup_TIM2()
 void set_DAC_table(int freq)
 {
  freq = (int)((float)freq * 1.1);
- int tics = (((16000000 * 7 / 4) / (10 * 12)) / freq);
+ int tics = (((16000000 * 7 / 2) / (10 * 12)) / freq);
  int divider = 1;
  while(tics > 500)
  {
