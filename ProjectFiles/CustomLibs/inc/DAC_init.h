@@ -11,6 +11,16 @@
 #ifndef DAC_init
 #define DAC_init
 
+/**
+ * @brief Type for dac_mode,
+ * this type signalize current DMA state
+ */
+enum dac_mode_state
+{
+  main_state,
+  alt_state
+};
+
 void Setup_DAC();
 void Setup_TIM2();
 void set_sin_DAC_table(int freq);

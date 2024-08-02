@@ -14,11 +14,16 @@
 #include "defines.h"
 #include "MDR32F9Qx_timer.h"
 #include "DMA_init.h"
+#include "DAC_init.h"
 
 // Внешние переменные
 extern uint16_t DAC_table[];
 extern uint16_t main_array_for_ADC[];
-extern uint16_t alternate_array_for_ADC[];	
+extern uint16_t alternate_array_for_ADC[];
+extern enum dac_mode_state dac_mode_state;	
+
+uint8_t main_array_for_DAC[64];
+uint8_t alternate_array_for_DAC[64];
 
 // Структуры для DMA
 DMA_ChannelInitTypeDef ADC1_DMA_structure;
@@ -126,6 +131,7 @@ void Setup_DMA()
 	
 	// Заполним структуру для канала TIM2 
 	TIM2_DMA_structure.DMA_PriCtrlData = &TIM2_primary_DMA_structure;						// Укажем основную структуру
+	TIM2_DMA_structure.DMA_AltCtrlData = &TIM2_alternate_DMA_structure;						// Укажем альтернативную структуру
 	TIM2_DMA_structure.DMA_Priority = DMA_Priority_High;							// Высокий уровень приоритетности (нужен для арбитража)
 	TIM2_DMA_structure.DMA_UseBurst = DMA_BurstSet;
 	TIM2_DMA_structure.DMA_SelectDataStructure =	DMA_CTRL_DATA_PRIMARY;				// в качестве базовой берем основную структуру
@@ -152,6 +158,37 @@ void Setup_DMA()
 }
 
 /**
+ * @brief Function aimed to reconfigure DAC DMA
+ * to transfer data from USB in streaming mode
+ * @param  None
+ * @retval None
+ */
+void reconfig_DMA_dac_mode(void)
+{
+	// Основная
+	TIM2_primary_DMA_structure.DMA_SourceBaseAddr =								// Адрес откуда будем брать измерения 
+	(uint32_t)(main_array_for_DAC);														// Начало массива DAC_table
+	TIM2_primary_DMA_structure.DMA_CycleSize = (64);							// Сколько измерений (DMA передач) содержит 1 DMA цикл
+	TIM2_primary_DMA_structure.DMA_SourceIncSize = DMA_SourceIncByte;			// теперь DAC_table - 8 битный массив => инкремент = байт
+	TIM2_primary_DMA_structure.DMA_MemoryDataSize =								// Скажем DMA, Что мы работаем с 8 битными данными
+	DMA_MemoryDataSize_Byte;	
+	// Альтернативная
+	TIM2_alternate_DMA_structure.DMA_SourceBaseAddr =							// Адрес откуда будем брать измерения 
+	(uint32_t)(alternate_array_for_DAC);													// 65ая позиция массива DAC_table
+	TIM2_alternate_DMA_structure.DMA_CycleSize = (64);							// Сколько измерений (DMA передач) содержит 1 DMA цикл
+	TIM2_alternate_DMA_structure.DMA_SourceIncSize = DMA_SourceIncByte;			// теперь DAC_table - 8 битный массив => инкремент = байт
+	TIM2_alternate_DMA_structure.DMA_MemoryDataSize =							// Скажем DMA, Что мы работаем с 8 битными данными
+	DMA_MemoryDataSize_Byte;
+	// Реинициализируем DMA с новыми настройками
+	DMA_CtrlInit(DMA_Channel_TIM2, DMA_CTRL_DATA_PRIMARY, &TIM2_primary_DMA_structure);		// реинициализируем основную структуру
+	DMA_CtrlInit(DMA_Channel_TIM2, DMA_CTRL_DATA_ALTERNATE, &TIM2_alternate_DMA_structure);	// реинициализируем альтернативную структуру
+	DMA_Init(DMA_Channel_TIM2, &TIM2_DMA_structure);
+	MDR_DMA->CHNL_REQ_MASK_CLR = 1 << DMA_Channel_TIM2;
+	MDR_DMA->CHNL_USEBURST_CLR = 1 << DMA_Channel_TIM2;
+	MDR_DMA->CHNL_ENABLE_SET = (1 << DMA_Channel_TIM2);
+}
+
+/**
   * @brief  Interrupt handler for: DMA \n 
   * this function rised every time when DMA cycle ends, currently this handler devoted to reinit the TIM2 DMA structures
   * @param  None
@@ -169,13 +206,15 @@ void DMA_IRQHandler() {
 	// 	TIMER_Cmd(MDR_TIMER2, ENABLE);
 	// 	count_dma_interrupts = 0;
 	// }
-	/*else*/ if(DMA_GetFlagStatus(DMA_Channel_TIM2, DMA_FLAG_CHNL_ALT) == RESET) 
+	/*else*/ if(DMA_GetFlagStatus(DMA_Channel_TIM2, DMA_FLAG_CHNL_ALT) == RESET) 				// Использует основную
 	{ 
 		DMA_CtrlInit(DMA_Channel_TIM2, DMA_CTRL_DATA_ALTERNATE, &TIM2_alternate_DMA_structure);	// реинициализируем альтернативную структуру
+		dac_mode_state = main_state;
 	}
-	else  
+	else  																						// Перешел на основную
 	{
 		DMA_CtrlInit(DMA_Channel_TIM2, DMA_CTRL_DATA_PRIMARY, &TIM2_primary_DMA_structure);		// реинициализируем основную структуру
+		dac_mode_state = alt_state;
 	}
 //		NVIC_ClearPendingIRQ (DMA_IRQn);
 }

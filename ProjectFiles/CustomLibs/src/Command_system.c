@@ -11,6 +11,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "MDR32F9Qx_usb_CDC.h"
 #include "MDR32F9Qx_dma.h"
+#include "MDR32F9Qx_timer.h"
 #include <string.h>
 #include <stdlib.h>
 #include "ADC_init.h"
@@ -31,7 +32,7 @@ int convert_voltage_to_register_val(float voltage);                 // функ�
   * @retval None
   */
 
-void execute_command(char *command) 
+int execute_command(char *command) 
 {
 // ------------- "set freq " command ------------------------------------------------------------ //
   if (strstr(command, "set freq ") == command) 
@@ -81,6 +82,17 @@ void execute_command(char *command)
     }
   }
 // ---------------------------------------------------------------------------------------------- //
+
+// ------------- "dac_mode " command ------------------------------------------------------------ //
+  if (strstr(command, "dac_mode") == command) 
+  {                    // проверить: команда начинается с "dac_mode"?
+    // Выключить таймер (остановить ЦАП)
+    TIMER_Cmd(MDR_TIMER2, DISABLE);
+   	NVIC_DisableIRQ(DMA_IRQn);
+    return(1);
+  }
+// ---------------------------------------------------------------------------------------------- //
+  return(0);
 }
 /** @example Commands 
  *  command can be sent to the MCU through USB or specified in code \n

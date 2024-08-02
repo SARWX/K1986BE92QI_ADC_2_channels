@@ -14,6 +14,9 @@
 // Структуры для DMA
 extern DMA_CtrlDataInitTypeDef ADC1_primary_DMA_structure;				// Основная структура канала для ADC1
 extern DMA_CtrlDataInitTypeDef ADC1_alternate_DMA_structure;				// Альтернативная структура канала для ADC1
+extern DMA_CtrlDataInitTypeDef TIM2_primary_DMA_structure;
+extern DMA_CtrlDataInitTypeDef TIM2_alternate_DMA_structure;
 void Setup_DMA();
+void reconfig_DMA_dac_mode(void);
 
 #endif /* DMA_init */

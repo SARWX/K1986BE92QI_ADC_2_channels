@@ -33,7 +33,9 @@
 /* Внешние переменные ------------------------------------------------------------*/
 int command_recived = 0;
 char buffer[BUFFER_LENGTH];
+char buffer_2[BUFFER_LENGTH];					// буфер для DAC alt данных
 extern char rec_buf[];							// Массив в котором записана переданная команда
+// extern char rec_buf_2[];						// Массив в котором alt данные для ЦАП
 // массивы для АЦП
 uint16_t main_array_for_ADC[NUM_OF_MES];		// Массив измерений АЦП для заполнения сновной структурой DMA
 uint16_t alternate_array_for_ADC[NUM_OF_MES];	// Массив измерений АЦП для заполнения альтернативной структурой DMA
@@ -41,6 +43,11 @@ uint16_t alternate_array_for_ADC[NUM_OF_MES];	// Массив измерений
 uint16_t tuner = NUM_OF_MES;					// Управление разверткой
 uint16_t coordinate_x = 0;
 uint16_t coordinate_y = 0;
+// переменные для dac_mode
+enum dac_mode_state dac_mode_state;				// Состояние DMA для ЦАПа в режиме dac_mode
+// extern uint16_t DAC_table[];					// Массив для DAC, в main он нужен для dac_mode
+extern uint8_t main_array_for_DAC[];
+extern uint8_t alternate_array_for_DAC[];
 /* -------------------------------------------------------------------------------*/
 
 int main(void) 
@@ -102,8 +109,10 @@ int main(void)
 	
 
 
-// TEST
+////////////////// TESTS ////////////////////
 // execute_command("set 2.0 0.0 !");
+	strcpy (rec_buf, "dac_mode");
+	command_recived = 1;	
 
 
 	while (1) 
@@ -114,7 +123,10 @@ int main(void)
 			// Надо приостановить работу АЦП
 			ADC1_Cmd(DISABLE);
 			command_recived = 0;
-			execute_command(rec_buf);
+			if(execute_command(rec_buf) == 1)		// Если пришла команда "dac_mode", то переходим в другой основной цикл
+			{
+				goto dac_mode;
+			}
 			// Почистим буфер
 			for(int i = 0; i < BUFFER_LENGTH; i++) 
 			{
@@ -148,4 +160,38 @@ int main(void)
 		// 	display_signal((uint16_t *)alternate_array_for_ADC, NUM_OF_MES, 1, ((tuner >> 8)));
 		// }
 	}	
+
+	dac_mode:
+	MDR_DAC->DAC2_DATA = 0;
+	// Предустановка для работы в режиме dac_mode
+	for(int i = 0; i < 64; i++)
+	{
+	//	(((uint8_t *)DAC_table))[i] = i;		// НЕ i А 0, это для теста
+	main_array_for_DAC[i] = 255 * (i%2);
+	alternate_array_for_DAC[i] = 255 * (i%2);
+	}
+	reconfig_DMA_dac_mode();		// Задать настройки DMA для dac_mode
+	// Теперь все готово, можно включить TIM2
+ 	NVIC_EnableIRQ(DMA_IRQn);
+	TIMER_Cmd(MDR_TIMER2, ENABLE);
+	// основной цикл для dac_mode
+	int test_transit = 0;
+	while (1)
+	{
+		MDR_DAC->DAC2_DATA = 0;
+		// 1 стадия - заполнение буфера, с использованием основной структуры DMA, параллельная передача буфера альтернативной по DAC
+		USB_CDC_SetReceiveBuffer(main_array_for_DAC, 64);		// Данные из USB помещаются в buffer
+		while(dac_mode_state == alt_state);							// Ждем когда альтернативный массив будет прочитан	
+		test_transit++;
+		// 2 стадия - заполнение буфера, с использованием альтернативной структуры DMA, параллельная передача буфера основной по DAC
+		USB_CDC_SetReceiveBuffer(alternate_array_for_DAC, 64);	// Данные из USB помещаются в buffer
+		while(dac_mode_state == main_state);						// Ждем когда основной массив будет прочитан
+		
+			// while (DMA_GetFlagStatus(DMA_Channel_TIM2, DMA_FLAG_CHNL_ALT) != RESET) ;						// ждем, когда DMA перейдет на альтернативную структуру
+			// DMA_CtrlInit(DMA_Channel_TIM2, DMA_CTRL_DATA_ALTERNATE, &TIM2_alternate_DMA_structure);	// реинициализируем альтернативную структуру
+			// while (DMA_GetFlagStatus(DMA_Channel_TIM2, DMA_FLAG_CHNL_ALT) == RESET) ;						// ждем, когда DMA перейдет на альтернативную структуру
+			// DMA_CtrlInit(DMA_Channel_TIM2, DMA_CTRL_DATA_PRIMARY, &TIM2_primary_DMA_structure);		// реинициализируем основную структуру
+
+		test_transit++;
+	}
 }

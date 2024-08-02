@@ -22,7 +22,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-extern PORT_InitTypeDef port_init_structure;
+// extern PORT_InitTypeDef port_init_structure;
 static USB_Clock_TypeDef USB_Clock_InitStruct;
 static USB_DeviceBUSParam_TypeDef USB_DeviceBUSParam;
 static MDR_SSP_TypeDef SSP_InitStruct;
