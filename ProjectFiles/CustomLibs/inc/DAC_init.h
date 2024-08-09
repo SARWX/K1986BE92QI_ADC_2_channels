@@ -23,6 +23,6 @@ enum dac_mode_state
 
 void Setup_DAC();
 void Setup_TIM2();
-void set_sin_DAC_table(int freq);
+void set_sin_DAC_table(int freq, int chan);
 
 #endif /* DAC_init */

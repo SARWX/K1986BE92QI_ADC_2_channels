@@ -42,7 +42,7 @@ void Setup_ADC()
     // Запрещаем все прерывания
     NVIC->ICPR[0] = WHOLE_WORD;			// Регистр сброса состояния ожидания для прерывания ICPR
     NVIC->ICER[0] = WHOLE_WORD;			// Регистр запрета прерываний IСER
-		NVIC->ISER[0] = (1<<ADC_IRQn);	// Регистр разрешения прерываний ISER
+	NVIC->ISER[0] = (1<<ADC_IRQn);	    // Регистр разрешения прерываний ISER
 
 	// Сбрасываем настройки порта D
     PORT_DeInit(MDR_PORTD);

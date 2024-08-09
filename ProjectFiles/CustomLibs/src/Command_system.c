@@ -38,14 +38,14 @@ int execute_command(char *command)
   if (strstr(command, "set freq ") == command) 
   {                    // проверить: команда начинается с "set freq "?
     int freq = atoi((char *)(command + strlen("set freq ")));       // перевести freq из строкового формата в int
-      set_sin_DAC_table(freq);                                          // задать синусоиду требуемой частоты в DAC_table
+      set_sin_DAC_table(freq, 1);                                          // задать синусоиду требуемой частоты в DAC_table (в первый канал)
   }
 // ---------------------------------------------------------------------------------------------- //
 
 // ---------------- "set " command -------------------------------------------------------------- //
   else if (strstr(command, "set ") == command)                      // проверить: команда начинается с "set "?
   {
-    static int DAC_table_buf[SIN_RES];                              // буфер DAC_table_buf
+    static int DAC_table_buf[SIN_RES*2];                              // буфер DAC_table_buf
     int i = 4;                                                      // 1ый символ числа num
     int buffer_num = 0;                                             // буферная переменная
     static int j = 0;                                               // индекс таблицы DAC_table_buf
@@ -68,7 +68,7 @@ int execute_command(char *command)
   
     if(command[i] == '!')                                           // передача завершена
     {
-      int iter = SIN_RES / j;                                       // сколько периодов нашего сигнала уложится в буфер для передачи
+      int iter = (SIN_RES*2) / j;                                       // сколько периодов нашего сигнала уложится в буфер для передачи
       for (int l = 0; l < iter; l++)                                // для каждого из умещающихся периодов
       {
         for (int k = 0; k <= j; k++)                                  

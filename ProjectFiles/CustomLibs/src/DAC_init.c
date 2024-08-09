@@ -26,7 +26,7 @@ int cur_dac_val = 0;
 
 // Счетчик для ЦАП
 int dac_cnt = 0;
-uint16_t DAC_table[SIN_RES];
+uint16_t DAC_table[SIN_RES*2];
 
 // Внешние структуры DMA
 extern DMA_CtrlDataInitTypeDef TIM2_primary_DMA_structure;
@@ -57,7 +57,7 @@ void Setup_DAC()
     PORT_DeInit(MDR_PORTE);
 	
 	// Конфигурируем выводы для ЦАП
-    port_init_structure.PORT_Pin   = PORT_Pin_0;				//     PE9
+    port_init_structure.PORT_Pin   = PORT_Pin_0;				//     PE0
     port_init_structure.PORT_OE    = PORT_OE_IN;				// Режим на вход
     port_init_structure.PORT_MODE  = PORT_MODE_ANALOG;			// Аналоговый вход (согласно спецификации)
     PORT_Init(MDR_PORTE, &port_init_structure);					// Инициализация выводов заданной структурой	
@@ -92,7 +92,7 @@ void Setup_TIM2()
 	Cnt_sTim2.TIMER_CounterMode = TIMER_CntMode_ClkFixedDir;			// Счет без направления изменения счета
 	Cnt_sTim2.TIMER_CounterDirection = TIMER_CntDir_Up;					// Счет в сторону увеличения
 	// Cnt_sTim2.TIMER_EventSource = TIMER_EvSrc_TM2; 					// Событие по достижении TIM2 значения ARR
-	Cnt_sTim2.TIMER_FilterSampling = TIMER_FDTS_TIMER_CLK_div_2;		// Вспомогательная частота для фильтра в 4 раза меньше основной
+	Cnt_sTim2.TIMER_FilterSampling = TIMER_FDTS_TIMER_CLK_div_1;		// Вспомогательная частота для фильтра в 4 раза меньше основной
 	Cnt_sTim2.TIMER_ARR_UpdateMode = TIMER_ARR_Update_Immediately;		// Изменение ARR таймера по переполнению
 	Cnt_sTim2.TIMER_IniCounter = 0;										// Инициализационное значение таймера
 	Cnt_sTim2.TIMER_Prescaler = PRESCALER_T2;							// делим на 12:  112 MHz / 4 / 12 
@@ -137,12 +137,20 @@ void Setup_TIM2()
 	TIMER_ChnOutInit (MDR_TIMER2, &TimerChnOutInitStructure);
 	//NVIC_EnableIRQ(Timer2_IRQn);
 	TIMER_DMACmd(MDR_TIMER2, TIMER_STATUS_CNT_ARR, ENABLE);
+
+	// Включим демультиплексор PE7 = 0 (0 = ON)
+	port_init_structure.PORT_Pin = PORT_Pin_7;
+	port_init_structure.PORT_OE = PORT_OE_OUT;
+	port_init_structure.PORT_SPEED = PORT_SPEED_MAXFAST;
+	port_init_structure.PORT_MODE = PORT_MODE_DIGITAL;
+	PORT_Init(MDR_PORTE, &port_init_structure);
+	PORT_ResetBits(MDR_PORTE, PORT_Pin_7); 	// Включить демультиплексор
 	
 	// Включить таймер
 	TIMER_Cmd(MDR_TIMER2, ENABLE);
 
-	TIMER_SetChnCompare (MDR_TIMER2, TIMER_CHANNEL3, 5);	// 4
-	TIMER_SetChnCompare (MDR_TIMER2, TIMER_CHANNEL1, 9);	// 10
+	TIMER_SetChnCompare (MDR_TIMER2, TIMER_CHANNEL3, 4);	// 4		PE2
+	TIMER_SetChnCompare (MDR_TIMER2, TIMER_CHANNEL1, 10);	// 10		PE1
 	
 }
 
@@ -150,11 +158,13 @@ void Setup_TIM2()
   * @brief  Init DAC: 
   * This function set DAC table so that DAC will give us
   * sinusoid with specified frequence.
-  * @param  int
+  * @param  freq - frequency of sinusoid
+  * @param  freq - DAC channel (may be 1 or 2)
   * @retval None
   */
-void set_sin_DAC_table(int freq) 
+void set_sin_DAC_table(int freq, int chan) 
 {
+	chan--;											// Приведем chan к 0 или 1
 	freq = (int)((float)freq * CORRECTION_FACTOR); 	// Поправочный коэффициент
 	int tics = (DISCRET_FREQ / freq);				// Сколько тиков таймера отвести на период синусоиды с частотой freq
 	int divider = 1;								
@@ -168,13 +178,13 @@ void set_sin_DAC_table(int freq)
 	double angle_inc = (6.28318 / tics);			// Шаг таблицы в радианах
 	for (int i = 0; i < (tics); i++)  
 	{
-		DAC_table[i] = (int) (sin(i*angle_inc) * SIN_AMPLITUDE) + SIN_MEDIUM_LINE;	// Вычисляем значение sin для i, с учетом средней линии
+		DAC_table[(i*2 + (chan-1))] = (int) (sin(i*angle_inc) * SIN_AMPLITUDE) + SIN_MEDIUM_LINE;	// Вычисляем значение sin для i, с учетом средней линии
 	}
 	DAC_table[0] = SIN_MEDIUM_LINE;													// Первое значение sin - это средняя линия 
 	DAC_table[tics - 1] = SIN_MEDIUM_LINE;											// Последнее значение sin - это средняя линия
 
-	TIM2_primary_DMA_structure.DMA_CycleSize = (tics);								// Сколько измерений (DMA передач) содержит 1 DMA цикл
-	TIM2_alternate_DMA_structure.DMA_CycleSize = (tics);							// Сколько измерений (DMA передач) содержит 1 DMA цикл
+	TIM2_primary_DMA_structure.DMA_CycleSize = (tics*2);								// Сколько измерений (DMA передач) содержит 1 DMA цикл
+	TIM2_alternate_DMA_structure.DMA_CycleSize = (tics*2);							// Сколько измерений (DMA передач) содержит 1 DMA цикл
 }
 
 /*********************** (C) COPYRIGHT 2024 ICV ****************************

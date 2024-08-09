@@ -22,8 +22,8 @@ extern uint16_t main_array_for_ADC[];
 extern uint16_t alternate_array_for_ADC[];
 extern enum dac_mode_state dac_mode_state;	
 
-uint8_t main_array_for_DAC[64];
-uint8_t alternate_array_for_DAC[64];
+uint8_t main_array_for_DAC[64*2];
+uint8_t alternate_array_for_DAC[64*2];
 
 // Структуры для DMA
 DMA_ChannelInitTypeDef ADC1_DMA_structure;
@@ -104,7 +104,7 @@ void Setup_DMA()
 	(uint32_t)(DAC_table);													// Соответственно это таблица DAC_table
 	TIM2_primary_DMA_structure.DMA_DestBaseAddr = 
 	(uint32_t)(&(MDR_DAC->DAC2_DATA));										// Адрес куда будем писать наши измерения (в DAC 2)
-	TIM2_primary_DMA_structure.DMA_CycleSize = (SIN_RES);							// Сколько измерений (DMA передач) содержит 1 DMA цикл
+	TIM2_primary_DMA_structure.DMA_CycleSize = (SIN_RES*2);							// Сколько измерений (DMA передач) содержит 1 DMA цикл
 	TIM2_primary_DMA_structure.DMA_SourceIncSize = DMA_SourceIncHalfword;		// DAC_table - 16 битный массив => инкремент = полуслово
 	TIM2_primary_DMA_structure.DMA_DestIncSize = DMA_DestIncNo;					// Адрес места, куда будем писать измерения не будет инкрементироваться
 	TIM2_primary_DMA_structure.DMA_MemoryDataSize =								// Скажем DMA, Что мы работаем с 16 битными данными
@@ -119,7 +119,7 @@ void Setup_DMA()
 	(uint32_t)(DAC_table);													// Соответственно это таблица DAC_table
 	TIM2_alternate_DMA_structure.DMA_DestBaseAddr = 
 	(uint32_t)(&(MDR_DAC->DAC2_DATA));										// Адрес куда будем писать наши измерения (в DAC 2)
-	TIM2_alternate_DMA_structure.DMA_CycleSize = (SIN_RES);							// Сколько измерений (DMA передач) содержит 1 DMA цикл
+	TIM2_alternate_DMA_structure.DMA_CycleSize = (SIN_RES*2);							// Сколько измерений (DMA передач) содержит 1 DMA цикл
 	TIM2_alternate_DMA_structure.DMA_SourceIncSize = DMA_SourceIncHalfword;		// DAC_table - 16 битный массив => инкремент = полуслово
 	TIM2_alternate_DMA_structure.DMA_DestIncSize = DMA_DestIncNo;					// Адрес места, куда будем писать измерения не будет инкрементироваться
 	TIM2_alternate_DMA_structure.DMA_MemoryDataSize =								// Скажем DMA, Что мы работаем с 16 битными данными
@@ -133,7 +133,7 @@ void Setup_DMA()
 	TIM2_DMA_structure.DMA_PriCtrlData = &TIM2_primary_DMA_structure;						// Укажем основную структуру
 	TIM2_DMA_structure.DMA_AltCtrlData = &TIM2_alternate_DMA_structure;						// Укажем альтернативную структуру
 	TIM2_DMA_structure.DMA_Priority = DMA_Priority_High;							// Высокий уровень приоритетности (нужен для арбитража)
-	TIM2_DMA_structure.DMA_UseBurst = DMA_BurstSet;
+	TIM2_DMA_structure.DMA_UseBurst = DMA_BurstClear;
 	TIM2_DMA_structure.DMA_SelectDataStructure =	DMA_CTRL_DATA_PRIMARY;				// в качестве базовой берем основную структуру
 	
 	// Проинициализируем первый канал
@@ -151,7 +151,7 @@ void Setup_DMA()
 	1 << DMA_Channel_SSP2_TX);
 	// Установим значение приоретета прерывания DMA
  	NVIC_EnableIRQ(DMA_IRQn);
-	NVIC_SetPriority (DMA_IRQn, 15);		// was 15
+	NVIC_SetPriority (DMA_IRQn, 1);		// was 15
 
 	// ПРОБУЕМ
 	MDR_DMA->CHNL_ENABLE_SET = (1 << DMA_Channel_TIM2);
@@ -175,6 +175,8 @@ void reconfig_DMA_dac_mode(void)
 	// Альтернативная
 	TIM2_alternate_DMA_structure.DMA_SourceBaseAddr =							// Адрес откуда будем брать измерения 
 	(uint32_t)(alternate_array_for_DAC);													// 65ая позиция массива DAC_table
+	// (uint32_t)(main_array_for_DAC);														// Начало массива DAC_table
+
 	TIM2_alternate_DMA_structure.DMA_CycleSize = (64);							// Сколько измерений (DMA передач) содержит 1 DMA цикл
 	TIM2_alternate_DMA_structure.DMA_SourceIncSize = DMA_SourceIncByte;			// теперь DAC_table - 8 битный массив => инкремент = байт
 	TIM2_alternate_DMA_structure.DMA_MemoryDataSize =							// Скажем DMA, Что мы работаем с 8 битными данными

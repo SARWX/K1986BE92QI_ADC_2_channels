@@ -50,19 +50,41 @@ extern uint8_t main_array_for_DAC[];
 extern uint8_t alternate_array_for_DAC[];
 /* -------------------------------------------------------------------------------*/
 
-int main(void) 
+void Test_diode(void)
 {
+		PORT_InitTypeDef GPIOInitStruct;
+		RST_CLK_PCLKcmd (RST_CLK_PCLK_PORTC, ENABLE);
+		GPIOInitStruct.PORT_Pin = PORT_Pin_2;
+		GPIOInitStruct.PORT_OE = PORT_OE_OUT;
+		GPIOInitStruct.PORT_SPEED = PORT_SPEED_MAXFAST;
+		GPIOInitStruct.PORT_MODE = PORT_MODE_DIGITAL;
+   		PORT_Init(MDR_PORTC, &GPIOInitStruct);
+		
+		// если не установилась частота, то будет светодиод мигать
+	 	while (1)
+		{
+			PORT_SetBits(MDR_PORTC, PORT_Pin_2); 	// Включить светодиод
+			delay_tick(16e6);
+			PORT_ResetBits(MDR_PORTC, PORT_Pin_2); 	// Выключить светодиод
+			delay_tick(16e6);
+		}
+}
+
+int main(void) 
+	{
 	Setup_CPU_Clock();
+//	 Test_diode();
 	VCom_Configuration();
 	Setup_ADC();
 	Setup_DMA();
 //		test();			/// TETTSSSTTT 
 	USB_CDC_Init((uint8_t *)buffer, 1, SET);
 	Setup_USB();		
-	set_sin_DAC_table(1000);
+	// set_sin_DAC_table(1000, 1);
+	// set_sin_DAC_table(1000, 2);
 	Setup_DAC();
-	Setup_SPI();
-	Setup_ili9341();
+	// Setup_SPI();
+	// Setup_ili9341();
 	Setup_TIM2();
  
 	// Включение АЦП и DMA для АЦП
@@ -111,8 +133,12 @@ int main(void)
 
 ////////////////// TESTS ////////////////////
 // execute_command("set 2.0 0.0 !");
-	strcpy (rec_buf, "dac_mode");
-	command_recived = 1;	
+// DAC_MODE test
+	// strcpy (rec_buf, "dac_mode");
+	// command_recived = 1;	
+// DEMUX test
+	// strcpy (rec_buf, "set 0.0 1.0 !");
+	// command_recived = 1;	
 
 
 	while (1) 
@@ -174,24 +200,32 @@ int main(void)
 	// Теперь все готово, можно включить TIM2
  	NVIC_EnableIRQ(DMA_IRQn);
 	TIMER_Cmd(MDR_TIMER2, ENABLE);
+	USB_CDC_SetReceiveBuffer(main_array_for_DAC, 16e6);		// Данные из USB помещаются в buffer
 	// основной цикл для dac_mode
 	int test_transit = 0;
 	while (1)
 	{
-		MDR_DAC->DAC2_DATA = 0;
+		// MDR_DAC->DAC2_DATA = 0;
 		// 1 стадия - заполнение буфера, с использованием основной структуры DMA, параллельная передача буфера альтернативной по DAC
 		USB_CDC_SetReceiveBuffer(main_array_for_DAC, 64);		// Данные из USB помещаются в buffer
+		// USB_CDC_ReceiveStop();
+		// USB_CDC_ReceiveStart();
+		// USB_DeviceReset();
+
 		while(dac_mode_state == alt_state);							// Ждем когда альтернативный массив будет прочитан	
-		test_transit++;
+		// test_transit++;
 		// 2 стадия - заполнение буфера, с использованием альтернативной структуры DMA, параллельная передача буфера основной по DAC
+		// USB_CDC_ReceiveStop();
 		USB_CDC_SetReceiveBuffer(alternate_array_for_DAC, 64);	// Данные из USB помещаются в buffer
+		// USB_CDC_ReceiveStart();
+		// USB_DeviceReset();
 		while(dac_mode_state == main_state);						// Ждем когда основной массив будет прочитан
 		
 			// while (DMA_GetFlagStatus(DMA_Channel_TIM2, DMA_FLAG_CHNL_ALT) != RESET) ;						// ждем, когда DMA перейдет на альтернативную структуру
 			// DMA_CtrlInit(DMA_Channel_TIM2, DMA_CTRL_DATA_ALTERNATE, &TIM2_alternate_DMA_structure);	// реинициализируем альтернативную структуру
 			// while (DMA_GetFlagStatus(DMA_Channel_TIM2, DMA_FLAG_CHNL_ALT) == RESET) ;						// ждем, когда DMA перейдет на альтернативную структуру
 			// DMA_CtrlInit(DMA_Channel_TIM2, DMA_CTRL_DATA_PRIMARY, &TIM2_primary_DMA_structure);		// реинициализируем основную структуру
-
-		test_transit++;
+ 
+		// test_transit++;
 	}
 }
