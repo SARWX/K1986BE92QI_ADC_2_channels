@@ -39,6 +39,7 @@ void Setup_CPU_Clock(void)
 		// если не установилась частота, то будет светодиод мигать
 	 	while (1)
 		{
+			
 			PORT_SetBits(MDR_PORTC, PORT_Pin_2); 	// Включить светодиод
 			delay_tick(100000);
 			PORT_ResetBits(MDR_PORTC, PORT_Pin_2); 	// Выключить светодиод

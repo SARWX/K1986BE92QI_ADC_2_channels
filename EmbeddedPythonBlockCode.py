@@ -16,20 +16,24 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
     portNumber is number, you can see in the name of your 
     serial port in device manager, like COM16 or COM7 
     """
+
+    MAX_DAC_NUM = 500  # Максимальное количество чисел, которое может быть записано в const_signal
+
     adc_num = 1
     
-    def __init__(self, portNumber = 7, baudrate = 2000000): 
+    def __init__(self, portNumber = 7): 
         """arguments to this function show up as parameters in GRC"""
         
         portName = 'COM' + str(portNumber)                  # Concatenate string and number
         
         gr.sync_block.__init__(
             self,
-            name = 'Serial Read',   
-            in_sig = [],                                    # no inputs 
-            out_sig = [np.float32, np.float32, np.float32]  # also you can try to use int
+            name = 'Analog Digital Interface',   
+            in_sig = [np.float32],                          # Входы
+            out_sig = [np.float32, np.float32, np.float32]  # Выходы
         )
         
+        baudrate = 2000000
         self.port = serial.Serial(portName, baudrate, timeout = 3.0) # open serial
         if (self.port.is_open):  #if already opened - close and open again
             self.port.close()
