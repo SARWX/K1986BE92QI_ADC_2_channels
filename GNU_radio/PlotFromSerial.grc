@@ -33,6 +33,27 @@ options:
     state: enabled
 
 blocks:
+- name: frequency
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: ''
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    rangeType: int
+    start: '1000'
+    step: '100'
+    stop: '10000'
+    value: '1000'
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1224, 32.0]
+    rotation: 0
+    state: true
 - name: generate_signal
   id: variable_qtgui_push_button
   parameters:
@@ -47,7 +68,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [112, 512.0]
+    coordinate: [56, 24.0]
     rotation: 0
     state: true
 - name: samp_rate
@@ -62,6 +83,27 @@ blocks:
     coordinate: [1896, 32.0]
     rotation: 0
     state: enabled
+- name: blocks_throttle2_0
+  id: blocks_throttle2
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: samp_rate
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [720, 72.0]
+    rotation: 0
+    state: true
 - name: epy_block_0
   id: epy_block
   parameters:
@@ -69,120 +111,124 @@ blocks:
       \ GRC will instantiate the first class it finds\nto get ports and parameters\
       \ of your block. The arguments to __init__  will\nbe the parameters. All of\
       \ them are required to have default values!\n\"\"\"\n\nimport serial\nimport\
-      \ serial.tools.list_ports\n\nimport numpy as np\nfrom gnuradio import gr\nimport\
-      \ pmt\n\n\nclass ADIBlock(gr.sync_block):  # other base classes are basic_block,\
-      \ decim_block, interp_block\n    \"\"\"\n    Read data from serial port and\
-      \ forward it to output. \n    portNumber is number, you can see in the name\
-      \ of your \n    serial port in device manager, like COM16 or COM7 \n    \"\"\
-      \"\n\n    MAX_DAC_NUM = 500   # \u041C\u0430\u043A\u0441\u0438\u043C\u0430\u043B\
-      \u044C\u043D\u043E\u0435 \u043A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\
-      \u043E \u0447\u0438\u0441\u0435\u043B, \u043A\u043E\u0442\u043E\u0440\u043E\u0435\
-      \ \u043C\u043E\u0436\u0435\u0442 \u0431\u044B\u0442\u044C \u0437\u0430\u043F\
-      \u0438\u0441\u0430\u043D\u043E \u0432 const_signal\n    MAX_DAC_VAL = 10.0 \
-      \ # \u041C\u0430\u043A\u0441\u0438\u043C\u0430\u043B\u044C\u043D\u043E\u0435\
-      \ \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435 \u043D\u0430 \u0432\u044B\
-      \u0445\u043E\u0434\u0435 \u0426\u0410\u041F\n    CHUNK_SIZE = 10     # \u041C\
-      \u0430\u043A\u0441\u0438\u043C\u0430\u043B\u044C\u043D\u043E\u0435 \u043A\u043E\
-      \u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u0447\u0438\u0441\u0435\u043B\
-      \ \u0432 \u043E\u0434\u043D\u043E\u0439 \u043A\u043E\u043C\u0430\u043D\u0434\
-      \u0435\n\n    adc_num = 1\n    \n    def __init__(self, portNumber=7): \n  \
-      \      \"\"\"arguments to this function show up as parameters in GRC\"\"\"\n\
-      \        self.portNumber = portNumber  # \u0421\u043E\u0445\u0440\u0430\u043D\
-      \u044F\u0435\u043C \u043D\u043E\u043C\u0435\u0440 \u043F\u043E\u0440\u0442\u0430\
-      \n        # portName = 'COM' + str(portNumber)                  # Concatenate\
-      \ string and number\n        \n        gr.sync_block.__init__(\n           \
-      \ self,\n            name = 'Analog Digital Interface',   \n            # in_sig\
-      \ = [np.float32],                          # \u0412\u0445\u043E\u0434\u044B\n\
-      \            in_sig = [],                          # \u0412\u0445\u043E\u0434\
-      \u044B\n            out_sig = [np.float32, np.float32]  # \u0412\u044B\u0445\
-      \u043E\u0434\u044B\n        )\n\n        # \u0420\u0435\u0433\u0438\u0441\u0442\
-      \u0440\u0430\u0446\u0438\u044F \u0438\u043C\u0435\u043D\u043E\u0432\u0430\u043D\
-      \u043D\u044B\u0445 \u0432\u0445\u043E\u0434\u043D\u044B\u0445 \u0438 \u0432\u044B\
-      \u0445\u043E\u0434\u043D\u044B\u0445 \u043F\u043E\u0440\u0442\u043E\u0432\n\
-      \        self.message_port_register_in(pmt.intern('set_const_signal'))\n   \
-      \     self.set_msg_handler(pmt.intern('set_const_signal'), self.handle_msg)\n\
+      \ serial.tools.list_ports\nimport time\n\nimport numpy as np\nfrom gnuradio\
+      \ import gr\nimport pmt\n\nMAX_DAC_NUM = 500   # \u041C\u0430\u043A\u0441\u0438\
+      \u043C\u0430\u043B\u044C\u043D\u043E\u0435 \u043A\u043E\u043B\u0438\u0447\u0435\
+      \u0441\u0442\u0432\u043E \u0447\u0438\u0441\u0435\u043B, \u043A\u043E\u0442\u043E\
+      \u0440\u043E\u0435 \u043C\u043E\u0436\u0435\u0442 \u0431\u044B\u0442\u044C \u0437\
+      \u0430\u043F\u0438\u0441\u0430\u043D\u043E \u0432 const_signal\nMAX_DAC_VAL\
+      \ = 10.0  # \u041C\u0430\u043A\u0441\u0438\u043C\u0430\u043B\u044C\u043D\u043E\
+      \u0435 \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435 \u043D\u0430 \u0432\u044B\
+      \u0445\u043E\u0434\u0435 \u0426\u0410\u041F\nCHUNK_SIZE = 10     # \u041C\u0430\
+      \u043A\u0441\u0438\u043C\u0430\u043B\u044C\u043D\u043E\u0435 \u043A\u043E\u043B\
+      \u0438\u0447\u0435\u0441\u0442\u0432\u043E \u0447\u0438\u0441\u0435\u043B \u0432\
+      \ \u043E\u0434\u043D\u043E\u0439 \u043A\u043E\u043C\u0430\u043D\u0434\u0435\n\
+      \n\nclass ADIBlock(gr.sync_block):  # other base classes are basic_block, decim_block,\
+      \ interp_block\n    \"\"\"\n    Read data from serial port and forward it to\
+      \ output. \n    portNumber is number, you can see in the name of your \n   \
+      \ serial port in device manager, like COM16 or COM7 \n    \"\"\"\n\n    adc_num\
+      \ = 1\n    \n    def __init__(self, portNumber=7, enable = 0): \n        \"\"\
+      \"arguments to this function show up as parameters in GRC\"\"\"\n        self.portNumber\
+      \ = portNumber  # \u0421\u043E\u0445\u0440\u0430\u043D\u044F\u0435\u043C \u043D\
+      \u043E\u043C\u0435\u0440 \u043F\u043E\u0440\u0442\u0430\n        # portName\
+      \ = 'COM' + str(portNumber)                  # Concatenate string and number\n\
+      \        \n        gr.sync_block.__init__(\n            self,\n            name\
+      \ = 'Analog Digital Interface',   \n            # in_sig = [np.float32],   \
+      \                       # \u0412\u0445\u043E\u0434\u044B\n            in_sig\
+      \ = [],                          # \u0412\u0445\u043E\u0434\u044B\n        \
+      \    out_sig = [np.float32, np.float32]  # \u0412\u044B\u0445\u043E\u0434\u044B\
+      \n        )\n\n        # \u0420\u0435\u0433\u0438\u0441\u0442\u0440\u0430\u0446\
+      \u0438\u044F \u0438\u043C\u0435\u043D\u043E\u0432\u0430\u043D\u043D\u044B\u0445\
+      \ \u0432\u0445\u043E\u0434\u043D\u044B\u0445 \u0438 \u0432\u044B\u0445\u043E\
+      \u0434\u043D\u044B\u0445 \u043F\u043E\u0440\u0442\u043E\u0432\n        self.message_port_register_in(pmt.intern('set_const_signal'))\n\
+      \        self.set_msg_handler(pmt.intern('set_const_signal'), self.handle_msg)\n\
       \        # self.message_port_register_out(pmt.intern('msg_out'))\n\n       \
       \  # \u0418\u043D\u0438\u0446\u0438\u0430\u043B\u0438\u0437\u0430\u0446\u0438\
       \u044F \u043F\u0435\u0440\u0435\u043C\u0435\u043D\u043D\u044B\u0445 \u0434\u043B\
       \u044F COM \u043F\u043E\u0440\u0442\u0430\n        self.port = None\n      \
       \  self.port_name = None\n        self.baudrate = 2000000  # \u0417\u0434\u0435\
       \u0441\u044C \u0437\u0430\u0445\u0430\u0440\u0434\u043A\u043E\u0436\u0435\u043D\
-      \ baudrate\n        \n    def open_port(self):\n        \"\"\"\u041E\u0442\u043A\
-      \u0440\u044B\u0432\u0430\u0435\u0442 COM \u043F\u043E\u0440\u0442, \u0435\u0441\
-      \u043B\u0438 \u043E\u043D \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u0435\
-      \u0442 \u0438 \u043D\u0435 \u0437\u0430\u043D\u044F\u0442.\"\"\"\n        baudrate\
-      \ = 2000000\n        portName = 'COM' + str(self.portNumber)\n\n        # \u041F\
-      \u043E\u043B\u0443\u0447\u0430\u0435\u043C \u0441\u043F\u0438\u0441\u043E\u043A\
-      \ \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u044B\u0445 COM \u043F\u043E\u0440\
-      \u0442\u043E\u0432\n        available_ports = [port.device for port in serial.tools.list_ports.comports()]\n\
-      \n        if portName not in available_ports:\n            print(f\"\u041E\u0448\
-      \u0438\u0431\u043A\u0430: \u041F\u043E\u0440\u0442 {portName} \u043D\u0435 \u043D\
-      \u0430\u0439\u0434\u0435\u043D.\")\n            return\n        \n        try:\n\
-      \            # \u041F\u044B\u0442\u0430\u0435\u043C\u0441\u044F \u043E\u0442\
-      \u043A\u0440\u044B\u0442\u044C \u043F\u043E\u0440\u0442\n            self.port\
-      \ = serial.Serial(portName, baudrate, timeout=3.0)\n            # \u0415\u0441\
-      \u043B\u0438 \u043F\u043E\u0440\u0442 \u0443\u0436\u0435 \u0431\u044B\u043B\
-      \ \u043E\u0442\u043A\u0440\u044B\u0442, \u0437\u0430\u043A\u0440\u044B\u0432\
-      \u0430\u0435\u043C \u0435\u0433\u043E \u0438 \u043E\u0442\u043A\u0440\u044B\u0432\
-      \u0430\u0435\u043C \u0437\u0430\u043D\u043E\u0432\u043E\n            if self.port.is_open:\n\
-      \                self.port.close()\n                self.port.open()\n     \
-      \       else:\n                self.port.open()\n            print(f\"\u041F\
-      \u043E\u0440\u0442 {portName} \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u043E\
-      \u0442\u043A\u0440\u044B\u0442.\")\n        except serial.SerialException as\
-      \ e:\n            # \u0415\u0441\u043B\u0438 \u043D\u0435 \u0443\u0434\u0430\
-      \u043B\u043E\u0441\u044C \u043E\u0442\u043A\u0440\u044B\u0442\u044C \u043F\u043E\
-      \u0440\u0442 (\u043D\u0430\u043F\u0440\u0438\u043C\u0435\u0440, \u043E\u043D\
-      \ \u0437\u0430\u043D\u044F\u0442), \u0432\u044B\u0432\u043E\u0434\u0438\u043C\
-      \ \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0435 \u043E\u0431 \u043E\
-      \u0448\u0438\u0431\u043A\u0435\n            print(f\"\u041E\u0448\u0438\u0431\
-      \u043A\u0430 \u043F\u0440\u0438 \u043E\u0442\u043A\u0440\u044B\u0442\u0438\u0438\
-      \ \u043F\u043E\u0440\u0442\u0430 {portName}: {e}\")\n            self.port =\
-      \ None\n\n\n\n    def handle_msg(self, msg):\n        \"\"\"\u041E\u0431\u0440\
-      \u0430\u0431\u043E\u0442\u043A\u0430 \u0432\u0445\u043E\u0434\u043D\u044B\u0445\
-      \ \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0439.\"\"\"\n        # \u041F\
-      \u0440\u0435\u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435\
-      \ \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u044F \u0432 \u0441\u043F\
-      \u0438\u0441\u043E\u043A \u0447\u0438\u0441\u0435\u043B \u0441 \u043F\u043B\u0430\
-      \u0432\u0430\u044E\u0449\u0435\u0439 \u0437\u0430\u043F\u044F\u0442\u043E\u0439\
-      \n        numbers = pmt.to_python(msg)\n\n        if not isinstance(numbers,\
-      \ list):\n            print(\"\u041E\u0448\u0438\u0431\u043A\u0430: \u041E\u0436\
-      \u0438\u0434\u0430\u043B\u0441\u044F \u0441\u043F\u0438\u0441\u043E\u043A \u0447\
-      \u0438\u0441\u0435\u043B.\")\n            return\n\n        if len(numbers)\
-      \ > MAX_DAC_NUM:\n            print(f\"\u041E\u0448\u0438\u0431\u043A\u0430\
-      : \u0421\u043B\u0438\u0448\u043A\u043E\u043C \u043C\u043D\u043E\u0433\u043E\
-      \ \u0447\u0438\u0441\u0435\u043B. \u041C\u0430\u043A\u0441\u0438\u043C\u0443\
-      \u043C {MAX_DAC_NUM}.\")\n            return\n\n        if any(val > MAX_DAC_VAL\
-      \ for val in numbers):\n            print(f\"\u041E\u0448\u0438\u0431\u043A\u0430\
-      : \u0417\u043D\u0430\u0447\u0435\u043D\u0438\u044F \u043D\u0435 \u043C\u043E\
-      \u0433\u0443\u0442 \u043F\u0440\u0435\u0432\u044B\u0448\u0430\u0442\u044C {MAX_DAC_VAL}.\"\
-      )\n            return\n\n        # \u041E\u0442\u043A\u0440\u044B\u0442\u0438\
-      \u0435 \u043F\u043E\u0440\u0442\u0430, \u0435\u0441\u043B\u0438 \u0435\u0449\
-      \u0435 \u043D\u0435 \u043E\u0442\u043A\u0440\u044B\u0442\n        if self.port\
-      \ is None:\n            self.open_port()\n\n        if self.port is not None\
-      \ and self.port.is_open:\n            # \u0420\u0430\u0437\u0434\u0435\u043B\
-      \u0435\u043D\u0438\u0435 \u0434\u0430\u043D\u043D\u044B\u0445 \u043D\u0430 \u043A\
-      \u0443\u0441\u043A\u0438 \u043F\u043E 10 \u0447\u0438\u0441\u0435\u043B \u0438\
-      \ \u043E\u0442\u043F\u0440\u0430\u0432\u043A\u0430\n            for i in range(0,\
-      \ len(numbers), CHUNK_SIZE):\n                chunk = numbers[i:i + CHUNK_SIZE]\n\
-      \                command = \"set \" + \" \".join(map(str, chunk))\n        \
-      \        if i + CHUNK_SIZE >= len(numbers):\n                    command +=\
-      \ \" !\"\n                \n                try:\n                    self.port.write(command.encode())\n\
+      \ baudrate\n        self.enable = enable\n        \n    def open_port(self):\n\
+      \        \"\"\"\u041E\u0442\u043A\u0440\u044B\u0432\u0430\u0435\u0442 COM \u043F\
+      \u043E\u0440\u0442, \u0435\u0441\u043B\u0438 \u043E\u043D \u0441\u0443\u0449\
+      \u0435\u0441\u0442\u0432\u0443\u0435\u0442 \u0438 \u043D\u0435 \u0437\u0430\u043D\
+      \u044F\u0442.\"\"\"\n        baudrate = 2000000\n        portName = 'COM' +\
+      \ str(self.portNumber)\n\n        # \u041F\u043E\u043B\u0443\u0447\u0430\u0435\
+      \u043C \u0441\u043F\u0438\u0441\u043E\u043A \u0434\u043E\u0441\u0442\u0443\u043F\
+      \u043D\u044B\u0445 COM \u043F\u043E\u0440\u0442\u043E\u0432\n        available_ports\
+      \ = [port.device for port in serial.tools.list_ports.comports()]\n\n       \
+      \ if portName not in available_ports:\n            print(f\"\u041E\u0448\u0438\
+      \u0431\u043A\u0430: \u041F\u043E\u0440\u0442 {portName} \u043D\u0435 \u043D\u0430\
+      \u0439\u0434\u0435\u043D.\")\n            return\n        \n        try:\n \
+      \           # \u041F\u044B\u0442\u0430\u0435\u043C\u0441\u044F \u043E\u0442\u043A\
+      \u0440\u044B\u0442\u044C \u043F\u043E\u0440\u0442\n            self.port = serial.Serial(portName,\
+      \ baudrate, timeout=3.0)\n            # \u0415\u0441\u043B\u0438 \u043F\u043E\
+      \u0440\u0442 \u0443\u0436\u0435 \u0431\u044B\u043B \u043E\u0442\u043A\u0440\u044B\
+      \u0442, \u0437\u0430\u043A\u0440\u044B\u0432\u0430\u0435\u043C \u0435\u0433\u043E\
+      \ \u0438 \u043E\u0442\u043A\u0440\u044B\u0432\u0430\u0435\u043C \u0437\u0430\
+      \u043D\u043E\u0432\u043E\n            if self.port.is_open:\n              \
+      \  self.port.close()\n                self.port.open()\n            else:\n\
+      \                self.port.open()\n            print(f\"\u041F\u043E\u0440\u0442\
+      \ {portName} \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u043E\u0442\u043A\u0440\
+      \u044B\u0442.\")\n        except serial.SerialException as e:\n            #\
+      \ \u0415\u0441\u043B\u0438 \u043D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\
+      \u044C \u043E\u0442\u043A\u0440\u044B\u0442\u044C \u043F\u043E\u0440\u0442 (\u043D\
+      \u0430\u043F\u0440\u0438\u043C\u0435\u0440, \u043E\u043D \u0437\u0430\u043D\u044F\
+      \u0442), \u0432\u044B\u0432\u043E\u0434\u0438\u043C \u0441\u043E\u043E\u0431\
+      \u0449\u0435\u043D\u0438\u0435 \u043E\u0431 \u043E\u0448\u0438\u0431\u043A\u0435\
+      \n            print(f\"\u041E\u0448\u0438\u0431\u043A\u0430 \u043F\u0440\u0438\
+      \ \u043E\u0442\u043A\u0440\u044B\u0442\u0438\u0438 \u043F\u043E\u0440\u0442\u0430\
+      \ {portName}: {e}\")\n            self.port = None\n\n\n\n    def handle_msg(self,\
+      \ msg):\n        \"\"\"\u041E\u0431\u0440\u0430\u0431\u043E\u0442\u043A\u0430\
+      \ \u0432\u0445\u043E\u0434\u043D\u044B\u0445 \u0441\u043E\u043E\u0431\u0449\u0435\
+      \u043D\u0438\u0439.\"\"\"\n        # \u041F\u0440\u0435\u043E\u0431\u0440\u0430\
+      \u0437\u043E\u0432\u0430\u043D\u0438\u0435 \u0441\u043E\u043E\u0431\u0449\u0435\
+      \u043D\u0438\u044F \u0432 \u0441\u043F\u0438\u0441\u043E\u043A \u0447\u0438\u0441\
+      \u0435\u043B \u0441 \u043F\u043B\u0430\u0432\u0430\u044E\u0449\u0435\u0439 \u0437\
+      \u0430\u043F\u044F\u0442\u043E\u0439\n        numbers = pmt.to_python(msg) \
+      \       # \u041F\u0440\u0435\u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\
+      \u043D\u0438\u0435 \u0432 \u0441\u0442\u0440\u043E\u043A\u0443\n        numbers\
+      \ = [float(x) for x in numbers.split()]\n        print(\"AAAAAAAAAAAAAAAAAAAAAA\"\
+      )\n        print(numbers[30])\n\n        # if not isinstance(numbers, list):\n\
+      \        #     print(\"\u041E\u0448\u0438\u0431\u043A\u0430: \u041E\u0436\u0438\
+      \u0434\u0430\u043B\u0441\u044F \u0441\u043F\u0438\u0441\u043E\u043A \u0447\u0438\
+      \u0441\u0435\u043B.\")\n        #     return\n\n        if len(numbers) > MAX_DAC_NUM:\n\
+      \            print(f\"\u041E\u0448\u0438\u0431\u043A\u0430: \u0421\u043B\u0438\
+      \u0448\u043A\u043E\u043C \u043C\u043D\u043E\u0433\u043E \u0447\u0438\u0441\u0435\
+      \u043B. \u041C\u0430\u043A\u0441\u0438\u043C\u0443\u043C {MAX_DAC_NUM}.\")\n\
+      \            return\n\n        if any(val > MAX_DAC_VAL for val in numbers):\n\
+      \            print(f\"\u041E\u0448\u0438\u0431\u043A\u0430: \u0417\u043D\u0430\
+      \u0447\u0435\u043D\u0438\u044F \u043D\u0435 \u043C\u043E\u0433\u0443\u0442 \u043F\
+      \u0440\u0435\u0432\u044B\u0448\u0430\u0442\u044C {MAX_DAC_VAL}.\")\n       \
+      \     return\n\n        # \u041E\u0442\u043A\u0440\u044B\u0442\u0438\u0435 \u043F\
+      \u043E\u0440\u0442\u0430, \u0435\u0441\u043B\u0438 \u0435\u0449\u0435 \u043D\
+      \u0435 \u043E\u0442\u043A\u0440\u044B\u0442\n        if self.port is None:\n\
+      \            self.open_port()\n\n        if self.port is not None and self.port.is_open:\n\
+      \            # \u0420\u0430\u0437\u0434\u0435\u043B\u0435\u043D\u0438\u0435\
+      \ \u0434\u0430\u043D\u043D\u044B\u0445 \u043D\u0430 \u043A\u0443\u0441\u043A\
+      \u0438 \u043F\u043E 10 \u0447\u0438\u0441\u0435\u043B \u0438 \u043E\u0442\u043F\
+      \u0440\u0430\u0432\u043A\u0430\n            for i in range(0, len(numbers),\
+      \ CHUNK_SIZE):\n                chunk = numbers[i:i + CHUNK_SIZE]\n        \
+      \        command = \"set \" + \" \".join(map(str, chunk))\n                if\
+      \ i + CHUNK_SIZE >= len(numbers):\n                    command += \" !\"\n \
+      \               \n                try:\n                    self.port.write(command.encode('ascii'))\n\
       \                    print(f\"\u041E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\
-      \u043D\u043E: {command}\")\n                except serial.SerialException as\
-      \ e:\n                    print(f\"\u041E\u0448\u0438\u0431\u043A\u0430 \u043F\
-      \u0440\u0438 \u043E\u0442\u043F\u0440\u0430\u0432\u043A\u0435 \u0434\u0430\u043D\
-      \u043D\u044B\u0445: {e}\")\n\n\n            \n    def work(self, input_items,\
-      \ output_items):\n\n        if self.port is None:\n            # \u0415\u0441\
-      \u043B\u0438 \u043F\u043E\u0440\u0442 \u043D\u0435 \u043E\u0442\u043A\u0440\u044B\
-      \u0442, \u043F\u043E\u043F\u044B\u0442\u0430\u0442\u044C\u0441\u044F \u043E\u0442\
-      \u043A\u0440\u044B\u0442\u044C \u0435\u0433\u043E\n            self.open_port()\n\
-      \n        n = 0\n        while n < len(output_items[0]):\n            # WORKING\
-      \ FOR 16 bit\n            # data = bytearray(4)  # Creating an array of bytes\
-      \ to read 2 16-bit values (4 bytes)\n            # self.port.readinto(data)\
-      \  # We read the data directly into the byte array\n            # output_items[1][n]\
-      \ = int.from_bytes(data[:2], 'little')  # Convert the first 2 bytes to a number\n\
-      \            # output_items[2][n] = int.from_bytes(data[2:], 'little')  # Convert\
-      \ the remaining 2 bytes to a number\n            # # output_items[1][n] = int.from_bytes(self.port.read(1),\
+      \u043D\u043E: {command}\")\n                    time.sleep(0.01)\n         \
+      \       except serial.SerialException as e:\n                    print(f\"\u041E\
+      \u0448\u0438\u0431\u043A\u0430 \u043F\u0440\u0438 \u043E\u0442\u043F\u0440\u0430\
+      \u0432\u043A\u0435 \u0434\u0430\u043D\u043D\u044B\u0445: {e}\")\n\n\n      \
+      \      \n    def work(self, input_items, output_items):\n\n        if self.port\
+      \ is None:\n            # \u0415\u0441\u043B\u0438 \u043F\u043E\u0440\u0442\
+      \ \u043D\u0435 \u043E\u0442\u043A\u0440\u044B\u0442, \u043F\u043E\u043F\u044B\
+      \u0442\u0430\u0442\u044C\u0441\u044F \u043E\u0442\u043A\u0440\u044B\u0442\u044C\
+      \ \u0435\u0433\u043E\n            self.open_port()\n\n        n = 0\n      \
+      \  while n < len(output_items[0]):\n            # WORKING FOR 16 bit\n     \
+      \       # data = bytearray(4)  # Creating an array of bytes to read 2 16-bit\
+      \ values (4 bytes)\n            # self.port.readinto(data)  # We read the data\
+      \ directly into the byte array\n            # output_items[1][n] = int.from_bytes(data[:2],\
+      \ 'little')  # Convert the first 2 bytes to a number\n            # output_items[2][n]\
+      \ = int.from_bytes(data[2:], 'little')  # Convert the remaining 2 bytes to a\
+      \ number\n            # # output_items[1][n] = int.from_bytes(self.port.read(1),\
       \ \"little\")\n            # n += 1\n\n\n            # # TEST 12 bit\n     \
       \       # data = bytearray(3)  # Creating an array of bytes to read 2 16-bit\
       \ values (4 bytes)\n            # self.port.readinto(data)  # We read the data\
@@ -195,59 +241,63 @@ blocks:
       \ the data directly into the byte array\n            output_items[0][n] = data[0]\n\
       \            output_items[1][n] = data[1]\n            n += 1\n            output_items[0][n]\
       \ = data[2]\n            output_items[1][n] = data[3]\n            n += 1\n\
+      \            # if self.enable == 1:\n            #     print(self.enable)\n\
       \            \n        return len(output_items[1])"
     affinity: ''
     alias: ''
     comment: ''
+    enable: generate_signal
     maxoutbuf: '0'
     minoutbuf: '0'
     portNumber: '7'
   states:
-    _io_cache: ('Analog Digital Interface', 'ADIBlock', [('portNumber', '7')], [('set_const_signal',
-      'message', 1)], [('0', 'float', 1), ('1', 'float', 1)], '\n    Read data from
-      serial port and forward it to output. \n    portNumber is number, you can see
-      in the name of your \n    serial port in device manager, like COM16 or COM7
-      \n    ', ['portNumber'])
+    _io_cache: ('Analog Digital Interface', 'ADIBlock', [('portNumber', '7'), ('enable',
+      '0')], [('set_const_signal', 'message', 1)], [('0', 'float', 1), ('1', 'float',
+      1)], '\n    Read data from serial port and forward it to output. \n    portNumber
+      is number, you can see in the name of your \n    serial port in device manager,
+      like COM16 or COM7 \n    ', ['enable', 'portNumber'])
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [760, 160.0]
+    coordinate: [712, 152.0]
     rotation: 0
     state: enabled
-- name: epy_block_1
+- name: epy_block_1_0
   id: epy_block
   parameters:
-    _source_code: "import numpy as np\nfrom gnuradio import gr\nimport pmt\n\nclass\
-      \ TriangleWaveGenerator(gr.sync_block):\n    \"\"\"\n    \u0413\u0435\u043D\u0435\
-      \u0440\u0430\u0442\u043E\u0440 \u0442\u0440\u0435\u0443\u0433\u043E\u043B\u044C\
-      \u043D\u043E\u0433\u043E \u0441\u0438\u0433\u043D\u0430\u043B\u0430.\n    \u041F\
-      \u0440\u0438\u043D\u0438\u043C\u0430\u0435\u0442 \u0447\u0430\u0441\u0442\u043E\
-      \u0442\u0443 \u0438 \u0430\u043C\u043F\u043B\u0438\u0442\u0443\u0434\u0443 \u043A\
-      \u0430\u043A \u043F\u0430\u0440\u0430\u043C\u0435\u0442\u0440\u044B \u0447\u0435\
-      \u0440\u0435\u0437 \u0433\u0440\u0430\u0444\u0438\u0447\u0435\u0441\u043A\u0438\
-      \u0439 \u0438\u043D\u0442\u0435\u0440\u0444\u0435\u0439\u0441.\n    \u041F\u0435\
-      \u0440\u0435\u0434\u0430\u0435\u0442 \u0441\u0433\u0435\u043D\u0435\u0440\u0438\
-      \u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0435 \u0437\u043D\u0430\u0447\u0435\
-      \u043D\u0438\u044F \u0432 ADI \u0431\u043B\u043E\u043A.\n    \"\"\"\n\n    def\
-      \ __init__(self, start = 0.0, end = 1.0, sample_rate = 250000, freq = 1000):\n\
-      \        gr.sync_block.__init__(\n            self,\n            name=\"Triangle\
-      \ Wave Generator\",\n            in_sig=[],\n            out_sig=[]\n      \
-      \  )\n\n        # \u0418\u043D\u0438\u0446\u0438\u0430\u043B\u0438\u0437\u0430\
-      \u0446\u0438\u044F \u043F\u0435\u0440\u0435\u043C\u0435\u043D\u043D\u044B\u0445\
-      \n        self.sample_rate = sample_rate\n        self.freq = freq\n\n     \
-      \   # \u0420\u0435\u0433\u0438\u0441\u0442\u0440\u0430\u0446\u0438\u044F \u0432\
-      \u044B\u0445\u043E\u0434\u043D\u043E\u0433\u043E \u043F\u043E\u0440\u0442\u0430\
-      \ \u0434\u043B\u044F \u043E\u0442\u043F\u0440\u0430\u0432\u043A\u0438 \u0434\
-      \u0430\u043D\u043D\u044B\u0445\n        self.message_port_register_out(pmt.intern('set_const_signal'))\n\
+    _source_code: "import numpy as np\nfrom gnuradio import gr\nimport pmt\nimport\
+      \ time\n\nclass TriangleWaveGenerator(gr.sync_block):\n    \"\"\"\n    \u0413\
+      \u0435\u043D\u0435\u0440\u0430\u0442\u043E\u0440 \u0442\u0440\u0435\u0443\u0433\
+      \u043E\u043B\u044C\u043D\u043E\u0433\u043E \u0441\u0438\u0433\u043D\u0430\u043B\
+      \u0430.\n    \u041F\u0440\u0438\u043D\u0438\u043C\u0430\u0435\u0442 \u0447\u0430\
+      \u0441\u0442\u043E\u0442\u0443 \u0438 \u0430\u043C\u043F\u043B\u0438\u0442\u0443\
+      \u0434\u0443 \u043A\u0430\u043A \u043F\u0430\u0440\u0430\u043C\u0435\u0442\u0440\
+      \u044B \u0447\u0435\u0440\u0435\u0437 \u0433\u0440\u0430\u0444\u0438\u0447\u0435\
+      \u0441\u043A\u0438\u0439 \u0438\u043D\u0442\u0435\u0440\u0444\u0435\u0439\u0441\
+      .\n    \u041F\u0435\u0440\u0435\u0434\u0430\u0435\u0442 \u0441\u0433\u0435\u043D\
+      \u0435\u0440\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0435 \u0437\u043D\
+      \u0430\u0447\u0435\u043D\u0438\u044F \u0432 ADI \u0431\u043B\u043E\u043A.\n\
+      \    \"\"\"\n\n    def __init__(self, start_p = 0.0, end_p = 1.0, sample_rate\
+      \ = 250000, freq = 1000, enable = 0.0):\n        gr.sync_block.__init__(\n \
+      \           self,\n            name=\"Triangle Wave Generator\",\n         \
+      \   in_sig=[],\n            out_sig=[np.float32]\n        )\n\n        # \u0418\
+      \u043D\u0438\u0446\u0438\u0430\u043B\u0438\u0437\u0430\u0446\u0438\u044F \u043F\
+      \u0435\u0440\u0435\u043C\u0435\u043D\u043D\u044B\u0445\n        self.start_p\
+      \ = start_p\n        self.end_p = end_p\n        self.sample_rate = sample_rate\n\
+      \        self.freq = freq\n        self.enable = enable \n\n        # \u0420\
+      \u0435\u0433\u0438\u0441\u0442\u0440\u0430\u0446\u0438\u044F \u0432\u044B\u0445\
+      \u043E\u0434\u043D\u043E\u0433\u043E \u043F\u043E\u0440\u0442\u0430 \u0434\u043B\
+      \u044F \u043E\u0442\u043F\u0440\u0430\u0432\u043A\u0438 \u0434\u0430\u043D\u043D\
+      \u044B\u0445\n        self.message_port_register_out(pmt.intern('set_const_signal'))\n\
       \n        # \u0413\u0435\u043D\u0435\u0440\u0430\u0446\u0438\u044F \u0438 \u043E\
       \u0442\u043F\u0440\u0430\u0432\u043A\u0430 \u0442\u0440\u0435\u0443\u0433\u043E\
       \u043B\u044C\u043D\u043E\u0433\u043E \u0441\u0438\u0433\u043D\u0430\u043B\u0430\
       \ \u043F\u0440\u0438 \u0438\u043D\u0438\u0446\u0438\u0430\u043B\u0438\u0437\u0430\
-      \u0446\u0438\u0438\n        signal_str = self.generate_triangle_wave(start,\
-      \ end, sample_rate, freq)\n\n        # \u041E\u0442\u043F\u0440\u0430\u0432\u043A\
-      \u0430 \u0441\u0433\u0435\u043D\u0435\u0440\u0438\u0440\u043E\u0432\u0430\u043D\
-      \u043D\u044B\u0445 \u0434\u0430\u043D\u043D\u044B\u0445 \u0432 ADI \u0431\u043B\
-      \u043E\u043A\n        self.message_port_pub(pmt.intern('set_const_signal'),\
+      \u0446\u0438\u0438\n        signal_str = self.generate_triangle_wave(start_p,\
+      \ end_p, sample_rate, freq)\n\n        time.sleep(2.00)\n\n        # \u041E\u0442\
+      \u043F\u0440\u0430\u0432\u043A\u0430 \u0441\u0433\u0435\u043D\u0435\u0440\u0438\
+      \u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0445 \u0434\u0430\u043D\u043D\u044B\
+      \u0445 \u0432 ADI \u0431\u043B\u043E\u043A\n        self.message_port_pub(pmt.intern('set_const_signal'),\
       \ pmt.intern(signal_str))\n\n    def generate_triangle_wave(self, start, end,\
       \ sample_rate, freq):\n        \"\"\"\u0413\u0435\u043D\u0435\u0440\u0430\u0446\
       \u0438\u044F \u0442\u0440\u0435\u0443\u0433\u043E\u043B\u044C\u043D\u043E\u0433\
@@ -267,57 +317,70 @@ blocks:
       \u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u043E\u0442\u0441\u0447\
       \u0435\u0442\u043E\u0432 \u0434\u043E\u043B\u0436\u043D\u043E \u0431\u044B\u0442\
       \u044C \u0431\u043E\u043B\u044C\u0448\u0435 \u0438\u043B\u0438 \u0440\u0430\u0432\
-      \u043D\u043E 1\")\n        \n        # 4. \u0412\u044B\u0447\u0438\u0441\u043B\
-      \u044F\u0435\u043C \u043A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E\
-      \ \u0446\u0435\u043B\u044B\u0445 \u043E\u0442\u0441\u0447\u0435\u0442\u043E\u0432\
-      \n        n = num_samples\n        \n        # 5. \u0412\u044B\u0447\u0438\u0441\
-      \u043B\u044F\u0435\u043C \u0434\u0435\u043B\u044C\u0442\u0443\n        delta\
-      \ = (end - start) / n\n        \n        # 6. \u0413\u0435\u043D\u0435\u0440\
+      \u043D\u043E 1\")\n        \n        # 5. \u0412\u044B\u0447\u0438\u0441\u043B\
+      \u044F\u0435\u043C \u0434\u0435\u043B\u044C\u0442\u0443\n        delta = (end\
+      \ - start) / num_samples\n        \n        # 6. \u0413\u0435\u043D\u0435\u0440\
       \u0438\u0440\u0443\u0435\u043C \u0442\u0440\u0435\u0443\u0433\u043E\u043B\u044C\
       \u043D\u044B\u0439 \u0441\u0438\u0433\u043D\u0430\u043B\n        signal = []\n\
       \        \n        # \u0413\u0435\u043D\u0435\u0440\u0430\u0446\u0438\u044F\
       \ \u0443\u0432\u0435\u043B\u0438\u0447\u0435\u043D\u0438\u044F\n        for\
-      \ i in range(n):\n            value = round(start + i * delta, 2)\n        \
-      \    signal.append(value)\n        \n        # \u0413\u0435\u043D\u0435\u0440\
-      \u0430\u0446\u0438\u044F \u0443\u043C\u0435\u043D\u044C\u0448\u0435\u043D\u0438\
-      \u044F\n        for i in range(n):\n            value = round(end - i * delta,\
-      \ 2)\n            signal.append(value)\n        \n        # \u041F\u0440\u0435\
-      \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435 \u0432 \u0441\
-      \u0442\u0440\u043E\u043A\u0443\n        signal_str = \" \".join(map(str, signal))\n\
-      \        print(f\"Generated signal: {signal_str}\")\n        return signal_str\n\
-      \n    def work(self, input_items, output_items):\n        # \u0424\u0443\u043D\
-      \u043A\u0446\u0438\u044F work \u0432\u044B\u043F\u043E\u043B\u043D\u044F\u0435\
-      \u0442\u0441\u044F \u043F\u0443\u0441\u0442\u043E\u0439, \u0442\u0430\u043A\
-      \ \u043A\u0430\u043A \u0441\u0438\u0433\u043D\u0430\u043B \u0433\u0435\u043D\
-      \u0435\u0440\u0438\u0440\u0443\u0435\u0442\u0441\u044F \u0442\u043E\u043B\u044C\
-      \u043A\u043E \u043E\u0434\u0438\u043D \u0440\u0430\u0437\n        return 0\n"
+      \ i in range(num_samples):\n            value = round(start + i * delta, 2)\n\
+      \            signal.append(value)\n        \n        # \u0413\u0435\u043D\u0435\
+      \u0440\u0430\u0446\u0438\u044F \u0443\u043C\u0435\u043D\u044C\u0448\u0435\u043D\
+      \u0438\u044F\n        for i in range(num_samples):\n            value = round(end\
+      \ - i * delta, 2)\n            signal.append(value)\n        \n        # \u041F\
+      \u0440\u0435\u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435\
+      \ \u0432 \u0441\u0442\u0440\u043E\u043A\u0443\n        signal_str = \" \".join(map(str,\
+      \ signal))\n        print(f\"Generated signal: {signal_str}\")\n        return\
+      \ signal_str\n\n    done = 0\n    def work(self, input_items, output_items):\n\
+      \        # \u0424\u0443\u043D\u043A\u0446\u0438\u044F work \u0432\u044B\u043F\
+      \u043E\u043B\u043D\u044F\u0435\u0442\u0441\u044F \u043F\u0443\u0441\u0442\u043E\
+      \u0439, \u0442\u0430\u043A \u043A\u0430\u043A \u0441\u0438\u0433\u043D\u0430\
+      \u043B \u0433\u0435\u043D\u0435\u0440\u0438\u0440\u0443\u0435\u0442\u0441\u044F\
+      \ \u0442\u043E\u043B\u044C\u043A\u043E \u043E\u0434\u0438\u043D \u0440\u0430\
+      \u0437\n        n = 0\n        while n < len(output_items[0]):\n           \
+      \ output_items[0][n] = self.enable\n            n += 1\n        if self.enable\
+      \ == 1:\n                # print(f\"Works\")\n        # # \u0413\u0435\u043D\
+      \u0435\u0440\u0430\u0446\u0438\u044F \u0438 \u043E\u0442\u043F\u0440\u0430\u0432\
+      \u043A\u0430 \u0442\u0440\u0435\u0443\u0433\u043E\u043B\u044C\u043D\u043E\u0433\
+      \u043E \u0441\u0438\u0433\u043D\u0430\u043B\u0430 \u043F\u0440\u0438 \u0438\u043D\
+      \u0438\u0446\u0438\u0430\u043B\u0438\u0437\u0430\u0446\u0438\u0438\n       \
+      \     signal_str = self.generate_triangle_wave(self.start_p, self.end_p, self.sample_rate,\
+      \ self.freq)\n\n            time.sleep(2.00)\n\n            # \u041E\u0442\u043F\
+      \u0440\u0430\u0432\u043A\u0430 \u0441\u0433\u0435\u043D\u0435\u0440\u0438\u0440\
+      \u043E\u0432\u0430\u043D\u043D\u044B\u0445 \u0434\u0430\u043D\u043D\u044B\u0445\
+      \ \u0432 ADI \u0431\u043B\u043E\u043A\n            self.message_port_pub(pmt.intern('set_const_signal'),\
+      \ pmt.intern(signal_str))\n        # done = 1\n        # return 0\n        return\
+      \ len(output_items[0])"
     affinity: ''
     alias: ''
     comment: ''
-    end: '1.0'
-    freq: '1000'
+    enable: generate_signal
+    end_p: '2'
+    freq: frequency
     maxoutbuf: '0'
     minoutbuf: '0'
-    sample_rate: '250000'
-    start: '0.0'
+    sample_rate: '400000'
+    start_p: '1'
   states:
-    _io_cache: "('Triangle Wave Generator', 'TriangleWaveGenerator', [('start', '0.0'),\
-      \ ('end', '1.0'), ('sample_rate', '250000'), ('freq', '1000')], [], [('set_const_signal',\
-      \ 'message', 1)], '\\n    \u0413\u0435\u043D\u0435\u0440\u0430\u0442\u043E\u0440\
-      \ \u0442\u0440\u0435\u0443\u0433\u043E\u043B\u044C\u043D\u043E\u0433\u043E \u0441\
-      \u0438\u0433\u043D\u0430\u043B\u0430.\\n    \u041F\u0440\u0438\u043D\u0438\u043C\
-      \u0430\u0435\u0442 \u0447\u0430\u0441\u0442\u043E\u0442\u0443 \u0438 \u0430\u043C\
-      \u043F\u043B\u0438\u0442\u0443\u0434\u0443 \u043A\u0430\u043A \u043F\u0430\u0440\
-      \u0430\u043C\u0435\u0442\u0440\u044B \u0447\u0435\u0440\u0435\u0437 \u0433\u0440\
-      \u0430\u0444\u0438\u0447\u0435\u0441\u043A\u0438\u0439 \u0438\u043D\u0442\u0435\
-      \u0440\u0444\u0435\u0439\u0441.\\n    \u041F\u0435\u0440\u0435\u0434\u0430\u0435\
-      \u0442 \u0441\u0433\u0435\u043D\u0435\u0440\u0438\u0440\u043E\u0432\u0430\u043D\
-      \u043D\u044B\u0435 \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u044F \u0432 ADI\
-      \ \u0431\u043B\u043E\u043A.\\n    ', ['freq', 'sample_rate'])"
+    _io_cache: "('Triangle Wave Generator', 'TriangleWaveGenerator', [('start_p',\
+      \ '0.0'), ('end_p', '1.0'), ('sample_rate', '250000'), ('freq', '1000'), ('enable',\
+      \ '0.0')], [], [('0', 'float', 1), ('set_const_signal', 'message', 1)], '\\\
+      n    \u0413\u0435\u043D\u0435\u0440\u0430\u0442\u043E\u0440 \u0442\u0440\u0435\
+      \u0443\u0433\u043E\u043B\u044C\u043D\u043E\u0433\u043E \u0441\u0438\u0433\u043D\
+      \u0430\u043B\u0430.\\n    \u041F\u0440\u0438\u043D\u0438\u043C\u0430\u0435\u0442\
+      \ \u0447\u0430\u0441\u0442\u043E\u0442\u0443 \u0438 \u0430\u043C\u043F\u043B\
+      \u0438\u0442\u0443\u0434\u0443 \u043A\u0430\u043A \u043F\u0430\u0440\u0430\u043C\
+      \u0435\u0442\u0440\u044B \u0447\u0435\u0440\u0435\u0437 \u0433\u0440\u0430\u0444\
+      \u0438\u0447\u0435\u0441\u043A\u0438\u0439 \u0438\u043D\u0442\u0435\u0440\u0444\
+      \u0435\u0439\u0441.\\n    \u041F\u0435\u0440\u0435\u0434\u0430\u0435\u0442 \u0441\
+      \u0433\u0435\u043D\u0435\u0440\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\
+      \u0435 \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u044F \u0432 ADI \u0431\u043B\
+      \u043E\u043A.\\n    ', ['enable', 'end_p', 'freq', 'sample_rate', 'start_p'])"
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [360, 200.0]
+    coordinate: [296, 152.0]
     rotation: 0
     state: true
 - name: qtgui_time_sink_x_0_0_0
@@ -350,7 +413,7 @@ blocks:
     comment: ''
     ctrlpanel: 'True'
     entags: 'False'
-    grid: 'True'
+    grid: 'False'
     gui_hint: 0,0,1,1
     label1: Signal 1
     label10: Signal 10
@@ -421,7 +484,8 @@ blocks:
 connections:
 - [epy_block_0, '0', qtgui_time_sink_x_0_0_0, '0']
 - [epy_block_0, '1', qtgui_time_sink_x_0_0_0, '1']
-- [epy_block_1, set_const_signal, epy_block_0, set_const_signal]
+- [epy_block_1_0, '0', blocks_throttle2_0, '0']
+- [epy_block_1_0, set_const_signal, epy_block_0, set_const_signal]
 
 metadata:
   file_format: 1
