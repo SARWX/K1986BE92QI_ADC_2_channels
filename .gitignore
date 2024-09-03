@@ -8,3 +8,6 @@ ProjectFiles/Blank.uvguix.PC_88
 ProjectFiles/.vscode
 *.o
 *.i
+GNU_radio/__pycache__/PlotFromSerial_epy_block_0.cpython-311.pyc
+GNU_radio/__pycache__/PlotFromSerial_epy_block_1_0.cpython-311.pyc
+GNU_radio/__pycache__/PlotFromSerial_epy_block_1.cpython-311.pyc
