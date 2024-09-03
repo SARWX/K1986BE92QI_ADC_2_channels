@@ -12,11 +12,13 @@
 #include "MDR32F9Qx_usb_CDC.h"
 #include "MDR32F9Qx_dma.h"
 #include "MDR32F9Qx_timer.h"
+#include "MDR32F9Qx_adc.h"
 #include <string.h>
 #include <stdlib.h>
 #include "ADC_init.h"
 #include "defines.h"
 #include "DAC_init.h"
+#include "Command_system.h"
 
 extern uint16_t DAC_table[SIN_RES];                                 // Внешняя таблица значений ЦАП
 extern DMA_CtrlDataInitTypeDef TIM2_primary_DMA_structure;          // Внешние структуры DMA
@@ -92,6 +94,16 @@ int execute_command(char *command)
     return(1);
   }
 // ---------------------------------------------------------------------------------------------- //
+
+
+// ------------- "mode " command ------------------------------------------------------------ //
+  if (strstr(command, "mode ") == command) 
+  {                     // проверить: команда начинается с "mode "?
+    enum mode_setting mode = atoi((char *)(command + strlen("mode ")));       // перевести режим из строкового формата в int
+      set_mode_setting(mode);   // задать требуемый режим
+  }
+// ---------------------------------------------------------------------------------------------- //
+
   return(0);
 }
 /** @example Commands 
@@ -161,6 +173,27 @@ int convert_voltage_to_register_val(float voltage)
   voltage /= 3.3;           // перевод в проценты от 3.3 вольт (максимума)
   voltage *= 4095;          // перевод в регистровое значение (4095 - максимум)
   return((int)voltage);     // преобразование к типу int
+}
+
+void set_mode_setting(enum mode_setting mode)
+{
+  // Выключение АЦП и таймера
+	ADC1_Cmd (DISABLE);
+	ADC2_Cmd (DISABLE);
+  TIMER_Cmd(MDR_TIMER2, DISABLE);
+
+  // 1 устрановка АЦП
+  int num_adc_chan = ((int)mode >> 1) + 1;
+  change_adc_chan_num(num_adc_chan);
+
+  // 2 установка каналов ЦАП
+  int num_dac_chan = ((int)mode % 2) + 1;
+  change_dac_chan_num(num_dac_chan);
+
+  // Включение АЦП и таймера
+	ADC1_Cmd (ENABLE);
+	ADC2_Cmd (ENABLE);
+  TIMER_Cmd(MDR_TIMER2, ENABLE);
 }
 
 /*********************** (C) COPYRIGHT 2024 ICV ****************************

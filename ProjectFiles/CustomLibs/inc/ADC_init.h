@@ -13,5 +13,6 @@
 #define ADC_init
 
 void Setup_ADC();
+void change_adc_chan_num(int num_adc_chan);
 
 #endif /* ADC_init */

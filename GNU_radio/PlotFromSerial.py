@@ -134,7 +134,7 @@ class PlotFromSerial(gr.top_block, Qt.QWidget):
         for c in range(0, 1):
             self.top_grid_layout.setColumnStretch(c, 1)
         self.epy_block_1_0 = epy_block_1_0.TriangleWaveGenerator(start_p=1, end_p=2, sample_rate=400000, freq=frequency, enable=generate_signal)
-        self.epy_block_0 = epy_block_0.ADIBlock(portNumber=7, enable=generate_signal)
+        self.epy_block_0 = epy_block_0.ADIBlock(portNumber=7, enable=generate_signal, mode=0)
         self.blocks_throttle2_0 = blocks.throttle( gr.sizeof_float*1, samp_rate, True, 0 if "auto" == "auto" else max( int(float(0.1) * samp_rate) if "auto" == "time" else int(0.1), 1) )
 
 

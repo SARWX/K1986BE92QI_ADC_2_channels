@@ -28,7 +28,7 @@ class ADIBlock(gr.sync_block):  # other base classes are basic_block, decim_bloc
 
     adc_num = 1
     
-    def __init__(self, portNumber=7, enable = 0): 
+    def __init__(self, portNumber=7, enable = 0, mode = 3): 
         """arguments to this function show up as parameters in GRC"""
         self.portNumber = portNumber  # Сохраняем номер порта
         # portName = 'COM' + str(portNumber)                  # Concatenate string and number
@@ -51,6 +51,7 @@ class ADIBlock(gr.sync_block):  # other base classes are basic_block, decim_bloc
         self.port_name = None
         self.baudrate = 2000000  # Здесь захардкожен baudrate
         self.enable = enable
+        self.mode = mode
         
     def open_port(self):
         """Открывает COM порт, если он существует и не занят."""
@@ -79,6 +80,15 @@ class ADIBlock(gr.sync_block):  # other base classes are basic_block, decim_bloc
             print(f"Ошибка при открытии порта {portName}: {e}")
             self.port = None
 
+
+    def set_mode(self, mode_setting):
+        command = "mode " + str(mode_setting)  
+        try:
+            self.port.write(command.encode('ascii'))
+            print(f"Отправлено: {command}")
+            time.sleep(0.01)
+        except serial.SerialException as e:
+            print(f"Ошибка при отправке данных: {e}")
 
 
     def handle_msg(self, msg):
@@ -127,9 +137,10 @@ class ADIBlock(gr.sync_block):  # other base classes are basic_block, decim_bloc
         if self.port is None:
             # Если порт не открыт, попытаться открыть его
             self.open_port()
+            self.set_mode(self.mode)
 
         n = 0
-        while n < len(output_items[0]):
+        while n < (len(output_items[0]) - 4):
             # WORKING FOR 16 bit
             # data = bytearray(4)  # Creating an array of bytes to read 2 16-bit values (4 bytes)
             # self.port.readinto(data)  # We read the data directly into the byte array
@@ -146,15 +157,19 @@ class ADIBlock(gr.sync_block):  # other base classes are basic_block, decim_bloc
             # output_items[2][n] = (((data[1] & 0xF0) / 8) + (data[2] * 8))  # Convert the first 2 bytes to a number
             # n += 1
 
-            # TEST 8 bit
             data = bytearray(4)  # Creating an array of bytes to read 2 16-bit values (4 bytes)
             self.port.readinto(data)  # We read the data directly into the byte array
-            output_items[0][n] = data[0]
-            output_items[1][n] = data[1]
-            n += 1
-            output_items[0][n] = data[2]
-            output_items[1][n] = data[3]
-            n += 1
+
+            if self.mode in range(0, 2):  # mode can be 0 or 1
+                for byte in data:
+                    output_items[0][n] = byte
+                    n += 1
+            else:
+                # TEST 8 bit
+                for i in range(0, 4, 2):
+                    output_items[0][n] = data[i]
+                    output_items[1][n] = data[i + 1]
+                    n += 1
             # if self.enable == 1:
             #     print(self.enable)
             

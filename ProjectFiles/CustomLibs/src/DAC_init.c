@@ -187,6 +187,31 @@ void set_sin_DAC_table(int freq, int chan)
 	TIM2_alternate_DMA_structure.DMA_CycleSize = (tics*2);							// Сколько измерений (DMA передач) содержит 1 DMA цикл
 }
 
+void change_dac_chan_num(int num_dac_chan)
+{
+	if (num_dac_chan == 1)
+	{
+		PORT_StructInit(&PortInitStructure);
+		PortInitStructure.PORT_FUNC = PORT_FUNC_PORT;
+		PortInitStructure.PORT_OE = PORT_OE_OUT;
+		PortInitStructure.PORT_MODE = PORT_MODE_DIGITAL;
+		PortInitStructure.PORT_Pin = (PORT_Pin_2 | PORT_Pin_1);		// PE1 и PE2
+		PortInitStructure.PORT_SPEED = PORT_SPEED_SLOW;
+		PORT_Init (MDR_PORTE, &PortInitStructure);
+		// Задаем комбинацию для канала
+		PORT_SetBits(MDR_PORTE, PORT_Pin_2 | PORT_Pin_1); 	// 1 1
+	}
+	else
+	{
+		PORT_StructInit(&PortInitStructure);
+		PortInitStructure.PORT_FUNC = PORT_FUNC_ALTER;
+		PortInitStructure.PORT_OE = PORT_OE_OUT;
+		PortInitStructure.PORT_MODE = PORT_MODE_DIGITAL;
+		PortInitStructure.PORT_Pin = (PORT_Pin_2 | PORT_Pin_1);		// PE1 и PE2
+		PortInitStructure.PORT_SPEED = PORT_SPEED_MAXFAST;
+		PORT_Init (MDR_PORTE, &PortInitStructure);
+	}
+}
 /*********************** (C) COPYRIGHT 2024 ICV ****************************
 *
 * END OF FILE DAC_init.c */
