@@ -29,12 +29,12 @@ class TriangleWaveGenerator(gr.sync_block):
         self.message_port_register_out(pmt.intern('set_const_signal'))
 
         # Генерация и отправка треугольного сигнала при инициализации
-        signal_str = self.generate_triangle_wave(start_p, end_p, sample_rate, freq)
+        # signal_str = self.generate_triangle_wave(start_p, end_p, sample_rate, freq)
 
-        time.sleep(2.00)
+        # time.sleep(2.00)
 
-        # Отправка сгенерированных данных в ADI блок
-        self.message_port_pub(pmt.intern('set_const_signal'), pmt.intern(signal_str))
+        # # Отправка сгенерированных данных в ADI блок
+        # self.message_port_pub(pmt.intern('set_const_signal'), pmt.intern(signal_str))
 
     def generate_triangle_wave(self, start, end, sample_rate, freq):
         """Генерация треугольного сигнала на основе параметров"""

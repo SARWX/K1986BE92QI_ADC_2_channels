@@ -66,7 +66,7 @@ void Setup_ADC()
     ADCx_structure.ADC_VRefSource       = ADC_VREF_SOURCE_INTERNAL;			    // Опорное напряжение от внутреннего источника
     ADCx_structure.ADC_IntVRefSource    = ADC_INT_VREF_SOURCE_INEXACT;		    // Выбираем неточный источник опорного напряжения
     ADCx_structure.ADC_Prescaler        = ADC_CLK_div_8;					    // Задаем скорость работы АЦП, ИМЕННО ЭТОЙ НАСТРОЙКОЙ ЗАДАЕТСЯ СКОРОСТЬ РАБОТЫ УСТРОЙСТВА
-	ADCx_structure.ADC_DelayGo          = 0x2;								    // Отложенный запуск, необходиим для нормальной работы
+	ADCx_structure.ADC_DelayGo          = 0x3;								    // сколько тактов на преобразование
     ADC1_Init (&ADCx_structure);											    // Применяем настройки к АЦП 1
     
     // Настройка АЦП для регулировки

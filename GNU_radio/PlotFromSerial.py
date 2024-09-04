@@ -82,8 +82,8 @@ class PlotFromSerial(gr.top_block, Qt.QWidget):
         self._frequency_win = RangeWidget(self._frequency_range, self.set_frequency, "'frequency'", "counter_slider", int, QtCore.Qt.Horizontal)
         self.top_layout.addWidget(self._frequency_win)
         self.qtgui_time_sink_x_0_0_0 = qtgui.time_sink_f(
-            2200, #size
-            220000, #samp_rate
+            5000, #size
+            500000, #samp_rate
             '', #name
             2, #number of inputs
             None # parent
@@ -133,7 +133,7 @@ class PlotFromSerial(gr.top_block, Qt.QWidget):
             self.top_grid_layout.setRowStretch(r, 1)
         for c in range(0, 1):
             self.top_grid_layout.setColumnStretch(c, 1)
-        self.epy_block_1_0 = epy_block_1_0.TriangleWaveGenerator(start_p=1, end_p=2, sample_rate=400000, freq=frequency, enable=generate_signal)
+        self.epy_block_1_0 = epy_block_1_0.TriangleWaveGenerator(start_p=1, end_p=2, sample_rate=1000000, freq=frequency, enable=generate_signal)
         self.epy_block_0 = epy_block_0.ADIBlock(portNumber=7, enable=generate_signal, mode=0)
         self.blocks_throttle2_0 = blocks.throttle( gr.sizeof_float*1, samp_rate, True, 0 if "auto" == "auto" else max( int(float(0.1) * samp_rate) if "auto" == "time" else int(0.1), 1) )
 
@@ -142,8 +142,8 @@ class PlotFromSerial(gr.top_block, Qt.QWidget):
         # Connections
         ##################################################
         self.msg_connect((self.epy_block_1_0, 'set_const_signal'), (self.epy_block_0, 'set_const_signal'))
-        self.connect((self.epy_block_0, 0), (self.qtgui_time_sink_x_0_0_0, 0))
         self.connect((self.epy_block_0, 1), (self.qtgui_time_sink_x_0_0_0, 1))
+        self.connect((self.epy_block_0, 0), (self.qtgui_time_sink_x_0_0_0, 0))
         self.connect((self.epy_block_1_0, 0), (self.blocks_throttle2_0, 0))
 
 

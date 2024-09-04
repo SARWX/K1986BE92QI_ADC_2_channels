@@ -47,7 +47,7 @@ void Setup_CPU_Clock(void)
 		}
 	}
 
-	RST_CLK_CPU_PLLconfig(RST_CLK_CPU_PLLsrcHSEdiv1, RST_CLK_CPU_PLLmul7); //  16 MHz * 7 = 112 MHz
+	RST_CLK_CPU_PLLconfig(RST_CLK_CPU_PLLsrcHSEdiv1, RST_CLK_CPU_PLLmul8); //  16 MHz * 7 = 112 MHz
 	
 	RST_CLK_CPU_PLLcmd(ENABLE);
 

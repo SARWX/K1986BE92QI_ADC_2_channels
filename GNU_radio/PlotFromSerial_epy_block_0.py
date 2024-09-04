@@ -17,6 +17,7 @@ import pmt
 MAX_DAC_NUM = 500   # Максимальное количество чисел, которое может быть записано в const_signal
 MAX_DAC_VAL = 10.0  # Максимальное значение на выходе ЦАП
 CHUNK_SIZE = 10     # Максимальное количество чисел в одной команде
+USB_PACKET_SIZE = 256 # байт
 
 
 class ADIBlock(gr.sync_block):  # other base classes are basic_block, decim_block, interp_block
@@ -52,6 +53,7 @@ class ADIBlock(gr.sync_block):  # other base classes are basic_block, decim_bloc
         self.baudrate = 2000000  # Здесь захардкожен baudrate
         self.enable = enable
         self.mode = mode
+        self.remaining_data = bytearray()  # Буфер для оставшихся данных
         
     def open_port(self):
         """Открывает COM порт, если он существует и не занят."""
@@ -140,37 +142,48 @@ class ADIBlock(gr.sync_block):  # other base classes are basic_block, decim_bloc
             self.set_mode(self.mode)
 
         n = 0
-        while n < (len(output_items[0]) - 4):
-            # WORKING FOR 16 bit
-            # data = bytearray(4)  # Creating an array of bytes to read 2 16-bit values (4 bytes)
-            # self.port.readinto(data)  # We read the data directly into the byte array
-            # output_items[1][n] = int.from_bytes(data[:2], 'little')  # Convert the first 2 bytes to a number
-            # output_items[2][n] = int.from_bytes(data[2:], 'little')  # Convert the remaining 2 bytes to a number
-            # # output_items[1][n] = int.from_bytes(self.port.read(1), "little")
-            # n += 1
+        chunk_size = USB_PACKET_SIZE
+        output_len = len(output_items[0])
+        data = bytearray(chunk_size)  # Создание массива байтов для чтения данных
 
+            
+        while n < (output_len - chunk_size):
+            chunk_size = USB_PACKET_SIZE
+        
+            # Объединяем остаточные данные из предыдущей итерации с новыми
+            if self.remaining_data:
+                data = self.remaining_data
+                chunk_size = len(data)
+                self.remaining_data = bytearray()  # Очищаем буфер
+            else:
+                self.port.readinto(data)  # Считывание данных непосредственно в массив байтов
 
-            # # TEST 12 bit
-            # data = bytearray(3)  # Creating an array of bytes to read 2 16-bit values (4 bytes)
-            # self.port.readinto(data)  # We read the data directly into the byte array
-            # output_items[1][n] = (data[0] + (data[1] & 0x0F)*16)  # Convert the first 2 bytes to a number
-            # output_items[2][n] = (((data[1] & 0xF0) / 8) + (data[2] * 8))  # Convert the first 2 bytes to a number
-            # n += 1
-
-            data = bytearray(4)  # Creating an array of bytes to read 2 16-bit values (4 bytes)
-            self.port.readinto(data)  # We read the data directly into the byte array
-
-            if self.mode in range(0, 2):  # mode can be 0 or 1
-                for byte in data:
-                    output_items[0][n] = byte
-                    n += 1
+            if self.mode < 2:  # mode can be 0 or 1, оба включают только 1 канал АЦП
+                output_items[0][n:n + chunk_size] = data[:chunk_size]
+                n += chunk_size
             else:
                 # TEST 8 bit
-                for i in range(0, 4, 2):
+                output_items[0][n:n + chunk_size // 2] = data[0::2]
+                output_items[1][n:n + chunk_size // 2] = data[1::2]
+                n += chunk_size // 2
+                    # if self.enable == 1:
+                    #     print(self.enable)
+        # Обработка оставшегося места в output_items
+        if n < output_len:
+            self.port.readinto(data)  # Считываем данные в массив байтов
+            if self.mode < 2:  # mode can be 0 или 1, оба включают только 1 канал АЦП
+                bytes_to_copy = min(chunk_size, output_len - n)
+                output_items[0][n:n + bytes_to_copy] = data[:bytes_to_copy]
+                n += bytes_to_copy
+                self.remaining_data = data[bytes_to_copy:]  # Сохраняем оставшиеся данные
+            else:
+                i = 0
+                half_chunk_size = chunk_size // 2
+                while n < output_len and i < chunk_size:
                     output_items[0][n] = data[i]
                     output_items[1][n] = data[i + 1]
                     n += 1
-            # if self.enable == 1:
-            #     print(self.enable)
-            
-        return len(output_items[1])
+                    i += 2
+                self.remaining_data = data[i:]  # Сохраняем оставшиеся данные
+
+        return len(output_items[0])  # Возвращаем количество обработанных элементов
