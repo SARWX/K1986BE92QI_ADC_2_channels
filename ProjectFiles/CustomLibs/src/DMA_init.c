@@ -10,6 +10,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "MDR32F9Qx_dma.h"
+#include "MDR32F9Qx_usb_handlers.h"
 #include "MDR32F9Qx_rst_clk.h"
 #include "defines.h"
 #include "MDR32F9Qx_timer.h"
@@ -21,9 +22,10 @@ extern uint16_t DAC_table[];
 extern uint16_t main_array_for_ADC[];
 extern uint16_t alternate_array_for_ADC[];
 extern enum dac_mode_state dac_mode_state;	
+extern enum dac_mode_state usb_dac_mode_state;	
 
-uint8_t main_array_for_DAC[64*2];
-uint8_t alternate_array_for_DAC[64*2];
+uint8_t main_array_for_DAC[DAC_MODE_BUF_SIZE];
+uint8_t alternate_array_for_DAC[DAC_MODE_BUF_SIZE];
 
 // Структуры для DMA
 DMA_ChannelInitTypeDef ADC1_DMA_structure;
@@ -168,7 +170,7 @@ void reconfig_DMA_dac_mode(void)
 	// Основная
 	TIM2_primary_DMA_structure.DMA_SourceBaseAddr =								// Адрес откуда будем брать измерения 
 	(uint32_t)(main_array_for_DAC);														// Начало массива DAC_table
-	TIM2_primary_DMA_structure.DMA_CycleSize = (64);							// Сколько измерений (DMA передач) содержит 1 DMA цикл
+	TIM2_primary_DMA_structure.DMA_CycleSize = (DAC_MODE_BUF_SIZE);							// Сколько измерений (DMA передач) содержит 1 DMA цикл
 	TIM2_primary_DMA_structure.DMA_SourceIncSize = DMA_SourceIncByte;			// теперь DAC_table - 8 битный массив => инкремент = байт
 	TIM2_primary_DMA_structure.DMA_MemoryDataSize =								// Скажем DMA, Что мы работаем с 8 битными данными
 	DMA_MemoryDataSize_Byte;	
@@ -177,7 +179,7 @@ void reconfig_DMA_dac_mode(void)
 	(uint32_t)(alternate_array_for_DAC);													// 65ая позиция массива DAC_table
 	// (uint32_t)(main_array_for_DAC);														// Начало массива DAC_table
 
-	TIM2_alternate_DMA_structure.DMA_CycleSize = (64);							// Сколько измерений (DMA передач) содержит 1 DMA цикл
+	TIM2_alternate_DMA_structure.DMA_CycleSize = (DAC_MODE_BUF_SIZE);							// Сколько измерений (DMA передач) содержит 1 DMA цикл
 	TIM2_alternate_DMA_structure.DMA_SourceIncSize = DMA_SourceIncByte;			// теперь DAC_table - 8 битный массив => инкремент = байт
 	TIM2_alternate_DMA_structure.DMA_MemoryDataSize =							// Скажем DMA, Что мы работаем с 8 битными данными
 	DMA_MemoryDataSize_Byte;
@@ -217,6 +219,10 @@ void DMA_IRQHandler() {
 	{
 		DMA_CtrlInit(DMA_Channel_TIM2, DMA_CTRL_DATA_PRIMARY, &TIM2_primary_DMA_structure);		// реинициализируем основную структуру
 		dac_mode_state = alt_state;
+		if (usb_dac_mode_state == stopped)
+		{
+			USB_CDC_ReceiveStart();	// восстановить получение по USB
+		}
 	}
 //		NVIC_ClearPendingIRQ (DMA_IRQn);
 }

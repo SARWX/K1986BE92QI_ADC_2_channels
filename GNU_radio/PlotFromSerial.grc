@@ -33,6 +33,34 @@ options:
     state: enabled
 
 blocks:
+- name: DAC_frequency
+  id: variable_qtgui_label
+  parameters:
+    comment: ''
+    formatter: None
+    gui_hint: ''
+    label: DAC frequency
+    type: int
+    value: (int)(DAC_sample_rate /(500 -  frequency))
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [40, 328.0]
+    rotation: 0
+    state: true
+- name: DAC_sample_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: '1000000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [208, 24.0]
+    rotation: 0
+    state: true
 - name: frequency
   id: variable_qtgui_range
   parameters:
@@ -42,16 +70,16 @@ blocks:
     min_len: '200'
     orient: QtCore.Qt.Horizontal
     rangeType: int
-    start: '1000'
-    step: '100'
-    stop: '10000'
-    value: '1000'
+    start: '0'
+    step: '1'
+    stop: 500 - 2
+    value: '0'
     widget: counter_slider
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1224, 32.0]
+    coordinate: [40, 192.0]
     rotation: 0
     state: true
 - name: generate_signal
@@ -68,7 +96,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [56, 24.0]
+    coordinate: [40, 24.0]
     rotation: 0
     state: true
 - name: samp_rate
@@ -101,7 +129,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [720, 72.0]
+    coordinate: [712, 72.0]
     rotation: 0
     state: true
 - name: epy_block_0
@@ -128,10 +156,10 @@ blocks:
       \"\n    Read data from serial port and forward it to output. \n    portNumber\
       \ is number, you can see in the name of your \n    serial port in device manager,\
       \ like COM16 or COM7 \n    \"\"\"\n\n    adc_num = 1\n    \n    def __init__(self,\
-      \ portNumber=7, enable = 0, mode = 3): \n        \"\"\"arguments to this function\
-      \ show up as parameters in GRC\"\"\"\n        self.portNumber = portNumber \
-      \ # \u0421\u043E\u0445\u0440\u0430\u043D\u044F\u0435\u043C \u043D\u043E\u043C\
-      \u0435\u0440 \u043F\u043E\u0440\u0442\u0430\n        # portName = 'COM' + str(portNumber)\
+      \ portNumber=7, mode = 3): \n        \"\"\"arguments to this function show up\
+      \ as parameters in GRC\"\"\"\n        self.portNumber = portNumber  # \u0421\
+      \u043E\u0445\u0440\u0430\u043D\u044F\u0435\u043C \u043D\u043E\u043C\u0435\u0440\
+      \ \u043F\u043E\u0440\u0442\u0430\n        # portName = 'COM' + str(portNumber)\
       \                  # Concatenate string and number\n        \n        gr.sync_block.__init__(\n\
       \            self,\n            name = 'Analog Digital Interface',   \n    \
       \        # in_sig = [np.float32],                          # \u0412\u0445\u043E\
@@ -149,58 +177,57 @@ blocks:
       \u044F COM \u043F\u043E\u0440\u0442\u0430\n        self.port = None\n      \
       \  self.port_name = None\n        self.baudrate = 2000000  # \u0417\u0434\u0435\
       \u0441\u044C \u0437\u0430\u0445\u0430\u0440\u0434\u043A\u043E\u0436\u0435\u043D\
-      \ baudrate\n        self.enable = enable\n        self.mode = mode\n       \
-      \ self.remaining_data = bytearray()  # \u0411\u0443\u0444\u0435\u0440 \u0434\
-      \u043B\u044F \u043E\u0441\u0442\u0430\u0432\u0448\u0438\u0445\u0441\u044F \u0434\
-      \u0430\u043D\u043D\u044B\u0445\n        \n    def open_port(self):\n       \
-      \ \"\"\"\u041E\u0442\u043A\u0440\u044B\u0432\u0430\u0435\u0442 COM \u043F\u043E\
-      \u0440\u0442, \u0435\u0441\u043B\u0438 \u043E\u043D \u0441\u0443\u0449\u0435\
-      \u0441\u0442\u0432\u0443\u0435\u0442 \u0438 \u043D\u0435 \u0437\u0430\u043D\u044F\
-      \u0442.\"\"\"\n        baudrate = 2000000\n        portName = 'COM' + str(self.portNumber)\n\
-      \n        # \u041F\u043E\u043B\u0443\u0447\u0430\u0435\u043C \u0441\u043F\u0438\
-      \u0441\u043E\u043A \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u044B\u0445 COM\
-      \ \u043F\u043E\u0440\u0442\u043E\u0432\n        available_ports = [port.device\
-      \ for port in serial.tools.list_ports.comports()]\n\n        if portName not\
-      \ in available_ports:\n            print(f\"\u041E\u0448\u0438\u0431\u043A\u0430\
-      : \u041F\u043E\u0440\u0442 {portName} \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\
-      \u043D.\")\n            return\n        \n        try:\n            # \u041F\
-      \u044B\u0442\u0430\u0435\u043C\u0441\u044F \u043E\u0442\u043A\u0440\u044B\u0442\
-      \u044C \u043F\u043E\u0440\u0442\n            self.port = serial.Serial(portName,\
-      \ baudrate, timeout=3.0)\n            # \u0415\u0441\u043B\u0438 \u043F\u043E\
-      \u0440\u0442 \u0443\u0436\u0435 \u0431\u044B\u043B \u043E\u0442\u043A\u0440\u044B\
-      \u0442, \u0437\u0430\u043A\u0440\u044B\u0432\u0430\u0435\u043C \u0435\u0433\u043E\
-      \ \u0438 \u043E\u0442\u043A\u0440\u044B\u0432\u0430\u0435\u043C \u0437\u0430\
-      \u043D\u043E\u0432\u043E\n            if self.port.is_open:\n              \
-      \  self.port.close()\n                self.port.open()\n            else:\n\
-      \                self.port.open()\n            print(f\"\u041F\u043E\u0440\u0442\
-      \ {portName} \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u043E\u0442\u043A\u0440\
-      \u044B\u0442.\")\n        except serial.SerialException as e:\n            #\
-      \ \u0415\u0441\u043B\u0438 \u043D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\
-      \u044C \u043E\u0442\u043A\u0440\u044B\u0442\u044C \u043F\u043E\u0440\u0442 (\u043D\
-      \u0430\u043F\u0440\u0438\u043C\u0435\u0440, \u043E\u043D \u0437\u0430\u043D\u044F\
-      \u0442), \u0432\u044B\u0432\u043E\u0434\u0438\u043C \u0441\u043E\u043E\u0431\
-      \u0449\u0435\u043D\u0438\u0435 \u043E\u0431 \u043E\u0448\u0438\u0431\u043A\u0435\
-      \n            print(f\"\u041E\u0448\u0438\u0431\u043A\u0430 \u043F\u0440\u0438\
-      \ \u043E\u0442\u043A\u0440\u044B\u0442\u0438\u0438 \u043F\u043E\u0440\u0442\u0430\
-      \ {portName}: {e}\")\n            self.port = None\n\n\n    def set_mode(self,\
-      \ mode_setting):\n        command = \"mode \" + str(mode_setting)  \n      \
-      \  try:\n            self.port.write(command.encode('ascii'))\n            print(f\"\
-      \u041E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E: {command}\")\n\
-      \            time.sleep(0.01)\n        except serial.SerialException as e:\n\
-      \            print(f\"\u041E\u0448\u0438\u0431\u043A\u0430 \u043F\u0440\u0438\
-      \ \u043E\u0442\u043F\u0440\u0430\u0432\u043A\u0435 \u0434\u0430\u043D\u043D\u044B\
-      \u0445: {e}\")\n\n\n    def handle_msg(self, msg):\n        \"\"\"\u041E\u0431\
-      \u0440\u0430\u0431\u043E\u0442\u043A\u0430 \u0432\u0445\u043E\u0434\u043D\u044B\
-      \u0445 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0439.\"\"\"\n     \
-      \   # \u041F\u0440\u0435\u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\
-      \u0438\u0435 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u044F \u0432 \u0441\
-      \u043F\u0438\u0441\u043E\u043A \u0447\u0438\u0441\u0435\u043B \u0441 \u043F\u043B\
-      \u0430\u0432\u0430\u044E\u0449\u0435\u0439 \u0437\u0430\u043F\u044F\u0442\u043E\
-      \u0439\n        numbers = pmt.to_python(msg)        # \u041F\u0440\u0435\u043E\
-      \u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435 \u0432 \u0441\u0442\
-      \u0440\u043E\u043A\u0443\n        numbers = [float(x) for x in numbers.split()]\n\
-      \        print(\"AAAAAAAAAAAAAAAAAAAAAA\")\n        print(numbers[30])\n\n \
-      \       # if not isinstance(numbers, list):\n        #     print(\"\u041E\u0448\
+      \ baudrate\n        self.mode = mode\n        self.remaining_data = bytearray()\
+      \  # \u0411\u0443\u0444\u0435\u0440 \u0434\u043B\u044F \u043E\u0441\u0442\u0430\
+      \u0432\u0448\u0438\u0445\u0441\u044F \u0434\u0430\u043D\u043D\u044B\u0445\n\
+      \        \n    def open_port(self):\n        \"\"\"\u041E\u0442\u043A\u0440\u044B\
+      \u0432\u0430\u0435\u0442 COM \u043F\u043E\u0440\u0442, \u0435\u0441\u043B\u0438\
+      \ \u043E\u043D \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u0435\u0442\
+      \ \u0438 \u043D\u0435 \u0437\u0430\u043D\u044F\u0442.\"\"\"\n        baudrate\
+      \ = 2000000\n        portName = 'COM' + str(self.portNumber)\n\n        # \u041F\
+      \u043E\u043B\u0443\u0447\u0430\u0435\u043C \u0441\u043F\u0438\u0441\u043E\u043A\
+      \ \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u044B\u0445 COM \u043F\u043E\u0440\
+      \u0442\u043E\u0432\n        available_ports = [port.device for port in serial.tools.list_ports.comports()]\n\
+      \n        if portName not in available_ports:\n            print(f\"\u041E\u0448\
+      \u0438\u0431\u043A\u0430: \u041F\u043E\u0440\u0442 {portName} \u043D\u0435 \u043D\
+      \u0430\u0439\u0434\u0435\u043D.\")\n            return\n        \n        try:\n\
+      \            # \u041F\u044B\u0442\u0430\u0435\u043C\u0441\u044F \u043E\u0442\
+      \u043A\u0440\u044B\u0442\u044C \u043F\u043E\u0440\u0442\n            self.port\
+      \ = serial.Serial(portName, baudrate, timeout=3.0)\n            # \u0415\u0441\
+      \u043B\u0438 \u043F\u043E\u0440\u0442 \u0443\u0436\u0435 \u0431\u044B\u043B\
+      \ \u043E\u0442\u043A\u0440\u044B\u0442, \u0437\u0430\u043A\u0440\u044B\u0432\
+      \u0430\u0435\u043C \u0435\u0433\u043E \u0438 \u043E\u0442\u043A\u0440\u044B\u0432\
+      \u0430\u0435\u043C \u0437\u0430\u043D\u043E\u0432\u043E\n            if self.port.is_open:\n\
+      \                self.port.close()\n                self.port.open()\n     \
+      \       else:\n                self.port.open()\n            print(f\"\u041F\
+      \u043E\u0440\u0442 {portName} \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u043E\
+      \u0442\u043A\u0440\u044B\u0442.\")\n        except serial.SerialException as\
+      \ e:\n            # \u0415\u0441\u043B\u0438 \u043D\u0435 \u0443\u0434\u0430\
+      \u043B\u043E\u0441\u044C \u043E\u0442\u043A\u0440\u044B\u0442\u044C \u043F\u043E\
+      \u0440\u0442 (\u043D\u0430\u043F\u0440\u0438\u043C\u0435\u0440, \u043E\u043D\
+      \ \u0437\u0430\u043D\u044F\u0442), \u0432\u044B\u0432\u043E\u0434\u0438\u043C\
+      \ \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0435 \u043E\u0431 \u043E\
+      \u0448\u0438\u0431\u043A\u0435\n            print(f\"\u041E\u0448\u0438\u0431\
+      \u043A\u0430 \u043F\u0440\u0438 \u043E\u0442\u043A\u0440\u044B\u0442\u0438\u0438\
+      \ \u043F\u043E\u0440\u0442\u0430 {portName}: {e}\")\n            self.port =\
+      \ None\n\n\n    def set_mode(self, mode_setting):\n        command = \"mode\
+      \ \" + str(mode_setting)  \n        try:\n            self.port.write(command.encode('ascii'))\n\
+      \            print(f\"\u041E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\
+      \u043E: {command}\")\n            time.sleep(0.01)\n        except serial.SerialException\
+      \ as e:\n            print(f\"\u041E\u0448\u0438\u0431\u043A\u0430 \u043F\u0440\
+      \u0438 \u043E\u0442\u043F\u0440\u0430\u0432\u043A\u0435 \u0434\u0430\u043D\u043D\
+      \u044B\u0445: {e}\")\n\n\n    def handle_msg(self, msg):\n        \"\"\"\u041E\
+      \u0431\u0440\u0430\u0431\u043E\u0442\u043A\u0430 \u0432\u0445\u043E\u0434\u043D\
+      \u044B\u0445 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0439.\"\"\"\n\
+      \        # \u041F\u0440\u0435\u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\
+      \u043D\u0438\u0435 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u044F \u0432\
+      \ \u0441\u043F\u0438\u0441\u043E\u043A \u0447\u0438\u0441\u0435\u043B \u0441\
+      \ \u043F\u043B\u0430\u0432\u0430\u044E\u0449\u0435\u0439 \u0437\u0430\u043F\u044F\
+      \u0442\u043E\u0439\n        numbers = pmt.to_python(msg)        # \u041F\u0440\
+      \u0435\u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435 \u0432\
+      \ \u0441\u0442\u0440\u043E\u043A\u0443\n        numbers = [float(x) for x in\
+      \ numbers.split()]\n        print(\"AAAAAAAAAAAAAAAAAAAAAA\")\n        # print(numbers[30])\n\
+      \n        # if not isinstance(numbers, list):\n        #     print(\"\u041E\u0448\
       \u0438\u0431\u043A\u0430: \u041E\u0436\u0438\u0434\u0430\u043B\u0441\u044F \u0441\
       \u043F\u0438\u0441\u043E\u043A \u0447\u0438\u0441\u0435\u043B.\")\n        #\
       \     return\n\n        if len(numbers) > MAX_DAC_NUM:\n            print(f\"\
@@ -234,7 +261,7 @@ blocks:
       \u0442\u044C\u0441\u044F \u043E\u0442\u043A\u0440\u044B\u0442\u044C \u0435\u0433\
       \u043E\n            self.open_port()\n            self.set_mode(self.mode)\n\
       \n        n = 0\n        chunk_size = USB_PACKET_SIZE\n        output_len =\
-      \ len(output_items[0])\n        data = bytearray(chunk_size)  # \u0421\u043E\
+      \ len(output_items[0])\n        # data = bytearray(chunk_size)  # \u0421\u043E\
       \u0437\u0434\u0430\u043D\u0438\u0435 \u043C\u0430\u0441\u0441\u0438\u0432\u0430\
       \ \u0431\u0430\u0439\u0442\u043E\u0432 \u0434\u043B\u044F \u0447\u0442\u0435\
       \u043D\u0438\u044F \u0434\u0430\u043D\u043D\u044B\u0445\n\n            \n  \
@@ -244,37 +271,44 @@ blocks:
       \u043D\u043D\u044B\u0435 \u0438\u0437 \u043F\u0440\u0435\u0434\u044B\u0434\u0443\
       \u0449\u0435\u0439 \u0438\u0442\u0435\u0440\u0430\u0446\u0438\u0438 \u0441 \u043D\
       \u043E\u0432\u044B\u043C\u0438\n            if self.remaining_data:\n      \
-      \          data = self.remaining_data\n                chunk_size = len(data)\n\
-      \                self.remaining_data = bytearray()  # \u041E\u0447\u0438\u0449\
-      \u0430\u0435\u043C \u0431\u0443\u0444\u0435\u0440\n            else:\n     \
-      \           self.port.readinto(data)  # \u0421\u0447\u0438\u0442\u044B\u0432\
-      \u0430\u043D\u0438\u0435 \u0434\u0430\u043D\u043D\u044B\u0445 \u043D\u0435\u043F\
-      \u043E\u0441\u0440\u0435\u0434\u0441\u0442\u0432\u0435\u043D\u043D\u043E \u0432\
+      \          chunk_size = len(self.remaining_data)\n                # print(chunk_size)\n\
+      \                data = bytearray(chunk_size)  # \u0421\u043E\u0437\u0434\u0430\
+      \u043D\u0438\u0435 \u043C\u0430\u0441\u0441\u0438\u0432\u0430 \u0431\u0430\u0439\
+      \u0442\u043E\u0432 \u0434\u043B\u044F \u0447\u0442\u0435\u043D\u0438\u044F \u0434\
+      \u0430\u043D\u043D\u044B\u0445\n                data = self.remaining_data\n\
+      \                # print(data)\n                self.remaining_data = bytearray()\
+      \  # \u041E\u0447\u0438\u0449\u0430\u0435\u043C \u0431\u0443\u0444\u0435\u0440\
+      \n            else:\n                data = bytearray(chunk_size)  # \u0421\u043E\
+      \u0437\u0434\u0430\u043D\u0438\u0435 \u043C\u0430\u0441\u0441\u0438\u0432\u0430\
+      \ \u0431\u0430\u0439\u0442\u043E\u0432 \u0434\u043B\u044F \u0447\u0442\u0435\
+      \u043D\u0438\u044F \u0434\u0430\u043D\u043D\u044B\u0445\n                self.port.readinto(data)\
+      \  # \u0421\u0447\u0438\u0442\u044B\u0432\u0430\u043D\u0438\u0435 \u0434\u0430\
+      \u043D\u043D\u044B\u0445 \u043D\u0435\u043F\u043E\u0441\u0440\u0435\u0434\u0441\
+      \u0442\u0432\u0435\u043D\u043D\u043E \u0432 \u043C\u0430\u0441\u0441\u0438\u0432\
+      \ \u0431\u0430\u0439\u0442\u043E\u0432\n\n            if self.mode < 2:  # mode\
+      \ can be 0 or 1, \u043E\u0431\u0430 \u0432\u043A\u043B\u044E\u0447\u0430\u044E\
+      \u0442 \u0442\u043E\u043B\u044C\u043A\u043E 1 \u043A\u0430\u043D\u0430\u043B\
+      \ \u0410\u0426\u041F\n                output_items[0][n:n + chunk_size] = data[:chunk_size]\n\
+      \                n += chunk_size\n            else:\n                # TEST\
+      \ 8 bit\n                output_items[0][n:n + chunk_size // 2] = data[0::2]\n\
+      \                output_items[1][n:n + chunk_size // 2] = data[1::2]\n     \
+      \           n += chunk_size // 2\n\n        # \u041E\u0431\u0440\u0430\u0431\
+      \u043E\u0442\u043A\u0430 \u043E\u0441\u0442\u0430\u0432\u0448\u0435\u0433\u043E\
+      \u0441\u044F \u043C\u0435\u0441\u0442\u0430 \u0432 output_items\n        if\
+      \ n < output_len:\n            self.port.readinto(data)  # \u0421\u0447\u0438\
+      \u0442\u044B\u0432\u0430\u0435\u043C \u0434\u0430\u043D\u043D\u044B\u0435 \u0432\
       \ \u043C\u0430\u0441\u0441\u0438\u0432 \u0431\u0430\u0439\u0442\u043E\u0432\n\
-      \n            if self.mode < 2:  # mode can be 0 or 1, \u043E\u0431\u0430 \u0432\
-      \u043A\u043B\u044E\u0447\u0430\u044E\u0442 \u0442\u043E\u043B\u044C\u043A\u043E\
-      \ 1 \u043A\u0430\u043D\u0430\u043B \u0410\u0426\u041F\n                output_items[0][n:n\
-      \ + chunk_size] = data[:chunk_size]\n                n += chunk_size\n     \
-      \       else:\n                # TEST 8 bit\n                output_items[0][n:n\
-      \ + chunk_size // 2] = data[0::2]\n                output_items[1][n:n + chunk_size\
-      \ // 2] = data[1::2]\n                n += chunk_size // 2\n               \
-      \     # if self.enable == 1:\n                    #     print(self.enable)\n\
-      \        # \u041E\u0431\u0440\u0430\u0431\u043E\u0442\u043A\u0430 \u043E\u0441\
-      \u0442\u0430\u0432\u0448\u0435\u0433\u043E\u0441\u044F \u043C\u0435\u0441\u0442\
-      \u0430 \u0432 output_items\n        if n < output_len:\n            self.port.readinto(data)\
-      \  # \u0421\u0447\u0438\u0442\u044B\u0432\u0430\u0435\u043C \u0434\u0430\u043D\
-      \u043D\u044B\u0435 \u0432 \u043C\u0430\u0441\u0441\u0438\u0432 \u0431\u0430\u0439\
-      \u0442\u043E\u0432\n            if self.mode < 2:  # mode can be 0 \u0438\u043B\
-      \u0438 1, \u043E\u0431\u0430 \u0432\u043A\u043B\u044E\u0447\u0430\u044E\u0442\
-      \ \u0442\u043E\u043B\u044C\u043A\u043E 1 \u043A\u0430\u043D\u0430\u043B \u0410\
-      \u0426\u041F\n                bytes_to_copy = min(chunk_size, output_len - n)\n\
-      \                output_items[0][n:n + bytes_to_copy] = data[:bytes_to_copy]\n\
-      \                n += bytes_to_copy\n                self.remaining_data = data[bytes_to_copy:]\
+      \            if self.mode < 2:  # mode can be 0 \u0438\u043B\u0438 1, \u043E\
+      \u0431\u0430 \u0432\u043A\u043B\u044E\u0447\u0430\u044E\u0442 \u0442\u043E\u043B\
+      \u044C\u043A\u043E 1 \u043A\u0430\u043D\u0430\u043B \u0410\u0426\u041F\n   \
+      \             bytes_to_copy = min(chunk_size, output_len - n)\n            \
+      \    output_items[0][n:n + bytes_to_copy] = data[:bytes_to_copy]\n         \
+      \       n += bytes_to_copy\n                self.remaining_data = data[bytes_to_copy:]\
       \  # \u0421\u043E\u0445\u0440\u0430\u043D\u044F\u0435\u043C \u043E\u0441\u0442\
       \u0430\u0432\u0448\u0438\u0435\u0441\u044F \u0434\u0430\u043D\u043D\u044B\u0435\
       \n            else:\n                i = 0\n                half_chunk_size\
       \ = chunk_size // 2\n                while n < output_len and i < chunk_size:\n\
-      \                    output_items[0][n] = data[i]\n                    output_items[1][n]\
+      \                    output_items[0][n] = data[i] \n                    output_items[1][n]\
       \ = data[i + 1]\n                    n += 1\n                    i += 2\n  \
       \              self.remaining_data = data[i:]  # \u0421\u043E\u0445\u0440\u0430\
       \u043D\u044F\u0435\u043C \u043E\u0441\u0442\u0430\u0432\u0448\u0438\u0435\u0441\
@@ -293,21 +327,20 @@ blocks:
       \ \u043A\u0430\u043D\u0430\u043B\u0430 \u0426\u0410\u041F  \n mode = 3,    //\
       \ 2 \u043A\u0430\u043D\u0430\u043B\u0430 \u0410\u0426\u041F, 2 \u043A\u0430\u043D\
       \u0430\u043B\u0430 \u0426\u0410\u041F"
-    enable: generate_signal
     maxoutbuf: '0'
     minoutbuf: '0'
     mode: '0'
     portNumber: '7'
   states:
-    _io_cache: ('Analog Digital Interface', 'ADIBlock', [('portNumber', '7'), ('enable',
-      '0'), ('mode', '3')], [('set_const_signal', 'message', 1)], [('0', 'float',
-      1), ('1', 'float', 1)], '\n    Read data from serial port and forward it to
-      output. \n    portNumber is number, you can see in the name of your \n    serial
-      port in device manager, like COM16 or COM7 \n    ', ['enable', 'mode', 'portNumber'])
+    _io_cache: ('Analog Digital Interface', 'ADIBlock', [('portNumber', '7'), ('mode',
+      '3')], [('set_const_signal', 'message', 1)], [('0', 'float', 1), ('1', 'float',
+      1)], '\n    Read data from serial port and forward it to output. \n    portNumber
+      is number, you can see in the name of your \n    serial port in device manager,
+      like COM16 or COM7 \n    ', ['mode', 'portNumber'])
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [712, 152.0]
+    coordinate: [712, 216.0]
     rotation: 0
     state: enabled
 - name: epy_block_1_0
@@ -404,12 +437,12 @@ blocks:
     alias: ''
     comment: ''
     enable: generate_signal
-    end_p: '2'
-    freq: frequency
+    end_p: '3'
+    freq: DAC_frequency
     maxoutbuf: '0'
     minoutbuf: '0'
-    sample_rate: '1000000'
-    start_p: '1'
+    sample_rate: DAC_sample_rate
+    start_p: '0'
   states:
     _io_cache: "('Triangle Wave Generator', 'TriangleWaveGenerator', [('start_p',\
       \ '0.0'), ('end_p', '1.0'), ('sample_rate', '250000'), ('freq', '1000'), ('enable',\
@@ -525,7 +558,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1008, 144.0]
+    coordinate: [1016, 120.0]
     rotation: 0
     state: enabled
 

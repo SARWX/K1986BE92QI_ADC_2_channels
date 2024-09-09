@@ -8,6 +8,8 @@ baud_rate = 115200  # Скорость передачи данных
 # Создаем массивы данных для отправки
 packet0 = bytes([0] *  64)
 packet01 = bytes([1] * 64)
+packet01_256 = bytes([1] * 256)
+packet02_256 = bytes([0] * 256)
 packet02 = bytes([2] * 64)
 packet03 = bytes([3] * 64)
 packet04 = bytes([4] * 64)
@@ -21,6 +23,8 @@ packet2 = bytes(range(64, 128))
 packet3 = bytes(range(128, 192))
 packet4 = bytes(range(192, 256))
 packet = bytes([i for i in range(16) for _ in range(4)])
+packet256_1 = bytes(range(0, 256))
+packet256_2 = bytes(range(256, 0))
 
 
 # Открываем COM порт
@@ -34,19 +38,23 @@ with serial.Serial(com_port, baud_rate, timeout=1) as ser:
         # ser.write(packet3)
         # ser.write(packet4)
 
-        ser.write(packet0)
-        ser.write(packet01)
-        ser.write(packet02)
-        ser.write(packet03)
-        ser.write(packet04)
-        ser.write(packet05)
-        ser.write(packet06)
-        ser.write(packet07)
-        ser.write(packet08)
-        ser.write(packet09)
+        # ser.write(packet0)
+        # ser.write(packet01)
+        # ser.write(packet02)
+        # ser.write(packet03)
+        # ser.write(packet04)
+        # ser.write(packet05)
+        # ser.write(packet06)
+        # ser.write(packet07)
+        # ser.write(packet08)
+        # ser.write(packet09)
 
 
         # ser.write(packet)
         # print("Данные успешно отправлены.")
     # except serial.SerialException as e:
         # print(f"Ошибка при работе с COM портом: {e}")
+        ser.write(packet01_256)
+        time.sleep(0.001)
+        ser.write(packet02_256)
+        time.sleep(0.001)

@@ -12,6 +12,7 @@
 from PyQt5 import Qt
 from gnuradio import qtgui
 from gnuradio import blocks
+from gnuradio import eng_notation
 from gnuradio import gr
 from gnuradio.filter import firdes
 from gnuradio.fft import window
@@ -20,7 +21,6 @@ import signal
 from PyQt5 import Qt
 from argparse import ArgumentParser
 from gnuradio.eng_arg import eng_float, intx
-from gnuradio import eng_notation
 from gnuradio.qtgui import Range, RangeWidget
 from PyQt5 import QtCore
 import PlotFromSerial_epy_block_0 as epy_block_0  # embedded python block
@@ -64,9 +64,11 @@ class PlotFromSerial(gr.top_block, Qt.QWidget):
         ##################################################
         # Variables
         ##################################################
+        self.frequency = frequency = 0
+        self.DAC_sample_rate = DAC_sample_rate = 1000000
         self.samp_rate = samp_rate = 2000000
         self.generate_signal = generate_signal = 0
-        self.frequency = frequency = 1000
+        self.DAC_frequency = DAC_frequency = ((int)(DAC_sample_rate /(500 -  frequency)))
 
         ##################################################
         # Blocks
@@ -78,9 +80,17 @@ class PlotFromSerial(gr.top_block, Qt.QWidget):
         _generate_signal_push_button.pressed.connect(lambda: self.set_generate_signal(self._generate_signal_choices['Pressed']))
         _generate_signal_push_button.released.connect(lambda: self.set_generate_signal(self._generate_signal_choices['Released']))
         self.top_layout.addWidget(_generate_signal_push_button)
-        self._frequency_range = Range(1000, 10000, 100, 1000, 200)
-        self._frequency_win = RangeWidget(self._frequency_range, self.set_frequency, "'frequency'", "counter_slider", int, QtCore.Qt.Horizontal)
-        self.top_layout.addWidget(self._frequency_win)
+        self._DAC_frequency_tool_bar = Qt.QToolBar(self)
+
+        if None:
+            self._DAC_frequency_formatter = None
+        else:
+            self._DAC_frequency_formatter = lambda x: str(x)
+
+        self._DAC_frequency_tool_bar.addWidget(Qt.QLabel("DAC frequency"))
+        self._DAC_frequency_label = Qt.QLabel(str(self._DAC_frequency_formatter(self.DAC_frequency)))
+        self._DAC_frequency_tool_bar.addWidget(self._DAC_frequency_label)
+        self.top_layout.addWidget(self._DAC_frequency_tool_bar)
         self.qtgui_time_sink_x_0_0_0 = qtgui.time_sink_f(
             5000, #size
             500000, #samp_rate
@@ -133,8 +143,11 @@ class PlotFromSerial(gr.top_block, Qt.QWidget):
             self.top_grid_layout.setRowStretch(r, 1)
         for c in range(0, 1):
             self.top_grid_layout.setColumnStretch(c, 1)
-        self.epy_block_1_0 = epy_block_1_0.TriangleWaveGenerator(start_p=1, end_p=2, sample_rate=1000000, freq=frequency, enable=generate_signal)
-        self.epy_block_0 = epy_block_0.ADIBlock(portNumber=7, enable=generate_signal, mode=0)
+        self._frequency_range = Range(0, (500 - 2), 1, 0, 200)
+        self._frequency_win = RangeWidget(self._frequency_range, self.set_frequency, "'frequency'", "counter_slider", int, QtCore.Qt.Horizontal)
+        self.top_layout.addWidget(self._frequency_win)
+        self.epy_block_1_0 = epy_block_1_0.TriangleWaveGenerator(start_p=0, end_p=3, sample_rate=DAC_sample_rate, freq=DAC_frequency, enable=generate_signal)
+        self.epy_block_0 = epy_block_0.ADIBlock(portNumber=7, mode=0)
         self.blocks_throttle2_0 = blocks.throttle( gr.sizeof_float*1, samp_rate, True, 0 if "auto" == "auto" else max( int(float(0.1) * samp_rate) if "auto" == "time" else int(0.1), 1) )
 
 
@@ -155,6 +168,21 @@ class PlotFromSerial(gr.top_block, Qt.QWidget):
 
         event.accept()
 
+    def get_frequency(self):
+        return self.frequency
+
+    def set_frequency(self, frequency):
+        self.frequency = frequency
+        self.set_DAC_frequency(((int)(self.DAC_sample_rate /(500 -  self.frequency))))
+
+    def get_DAC_sample_rate(self):
+        return self.DAC_sample_rate
+
+    def set_DAC_sample_rate(self, DAC_sample_rate):
+        self.DAC_sample_rate = DAC_sample_rate
+        self.set_DAC_frequency(((int)(self.DAC_sample_rate /(500 -  self.frequency))))
+        self.epy_block_1_0.sample_rate = self.DAC_sample_rate
+
     def get_samp_rate(self):
         return self.samp_rate
 
@@ -167,15 +195,15 @@ class PlotFromSerial(gr.top_block, Qt.QWidget):
 
     def set_generate_signal(self, generate_signal):
         self.generate_signal = generate_signal
-        self.epy_block_0.enable = self.generate_signal
         self.epy_block_1_0.enable = self.generate_signal
 
-    def get_frequency(self):
-        return self.frequency
+    def get_DAC_frequency(self):
+        return self.DAC_frequency
 
-    def set_frequency(self, frequency):
-        self.frequency = frequency
-        self.epy_block_1_0.freq = self.frequency
+    def set_DAC_frequency(self, DAC_frequency):
+        self.DAC_frequency = DAC_frequency
+        Qt.QMetaObject.invokeMethod(self._DAC_frequency_label, "setText", Qt.Q_ARG("QString", str(self._DAC_frequency_formatter(self.DAC_frequency))))
+        self.epy_block_1_0.freq = self.DAC_frequency
 
 
 

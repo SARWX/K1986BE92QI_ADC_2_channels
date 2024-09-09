@@ -29,7 +29,7 @@ class ADIBlock(gr.sync_block):  # other base classes are basic_block, decim_bloc
 
     adc_num = 1
     
-    def __init__(self, portNumber=7, enable = 0, mode = 3): 
+    def __init__(self, portNumber=7, mode = 3): 
         """arguments to this function show up as parameters in GRC"""
         self.portNumber = portNumber  # Сохраняем номер порта
         # portName = 'COM' + str(portNumber)                  # Concatenate string and number
@@ -51,7 +51,6 @@ class ADIBlock(gr.sync_block):  # other base classes are basic_block, decim_bloc
         self.port = None
         self.port_name = None
         self.baudrate = 2000000  # Здесь захардкожен baudrate
-        self.enable = enable
         self.mode = mode
         self.remaining_data = bytearray()  # Буфер для оставшихся данных
         
@@ -99,7 +98,7 @@ class ADIBlock(gr.sync_block):  # other base classes are basic_block, decim_bloc
         numbers = pmt.to_python(msg)        # Преобразование в строку
         numbers = [float(x) for x in numbers.split()]
         print("AAAAAAAAAAAAAAAAAAAAAA")
-        print(numbers[30])
+        # print(numbers[30])
 
         # if not isinstance(numbers, list):
         #     print("Ошибка: Ожидался список чисел.")
@@ -144,7 +143,7 @@ class ADIBlock(gr.sync_block):  # other base classes are basic_block, decim_bloc
         n = 0
         chunk_size = USB_PACKET_SIZE
         output_len = len(output_items[0])
-        data = bytearray(chunk_size)  # Создание массива байтов для чтения данных
+        # data = bytearray(chunk_size)  # Создание массива байтов для чтения данных
 
             
         while n < (output_len - chunk_size):
@@ -152,10 +151,14 @@ class ADIBlock(gr.sync_block):  # other base classes are basic_block, decim_bloc
         
             # Объединяем остаточные данные из предыдущей итерации с новыми
             if self.remaining_data:
+                chunk_size = len(self.remaining_data)
+                # print(chunk_size)
+                data = bytearray(chunk_size)  # Создание массива байтов для чтения данных
                 data = self.remaining_data
-                chunk_size = len(data)
+                # print(data)
                 self.remaining_data = bytearray()  # Очищаем буфер
             else:
+                data = bytearray(chunk_size)  # Создание массива байтов для чтения данных
                 self.port.readinto(data)  # Считывание данных непосредственно в массив байтов
 
             if self.mode < 2:  # mode can be 0 or 1, оба включают только 1 канал АЦП
@@ -166,8 +169,7 @@ class ADIBlock(gr.sync_block):  # other base classes are basic_block, decim_bloc
                 output_items[0][n:n + chunk_size // 2] = data[0::2]
                 output_items[1][n:n + chunk_size // 2] = data[1::2]
                 n += chunk_size // 2
-                    # if self.enable == 1:
-                    #     print(self.enable)
+
         # Обработка оставшегося места в output_items
         if n < output_len:
             self.port.readinto(data)  # Считываем данные в массив байтов
@@ -180,7 +182,7 @@ class ADIBlock(gr.sync_block):  # other base classes are basic_block, decim_bloc
                 i = 0
                 half_chunk_size = chunk_size // 2
                 while n < output_len and i < chunk_size:
-                    output_items[0][n] = data[i]
+                    output_items[0][n] = data[i] 
                     output_items[1][n] = data[i + 1]
                     n += 1
                     i += 2

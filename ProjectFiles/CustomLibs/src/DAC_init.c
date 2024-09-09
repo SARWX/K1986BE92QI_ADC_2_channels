@@ -96,7 +96,7 @@ void Setup_TIM2()
 	Cnt_sTim2.TIMER_ARR_UpdateMode = TIMER_ARR_Update_Immediately;		// Изменение ARR таймера по переполнению
 	Cnt_sTim2.TIMER_IniCounter = 0;										// Инициализационное значение таймера
 	Cnt_sTim2.TIMER_Prescaler = PRESCALER_T2;							// делим на 12:  128 MHz / 4 / 12 
-	Cnt_sTim2.TIMER_Period = PERIOD_T2 - 2;								// Значение ARR делим на 10:  112 MHz / 4 / 12 / 10
+	Cnt_sTim2.TIMER_Period = PERIOD_T2 - 3;								// Значение ARR делим на 10:  112 MHz / 4 / 12 / 10
 																		// Итоговая частота ЦАПа будет 250 кГц
 	
 	TIMER_CntInit(MDR_TIMER2, &Cnt_sTim2);

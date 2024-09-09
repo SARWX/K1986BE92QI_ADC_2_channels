@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    DAC_init.c
+  * @file    DAC_init.h
   * @author  ICV
   * @version V1.0.0
   * @date    08/05/2024
@@ -15,10 +15,12 @@
  * @brief Type for dac_mode,
  * this type signalize current DMA state
  */
-enum dac_mode_state
+enum dac_mode_state 
 {
   main_state,
-  alt_state
+  alt_state,
+  not_init,
+  stopped,
 };
 
 void Setup_DAC();
