@@ -69,3 +69,12 @@ void convert_to_12_bit(uint8_t *arr, int size)
 		i++;
     }
 }
+
+void convert_8_to_16_bit(uint8_t *arr, int size)
+{
+	uint16_t *converted_arr = (uint16_t *)arr;
+	for(size; size >= 0; --size)
+	{
+		converted_arr[size] = (uint16_t)arr[size];
+	}
+}

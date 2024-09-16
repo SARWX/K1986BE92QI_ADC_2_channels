@@ -45,11 +45,17 @@ uint16_t tuner = NUM_OF_MES;					// Управление разверткой
 uint16_t coordinate_x = 0;
 uint16_t coordinate_y = 0;
 // переменные для dac_mode
-enum dac_mode_state dac_mode_state;				// Состояние DMA для ЦАПа в режиме dac_mode
+volatile enum dac_mode_state dac_mode_state;				// Состояние DMA для ЦАПа в режиме dac_mode
 // extern uint16_t DAC_table[];					// Массив для DAC, в main он нужен для dac_mode
 extern uint8_t main_array_for_DAC[];
 extern uint8_t alternate_array_for_DAC[];
 /* -------------------------------------------------------------------------------*/
+
+USB_Result test_usb(USB_EP_TypeDef EPx, uint8_t* Buffer, uint32_t Length)
+{
+    // Возвращаем успешный результат
+    return USB_SUCCESS;
+}
 
 void Test_diode(void)
 {
@@ -202,12 +208,50 @@ int main(void)
 	// Теперь все готово, можно включить TIM2
  	NVIC_EnableIRQ(DMA_IRQn);
 	TIMER_Cmd(MDR_TIMER2, ENABLE);
-	USB_CDC_SetReceiveBuffer(main_array_for_DAC, DAC_MODE_BUF_SIZE);		// Данные из USB помещаются в buffer
-	dac_mode_state = main_state;
+	// USB_CDC_SetReceiveBuffer(main_array_for_DAC, DAC_MODE_BUF_SIZE);		// Данные из USB помещаются в buffer
+	// USB_CDC_ReceiveStop();
+	// dac_mode_state = main_state;
 	// основной цикл для dac_mode
 	int test_transit = 0;
+
+	uint16_t *converted_arr;
+
+
 	while (1)
 	{
+		// 1 - заполнение main
+		while (dac_mode_state == main_state)
+			;	// Ждем перехода на alt_state
+		USB_Result result = USB_EP_doDataOut(USB_EP3, main_array_for_DAC, 64*2, test_usb);
+		// convert_8_to_16_bit(alternate_array_for_DAC, DAC_MODE_BUF_SIZE);
+		// USB_CDC_SetReceiveBuffer(main_array_for_DAC, DAC_MODE_BUF_SIZE);		// Данные из USB помещаются в buffer
+		// converted_arr = main_array_for_DAC;
+		// for(int i = DAC_MODE_BUF_SIZE; i >= 0; --i)
+		// {
+		// 	converted_arr[i] = main_array_for_DAC[i];
+		// }
+
+		// 1 - заполнение alt
+		while (dac_mode_state == alt_state)
+			;	// Ждем перехода на alt_state
+		result = USB_EP_doDataOut(USB_EP3, alternate_array_for_DAC, DAC_MODE_BUF_SIZE*2, test_usb);
+		// convert_8_to_16_bit(main_array_for_DAC, DAC_MODE_BUF_SIZE);
+		// converted_arr = alternate_array_for_DAC;
+		// for(int i = DAC_MODE_BUF_SIZE; i >= 0; --i)
+		// {
+		// 	converted_arr[i] = alternate_array_for_DAC[i];
+		// }
+
+
+
+
+
+
+
+
+		// USB_CDC_SetReceiveBuffer(alternate_array_for_DAC, DAC_MODE_BUF_SIZE);		// Данные из USB помещаются в buffer
+
+
 		// MDR_DAC->DAC2_DATA = 0;
 		// // 1 стадия - заполнение буфера, с использованием основной структуры DMA, параллельная передача буфера альтернативной по DAC
 		// USB_CDC_SetReceiveBuffer(main_array_for_DAC, 256);		// Данные из USB помещаются в buffer

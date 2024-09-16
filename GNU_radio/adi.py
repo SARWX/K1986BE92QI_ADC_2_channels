@@ -8,10 +8,16 @@ be the parameters. All of them are required to have default values!
 
 import serial
 import serial.tools.list_ports
+import time
 
 import numpy as np
 from gnuradio import gr
 import pmt
+
+MAX_DAC_NUM = 500   # Максимальное количество чисел, которое может быть записано в const_signal
+MAX_DAC_VAL = 10.0  # Максимальное значение на выходе ЦАП
+CHUNK_SIZE = 10     # Максимальное количество чисел в одной команде
+USB_PACKET_SIZE = 256 # байт
 
 
 class ADIBlock(gr.sync_block):  # other base classes are basic_block, decim_block, interp_block
@@ -21,13 +27,8 @@ class ADIBlock(gr.sync_block):  # other base classes are basic_block, decim_bloc
     serial port in device manager, like COM16 or COM7 
     """
 
-    MAX_DAC_NUM = 500   # Максимальное количество чисел, которое может быть записано в const_signal
-    MAX_DAC_VAL = 10.0  # Максимальное значение на выходе ЦАП
-    CHUNK_SIZE = 10     # Максимальное количество чисел в одной команде
-
-    adc_num = 1
     
-    def __init__(self, portNumber=7): 
+    def __init__(self, portNumber=7, mode = 3): 
         """arguments to this function show up as parameters in GRC"""
         self.portNumber = portNumber  # Сохраняем номер порта
         # portName = 'COM' + str(portNumber)                  # Concatenate string and number
@@ -35,8 +36,7 @@ class ADIBlock(gr.sync_block):  # other base classes are basic_block, decim_bloc
         gr.sync_block.__init__(
             self,
             name = 'Analog Digital Interface',   
-            # in_sig = [np.float32],                          # Входы
-            in_sig = [],                          # Входы
+            in_sig = [np.float32, np.float32],                # Входы
             out_sig = [np.float32, np.float32]  # Выходы
         )
 
@@ -49,6 +49,8 @@ class ADIBlock(gr.sync_block):  # other base classes are basic_block, decim_bloc
         self.port = None
         self.port_name = None
         self.baudrate = 2000000  # Здесь захардкожен baudrate
+        self.mode = mode
+        self.remaining_data = bytearray()  # Буфер для оставшихся данных
         
     def open_port(self):
         """Открывает COM порт, если он существует и не занят."""
@@ -78,15 +80,27 @@ class ADIBlock(gr.sync_block):  # other base classes are basic_block, decim_bloc
             self.port = None
 
 
+    def set_mode(self, mode_setting):
+        command = "mode " + str(mode_setting)  
+        try:
+            self.port.write(command.encode('ascii'))
+            print(f"Отправлено: {command}")
+            time.sleep(0.01)
+        except serial.SerialException as e:
+            print(f"Ошибка при отправке данных: {e}")
+
 
     def handle_msg(self, msg):
         """Обработка входных сообщений."""
         # Преобразование сообщения в список чисел с плавающей запятой
-        numbers = pmt.to_python(msg)
+        numbers = pmt.to_python(msg)        # Преобразование в строку
+        numbers = [float(x) for x in numbers.split()]
+        print("AAAAAAAAAAAAAAAAAAAAAA")
+        # print(numbers[30])
 
-        if not isinstance(numbers, list):
-            print("Ошибка: Ожидался список чисел.")
-            return
+        # if not isinstance(numbers, list):
+        #     print("Ошибка: Ожидался список чисел.")
+        #     return
 
         if len(numbers) > MAX_DAC_NUM:
             print(f"Ошибка: Слишком много чисел. Максимум {MAX_DAC_NUM}.")
@@ -109,8 +123,9 @@ class ADIBlock(gr.sync_block):  # other base classes are basic_block, decim_bloc
                     command += " !"
                 
                 try:
-                    self.port.write(command.encode())
+                    self.port.write(command.encode('ascii'))
                     print(f"Отправлено: {command}")
+                    time.sleep(0.01)
                 except serial.SerialException as e:
                     print(f"Ошибка при отправке данных: {e}")
 
@@ -121,33 +136,113 @@ class ADIBlock(gr.sync_block):  # other base classes are basic_block, decim_bloc
         if self.port is None:
             # Если порт не открыт, попытаться открыть его
             self.open_port()
+            self.set_mode(self.mode)
 
-        n = 0
-        while n < len(output_items[0]):
-            # WORKING FOR 16 bit
-            # data = bytearray(4)  # Creating an array of bytes to read 2 16-bit values (4 bytes)
-            # self.port.readinto(data)  # We read the data directly into the byte array
-            # output_items[1][n] = int.from_bytes(data[:2], 'little')  # Convert the first 2 bytes to a number
-            # output_items[2][n] = int.from_bytes(data[2:], 'little')  # Convert the remaining 2 bytes to a number
-            # # output_items[1][n] = int.from_bytes(self.port.read(1), "little")
-            # n += 1
+        # Случай обычной работы (Упор на АЦП)
+        if self.mode < 4:
+            n = 0
+            chunk_size = USB_PACKET_SIZE
+            output_len = len(output_items[0])
+            # data = bytearray(chunk_size)  # Создание массива байтов для чтения данных
 
-
-            # # TEST 12 bit
-            # data = bytearray(3)  # Creating an array of bytes to read 2 16-bit values (4 bytes)
-            # self.port.readinto(data)  # We read the data directly into the byte array
-            # output_items[1][n] = (data[0] + (data[1] & 0x0F)*16)  # Convert the first 2 bytes to a number
-            # output_items[2][n] = (((data[1] & 0xF0) / 8) + (data[2] * 8))  # Convert the first 2 bytes to a number
-            # n += 1
-
-            # TEST 8 bit
-            data = bytearray(4)  # Creating an array of bytes to read 2 16-bit values (4 bytes)
-            self.port.readinto(data)  # We read the data directly into the byte array
-            output_items[0][n] = data[0]
-            output_items[1][n] = data[1]
-            n += 1
-            output_items[0][n] = data[2]
-            output_items[1][n] = data[3]
-            n += 1
+                
+            while n < (output_len - chunk_size):
+                chunk_size = USB_PACKET_SIZE
             
-        return len(output_items[1])
+                # Объединяем остаточные данные из предыдущей итерации с новыми
+                if self.remaining_data:
+                    chunk_size = len(self.remaining_data)
+                    # print(chunk_size)
+                    data = bytearray(chunk_size)  # Создание массива байтов для чтения данных
+                    data = self.remaining_data
+                    # print(data)
+                    self.remaining_data = bytearray()  # Очищаем буфер
+                else:
+                    data = bytearray(chunk_size)  # Создание массива байтов для чтения данных
+                    self.port.readinto(data)  # Считывание данных непосредственно в массив байтов
+
+                if self.mode < 2:  # mode can be 0 or 1, оба включают только 1 канал АЦП
+                    output_items[0][n:n + chunk_size] = data[:chunk_size]
+                    n += chunk_size
+                else:
+                    # TEST 8 bit
+                    output_items[0][n:n + chunk_size // 2] = data[0::2]
+                    output_items[1][n:n + chunk_size // 2] = data[1::2]
+                    n += chunk_size // 2
+
+            # Обработка оставшегося места в output_items
+            if n < output_len:
+                self.port.readinto(data)  # Считываем данные в массив байтов
+                if self.mode < 2:  # mode can be 0 или 1, оба включают только 1 канал АЦП
+                    bytes_to_copy = min(chunk_size, output_len - n)
+                    output_items[0][n:n + bytes_to_copy] = data[:bytes_to_copy]
+                    n += bytes_to_copy
+                    self.remaining_data = data[bytes_to_copy:]  # Сохраняем оставшиеся данные
+                else:
+                    i = 0
+                    half_chunk_size = chunk_size // 2
+                    while n < output_len and i < chunk_size:
+                        output_items[0][n] = data[i] 
+                        output_items[1][n] = data[i + 1]
+                        n += 1
+                        i += 2
+                    self.remaining_data = data[i:]  # Сохраняем оставшиеся данные
+
+            return len(output_items[0])  # Возвращаем количество обработанных элементов
+
+
+
+
+                # Случай, когда mode >= 4 (dac_mode) - упор на ЦАП, АЦП отключен
+        # Случай, когда mode >= 4 (dac_mode) - упор на ЦАП, АЦП отключен
+        else:
+            data = bytearray(USB_PACKET_SIZE )  # Создание массива байтов для чтения данных
+            n = 0
+            remaining_len = 0
+            input_len = min(len(input_items[0]), len(input_items[1]))  # Используем минимальную длину для избежания выхода за границы
+
+            # Если есть remaining_data, объединяем его с текущими данными
+            if self.remaining_data:
+                remaining_len = len(self.remaining_data)
+                # Увеличиваем размер буфера, добавляя длину remaining_data
+                data = self.remaining_data + data[:USB_PACKET_SIZE  - remaining_len]  # Ограничиваем data по размеру
+                self.remaining_data = bytearray()  # Очищаем буфер после объединения
+
+            while n < input_len:
+                i = remaining_len  # Сбрасываем индекс для data
+
+                while i < (USB_PACKET_SIZE ) and n < input_len:  # Проверяем и n
+                    value1 = int((input_items[0][n] + 1) * 4000 / 2) & 0xFFFF  # Приведение к целому числу и ограничение до 16 бит
+                    data[i] = value1 & 0xFF  # Младший байт
+                    data[i + 1] = (value1 >> 8) & 0xFF  # Старший байт
+                    i += 2
+                    value2 = int((input_items[1][n] + 1) * 4000 / 2) & 0xFFFF  # Приведение к целому числу и ограничение до 16 бит
+                    data[i] = value2 & 0xFF  # Младший байт
+                    data[i + 1] = (value2 >> 8) & 0xFF  # Старший байт
+                    i += 2
+                    n += 1
+
+                # Отправляем собранные данные в порт
+                self.port.write(data)  # Отправляем только заполненную часть
+                remaining_len = 0
+                data = bytearray(USB_PACKET_SIZE )
+
+            # Обработка оставшихся данных
+            if n < input_len:
+                remaining_data = bytearray()
+
+                while n < input_len and i < USB_PACKET_SIZE :
+                    value1 = int((input_items[0][n] + 1) * 4000 / 2) & 0xFFFF
+                    remaining_data.append(value1 & 0xFF)
+                    remaining_data.append((value1 >> 8) & 0xFF)
+                    i += 2
+                    value2 = int((input_items[1][n] + 1) * 4000 / 2) & 0xFFFF
+                    remaining_data.append(value2 & 0xFF)
+                    remaining_data.append((value2 >> 8) & 0xFF)
+                    i += 2
+                    n += 1
+
+                # Сохраняем остаточные данные для следующего вызова
+                self.remaining_data = remaining_data
+
+            return len(input_items[0])

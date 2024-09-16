@@ -39,7 +39,7 @@ extern uint8_t main_array_for_DAC[];
 extern uint8_t alternate_array_for_DAC[];
 
 
-enum dac_mode_state usb_dac_mode_state = not_init;				// Состояние USB для ЦАПа в режиме dac_mode
+volatile enum dac_mode_state usb_dac_mode_state = not_init;				// Состояние USB для ЦАПа в режиме dac_mode
 
 char *start;
 char *end;
@@ -88,7 +88,7 @@ void VCom_Configuration(void)
 {
 	#ifdef USB_CDC_LINE_CODING_SUPPORTED
 		//LineCoding.dwDTERate = 9600;
-		LineCoding.dwDTERate = 16000000;
+		LineCoding.dwDTERate = 10000000;
 		LineCoding.bCharFormat = 0;
 		LineCoding.bParityType = 0;
 		LineCoding.bDataBits = 8;
@@ -111,35 +111,68 @@ USB_Result USB_CDC_RecieveData(uint8_t *buffer, uint32_t Length)
 	}
 	else
 	{
-		static enum dac_mode_state prev_dac_mode_state = not_init;			// Предыдущее состояние DMA для ЦАПа в режиме dac_mode
-		if (prev_dac_mode_state == dac_mode_state)	// Не успел еще отработать ЦАП, а USB уже подготовил данные
-		{
-			USB_CDC_ReceiveStop();		// пока остановим USB
-			if (dac_mode_state == alt_state)
-			{
-				USB_CDC_SetReceiveBuffer(alternate_array_for_DAC, DAC_MODE_BUF_SIZE);	// Тут логика инверсная
-			}
-			else
-			{
-				USB_CDC_SetReceiveBuffer(main_array_for_DAC, DAC_MODE_BUF_SIZE);	// Тут логика инверсная
-			}
-			usb_dac_mode_state = stopped;	// установим флаг того, что USB остановлен
-		}
-		else		// Все хорошо, можно дальше работать
-		{
-			if (dac_mode_state == alt_state)
-			{
-				USB_CDC_SetReceiveBuffer(main_array_for_DAC, DAC_MODE_BUF_SIZE);	// Данные из USB помещаются в main_array_for_DAC,
-				usb_dac_mode_state = main_state;
-			}
-			else
-			{
-				USB_CDC_SetReceiveBuffer(alternate_array_for_DAC, DAC_MODE_BUF_SIZE);	// Данные из USB помещаются в alternate_array_for_DAC
-				usb_dac_mode_state = alt_state;
-			}
+		
+		// Previous idea
+		// static enum dac_mode_state prev_dac_mode_state = not_init;			// Предыдущее состояние DMA для ЦАПа в режиме dac_mode
+		// usb_dac_mode_state = (usb_dac_mode_state == stopped ? dac_mode : usb_dac_mode_state);		// Если было остановлено, то принять текущее состояние 
+		// usb_dac_mode_state = (usb_dac_mode_state == alt_state ? main_state : alt_state);			// Следующее состояние
+		// if (usb_dac_mode_state == alt_state)
+		// {
+		// 	USB_CDC_SetReceiveBuffer(alternate_array_for_DAC,  DAC_MODE_BUF_SIZE);	// Данные из USB помещаются в main_array_for_DAC,
+		// }
+		// else
+		// {
+		// 	USB_CDC_SetReceiveBuffer(main_array_for_DAC,  DAC_MODE_BUF_SIZE);	// Данные из USB помещаются в alternate_array_for_DAC
+		// }
+		// if (dac_mode == usb_dac_mode_state)		// Это запрещено, нельзя перезаписывать активную структуру
+		// {
+		// 	USB_CDC_ReceiveStop();		// пока остановим USB
+		// 	usb_dac_mode_state = stopped;	// установим флаг того, что USB остановлен
+		// }
 
-			prev_dac_mode_state = dac_mode_state;		// Сохраним предыдущее состояние
-		}
+
+
+		// if (prev_dac_mode_state == dac_mode_state)	// Не успел еще отработать ЦАП, а USB уже подготовил данные
+		// {
+		// 	if (dac_mode_state == alt_state)
+		// 	{
+		// 		USB_CDC_SetReceiveBuffer(alternate_array_for_DAC,  1);	// Тут логика инверсная
+		// 	}
+		// 	else
+		// 	{
+		// 		USB_CDC_SetReceiveBuffer(main_array_for_DAC,  1);	// Тут логика инверсная
+		// 	}
+		// 	usb_dac_mode_state = stopped;	// установим флаг того, что USB остановлен
+		// }
+		// else		// Все хорошо, можно дальше работать
+		// {
+		// 	if (dac_mode_state == alt_state)
+		// 	{
+		// 		USB_CDC_SetReceiveBuffer(main_array_for_DAC,  1);	// Данные из USB помещаются в main_array_for_DAC,
+		// 		// USB_CDC_ReceiveStart();	// восстановить получение по USB
+		// 		usb_dac_mode_state = main_state;
+		// 	}
+		// 	else
+		// 	{
+		// 		USB_CDC_SetReceiveBuffer(alternate_array_for_DAC,  1);	// Данные из USB помещаются в alternate_array_for_DAC
+		// 		// USB_CDC_ReceiveStart();	// восстановить получение по USB
+		// 		usb_dac_mode_state = alt_state;
+		// 	}
+
+			// prev_dac_mode_state = dac_mode_state;		// Сохраним предыдущее состояние
+		// }
+		// USB_CDC_SendData("s", 1 );	// signal stop
+
+		// USB_CDC_ReceiveStop();		// пока остановим USB
+		// if (dac_mode == alt_state)		// DAC использует Alt сейчас, а USB будет в следующий период
+		// {
+		// 	USB_CDC_SetReceiveBuffer(alternate_array_for_DAC,  DAC_MODE_BUF_SIZE);	// Поэтому, мы подготовим Alt для USB сейчас
+		// }
+		// else
+		// {
+		// 	USB_CDC_SetReceiveBuffer(main_array_for_DAC,  DAC_MODE_BUF_SIZE);	// В противном случае main
+		// }
+		// usb_dac_mode_state = stopped;	// установим флаг того, что USB остановлен
 	}
 }
 

@@ -24,8 +24,8 @@ extern uint16_t alternate_array_for_ADC[];
 extern enum dac_mode_state dac_mode_state;	
 extern enum dac_mode_state usb_dac_mode_state;	
 
-uint8_t main_array_for_DAC[DAC_MODE_BUF_SIZE];
-uint8_t alternate_array_for_DAC[DAC_MODE_BUF_SIZE];
+uint8_t main_array_for_DAC[DAC_MODE_BUF_SIZE * 2];			// (преобразуем в 16 битный массив)
+uint8_t alternate_array_for_DAC[DAC_MODE_BUF_SIZE * 2];		// (преобразуем в 16 битный массив)
 
 // Структуры для DMA
 DMA_ChannelInitTypeDef ADC1_DMA_structure;
@@ -168,21 +168,23 @@ void Setup_DMA()
 void reconfig_DMA_dac_mode(void)
 {
 	// Основная
+	TIM2_primary_DMA_structure.DMA_DestBaseAddr = 
+	(uint32_t)(&(MDR_DAC->DAC2_DATA)) ;	
 	TIM2_primary_DMA_structure.DMA_SourceBaseAddr =								// Адрес откуда будем брать измерения 
 	(uint32_t)(main_array_for_DAC);														// Начало массива DAC_table
 	TIM2_primary_DMA_structure.DMA_CycleSize = (DAC_MODE_BUF_SIZE);							// Сколько измерений (DMA передач) содержит 1 DMA цикл
-	TIM2_primary_DMA_structure.DMA_SourceIncSize = DMA_SourceIncByte;			// теперь DAC_table - 8 битный массив => инкремент = байт
+	TIM2_primary_DMA_structure.DMA_SourceIncSize = DMA_SourceIncHalfword;			// теперь DAC_table - 8 битный массив => инкремент = байт
 	TIM2_primary_DMA_structure.DMA_MemoryDataSize =								// Скажем DMA, Что мы работаем с 8 битными данными
-	DMA_MemoryDataSize_Byte;	
+	DMA_MemoryDataSize_HalfWord;	
 	// Альтернативная
+	TIM2_alternate_DMA_structure.DMA_DestBaseAddr = 
+	(uint32_t)(&(MDR_DAC->DAC2_DATA)) ;	
 	TIM2_alternate_DMA_structure.DMA_SourceBaseAddr =							// Адрес откуда будем брать измерения 
 	(uint32_t)(alternate_array_for_DAC);													// 65ая позиция массива DAC_table
-	// (uint32_t)(main_array_for_DAC);														// Начало массива DAC_table
-
 	TIM2_alternate_DMA_structure.DMA_CycleSize = (DAC_MODE_BUF_SIZE);							// Сколько измерений (DMA передач) содержит 1 DMA цикл
-	TIM2_alternate_DMA_structure.DMA_SourceIncSize = DMA_SourceIncByte;			// теперь DAC_table - 8 битный массив => инкремент = байт
+	TIM2_alternate_DMA_structure.DMA_SourceIncSize = DMA_SourceIncHalfword;			// теперь DAC_table - 8 битный массив => инкремент = байт
 	TIM2_alternate_DMA_structure.DMA_MemoryDataSize =							// Скажем DMA, Что мы работаем с 8 битными данными
-	DMA_MemoryDataSize_Byte;
+	DMA_MemoryDataSize_HalfWord;
 	// Реинициализируем DMA с новыми настройками
 	DMA_CtrlInit(DMA_Channel_TIM2, DMA_CTRL_DATA_PRIMARY, &TIM2_primary_DMA_structure);		// реинициализируем основную структуру
 	DMA_CtrlInit(DMA_Channel_TIM2, DMA_CTRL_DATA_ALTERNATE, &TIM2_alternate_DMA_structure);	// реинициализируем альтернативную структуру
@@ -210,19 +212,20 @@ void DMA_IRQHandler() {
 	// 	TIMER_Cmd(MDR_TIMER2, ENABLE);
 	// 	count_dma_interrupts = 0;
 	// }
-	/*else*/ if(DMA_GetFlagStatus(DMA_Channel_TIM2, DMA_FLAG_CHNL_ALT) == RESET) 				// Использует основную
+	/*else*/ if(DMA_GetFlagStatus(DMA_Channel_TIM2, DMA_FLAG_CHNL_ALT) == RESET) 				// 0 - первичная, 1 - альтернативная (Использует основную?)
 	{ 
 		DMA_CtrlInit(DMA_Channel_TIM2, DMA_CTRL_DATA_ALTERNATE, &TIM2_alternate_DMA_structure);	// реинициализируем альтернативную структуру
-		dac_mode_state = main_state;
+		dac_mode_state = main_state;		// Непосредственно сейчас DMA использует основную
 	}
 	else  																						// Перешел на основную
 	{
 		DMA_CtrlInit(DMA_Channel_TIM2, DMA_CTRL_DATA_PRIMARY, &TIM2_primary_DMA_structure);		// реинициализируем основную структуру
-		dac_mode_state = alt_state;
-		if (usb_dac_mode_state == stopped)
-		{
-			USB_CDC_ReceiveStart();	// восстановить получение по USB
-		}
+		dac_mode_state = alt_state;			// Непосредственно сейчас DMA использует альтернативную
+	}
+	if (usb_dac_mode_state == stopped)		// USB подготовил для нас данные?
+	{
+		// USB_CDC_SendData("c", 1 );	// signal continue
+		USB_CDC_ReceiveStart();	// восстановить получение по USB
 	}
 //		NVIC_ClearPendingIRQ (DMA_IRQn);
 }
