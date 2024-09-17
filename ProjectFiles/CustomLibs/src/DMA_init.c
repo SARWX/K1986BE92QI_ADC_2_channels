@@ -201,18 +201,8 @@ void reconfig_DMA_dac_mode(void)
   * @retval None
   */
 void DMA_IRQHandler() {	
-	// count_dma_interrupts++;
-	// if (count_dma_interrupts > 100)
-	// {
-	// 	TIMER_Cmd(MDR_TIMER2, DISABLE);
-	// 	DMA_GetCurrTransferCounter();
-	// 	MDR_TIMER2->CNT = 0;	// Синхронизировать таймер и DMA
-	// 	DMA_CtrlInit(DMA_Channel_TIM2, DMA_CTRL_DATA_ALTERNATE, &TIM2_alternate_DMA_structure);	// реинициализируем альтернативную структуру
-	// 	DMA_CtrlInit(DMA_Channel_TIM2, DMA_CTRL_DATA_PRIMARY, &TIM2_primary_DMA_structure);		// реинициализируем основную структуру
-	// 	TIMER_Cmd(MDR_TIMER2, ENABLE);
-	// 	count_dma_interrupts = 0;
-	// }
-	/*else*/ if(DMA_GetFlagStatus(DMA_Channel_TIM2, DMA_FLAG_CHNL_ALT) == RESET) 				// 0 - первичная, 1 - альтернативная (Использует основную?)
+	
+	if(DMA_GetFlagStatus(DMA_Channel_TIM2, DMA_FLAG_CHNL_ALT) == RESET) 				// 0 - первичная, 1 - альтернативная (Использует основную?)
 	{ 
 		DMA_CtrlInit(DMA_Channel_TIM2, DMA_CTRL_DATA_ALTERNATE, &TIM2_alternate_DMA_structure);	// реинициализируем альтернативную структуру
 		dac_mode_state = main_state;		// Непосредственно сейчас DMA использует основную

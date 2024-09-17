@@ -81,7 +81,10 @@ class ADIBlock(gr.sync_block):  # other base classes are basic_block, decim_bloc
 
 
     def set_mode(self, mode_setting):
-        command = "mode " + str(mode_setting)  
+        if mode_setting < 4:
+            command = "mode " + str(mode_setting)  
+        else:
+            command = "dac_mode"
         try:
             self.port.write(command.encode('ascii'))
             print(f"Отправлено: {command}")
@@ -143,7 +146,7 @@ class ADIBlock(gr.sync_block):  # other base classes are basic_block, decim_bloc
             n = 0
             chunk_size = USB_PACKET_SIZE
             output_len = len(output_items[0])
-            # data = bytearray(chunk_size)  # Создание массива байтов для чтения данных
+            data = bytearray(chunk_size)  # Создание массива байтов для чтения данных
 
                 
             while n < (output_len - chunk_size):
@@ -190,19 +193,60 @@ class ADIBlock(gr.sync_block):  # other base classes are basic_block, decim_bloc
 
             return len(output_items[0])  # Возвращаем количество обработанных элементов
 
+
+
+
+                # Случай, когда mode >= 4 (dac_mode) - упор на ЦАП, АЦП отключен
         # Случай, когда mode >= 4 (dac_mode) - упор на ЦАП, АЦП отключен
         else:
-            data = bytearray(USB_PACKET_SIZE)  # Создание массива байтов для чтения данных
-            i = 0
-            while i <  USB_PACKET_SIZE:
-                data[i] = (byte)((input_items[0][i] + 1) * 256 / 2)
-                i += 1
-                data[i] = (byte)((input_items[0][i] + 1) * 256 / 2)
-                i += 1
-            # Отправляем собранные данные в порт                
-            self.port.write(data)
-        
-        
-        return len(output_items[0])
-            # return len(output_items[0])  # Возвращаем количество обработанных элементов
-            
+            data = bytearray(USB_PACKET_SIZE )  # Создание массива байтов для чтения данных
+            n = 0
+            remaining_len = 0
+            input_len = min(len(input_items[0]), len(input_items[1]))  # Используем минимальную длину для избежания выхода за границы
+
+            # Если есть remaining_data, объединяем его с текущими данными
+            if self.remaining_data:
+                remaining_len = len(self.remaining_data)
+                # Увеличиваем размер буфера, добавляя длину remaining_data
+                data = self.remaining_data + data[:USB_PACKET_SIZE  - remaining_len]  # Ограничиваем data по размеру
+                self.remaining_data = bytearray()  # Очищаем буфер после объединения
+
+            while n < input_len:
+                i = remaining_len  # Сбрасываем индекс для data
+
+                while i < (USB_PACKET_SIZE ) and n < input_len:  # Проверяем и n
+                    value1 = int((input_items[0][n] + 1) * 4000 / 2) & 0xFFFF  # Приведение к целому числу и ограничение до 16 бит
+                    data[i] = value1 & 0xFF  # Младший байт
+                    data[i + 1] = (value1 >> 8) & 0xFF  # Старший байт
+                    i += 2
+                    value2 = int((input_items[1][n] + 1) * 4000 / 2) & 0xFFFF  # Приведение к целому числу и ограничение до 16 бит
+                    data[i] = value2 & 0xFF  # Младший байт
+                    data[i + 1] = (value2 >> 8) & 0xFF  # Старший байт
+                    i += 2
+                    n += 1
+
+                # Отправляем собранные данные в порт
+                self.port.write(data)  # Отправляем только заполненную часть
+                remaining_len = 0
+                data = bytearray(USB_PACKET_SIZE )
+
+            # Обработка оставшихся данных
+            if n < input_len:
+                remaining_data = bytearray()
+
+                while n < input_len and i < USB_PACKET_SIZE :
+                    value1 = int((input_items[0][n] + 1) * 4000 / 2) & 0xFFFF
+                    remaining_data.append(value1 & 0xFF)
+                    remaining_data.append((value1 >> 8) & 0xFF)
+                    i += 2
+                    value2 = int((input_items[1][n] + 1) * 4000 / 2) & 0xFFFF
+                    remaining_data.append(value2 & 0xFF)
+                    remaining_data.append((value2 >> 8) & 0xFF)
+                    i += 2
+                    n += 1
+
+                # Сохраняем остаточные данные для следующего вызова
+                self.remaining_data = remaining_data
+
+            return len(input_items[0])
+

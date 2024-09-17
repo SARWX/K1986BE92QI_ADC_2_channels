@@ -81,7 +81,10 @@ class ADIBlock(gr.sync_block):  # other base classes are basic_block, decim_bloc
 
 
     def set_mode(self, mode_setting):
-        command = "mode " + str(mode_setting)  
+        if mode_setting < 4:
+            command = "mode " + str(mode_setting)  
+        else:
+            command = "dac_mode"
         try:
             self.port.write(command.encode('ascii'))
             print(f"Отправлено: {command}")
@@ -246,3 +249,4 @@ class ADIBlock(gr.sync_block):  # other base classes are basic_block, decim_bloc
                 self.remaining_data = remaining_data
 
             return len(input_items[0])
+

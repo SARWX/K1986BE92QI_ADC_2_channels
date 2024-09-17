@@ -89,8 +89,8 @@ int execute_command(char *command)
   if (strstr(command, "dac_mode") == command) 
   {                    // проверить: команда начинается с "dac_mode"?
     // Выключить таймер (остановить ЦАП)
-    TIMER_Cmd(MDR_TIMER2, DISABLE);
-   	NVIC_DisableIRQ(DMA_IRQn);
+    // TIMER_Cmd(MDR_TIMER2, DISABLE);
+   	// NVIC_DisableIRQ(DMA_IRQn);
     return(1);
   }
 // ---------------------------------------------------------------------------------------------- //

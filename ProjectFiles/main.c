@@ -140,9 +140,9 @@ int main(void)
 
 ////////////////// TESTS ////////////////////
 // execute_command("set 2.0 0.0 !");
-// DAC_MODE test
-	strcpy (rec_buf, "dac_mode");
-	command_recived = 1;	
+											// DAC_MODE test
+												// strcpy (rec_buf, "dac_mode");
+												// command_recived = 1;	
 // DEMUX test
 	// strcpy (rec_buf, "set 0.0 1.0 !");
 	// command_recived = 1;	
@@ -196,83 +196,28 @@ int main(void)
 	}	
 
 	dac_mode:
-	MDR_DAC->DAC2_DATA = 0;
+	reconfig_TIM_dac_mode();
+	reconfig_DMA_dac_mode();
 	// Предустановка для работы в режиме dac_mode
 	for(int i = 0; i < DAC_MODE_BUF_SIZE; i++)
 	{
-		//	(((uint8_t *)DAC_table))[i] = i;		// НЕ i А 0, это для теста
 		main_array_for_DAC[i] = 100 * (i%2);
 		alternate_array_for_DAC[i] = 100 * (i%2);
 	}
-	reconfig_DMA_dac_mode();		// Задать настройки DMA для dac_mode
 	// Теперь все готово, можно включить TIM2
  	NVIC_EnableIRQ(DMA_IRQn);
 	TIMER_Cmd(MDR_TIMER2, ENABLE);
-	// USB_CDC_SetReceiveBuffer(main_array_for_DAC, DAC_MODE_BUF_SIZE);		// Данные из USB помещаются в buffer
-	// USB_CDC_ReceiveStop();
-	// dac_mode_state = main_state;
-	// основной цикл для dac_mode
-	int test_transit = 0;
-
-	uint16_t *converted_arr;
-
 
 	while (1)
 	{
 		// 1 - заполнение main
 		while (dac_mode_state == main_state)
 			;	// Ждем перехода на alt_state
-		USB_Result result = USB_EP_doDataOut(USB_EP3, main_array_for_DAC, 64*2, test_usb);
-		// convert_8_to_16_bit(alternate_array_for_DAC, DAC_MODE_BUF_SIZE);
-		// USB_CDC_SetReceiveBuffer(main_array_for_DAC, DAC_MODE_BUF_SIZE);		// Данные из USB помещаются в buffer
-		// converted_arr = main_array_for_DAC;
-		// for(int i = DAC_MODE_BUF_SIZE; i >= 0; --i)
-		// {
-		// 	converted_arr[i] = main_array_for_DAC[i];
-		// }
+		USB_Result result = USB_EP_doDataOut(USB_EP3, main_array_for_DAC, DAC_MODE_BUF_SIZE*2, test_usb);
 
 		// 1 - заполнение alt
 		while (dac_mode_state == alt_state)
 			;	// Ждем перехода на alt_state
 		result = USB_EP_doDataOut(USB_EP3, alternate_array_for_DAC, DAC_MODE_BUF_SIZE*2, test_usb);
-		// convert_8_to_16_bit(main_array_for_DAC, DAC_MODE_BUF_SIZE);
-		// converted_arr = alternate_array_for_DAC;
-		// for(int i = DAC_MODE_BUF_SIZE; i >= 0; --i)
-		// {
-		// 	converted_arr[i] = alternate_array_for_DAC[i];
-		// }
-
-
-
-
-
-
-
-
-		// USB_CDC_SetReceiveBuffer(alternate_array_for_DAC, DAC_MODE_BUF_SIZE);		// Данные из USB помещаются в buffer
-
-
-		// MDR_DAC->DAC2_DATA = 0;
-		// // 1 стадия - заполнение буфера, с использованием основной структуры DMA, параллельная передача буфера альтернативной по DAC
-		// USB_CDC_SetReceiveBuffer(main_array_for_DAC, 256);		// Данные из USB помещаются в buffer
-		// // USB_CDC_ReceiveStop();
-		// // USB_CDC_ReceiveStart();
-		// // USB_DeviceReset();
-
-		// while(dac_mode_state == alt_state);							// Ждем когда альтернативный массив будет прочитан	
-		// // test_transit++;
-		// // 2 стадия - заполнение буфера, с использованием альтернативной структуры DMA, параллельная передача буфера основной по DAC
-		// // USB_CDC_ReceiveStop();
-		// USB_CDC_SetReceiveBuffer(alternate_array_for_DAC, 256);	// Данные из USB помещаются в buffer
-		// // USB_CDC_ReceiveStart();
-		// // USB_DeviceReset();
-		// while(dac_mode_state == main_state);						// Ждем когда основной массив будет прочитан
-		
-			// while (DMA_GetFlagStatus(DMA_Channel_TIM2, DMA_FLAG_CHNL_ALT) != RESET) ;						// ждем, когда DMA перейдет на альтернативную структуру
-			// DMA_CtrlInit(DMA_Channel_TIM2, DMA_CTRL_DATA_ALTERNATE, &TIM2_alternate_DMA_structure);	// реинициализируем альтернативную структуру
-			// while (DMA_GetFlagStatus(DMA_Channel_TIM2, DMA_FLAG_CHNL_ALT) == RESET) ;						// ждем, когда DMA перейдет на альтернативную структуру
-			// DMA_CtrlInit(DMA_Channel_TIM2, DMA_CTRL_DATA_PRIMARY, &TIM2_primary_DMA_structure);		// реинициализируем основную структуру
- 
-		// test_transit++;
 	}
 }

@@ -212,6 +212,15 @@ void change_dac_chan_num(int num_dac_chan)
 		PORT_Init (MDR_PORTE, &PortInitStructure);
 	}
 }
+
+void reconfig_TIM_dac_mode()
+{
+	TIMER_SetCntPrescaler(MDR_TIMER2, PRESCALER_T2_DAC_MODE);
+	TIMER_Cmd(MDR_TIMER2, DISABLE);
+	NVIC_DisableIRQ(DMA_IRQn);
+	MDR_TIMER2->CNT = 0;	
+}
+
 /*********************** (C) COPYRIGHT 2024 ICV ****************************
 *
 * END OF FILE DAC_init.c */

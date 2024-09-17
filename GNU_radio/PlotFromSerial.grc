@@ -111,28 +111,7 @@ blocks:
     coordinate: [1896, 32.0]
     rotation: 0
     state: enabled
-- name: blocks_throttle2_0
-  id: blocks_throttle2
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    ignoretag: 'True'
-    limit: auto
-    maximum: '0.1'
-    maxoutbuf: '0'
-    minoutbuf: '0'
-    samples_per_second: samp_rate
-    type: float
-    vlen: '1'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [712, 72.0]
-    rotation: 0
-    state: true
-- name: epy_block_0
+- name: epy_block_0_0
   id: epy_block
   parameters:
     _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
@@ -155,22 +134,21 @@ blocks:
       \  # other base classes are basic_block, decim_block, interp_block\n    \"\"\
       \"\n    Read data from serial port and forward it to output. \n    portNumber\
       \ is number, you can see in the name of your \n    serial port in device manager,\
-      \ like COM16 or COM7 \n    \"\"\"\n\n    adc_num = 1\n    \n    def __init__(self,\
-      \ portNumber=7, mode = 3): \n        \"\"\"arguments to this function show up\
-      \ as parameters in GRC\"\"\"\n        self.portNumber = portNumber  # \u0421\
-      \u043E\u0445\u0440\u0430\u043D\u044F\u0435\u043C \u043D\u043E\u043C\u0435\u0440\
-      \ \u043F\u043E\u0440\u0442\u0430\n        # portName = 'COM' + str(portNumber)\
-      \                  # Concatenate string and number\n        \n        gr.sync_block.__init__(\n\
+      \ like COM16 or COM7 \n    \"\"\"\n\n    \n    def __init__(self, portNumber=7,\
+      \ mode = 3): \n        \"\"\"arguments to this function show up as parameters\
+      \ in GRC\"\"\"\n        self.portNumber = portNumber  # \u0421\u043E\u0445\u0440\
+      \u0430\u043D\u044F\u0435\u043C \u043D\u043E\u043C\u0435\u0440 \u043F\u043E\u0440\
+      \u0442\u0430\n        # portName = 'COM' + str(portNumber)                 \
+      \ # Concatenate string and number\n        \n        gr.sync_block.__init__(\n\
       \            self,\n            name = 'Analog Digital Interface',   \n    \
-      \        # in_sig = [np.float32],                          # \u0412\u0445\u043E\
-      \u0434\u044B\n            in_sig = [],                          # \u0412\u0445\
-      \u043E\u0434\u044B\n            out_sig = [np.float32, np.float32]  # \u0412\
-      \u044B\u0445\u043E\u0434\u044B\n        )\n\n        # \u0420\u0435\u0433\u0438\
-      \u0441\u0442\u0440\u0430\u0446\u0438\u044F \u0438\u043C\u0435\u043D\u043E\u0432\
-      \u0430\u043D\u043D\u044B\u0445 \u0432\u0445\u043E\u0434\u043D\u044B\u0445 \u0438\
-      \ \u0432\u044B\u0445\u043E\u0434\u043D\u044B\u0445 \u043F\u043E\u0440\u0442\u043E\
-      \u0432\n        self.message_port_register_in(pmt.intern('set_const_signal'))\n\
-      \        self.set_msg_handler(pmt.intern('set_const_signal'), self.handle_msg)\n\
+      \        in_sig = [np.float32, np.float32],                # \u0412\u0445\u043E\
+      \u0434\u044B\n            out_sig = [np.float32, np.float32]  # \u0412\u044B\
+      \u0445\u043E\u0434\u044B\n        )\n\n        # \u0420\u0435\u0433\u0438\u0441\
+      \u0442\u0440\u0430\u0446\u0438\u044F \u0438\u043C\u0435\u043D\u043E\u0432\u0430\
+      \u043D\u043D\u044B\u0445 \u0432\u0445\u043E\u0434\u043D\u044B\u0445 \u0438 \u0432\
+      \u044B\u0445\u043E\u0434\u043D\u044B\u0445 \u043F\u043E\u0440\u0442\u043E\u0432\
+      \n        self.message_port_register_in(pmt.intern('set_const_signal'))\n  \
+      \      self.set_msg_handler(pmt.intern('set_const_signal'), self.handle_msg)\n\
       \        # self.message_port_register_out(pmt.intern('msg_out'))\n\n       \
       \  # \u0418\u043D\u0438\u0446\u0438\u0430\u043B\u0438\u0437\u0430\u0446\u0438\
       \u044F \u043F\u0435\u0440\u0435\u043C\u0435\u043D\u043D\u044B\u0445 \u0434\u043B\
@@ -210,8 +188,9 @@ blocks:
       \u0448\u0438\u0431\u043A\u0435\n            print(f\"\u041E\u0448\u0438\u0431\
       \u043A\u0430 \u043F\u0440\u0438 \u043E\u0442\u043A\u0440\u044B\u0442\u0438\u0438\
       \ \u043F\u043E\u0440\u0442\u0430 {portName}: {e}\")\n            self.port =\
-      \ None\n\n\n    def set_mode(self, mode_setting):\n        command = \"mode\
-      \ \" + str(mode_setting)  \n        try:\n            self.port.write(command.encode('ascii'))\n\
+      \ None\n\n\n    def set_mode(self, mode_setting):\n        if mode_setting <\
+      \ 4:\n            command = \"mode \" + str(mode_setting)  \n        else:\n\
+      \            command = \"dac_mode\"\n        try:\n            self.port.write(command.encode('ascii'))\n\
       \            print(f\"\u041E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\
       \u043E: {command}\")\n            time.sleep(0.01)\n        except serial.SerialException\
       \ as e:\n            print(f\"\u041E\u0448\u0438\u0431\u043A\u0430 \u043F\u0440\
@@ -260,87 +239,164 @@ blocks:
       \ \u043E\u0442\u043A\u0440\u044B\u0442, \u043F\u043E\u043F\u044B\u0442\u0430\
       \u0442\u044C\u0441\u044F \u043E\u0442\u043A\u0440\u044B\u0442\u044C \u0435\u0433\
       \u043E\n            self.open_port()\n            self.set_mode(self.mode)\n\
-      \n        n = 0\n        chunk_size = USB_PACKET_SIZE\n        output_len =\
-      \ len(output_items[0])\n        # data = bytearray(chunk_size)  # \u0421\u043E\
-      \u0437\u0434\u0430\u043D\u0438\u0435 \u043C\u0430\u0441\u0441\u0438\u0432\u0430\
-      \ \u0431\u0430\u0439\u0442\u043E\u0432 \u0434\u043B\u044F \u0447\u0442\u0435\
-      \u043D\u0438\u044F \u0434\u0430\u043D\u043D\u044B\u0445\n\n            \n  \
-      \      while n < (output_len - chunk_size):\n            chunk_size = USB_PACKET_SIZE\n\
-      \        \n            # \u041E\u0431\u044A\u0435\u0434\u0438\u043D\u044F\u0435\
+      \n        # \u0421\u043B\u0443\u0447\u0430\u0439 \u043E\u0431\u044B\u0447\u043D\
+      \u043E\u0439 \u0440\u0430\u0431\u043E\u0442\u044B (\u0423\u043F\u043E\u0440\
+      \ \u043D\u0430 \u0410\u0426\u041F)\n        if self.mode < 4:\n            n\
+      \ = 0\n            chunk_size = USB_PACKET_SIZE\n            output_len = len(output_items[0])\n\
+      \            data = bytearray(chunk_size)  # \u0421\u043E\u0437\u0434\u0430\u043D\
+      \u0438\u0435 \u043C\u0430\u0441\u0441\u0438\u0432\u0430 \u0431\u0430\u0439\u0442\
+      \u043E\u0432 \u0434\u043B\u044F \u0447\u0442\u0435\u043D\u0438\u044F \u0434\u0430\
+      \u043D\u043D\u044B\u0445\n\n                \n            while n < (output_len\
+      \ - chunk_size):\n                chunk_size = USB_PACKET_SIZE\n           \
+      \ \n                # \u041E\u0431\u044A\u0435\u0434\u0438\u043D\u044F\u0435\
       \u043C \u043E\u0441\u0442\u0430\u0442\u043E\u0447\u043D\u044B\u0435 \u0434\u0430\
       \u043D\u043D\u044B\u0435 \u0438\u0437 \u043F\u0440\u0435\u0434\u044B\u0434\u0443\
       \u0449\u0435\u0439 \u0438\u0442\u0435\u0440\u0430\u0446\u0438\u0438 \u0441 \u043D\
-      \u043E\u0432\u044B\u043C\u0438\n            if self.remaining_data:\n      \
-      \          chunk_size = len(self.remaining_data)\n                # print(chunk_size)\n\
-      \                data = bytearray(chunk_size)  # \u0421\u043E\u0437\u0434\u0430\
-      \u043D\u0438\u0435 \u043C\u0430\u0441\u0441\u0438\u0432\u0430 \u0431\u0430\u0439\
-      \u0442\u043E\u0432 \u0434\u043B\u044F \u0447\u0442\u0435\u043D\u0438\u044F \u0434\
-      \u0430\u043D\u043D\u044B\u0445\n                data = self.remaining_data\n\
-      \                # print(data)\n                self.remaining_data = bytearray()\
-      \  # \u041E\u0447\u0438\u0449\u0430\u0435\u043C \u0431\u0443\u0444\u0435\u0440\
-      \n            else:\n                data = bytearray(chunk_size)  # \u0421\u043E\
-      \u0437\u0434\u0430\u043D\u0438\u0435 \u043C\u0430\u0441\u0441\u0438\u0432\u0430\
-      \ \u0431\u0430\u0439\u0442\u043E\u0432 \u0434\u043B\u044F \u0447\u0442\u0435\
-      \u043D\u0438\u044F \u0434\u0430\u043D\u043D\u044B\u0445\n                self.port.readinto(data)\
+      \u043E\u0432\u044B\u043C\u0438\n                if self.remaining_data:\n  \
+      \                  chunk_size = len(self.remaining_data)\n                 \
+      \   # print(chunk_size)\n                    data = bytearray(chunk_size)  #\
+      \ \u0421\u043E\u0437\u0434\u0430\u043D\u0438\u0435 \u043C\u0430\u0441\u0441\u0438\
+      \u0432\u0430 \u0431\u0430\u0439\u0442\u043E\u0432 \u0434\u043B\u044F \u0447\u0442\
+      \u0435\u043D\u0438\u044F \u0434\u0430\u043D\u043D\u044B\u0445\n            \
+      \        data = self.remaining_data\n                    # print(data)\n   \
+      \                 self.remaining_data = bytearray()  # \u041E\u0447\u0438\u0449\
+      \u0430\u0435\u043C \u0431\u0443\u0444\u0435\u0440\n                else:\n \
+      \                   data = bytearray(chunk_size)  # \u0421\u043E\u0437\u0434\
+      \u0430\u043D\u0438\u0435 \u043C\u0430\u0441\u0441\u0438\u0432\u0430 \u0431\u0430\
+      \u0439\u0442\u043E\u0432 \u0434\u043B\u044F \u0447\u0442\u0435\u043D\u0438\u044F\
+      \ \u0434\u0430\u043D\u043D\u044B\u0445\n                    self.port.readinto(data)\
       \  # \u0421\u0447\u0438\u0442\u044B\u0432\u0430\u043D\u0438\u0435 \u0434\u0430\
       \u043D\u043D\u044B\u0445 \u043D\u0435\u043F\u043E\u0441\u0440\u0435\u0434\u0441\
       \u0442\u0432\u0435\u043D\u043D\u043E \u0432 \u043C\u0430\u0441\u0441\u0438\u0432\
-      \ \u0431\u0430\u0439\u0442\u043E\u0432\n\n            if self.mode < 2:  # mode\
-      \ can be 0 or 1, \u043E\u0431\u0430 \u0432\u043A\u043B\u044E\u0447\u0430\u044E\
-      \u0442 \u0442\u043E\u043B\u044C\u043A\u043E 1 \u043A\u0430\u043D\u0430\u043B\
-      \ \u0410\u0426\u041F\n                output_items[0][n:n + chunk_size] = data[:chunk_size]\n\
-      \                n += chunk_size\n            else:\n                # TEST\
-      \ 8 bit\n                output_items[0][n:n + chunk_size // 2] = data[0::2]\n\
-      \                output_items[1][n:n + chunk_size // 2] = data[1::2]\n     \
-      \           n += chunk_size // 2\n\n        # \u041E\u0431\u0440\u0430\u0431\
-      \u043E\u0442\u043A\u0430 \u043E\u0441\u0442\u0430\u0432\u0448\u0435\u0433\u043E\
-      \u0441\u044F \u043C\u0435\u0441\u0442\u0430 \u0432 output_items\n        if\
-      \ n < output_len:\n            self.port.readinto(data)  # \u0421\u0447\u0438\
-      \u0442\u044B\u0432\u0430\u0435\u043C \u0434\u0430\u043D\u043D\u044B\u0435 \u0432\
-      \ \u043C\u0430\u0441\u0441\u0438\u0432 \u0431\u0430\u0439\u0442\u043E\u0432\n\
-      \            if self.mode < 2:  # mode can be 0 \u0438\u043B\u0438 1, \u043E\
-      \u0431\u0430 \u0432\u043A\u043B\u044E\u0447\u0430\u044E\u0442 \u0442\u043E\u043B\
-      \u044C\u043A\u043E 1 \u043A\u0430\u043D\u0430\u043B \u0410\u0426\u041F\n   \
-      \             bytes_to_copy = min(chunk_size, output_len - n)\n            \
-      \    output_items[0][n:n + bytes_to_copy] = data[:bytes_to_copy]\n         \
-      \       n += bytes_to_copy\n                self.remaining_data = data[bytes_to_copy:]\
+      \ \u0431\u0430\u0439\u0442\u043E\u0432\n\n                if self.mode < 2:\
+      \  # mode can be 0 or 1, \u043E\u0431\u0430 \u0432\u043A\u043B\u044E\u0447\u0430\
+      \u044E\u0442 \u0442\u043E\u043B\u044C\u043A\u043E 1 \u043A\u0430\u043D\u0430\
+      \u043B \u0410\u0426\u041F\n                    output_items[0][n:n + chunk_size]\
+      \ = data[:chunk_size]\n                    n += chunk_size\n               \
+      \ else:\n                    # TEST 8 bit\n                    output_items[0][n:n\
+      \ + chunk_size // 2] = data[0::2]\n                    output_items[1][n:n +\
+      \ chunk_size // 2] = data[1::2]\n                    n += chunk_size // 2\n\n\
+      \            # \u041E\u0431\u0440\u0430\u0431\u043E\u0442\u043A\u0430 \u043E\
+      \u0441\u0442\u0430\u0432\u0448\u0435\u0433\u043E\u0441\u044F \u043C\u0435\u0441\
+      \u0442\u0430 \u0432 output_items\n            if n < output_len:\n         \
+      \       self.port.readinto(data)  # \u0421\u0447\u0438\u0442\u044B\u0432\u0430\
+      \u0435\u043C \u0434\u0430\u043D\u043D\u044B\u0435 \u0432 \u043C\u0430\u0441\u0441\
+      \u0438\u0432 \u0431\u0430\u0439\u0442\u043E\u0432\n                if self.mode\
+      \ < 2:  # mode can be 0 \u0438\u043B\u0438 1, \u043E\u0431\u0430 \u0432\u043A\
+      \u043B\u044E\u0447\u0430\u044E\u0442 \u0442\u043E\u043B\u044C\u043A\u043E 1\
+      \ \u043A\u0430\u043D\u0430\u043B \u0410\u0426\u041F\n                    bytes_to_copy\
+      \ = min(chunk_size, output_len - n)\n                    output_items[0][n:n\
+      \ + bytes_to_copy] = data[:bytes_to_copy]\n                    n += bytes_to_copy\n\
+      \                    self.remaining_data = data[bytes_to_copy:]  # \u0421\u043E\
+      \u0445\u0440\u0430\u043D\u044F\u0435\u043C \u043E\u0441\u0442\u0430\u0432\u0448\
+      \u0438\u0435\u0441\u044F \u0434\u0430\u043D\u043D\u044B\u0435\n            \
+      \    else:\n                    i = 0\n                    half_chunk_size =\
+      \ chunk_size // 2\n                    while n < output_len and i < chunk_size:\n\
+      \                        output_items[0][n] = data[i] \n                   \
+      \     output_items[1][n] = data[i + 1]\n                        n += 1\n   \
+      \                     i += 2\n                    self.remaining_data = data[i:]\
       \  # \u0421\u043E\u0445\u0440\u0430\u043D\u044F\u0435\u043C \u043E\u0441\u0442\
       \u0430\u0432\u0448\u0438\u0435\u0441\u044F \u0434\u0430\u043D\u043D\u044B\u0435\
-      \n            else:\n                i = 0\n                half_chunk_size\
-      \ = chunk_size // 2\n                while n < output_len and i < chunk_size:\n\
-      \                    output_items[0][n] = data[i] \n                    output_items[1][n]\
-      \ = data[i + 1]\n                    n += 1\n                    i += 2\n  \
-      \              self.remaining_data = data[i:]  # \u0421\u043E\u0445\u0440\u0430\
-      \u043D\u044F\u0435\u043C \u043E\u0441\u0442\u0430\u0432\u0448\u0438\u0435\u0441\
-      \u044F \u0434\u0430\u043D\u043D\u044B\u0435\n\n        return len(output_items[0])\
-      \  # \u0412\u043E\u0437\u0432\u0440\u0430\u0449\u0430\u0435\u043C \u043A\u043E\
-      \u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u043E\u0431\u0440\u0430\u0431\
-      \u043E\u0442\u0430\u043D\u043D\u044B\u0445 \u044D\u043B\u0435\u043C\u0435\u043D\
-      \u0442\u043E\u0432"
+      \n\n            return len(output_items[0])  # \u0412\u043E\u0437\u0432\u0440\
+      \u0430\u0449\u0430\u0435\u043C \u043A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\
+      \u0432\u043E \u043E\u0431\u0440\u0430\u0431\u043E\u0442\u0430\u043D\u043D\u044B\
+      \u0445 \u044D\u043B\u0435\u043C\u0435\u043D\u0442\u043E\u0432\n\n\n\n\n    \
+      \            # \u0421\u043B\u0443\u0447\u0430\u0439, \u043A\u043E\u0433\u0434\
+      \u0430 mode >= 4 (dac_mode) - \u0443\u043F\u043E\u0440 \u043D\u0430 \u0426\u0410\
+      \u041F, \u0410\u0426\u041F \u043E\u0442\u043A\u043B\u044E\u0447\u0435\u043D\n\
+      \        # \u0421\u043B\u0443\u0447\u0430\u0439, \u043A\u043E\u0433\u0434\u0430\
+      \ mode >= 4 (dac_mode) - \u0443\u043F\u043E\u0440 \u043D\u0430 \u0426\u0410\u041F\
+      , \u0410\u0426\u041F \u043E\u0442\u043A\u043B\u044E\u0447\u0435\u043D\n    \
+      \    else:\n            data = bytearray(USB_PACKET_SIZE )  # \u0421\u043E\u0437\
+      \u0434\u0430\u043D\u0438\u0435 \u043C\u0430\u0441\u0441\u0438\u0432\u0430 \u0431\
+      \u0430\u0439\u0442\u043E\u0432 \u0434\u043B\u044F \u0447\u0442\u0435\u043D\u0438\
+      \u044F \u0434\u0430\u043D\u043D\u044B\u0445\n            n = 0\n           \
+      \ remaining_len = 0\n            input_len = min(len(input_items[0]), len(input_items[1]))\
+      \  # \u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u043C \u043C\u0438\
+      \u043D\u0438\u043C\u0430\u043B\u044C\u043D\u0443\u044E \u0434\u043B\u0438\u043D\
+      \u0443 \u0434\u043B\u044F \u0438\u0437\u0431\u0435\u0436\u0430\u043D\u0438\u044F\
+      \ \u0432\u044B\u0445\u043E\u0434\u0430 \u0437\u0430 \u0433\u0440\u0430\u043D\
+      \u0438\u0446\u044B\n\n            # \u0415\u0441\u043B\u0438 \u0435\u0441\u0442\
+      \u044C remaining_data, \u043E\u0431\u044A\u0435\u0434\u0438\u043D\u044F\u0435\
+      \u043C \u0435\u0433\u043E \u0441 \u0442\u0435\u043A\u0443\u0449\u0438\u043C\u0438\
+      \ \u0434\u0430\u043D\u043D\u044B\u043C\u0438\n            if self.remaining_data:\n\
+      \                remaining_len = len(self.remaining_data)\n                #\
+      \ \u0423\u0432\u0435\u043B\u0438\u0447\u0438\u0432\u0430\u0435\u043C \u0440\u0430\
+      \u0437\u043C\u0435\u0440 \u0431\u0443\u0444\u0435\u0440\u0430, \u0434\u043E\u0431\
+      \u0430\u0432\u043B\u044F\u044F \u0434\u043B\u0438\u043D\u0443 remaining_data\n\
+      \                data = self.remaining_data + data[:USB_PACKET_SIZE  - remaining_len]\
+      \  # \u041E\u0433\u0440\u0430\u043D\u0438\u0447\u0438\u0432\u0430\u0435\u043C\
+      \ data \u043F\u043E \u0440\u0430\u0437\u043C\u0435\u0440\u0443\n           \
+      \     self.remaining_data = bytearray()  # \u041E\u0447\u0438\u0449\u0430\u0435\
+      \u043C \u0431\u0443\u0444\u0435\u0440 \u043F\u043E\u0441\u043B\u0435 \u043E\u0431\
+      \u044A\u0435\u0434\u0438\u043D\u0435\u043D\u0438\u044F\n\n            while\
+      \ n < input_len:\n                i = remaining_len  # \u0421\u0431\u0440\u0430\
+      \u0441\u044B\u0432\u0430\u0435\u043C \u0438\u043D\u0434\u0435\u043A\u0441 \u0434\
+      \u043B\u044F data\n\n                while i < (USB_PACKET_SIZE ) and n < input_len:\
+      \  # \u041F\u0440\u043E\u0432\u0435\u0440\u044F\u0435\u043C \u0438 n\n     \
+      \               value1 = int((input_items[0][n] + 1) * 4000 / 2) & 0xFFFF  #\
+      \ \u041F\u0440\u0438\u0432\u0435\u0434\u0435\u043D\u0438\u0435 \u043A \u0446\
+      \u0435\u043B\u043E\u043C\u0443 \u0447\u0438\u0441\u043B\u0443 \u0438 \u043E\u0433\
+      \u0440\u0430\u043D\u0438\u0447\u0435\u043D\u0438\u0435 \u0434\u043E 16 \u0431\
+      \u0438\u0442\n                    data[i] = value1 & 0xFF  # \u041C\u043B\u0430\
+      \u0434\u0448\u0438\u0439 \u0431\u0430\u0439\u0442\n                    data[i\
+      \ + 1] = (value1 >> 8) & 0xFF  # \u0421\u0442\u0430\u0440\u0448\u0438\u0439\
+      \ \u0431\u0430\u0439\u0442\n                    i += 2\n                   \
+      \ value2 = int((input_items[1][n] + 1) * 4000 / 2) & 0xFFFF  # \u041F\u0440\u0438\
+      \u0432\u0435\u0434\u0435\u043D\u0438\u0435 \u043A \u0446\u0435\u043B\u043E\u043C\
+      \u0443 \u0447\u0438\u0441\u043B\u0443 \u0438 \u043E\u0433\u0440\u0430\u043D\u0438\
+      \u0447\u0435\u043D\u0438\u0435 \u0434\u043E 16 \u0431\u0438\u0442\n        \
+      \            data[i] = value2 & 0xFF  # \u041C\u043B\u0430\u0434\u0448\u0438\
+      \u0439 \u0431\u0430\u0439\u0442\n                    data[i + 1] = (value2 >>\
+      \ 8) & 0xFF  # \u0421\u0442\u0430\u0440\u0448\u0438\u0439 \u0431\u0430\u0439\
+      \u0442\n                    i += 2\n                    n += 1\n\n         \
+      \       # \u041E\u0442\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u043C \u0441\
+      \u043E\u0431\u0440\u0430\u043D\u043D\u044B\u0435 \u0434\u0430\u043D\u043D\u044B\
+      \u0435 \u0432 \u043F\u043E\u0440\u0442\n                self.port.write(data)\
+      \  # \u041E\u0442\u043F\u0440\u0430\u0432\u043B\u044F\u0435\u043C \u0442\u043E\
+      \u043B\u044C\u043A\u043E \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D\u043D\
+      \u0443\u044E \u0447\u0430\u0441\u0442\u044C\n                remaining_len =\
+      \ 0\n                data = bytearray(USB_PACKET_SIZE )\n\n            # \u041E\
+      \u0431\u0440\u0430\u0431\u043E\u0442\u043A\u0430 \u043E\u0441\u0442\u0430\u0432\
+      \u0448\u0438\u0445\u0441\u044F \u0434\u0430\u043D\u043D\u044B\u0445\n      \
+      \      if n < input_len:\n                remaining_data = bytearray()\n\n \
+      \               while n < input_len and i < USB_PACKET_SIZE :\n            \
+      \        value1 = int((input_items[0][n] + 1) * 4000 / 2) & 0xFFFF\n       \
+      \             remaining_data.append(value1 & 0xFF)\n                    remaining_data.append((value1\
+      \ >> 8) & 0xFF)\n                    i += 2\n                    value2 = int((input_items[1][n]\
+      \ + 1) * 4000 / 2) & 0xFFFF\n                    remaining_data.append(value2\
+      \ & 0xFF)\n                    remaining_data.append((value2 >> 8) & 0xFF)\n\
+      \                    i += 2\n                    n += 1\n\n                #\
+      \ \u0421\u043E\u0445\u0440\u0430\u043D\u044F\u0435\u043C \u043E\u0441\u0442\u0430\
+      \u0442\u043E\u0447\u043D\u044B\u0435 \u0434\u0430\u043D\u043D\u044B\u0435 \u0434\
+      \u043B\u044F \u0441\u043B\u0435\u0434\u0443\u044E\u0449\u0435\u0433\u043E \u0432\
+      \u044B\u0437\u043E\u0432\u0430\n                self.remaining_data = remaining_data\n\
+      \n            return len(input_items[0])\n\n"
     affinity: ''
     alias: ''
     comment: "mode = 0,    // 1\u044B\u0439 \u043A\u0430\u043D\u0430\u043B \u0410\u0426\
-      \u041F, 1\u044B\u0439 \u043A\u0430\u043D\u0430\u043B \u0426\u0410\u041F \n mode\
+      \u041F, 1\u044B\u0439 \u043A\u0430\u043D\u0430\u043B \u0426\u0410\u041F \nmode\
       \  = 1,    // 1\u044B\u0439 \u043A\u0430\u043D\u0430\u043B \u0410\u0426\u041F\
-      , 2 \u043A\u0430\u043D\u0430\u043B\u0430 \u0426\u0410\u041F    \n mode  = 2,\
+      , 2 \u043A\u0430\u043D\u0430\u043B\u0430 \u0426\u0410\u041F    \nmode  = 2,\
       \    // 2 \u043A\u0430\u043D\u0430\u043B\u0430 \u0410\u0426\u041F, 1\u044B\u0439\
-      \ \u043A\u0430\u043D\u0430\u043B\u0430 \u0426\u0410\u041F  \n mode = 3,    //\
+      \ \u043A\u0430\u043D\u0430\u043B\u0430 \u0426\u0410\u041F  \nmode = 3,    //\
       \ 2 \u043A\u0430\u043D\u0430\u043B\u0430 \u0410\u0426\u041F, 2 \u043A\u0430\u043D\
-      \u0430\u043B\u0430 \u0426\u0410\u041F"
+      \u0430\u043B\u0430 \u0426\u0410\u041F\nmode >= 4  // dac_mode"
     maxoutbuf: '0'
     minoutbuf: '0'
     mode: '0'
     portNumber: '7'
   states:
     _io_cache: ('Analog Digital Interface', 'ADIBlock', [('portNumber', '7'), ('mode',
-      '3')], [('set_const_signal', 'message', 1)], [('0', 'float', 1), ('1', 'float',
-      1)], '\n    Read data from serial port and forward it to output. \n    portNumber
-      is number, you can see in the name of your \n    serial port in device manager,
-      like COM16 or COM7 \n    ', ['mode', 'portNumber'])
+      '3')], [('0', 'float', 1), ('1', 'float', 1), ('set_const_signal', 'message',
+      1)], [('0', 'float', 1), ('1', 'float', 1)], '\n    Read data from serial port
+      and forward it to output. \n    portNumber is number, you can see in the name
+      of your \n    serial port in device manager, like COM16 or COM7 \n    ', ['mode',
+      'portNumber'])
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [712, 216.0]
+    coordinate: [672, 208.0]
     rotation: 0
     state: enabled
 - name: epy_block_1_0
@@ -461,7 +517,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [296, 152.0]
+    coordinate: [288, 216.0]
     rotation: 0
     state: true
 - name: qtgui_time_sink_x_0_0_0
@@ -563,10 +619,11 @@ blocks:
     state: enabled
 
 connections:
-- [epy_block_0, '0', qtgui_time_sink_x_0_0_0, '0']
-- [epy_block_0, '1', qtgui_time_sink_x_0_0_0, '1']
-- [epy_block_1_0, '0', blocks_throttle2_0, '0']
-- [epy_block_1_0, set_const_signal, epy_block_0, set_const_signal]
+- [epy_block_0_0, '0', qtgui_time_sink_x_0_0_0, '0']
+- [epy_block_0_0, '1', qtgui_time_sink_x_0_0_0, '1']
+- [epy_block_1_0, '0', epy_block_0_0, '0']
+- [epy_block_1_0, '0', epy_block_0_0, '1']
+- [epy_block_1_0, set_const_signal, epy_block_0_0, set_const_signal]
 
 metadata:
   file_format: 1
