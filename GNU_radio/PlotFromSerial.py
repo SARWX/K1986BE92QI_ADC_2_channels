@@ -91,7 +91,7 @@ class PlotFromSerial(gr.top_block, Qt.QWidget):
         self._DAC_frequency_tool_bar.addWidget(self._DAC_frequency_label)
         self.top_layout.addWidget(self._DAC_frequency_tool_bar)
         self.qtgui_time_sink_x_0_0_0 = qtgui.time_sink_f(
-            5000, #size
+            10000, #size
             500000, #samp_rate
             '', #name
             2, #number of inputs
@@ -146,7 +146,7 @@ class PlotFromSerial(gr.top_block, Qt.QWidget):
         self._frequency_win = RangeWidget(self._frequency_range, self.set_frequency, "'frequency'", "counter_slider", int, QtCore.Qt.Horizontal)
         self.top_layout.addWidget(self._frequency_win)
         self.epy_block_1_0 = epy_block_1_0.TriangleWaveGenerator(start_p=0, end_p=3, sample_rate=DAC_sample_rate, freq=DAC_frequency, enable=generate_signal)
-        self.epy_block_0_0 = epy_block_0_0.ADIBlock(portNumber=7, mode=0)
+        self.epy_block_0_0 = epy_block_0_0.ADIBlock(portNumber=10, mode=3)
 
 
         ##################################################
@@ -155,8 +155,8 @@ class PlotFromSerial(gr.top_block, Qt.QWidget):
         self.msg_connect((self.epy_block_1_0, 'set_const_signal'), (self.epy_block_0_0, 'set_const_signal'))
         self.connect((self.epy_block_0_0, 1), (self.qtgui_time_sink_x_0_0_0, 1))
         self.connect((self.epy_block_0_0, 0), (self.qtgui_time_sink_x_0_0_0, 0))
-        self.connect((self.epy_block_1_0, 0), (self.epy_block_0_0, 1))
         self.connect((self.epy_block_1_0, 0), (self.epy_block_0_0, 0))
+        self.connect((self.epy_block_1_0, 0), (self.epy_block_0_0, 1))
 
 
     def closeEvent(self, event):

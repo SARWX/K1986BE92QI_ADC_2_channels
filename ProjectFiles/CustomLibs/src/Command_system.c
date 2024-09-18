@@ -194,6 +194,13 @@ void set_mode_setting(enum mode_setting mode)
 	ADC1_Cmd (ENABLE);
 	ADC2_Cmd (ENABLE);
   TIMER_Cmd(MDR_TIMER2, ENABLE);
+
+		// NVIC_EnableIRQ(USB_IRQn);
+		// NVIC_EnableIRQ(ADC_IRQn);
+		// NVIC_EnableIRQ(DMA_IRQn);
+    // NVIC_DisableIRQ(DMA_IRQn);
+    // NVIC_DisableIRQ(ADC_IRQn);
+    // NVIC_DisableIRQ(Timer2_IRQn);
 }
 
 /*********************** (C) COPYRIGHT 2024 ICV ****************************

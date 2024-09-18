@@ -17,7 +17,8 @@ import pmt
 MAX_DAC_NUM = 500   # Максимальное количество чисел, которое может быть записано в const_signal
 MAX_DAC_VAL = 10.0  # Максимальное значение на выходе ЦАП
 CHUNK_SIZE = 10     # Максимальное количество чисел в одной команде
-USB_PACKET_SIZE = 256 # байт
+USB_PACKET_SIZE = 32 # байт
+# USB_PACKET_SIZE = 256 # байт              ДЛЯ dac mode
 
 
 class ADIBlock(gr.sync_block):  # other base classes are basic_block, decim_block, interp_block
@@ -50,7 +51,7 @@ class ADIBlock(gr.sync_block):  # other base classes are basic_block, decim_bloc
         self.port_name = None
         self.baudrate = 2000000  # Здесь захардкожен baudrate
         self.mode = mode
-        self.remaining_data = bytearray()  # Буфер для оставшихся данных
+        self.remaining_data = bytearray(USB_PACKET_SIZE + 1)  # Буфер для оставшихся данных     0ой байт - флаг (0 - в массиве нет полезных данных, 1 - надо читать)
         
     def open_port(self):
         """Открывает COM порт, если он существует и не занят."""
@@ -146,20 +147,28 @@ class ADIBlock(gr.sync_block):  # other base classes are basic_block, decim_bloc
             n = 0
             chunk_size = USB_PACKET_SIZE
             output_len = len(output_items[0])
+            # print (output_len)
             data = bytearray(chunk_size)  # Создание массива байтов для чтения данных
+            n_increment = (USB_PACKET_SIZE if self.mode < 3 else (USB_PACKET_SIZE // 2))
 
                 
-            while n < (output_len - chunk_size):
+            while n < (output_len - n_increment):
                 chunk_size = USB_PACKET_SIZE
             
                 # Объединяем остаточные данные из предыдущей итерации с новыми
-                if self.remaining_data:
-                    chunk_size = len(self.remaining_data)
-                    # print(chunk_size)
-                    data = bytearray(chunk_size)  # Создание массива байтов для чтения данных
-                    data = self.remaining_data
+                if self.remaining_data[0] == 1:
+                    # data = bytearray(chunk_size)  # Создание массива байтов для чтения данных
+                    chunk_size = len(self.remaining_data) - 1
+                    data = bytearray(chunk_size)
+                    data = self.remaining_data[1:]       # Сохранить данные 
+                    # print (data)
+                    # data[-1:] = b'\x00'
+                    # print(len(self.remaining_data))
                     # print(data)
-                    self.remaining_data = bytearray()  # Очищаем буфер
+                    # print("YES")
+                    # while True:
+                    #     pass
+                    self.remaining_data = bytearray(USB_PACKET_SIZE + 1)  # Очищаем буфер
                 else:
                     data = bytearray(chunk_size)  # Создание массива байтов для чтения данных
                     self.port.readinto(data)  # Считывание данных непосредственно в массив байтов
@@ -171,7 +180,10 @@ class ADIBlock(gr.sync_block):  # other base classes are basic_block, decim_bloc
                     # TEST 8 bit
                     output_items[0][n:n + chunk_size // 2] = data[0::2]
                     output_items[1][n:n + chunk_size // 2] = data[1::2]
+                    # output_items[1][n] = b'\x30'
                     n += chunk_size // 2
+
+                    # TESST
 
             # Обработка оставшегося места в output_items
             if n < output_len:
@@ -183,13 +195,18 @@ class ADIBlock(gr.sync_block):  # other base classes are basic_block, decim_bloc
                     self.remaining_data = data[bytes_to_copy:]  # Сохраняем оставшиеся данные
                 else:
                     i = 0
-                    half_chunk_size = chunk_size // 2
+                    # print(n)
                     while n < output_len and i < chunk_size:
                         output_items[0][n] = data[i] 
                         output_items[1][n] = data[i + 1]
                         n += 1
                         i += 2
-                    self.remaining_data = data[i:]  # Сохраняем оставшиеся данные
+                    # output_items[1][n-1] = 300
+                    self.remaining_data = bytearray(USB_PACKET_SIZE - i + 1)
+                    self.remaining_data[1:] = data[i:]  # Сохраняем оставшиеся данные
+                    self.remaining_data[0] = (0 if (USB_PACKET_SIZE - i) == 0 else 1)  # Флаг запроса чтения
+                    # print(n)
+                    # print(self.remaining_data)
 
             return len(output_items[0])  # Возвращаем количество обработанных элементов
 

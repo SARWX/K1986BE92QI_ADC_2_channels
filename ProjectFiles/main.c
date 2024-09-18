@@ -170,6 +170,7 @@ int main(void)
 			ADC1_Cmd(ENABLE);
 		}
 
+		
 		// Определим значение управляющего элемента и усредним 
 		// tuner = (tuner + ((MDR_ADC->ADC2_RESULT >> 8) << 8)) / 2;
 //		tuner = ((MDR_ADC->ADC2_RESULT >> 8) << 8);

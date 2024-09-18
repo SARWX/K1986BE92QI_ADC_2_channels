@@ -6,6 +6,7 @@ ProjectFiles/EventRecorderStub.scvd
 ProjectFiles/Blank.uvguix.PC_88
 # ProjectFiles/Blank.uvprojx 
 ProjectFiles/.vscode
+ProjectFiles/Tests/*
 *.o
 *.i
 GNU_radio/__pycache__/PlotFromSerial_epy_block_0.cpython-311.pyc
