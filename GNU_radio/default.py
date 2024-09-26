@@ -5,12 +5,14 @@
 # SPDX-License-Identifier: GPL-3.0
 #
 # GNU Radio Python Flow Graph
-# Title: Serial Plot
-# Author: Tomsov Vsevolod
+# Title: Not titled yet
+# Author: PC_88
 # GNU Radio version: 3.10.8.0
 
 from PyQt5 import Qt
 from gnuradio import qtgui
+from gnuradio import analog
+from gnuradio import blocks
 from gnuradio import eng_notation
 from gnuradio import gr
 from gnuradio.filter import firdes
@@ -22,18 +24,19 @@ from argparse import ArgumentParser
 from gnuradio.eng_arg import eng_float, intx
 from gnuradio.qtgui import Range, RangeWidget
 from PyQt5 import QtCore
-import PlotFromSerial_epy_block_0_0 as epy_block_0_0  # embedded python block
-import PlotFromSerial_epy_block_1_0 as epy_block_1_0  # embedded python block
+import default_epy_block_0 as epy_block_0  # embedded python block
+import default_epy_block_0_0_1 as epy_block_0_0_1  # embedded python block
+import default_epy_block_1_0 as epy_block_1_0  # embedded python block
 import sip
 
 
 
-class PlotFromSerial(gr.top_block, Qt.QWidget):
+class default(gr.top_block, Qt.QWidget):
 
     def __init__(self):
-        gr.top_block.__init__(self, "Serial Plot", catch_exceptions=True)
+        gr.top_block.__init__(self, "Not titled yet", catch_exceptions=True)
         Qt.QWidget.__init__(self)
-        self.setWindowTitle("Serial Plot")
+        self.setWindowTitle("Not titled yet")
         qtgui.util.check_set_qss()
         try:
             self.setWindowIcon(Qt.QIcon.fromTheme('gnuradio-grc'))
@@ -51,7 +54,7 @@ class PlotFromSerial(gr.top_block, Qt.QWidget):
         self.top_grid_layout = Qt.QGridLayout()
         self.top_layout.addLayout(self.top_grid_layout)
 
-        self.settings = Qt.QSettings("GNU Radio", "PlotFromSerial")
+        self.settings = Qt.QSettings("GNU Radio", "default")
 
         try:
             geometry = self.settings.value("geometry")
@@ -65,7 +68,7 @@ class PlotFromSerial(gr.top_block, Qt.QWidget):
         ##################################################
         self.frequency = frequency = 0
         self.DAC_sample_rate = DAC_sample_rate = 1000000
-        self.samp_rate = samp_rate = 2000000
+        self.samp_rate = samp_rate = 1000000
         self.generate_signal = generate_signal = 0
         self.DAC_frequency = DAC_frequency = ((int)(DAC_sample_rate /(500 -  frequency)))
 
@@ -73,6 +76,9 @@ class PlotFromSerial(gr.top_block, Qt.QWidget):
         # Blocks
         ##################################################
 
+        self._samp_rate_range = Range(0, 10000000, 1, 1000000, 200)
+        self._samp_rate_win = RangeWidget(self._samp_rate_range, self.set_samp_rate, "'samp_rate'", "counter_slider", int, QtCore.Qt.Horizontal)
+        self.top_layout.addWidget(self._samp_rate_win)
         _generate_signal_push_button = Qt.QPushButton('Triangle')
         _generate_signal_push_button = Qt.QPushButton('Triangle')
         self._generate_signal_choices = {'Pressed': 1, 'Released': 0}
@@ -146,21 +152,32 @@ class PlotFromSerial(gr.top_block, Qt.QWidget):
         self._frequency_win = RangeWidget(self._frequency_range, self.set_frequency, "'frequency'", "counter_slider", int, QtCore.Qt.Horizontal)
         self.top_layout.addWidget(self._frequency_win)
         self.epy_block_1_0 = epy_block_1_0.TriangleWaveGenerator(start_p=0, end_p=3, sample_rate=DAC_sample_rate, freq=DAC_frequency, enable=generate_signal)
-        self.epy_block_0_0 = epy_block_0_0.ADIBlock(portNumber=10, mode=3)
+        self.epy_block_0_0_1 = epy_block_0_0_1.ADIBlock(portNumber=10, mode=3)
+        self.epy_block_0 = epy_block_0.ADIBlock(portNumber=7, mode=20)
+        self.blocks_null_source_0 = blocks.null_source(gr.sizeof_float*1)
+        self.blocks_null_sink_0_1 = blocks.null_sink(gr.sizeof_float*1)
+        self.blocks_null_sink_0_0 = blocks.null_sink(gr.sizeof_float*1)
+        self.blocks_null_sink_0 = blocks.null_sink(gr.sizeof_float*1)
+        self.analog_sig_source_x_0_0 = analog.sig_source_f(samp_rate, analog.GR_SIN_WAVE, 10000, 1, 0, 0)
+        self.analog_sig_source_x_0 = analog.sig_source_f(samp_rate, analog.GR_SIN_WAVE, 1000, 1, 0, 0)
 
 
         ##################################################
         # Connections
         ##################################################
-        self.msg_connect((self.epy_block_1_0, 'set_const_signal'), (self.epy_block_0_0, 'set_const_signal'))
-        self.connect((self.epy_block_0_0, 0), (self.qtgui_time_sink_x_0_0_0, 0))
-        self.connect((self.epy_block_0_0, 1), (self.qtgui_time_sink_x_0_0_0, 1))
-        self.connect((self.epy_block_1_0, 0), (self.epy_block_0_0, 1))
-        self.connect((self.epy_block_1_0, 0), (self.epy_block_0_0, 0))
+        self.connect((self.analog_sig_source_x_0, 0), (self.epy_block_0, 0))
+        self.connect((self.analog_sig_source_x_0_0, 0), (self.epy_block_0, 1))
+        self.connect((self.blocks_null_source_0, 0), (self.epy_block_0_0_1, 1))
+        self.connect((self.blocks_null_source_0, 0), (self.epy_block_0_0_1, 0))
+        self.connect((self.epy_block_0, 0), (self.blocks_null_sink_0, 0))
+        self.connect((self.epy_block_0, 1), (self.blocks_null_sink_0_0, 0))
+        self.connect((self.epy_block_0_0_1, 0), (self.qtgui_time_sink_x_0_0_0, 0))
+        self.connect((self.epy_block_0_0_1, 1), (self.qtgui_time_sink_x_0_0_0, 1))
+        self.connect((self.epy_block_1_0, 0), (self.blocks_null_sink_0_1, 0))
 
 
     def closeEvent(self, event):
-        self.settings = Qt.QSettings("GNU Radio", "PlotFromSerial")
+        self.settings = Qt.QSettings("GNU Radio", "default")
         self.settings.setValue("geometry", self.saveGeometry())
         self.stop()
         self.wait()
@@ -187,6 +204,8 @@ class PlotFromSerial(gr.top_block, Qt.QWidget):
 
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
+        self.analog_sig_source_x_0.set_sampling_freq(self.samp_rate)
+        self.analog_sig_source_x_0_0.set_sampling_freq(self.samp_rate)
 
     def get_generate_signal(self):
         return self.generate_signal
@@ -206,7 +225,7 @@ class PlotFromSerial(gr.top_block, Qt.QWidget):
 
 
 
-def main(top_block_cls=PlotFromSerial, options=None):
+def main(top_block_cls=default, options=None):
 
     qapp = Qt.QApplication(sys.argv)
 

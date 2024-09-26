@@ -97,7 +97,9 @@ int main(void)
 	// Включение АЦП и DMA для АЦП
 	ADC1_Cmd (ENABLE);						// разрешаем работу ADC1
 	ADC2_Cmd (ENABLE);						// разрешаем работу ADC2
-
+	
+	
+	NVIC_SetPriority (USB_IRQn, 0);
 // 	/* Main loop */
 //	ili9341_setaddress(0,0,319,239);
 	// Тест с отключением прерываний
@@ -190,7 +192,7 @@ int main(void)
 		DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_ALTERNATE, &ADC1_alternate_DMA_structure);		// реинициализируем альтернативную структуру
 		convert_to_8_bit(alternate_array_for_ADC, NUM_OF_MES);
 		USB_CDC_SendData((uint8_t *)alternate_array_for_ADC, NUM_OF_MES );			// отправка буфера альтернативной структуры DMA по USB
-
+ 
 		// {
 		// 	display_signal((uint16_t *)alternate_array_for_ADC, NUM_OF_MES, 1, ((tuner >> 8)));
 		// }

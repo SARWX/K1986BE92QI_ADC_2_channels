@@ -25,7 +25,7 @@
 #define VECTOR_TABLE_OFFSET 0x08000000	// Смещение таблицы векторов (см. спецификацию)
 #define WHOLE_WORD 0xFFFFFFFF			// Константа отображающая 32 битное слово
 #define PRESCALER_T2 8//10					// Определяет воо сколько раз будет делиться системная частота для ЦАП
-#define PRESCALER_T2_DAC_MODE 56//10					// Для режима потоковой передачи через USB в DAC
+#define PRESCALER_T2_DAC_MODE 64//56//10					// Для режима потоковой передачи через USB в DAC
 #define PERIOD_T2 16//12					// Определяет период работы ЦАП
 #define HSE_FREQ 16000000
 #define CPU_PLL 8
