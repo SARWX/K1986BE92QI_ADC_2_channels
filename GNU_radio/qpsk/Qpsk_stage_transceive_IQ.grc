@@ -39,7 +39,7 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    const: '10'
+    const: '60'
     maxoutbuf: '0'
     minoutbuf: '0'
     type: byte

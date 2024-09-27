@@ -17,7 +17,7 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
         """arguments to this function show up as parameters in GRC"""
         gr.sync_block.__init__(
             self,
-            name='Embedded Python Block',   # will show up in GRC
+            name='Decode IQ QPSK',   # will show up in GRC
             in_sig=[np.float32, np.float32],
             out_sig=[np.float32, np.float32]
         )
@@ -64,7 +64,7 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
 
 
         # Параметр N — количество выборок, которые нужно сделать после нахождения опоры
-        N = 5  # Можно изменить на нужное значение
+        N = 1  # Можно изменить на нужное значение
         step = 4  # Шаг для выборки (каждый четвертый элемент)
         start_index = 0   # Индекс опорного элемента
         opora_found = False  # Флаг, указывающий, найдена ли опора
@@ -83,7 +83,7 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
                 
                 if diff_0 >= 0.3 or diff_1 >= 0.3:
                     opora_found = True  # Опора найдена, переключаемся на выборки с i+2
-                    i += 2  # Сдвиг на i+2 для начала новой выборки
+                    i += 1  # Сдвиг на i+2 для начала новой выборки
                     start_index = i     # Новый индекс опорного элемента
             else:
                 # Опора найдена, выполняем N выборок с шагом 4, начиная с i+2

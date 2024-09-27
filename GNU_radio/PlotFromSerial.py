@@ -153,10 +153,10 @@ class PlotFromSerial(gr.top_block, Qt.QWidget):
         # Connections
         ##################################################
         self.msg_connect((self.epy_block_1_0, 'set_const_signal'), (self.epy_block_0_0, 'set_const_signal'))
-        self.connect((self.epy_block_0_0, 0), (self.qtgui_time_sink_x_0_0_0, 0))
         self.connect((self.epy_block_0_0, 1), (self.qtgui_time_sink_x_0_0_0, 1))
-        self.connect((self.epy_block_1_0, 0), (self.epy_block_0_0, 1))
+        self.connect((self.epy_block_0_0, 0), (self.qtgui_time_sink_x_0_0_0, 0))
         self.connect((self.epy_block_1_0, 0), (self.epy_block_0_0, 0))
+        self.connect((self.epy_block_1_0, 0), (self.epy_block_0_0, 1))
 
 
     def closeEvent(self, event):

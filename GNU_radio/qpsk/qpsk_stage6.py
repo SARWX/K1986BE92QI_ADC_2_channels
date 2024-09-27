@@ -178,8 +178,8 @@ class qpsk_stage6(gr.top_block, Qt.QWidget):
         self.connect((self.blocks_null_source_0_0, 0), (self.epy_block_0_0, 1))
         self.connect((self.epy_block_0_0, 0), (self.blocks_multiply_const_vxx_0, 0))
         self.connect((self.epy_block_0_0, 1), (self.blocks_multiply_const_vxx_0_0, 0))
-        self.connect((self.epy_block_1_0, 1), (self.qtgui_time_sink_x_0, 1))
         self.connect((self.epy_block_1_0, 0), (self.qtgui_time_sink_x_0, 0))
+        self.connect((self.epy_block_1_0, 1), (self.qtgui_time_sink_x_0, 1))
 
 
     def closeEvent(self, event):
