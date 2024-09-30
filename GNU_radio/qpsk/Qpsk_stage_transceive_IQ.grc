@@ -47,9 +47,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [32, 136.0]
+    coordinate: [8, 176.0]
     rotation: 0
-    state: true
+    state: disabled
 - name: analog_random_source_x_0
   id: analog_random_source_x
   parameters:
@@ -171,7 +171,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1232, 224.0]
+    coordinate: [1232, 256.0]
     rotation: 0
     state: true
 - name: blocks_null_sink_0_0
@@ -191,6 +191,23 @@ blocks:
     coordinate: [1232, 288.0]
     rotation: 0
     state: true
+- name: blocks_null_sink_0_1
+  id: blocks_null_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    bus_structure_sink: '[[0,],]'
+    comment: ''
+    num_inputs: '1'
+    type: byte
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [448, 104.0]
+    rotation: 0
+    state: disabled
 - name: blocks_null_sink_1
   id: blocks_null_sink
   parameters:
@@ -548,6 +565,91 @@ blocks:
     coordinate: [1024, 240.0]
     rotation: 0
     state: enabled
+- name: epy_block_1
+  id: epy_block
+  parameters:
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
+      from gnuradio import gr\n\n\nclass blk(gr.sync_block):  # other base classes\
+      \ are basic_block, decim_block, interp_block\n    \"\"\"Embedded Python Block\
+      \ example - a simple multiply const\"\"\"\n\n    def __init__(self, example_param=1.0):\
+      \  # only default arguments here\n        \"\"\"arguments to this function show\
+      \ up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n         \
+      \   self,\n            name='Test string generator',   # will show up in GRC\n\
+      \            in_sig=[],\n            out_sig=[np.byte]\n        )\n        #\
+      \ if an attribute with the same name as a parameter is found,\n        # a callback\
+      \ is registered (properties work, too).\n        self.example_param = example_param\n\
+      \n    def work(self, input_items, output_items):\n        i = 0\n        messege\
+      \ = \"Hello world!\\n\"\n        message_bytes = bytes(messege, 'ascii')\n \
+      \       mes_len = len(messege)\n        output_len = len(output_items[0])\n\
+      \        while(i < (output_len - mes_len)):\n           # \u041F\u0435\u0440\
+      \u0435\u0432\u043E\u0434\u0438\u043C \u0431\u0430\u0439\u0442\u044B \u0432 \u0446\
+      \u0435\u043B\u044B\u0435 \u0447\u0438\u0441\u043B\u0430 \u0438 \u0437\u0430\u043F\
+      \u0438\u0441\u044B\u0432\u0430\u0435\u043C \u0432 \u043C\u0430\u0441\u0441\u0438\
+      \u0432\n            output_items[0][i:i + mes_len] = np.frombuffer(message_bytes,\
+      \ dtype=np.byte)\n            i += mes_len\n        return len(output_items[0])\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    example_param: '1.0'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    _io_cache: ('Test string generator', 'blk', [('example_param', '1.0')], [], [('0',
+      'byte', 1)], 'Embedded Python Block example - a simple multiply const', ['example_param'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [240, 80.0]
+    rotation: 0
+    state: disabled
+- name: epy_block_1_0
+  id: epy_block
+  parameters:
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
+      from gnuradio import gr\n\n# Constants\nWAIT = 10\n\nclass blk(gr.sync_block):\
+      \  # other base classes are basic_block, decim_block, interp_block\n    \"\"\
+      \"Embedded Python Block example - a simple multiply const\"\"\"\n\n    def __init__(self,\
+      \ example_param=1.0):  # only default arguments here\n        \"\"\"arguments\
+      \ to this function show up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n\
+      \            self,\n            name='Test string generator',   # will show\
+      \ up in GRC\n            in_sig=[],\n            out_sig=[np.byte]\n       \
+      \ )\n        # if an attribute with the same name as a parameter is found,\n\
+      \        # a callback is registered (properties work, too).\n        self.example_param\
+      \ = example_param\n\n    def work(self, input_items, output_items):\n      \
+      \  i = 0\n        default_level = \"\\0\" * WAIT\n        start_condition =\
+      \ chr(3)        # \u042D\u0442\u043E 2 \u0435\u0434\u0438\u043D\u0438\u0446\u044B\
+      \ \u043F\u043E\u0434\u0440\u044F\u0434 (2 \u043D\u0430\u0434\u043E, \u0447\u0442\
+      \u043E\u0431\u044B \u043D\u0430 \u043E\u0431\u0430 \u043A\u0430\u043D\u0430\u043B\
+      \u0430)\n        information = \"<\"*10\n        messege = default_level + start_condition\
+      \ + information\n        message_bytes = bytes(messege, 'ascii')\n        mes_len\
+      \ = len(messege)\n        output_len = len(output_items[0])\n        while(i\
+      \ < (output_len - mes_len)):\n           # \u041F\u0435\u0440\u0435\u0432\u043E\
+      \u0434\u0438\u043C \u0431\u0430\u0439\u0442\u044B \u0432 \u0446\u0435\u043B\u044B\
+      \u0435 \u0447\u0438\u0441\u043B\u0430 \u0438 \u0437\u0430\u043F\u0438\u0441\u044B\
+      \u0432\u0430\u0435\u043C \u0432 \u043C\u0430\u0441\u0441\u0438\u0432\n     \
+      \       output_items[0][i:i + mes_len] = np.frombuffer(message_bytes, dtype=np.byte)\n\
+      \            i += mes_len\n        return len(output_items[0])\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    example_param: '1.0'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    _io_cache: ('Test string generator', 'blk', [('example_param', '1.0')], [], [('0',
+      'byte', 1)], 'Embedded Python Block example - a simple multiply const', ['example_param'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [144, 144.0]
+    rotation: 0
+    state: true
 - name: qtgui_time_sink_x_0
   id: qtgui_time_sink_x
   parameters:
@@ -739,7 +841,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [984, 104.0]
+    coordinate: [976, 104.0]
     rotation: 0
     state: true
 
@@ -759,6 +861,8 @@ connections:
 - [blocks_unpack_k_bits_bb_0_0, '0', blocks_stream_demux_0, '0']
 - [epy_block_0, '0', blocks_null_sink_0, '0']
 - [epy_block_0, '1', blocks_null_sink_0_0, '0']
+- [epy_block_1, '0', blocks_null_sink_0_1, '0']
+- [epy_block_1_0, '0', blocks_unpack_k_bits_bb_0_0, '0']
 
 metadata:
   file_format: 1

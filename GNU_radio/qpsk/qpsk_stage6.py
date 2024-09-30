@@ -22,7 +22,7 @@ from argparse import ArgumentParser
 from gnuradio.eng_arg import eng_float, intx
 from gnuradio import eng_notation
 import qpsk_stage6_epy_block_0_0 as epy_block_0_0  # embedded python block
-import qpsk_stage6_epy_block_1_0 as epy_block_1_0  # embedded python block
+import qpsk_stage6_epy_block_1_0_0 as epy_block_1_0_0  # embedded python block
 import sip
 
 
@@ -159,7 +159,7 @@ class qpsk_stage6(gr.top_block, Qt.QWidget):
 
         self._qtgui_time_sink_x_0_win = sip.wrapinstance(self.qtgui_time_sink_x_0.qwidget(), Qt.QWidget)
         self.top_layout.addWidget(self._qtgui_time_sink_x_0_win)
-        self.epy_block_1_0 = epy_block_1_0.blk(example_param=1.0)
+        self.epy_block_1_0_0 = epy_block_1_0_0.blk(example_param=1.0)
         self.epy_block_0_0 = epy_block_0_0.ADIBlock(portNumber=10, mode=3)
         self.blocks_null_source_0_0 = blocks.null_source(gr.sizeof_float*1)
         self.blocks_null_source_0 = blocks.null_source(gr.sizeof_float*1)
@@ -170,16 +170,16 @@ class qpsk_stage6(gr.top_block, Qt.QWidget):
         ##################################################
         # Connections
         ##################################################
-        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.epy_block_1_0, 0))
+        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.epy_block_1_0_0, 0))
         self.connect((self.blocks_multiply_const_vxx_0, 0), (self.qtgui_time_sink_x_0_0, 0))
-        self.connect((self.blocks_multiply_const_vxx_0_0, 0), (self.epy_block_1_0, 1))
+        self.connect((self.blocks_multiply_const_vxx_0_0, 0), (self.epy_block_1_0_0, 1))
         self.connect((self.blocks_multiply_const_vxx_0_0, 0), (self.qtgui_time_sink_x_0_0, 1))
         self.connect((self.blocks_null_source_0, 0), (self.epy_block_0_0, 0))
         self.connect((self.blocks_null_source_0_0, 0), (self.epy_block_0_0, 1))
         self.connect((self.epy_block_0_0, 0), (self.blocks_multiply_const_vxx_0, 0))
         self.connect((self.epy_block_0_0, 1), (self.blocks_multiply_const_vxx_0_0, 0))
-        self.connect((self.epy_block_1_0, 0), (self.qtgui_time_sink_x_0, 0))
-        self.connect((self.epy_block_1_0, 1), (self.qtgui_time_sink_x_0, 1))
+        self.connect((self.epy_block_1_0_0, 0), (self.qtgui_time_sink_x_0, 0))
+        self.connect((self.epy_block_1_0_0, 1), (self.qtgui_time_sink_x_0, 1))
 
 
     def closeEvent(self, event):

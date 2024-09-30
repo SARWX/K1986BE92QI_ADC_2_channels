@@ -17,9 +17,9 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
         """arguments to this function show up as parameters in GRC"""
         gr.sync_block.__init__(
             self,
-            name='Embedded Python Block',   # will show up in GRC
-            in_sig=[np.float32, np.float32],
-            out_sig=[np.byte, np.byte]
+            name='Test string decoder',   # will show up in GRC
+            in_sig=[np.byte],
+            out_sig=[]
         )
         # if an attribute with the same name as a parameter is found,
         # a callback is registered (properties work, too).
@@ -27,22 +27,12 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
 
     def work(self, input_items, output_items):
         i = 0
-        output_len = len(output_items[0])
-        input_len = len(intput_items[0])
-        while(i < intput_len):
-            # 1 - найти переход 1 -> 0
-            mes = 0.0
-            for mes in input_items[0][i:i+7]:
-                res += mes
-            res /= 7
-            res = (1 if res > 0.5  else 0)
-            output_items[0][(i // 7)] = int(res) 
-            # 1 - найти переход 1 -> 0
-            mes = 0.0
-            for mes in input_items[1][i:i+7]:
-                res += mes
-            res = (1 if res > 0.5  else 0)
-            output_items[1][(i // 7)] = int(res) 
-            i += 7
-            
-        return len(i)
+        messege = ""
+        input_len = len(input_items[0])
+        while(i < (input_len)):
+            messege += str(input_items[0][i])
+            if(input_items[0][i] == '\n'):
+                print(messege)
+                messege = ""
+            i += 1
+        return len(input_items[0])
