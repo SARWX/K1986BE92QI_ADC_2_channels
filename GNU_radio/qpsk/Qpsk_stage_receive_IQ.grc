@@ -47,7 +47,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1472, 288.0]
+    coordinate: [1232, 136.0]
     rotation: 0
     state: disabled
 - name: blocks_float_to_char_0
@@ -64,7 +64,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1088, 160.0]
+    coordinate: [936, 152.0]
     rotation: 0
     state: disabled
 - name: blocks_float_to_char_0_0
@@ -81,7 +81,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1088, 216.0]
+    coordinate: [936, 208.0]
     rotation: 0
     state: disabled
 - name: blocks_multiply_const_vxx_0
@@ -99,7 +99,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [648, 208.0]
+    coordinate: [496, 200.0]
     rotation: 0
     state: true
 - name: blocks_multiply_const_vxx_0_0
@@ -117,7 +117,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [648, 272.0]
+    coordinate: [496, 264.0]
     rotation: 0
     state: true
 - name: blocks_null_source_0
@@ -136,7 +136,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [64, 232.0]
+    coordinate: [8, 208.0]
     rotation: 0
     state: true
 - name: blocks_null_source_0_0
@@ -155,7 +155,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [64, 264.0]
+    coordinate: [8, 240.0]
     rotation: 0
     state: true
 - name: blocks_null_source_0_0_0
@@ -174,7 +174,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [872, 176.0]
+    coordinate: [720, 168.0]
     rotation: 0
     state: disabled
 - name: blocks_null_source_0_1
@@ -193,7 +193,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [800, 88.0]
+    coordinate: [648, 80.0]
     rotation: 0
     state: disabled
 - name: blocks_null_source_0_2
@@ -212,7 +212,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [872, 144.0]
+    coordinate: [720, 136.0]
     rotation: 0
     state: disabled
 - name: blocks_pack_k_bits_bb_0
@@ -228,7 +228,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1448, 184.0]
+    coordinate: [1152, 80.0]
     rotation: 0
     state: disabled
 - name: blocks_stream_mux_0
@@ -247,7 +247,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1272, 176.0]
+    coordinate: [1096, 168.0]
     rotation: 0
     state: disabled
 - name: epy_block_0_0
@@ -552,7 +552,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [400, 216.0]
+    coordinate: [248, 208.0]
     rotation: 0
     state: enabled
 - name: epy_block_1
@@ -588,7 +588,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [960, 80.0]
+    coordinate: [808, 72.0]
     rotation: 0
     state: disabled
 - name: epy_block_1_0
@@ -742,7 +742,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [848, 344.0]
+    coordinate: [696, 336.0]
     rotation: 0
     state: disabled
 - name: epy_block_1_0_0
@@ -753,7 +753,7 @@ blocks:
       \ of your block. The arguments to __init__  will\nbe the parameters. All of\
       \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
       from gnuradio import gr\nimport enum\n\n\n# class Scheduler(enum.Enum):\n# \
-      \    first_channel = 0\n#     second_channel = 1\n#     deinit = 2\n\n\nclass\
+      \    first_channel = 0\n#     second_channel = 1\n#     deinit = 2\n\nclass\
       \ blk(gr.sync_block):  # other base classes are basic_block, decim_block, interp_block\n\
       \    \"\"\"Embedded Python Block example - a simple multiply const\"\"\"\n\n\
       \    def __init__(self, example_param=1.0):  # only default arguments here\n\
@@ -763,15 +763,17 @@ blocks:
       \            out_sig=[np.float32, np.float32]\n        )\n        # if an attribute\
       \ with the same name as a parameter is found,\n        # a callback is registered\
       \ (properties work, too).\n        self.example_param = example_param\n\n  \
-      \  def work(self, input_items, output_items):\n        WAIT = 10\n        packet_size_bytes\
-      \ = 10  # \u0420\u0430\u0437\u043C\u0435\u0440 \u043F\u0430\u043A\u0435\u0442\
-      \u0430 \u0432 \u0431\u0430\u0439\u0442\u0430\u0445\n        packet_size_bits\
-      \ = packet_size_bytes * 8  # 10 \u0431\u0430\u0439\u0442 = 80 \u0431\u0438\u0442\
-      \n        bit_size = 4  # \u0420\u0430\u0437\u043C\u0435\u0440 \u0431\u0438\u0442\
-      \u0430 (\u0434\u043B\u044F \u0440\u0430\u0441\u0447\u0435\u0442\u0430 \u0448\
-      \u0430\u0433\u0430 \u043F\u0440\u0438 \u0447\u0442\u0435\u043D\u0438\u0438)\n\
-      \        # \"\u041F\u043B\u0430\u043D\u0438\u0440\u043E\u0432\u0449\u0438\u043A\
-      \" \u0440\u0430\u0441\u043F\u0440\u0435\u0434\u0435\u043B\u044F\u044E\u0449\u0438\
+      \  def work(self, input_items, output_items):\n        # WAIT = 10\n\n     \
+      \   WAIT = 10 * 8 * 4\n        packet_size_bytes = 10  # \u0420\u0430\u0437\u043C\
+      \u0435\u0440 \u043F\u0430\u043A\u0435\u0442\u0430 \u0432 \u0431\u0430\u0439\u0442\
+      \u0430\u0445\n        packet_size_bits = packet_size_bytes * 8  # 10 \u0431\u0430\
+      \u0439\u0442 = 80 \u0431\u0438\u0442\n        bit_size = 4  # \u0420\u0430\u0437\
+      \u043C\u0435\u0440 \u0431\u0438\u0442\u0430 (\u0434\u043B\u044F \u0440\u0430\
+      \u0441\u0447\u0435\u0442\u0430 \u0448\u0430\u0433\u0430 \u043F\u0440\u0438 \u0447\
+      \u0442\u0435\u043D\u0438\u0438)\n        packet_size_mes = packet_size_bits\
+      \ * bit_size  # 10 \u0431\u0430\u0439\u0442 = 80 \u0431\u0438\u0442\n      \
+      \  # \"\u041F\u043B\u0430\u043D\u0438\u0440\u043E\u0432\u0449\u0438\u043A\"\
+      \ \u0440\u0430\u0441\u043F\u0440\u0435\u0434\u0435\u043B\u044F\u044E\u0449\u0438\
       \u0439 \u043F\u043E \u043A\u0430\u043D\u0430\u043B\u0430\u043C (\u043A\u0442\
       \u043E \u0440\u0430\u043D\u044C\u0448\u0435 0->1, \u0442\u043E\u0442 \u043F\u0435\
       \u0440\u0432\u044B\u0439 \u043A\u0430\u043D\u0430\u043B) \n        # scheduler\
@@ -782,53 +784,64 @@ blocks:
       \       \n        i = 0\n        j = 0\n\n        exact_num_of_mes_per_bit =\
       \ 4.33\n        count_mes_per_pack = 0\n        prev_start = 0\n\n        output_len\
       \ = len(output_items[0])\n        input_len = len(input_items[0])\n\n      \
-      \  # print(input_len, output_len)\n        \n\n        chan_0_start_condition\
-      \ = False\n        chan_0_start_index = 0\n        chan_1_start_condition =\
-      \ False\n        chan_1_start_index = 0\n        chan_num_0 = 0\n        chan_num_1\
-      \ = 1\n\n        start_condition_found = False  # \u0424\u043B\u0430\u0433,\
-      \ \u043D\u0430\u0439\u0434\u0435\u043D\u043E \u043B\u0438 start_condition\n\
-      \        read_started = False  # \u0424\u043B\u0430\u0433, \u043D\u0430\u0447\
-      \u0430\u043B\u043E\u0441\u044C \u043B\u0438 \u0447\u0442\u0435\u043D\u0438\u0435\
-      \n        bits_read = 0  # \u0421\u0447\u0435\u0442\u0447\u0438\u043A \u043F\
-      \u0440\u043E\u0447\u0438\u0442\u0430\u043D\u043D\u044B\u0445 \u0431\u0438\u0442\
-      \u043E\u0432\n\n        while i < (input_len - 7):\n            if not start_condition_found:\n\
-      \                # 1 - \u041B\u0438\u0431\u043E \u043E\u0434\u043D\u043E\u0432\
-      \u0440\u0435\u043C\u0435\u043D\u043D\u043E, \u043B\u0438\u0431\u043E \u0441\
-      \ \u0448\u0430\u0433\u043E\u043C \u0432 1 \u043E\u0431\u0430 \u043A\u0430\u043D\
-      \u0430\u043B\u0430 \u0434\u043E\u043B\u0436\u043D\u044B \u043F\u0435\u0440\u0435\
-      \u0439\u0442\u0438 \u0432 1 \n                # 1 - \u041F\u0440\u043E\u0432\
-      \u0435\u0440\u044F\u0435\u043C \u0443\u0441\u043B\u043E\u0432\u0438\u0435: \u043E\
-      \u0431\u0430 \u043A\u0430\u043D\u0430\u043B\u0430 \u043F\u043E\u0441\u043B\u0435\
-      \u0434\u043E\u0432\u0430\u0442\u0435\u043B\u044C\u043D\u043E \u043F\u0435\u0440\
-      \u0435\u0448\u043B\u0438 \u043D\u0430 1\n                if input_items[0][i]\
-      \ > 0.4:\n                    if chan_0_start_condition == False:\n        \
-      \                chan_0_start_index = (i + 2 + 4)\n                        chan_num_0\
-      \ = scheduler            # \u043A\u0430\u043A\u0438\u043C \u043A\u0430\u043D\
-      \u0430\u043B\u043E\u043C \u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D \u043F\
-      \u0435\u0440\u0432\u044B\u0439\n                        scheduler += 1\n   \
-      \                 chan_0_start_condition = True\n                if input_items[1][i]\
-      \ > 0.4:\n                    if chan_1_start_condition == False:\n        \
-      \                chan_1_start_index = (i + 2 + 4)\n                        chan_num_1\
-      \ = scheduler            # \u043A\u0430\u043A\u0438\u043C \u043A\u0430\u043D\
-      \u0430\u043B\u043E\u043C \u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D \u0432\
-      \u0442\u043E\u0440\u043E\u0439\n                        scheduler += 1\n   \
-      \                 chan_1_start_condition = True\n\n                if (chan_0_start_condition\
-      \ and chan_1_start_condition):\n                    if (abs(chan_0_start_index\
-      \ - chan_1_start_index) < 4):\n                        start_condition_found\
-      \ = True\n                        read_started = True\n                    \
-      \    bits_read = 0  # \u0421\u0431\u0440\u0430\u0441\u044B\u0432\u0430\u0435\
-      \u043C \u0441\u0447\u0435\u0442\u0447\u0438\u043A \u043F\u0440\u043E\u0447\u0438\
-      \u0442\u0430\u043D\u043D\u044B\u0445 \u0431\u0438\u0442\u043E\u0432\n      \
-      \              else:\n                        chan_0_start_condition = False\n\
-      \                        chan_1_start_condition = False\n                  \
-      \      # scheduler = Scheduler.first_channel\n                        scheduler\
-      \ = 0\n                    # # \u041F\u043E\u0441\u0447\u0438\u0442\u0430\u0435\
-      \u043C \u0442\u043E\u0447\u043D\u043E \u0441\u043A\u043E\u043B\u044C\u043A\u043E\
-      \ \u0438\u0437\u043C\u0435\u0440\u0435\u043D\u0438\u0439 \u043F\u0440\u0438\u0445\
-      \u043E\u0434\u0438\u0442\u0441\u044F \u043D\u0430 1 \u0431\u0438\u0442\n   \
-      \                 # if prev_start != 0:\n                    #     count_mes_per_pack\
-      \ = i - prev_start\n                    #     exact_num_of_mes_per_bit = count_mes_per_pack\
-      \ / packet_size_bits\n                    #     print(exact_num_of_mes_per_bit)\n\
+      \  # print(input_len, output_len)\n        test_mark = 0\n        \n\n     \
+      \   chan_0_start_condition = False\n        chan_0_start_index = 0\n       \
+      \ chan_1_start_condition = False\n        chan_1_start_index = 0\n        chan_num_0\
+      \ = 0\n        chan_num_1 = 1\n\n        start_condition_found = False  # \u0424\
+      \u043B\u0430\u0433, \u043D\u0430\u0439\u0434\u0435\u043D\u043E \u043B\u0438\
+      \ start_condition\n        read_started = False  # \u0424\u043B\u0430\u0433\
+      , \u043D\u0430\u0447\u0430\u043B\u043E\u0441\u044C \u043B\u0438 \u0447\u0442\
+      \u0435\u043D\u0438\u0435\n        bits_read = 0  # \u0421\u0447\u0435\u0442\u0447\
+      \u0438\u043A \u043F\u0440\u043E\u0447\u0438\u0442\u0430\u043D\u043D\u044B\u0445\
+      \ \u0431\u0438\u0442\u043E\u0432\n\n        # \u041D\u0435 \u043D\u0430\u0434\
+      \u043E \u0447\u0438\u0442\u0430\u0442\u044C \u0431\u0443\u0444\u0435\u0440,\
+      \ \u0435\u0441\u043B\u0438 \u0432 \u043D\u0435\u0433\u043E \u043D\u0435 \u043C\
+      \u043E\u0436\u0435\u0442 \u043F\u043E\u043C\u0435\u0441\u0442\u0438\u0442\u044C\
+      \u0441\u044F \u043A\u0430\u043A \u043C\u0438\u043D\u0438\u0443\u043C 1 \u043F\
+      \u043E\u043B\u043D\u043E\u0446\u0435\u043D\u043D\u044B\u0439 \u043F\u0430\u043A\
+      \u0435\u0442\n        # \u0420\u0430\u0437\u043C\u0435\u0440 \u0431\u0443\u0444\
+      \u0435\u0440\u0430 \u043F\u043E\u0447\u0435\u043C\u0443-\u0442\u043E \u043F\u043E\
+      \u0441\u0442\u043E\u044F\u043D\u043D\u043E \u043C\u0435\u043D\u044F\u0435\u0442\
+      \u0441\u044F \n        if (input_len < WAIT + packet_size_mes):\n          \
+      \  return(output_len)\n\n        while i < (input_len - 7):\n            if\
+      \ not start_condition_found:\n                # 1 - \u041B\u0438\u0431\u043E\
+      \ \u043E\u0434\u043D\u043E\u0432\u0440\u0435\u043C\u0435\u043D\u043D\u043E,\
+      \ \u043B\u0438\u0431\u043E \u0441 \u0448\u0430\u0433\u043E\u043C \u0432 1 \u043E\
+      \u0431\u0430 \u043A\u0430\u043D\u0430\u043B\u0430 \u0434\u043E\u043B\u0436\u043D\
+      \u044B \u043F\u0435\u0440\u0435\u0439\u0442\u0438 \u0432 1 \n              \
+      \  # 1 - \u041F\u0440\u043E\u0432\u0435\u0440\u044F\u0435\u043C \u0443\u0441\
+      \u043B\u043E\u0432\u0438\u0435: \u043E\u0431\u0430 \u043A\u0430\u043D\u0430\u043B\
+      \u0430 \u043F\u043E\u0441\u043B\u0435\u0434\u043E\u0432\u0430\u0442\u0435\u043B\
+      \u044C\u043D\u043E \u043F\u0435\u0440\u0435\u0448\u043B\u0438 \u043D\u0430 1\n\
+      \                if input_items[0][i] > 0.4:\n                    if chan_0_start_condition\
+      \ == False:\n                        chan_0_start_index = (i + 2 + 4)\n    \
+      \                    chan_num_0 = scheduler            # \u043A\u0430\u043A\u0438\
+      \u043C \u043A\u0430\u043D\u0430\u043B\u043E\u043C \u043D\u0430\u0437\u043D\u0430\
+      \u0447\u0435\u043D \u043F\u0435\u0440\u0432\u044B\u0439\n                  \
+      \      scheduler += 1\n                    chan_0_start_condition = True\n \
+      \               if input_items[1][i] > 0.4:\n                    if chan_1_start_condition\
+      \ == False:\n                        chan_1_start_index = (i + 2 + 4)\n    \
+      \                    chan_num_1 = scheduler            # \u043A\u0430\u043A\u0438\
+      \u043C \u043A\u0430\u043D\u0430\u043B\u043E\u043C \u043D\u0430\u0437\u043D\u0430\
+      \u0447\u0435\u043D \u0432\u0442\u043E\u0440\u043E\u0439\n                  \
+      \      scheduler += 1\n                    chan_1_start_condition = True\n\n\
+      \                if (chan_0_start_condition and chan_1_start_condition):\n \
+      \                   if (abs(chan_0_start_index - chan_1_start_index) < 4):\n\
+      \                        start_condition_found = True\n                    \
+      \    # print(i - test_mark)\n                        read_started = True\n \
+      \                       bits_read = 0  # \u0421\u0431\u0440\u0430\u0441\u044B\
+      \u0432\u0430\u0435\u043C \u0441\u0447\u0435\u0442\u0447\u0438\u043A \u043F\u0440\
+      \u043E\u0447\u0438\u0442\u0430\u043D\u043D\u044B\u0445 \u0431\u0438\u0442\u043E\
+      \u0432\n                    else:\n                        chan_0_start_condition\
+      \ = False\n                        chan_1_start_condition = False\n        \
+      \                # scheduler = Scheduler.first_channel\n                   \
+      \     scheduler = 0\n                    # # \u041F\u043E\u0441\u0447\u0438\u0442\
+      \u0430\u0435\u043C \u0442\u043E\u0447\u043D\u043E \u0441\u043A\u043E\u043B\u044C\
+      \u043A\u043E \u0438\u0437\u043C\u0435\u0440\u0435\u043D\u0438\u0439 \u043F\u0440\
+      \u0438\u0445\u043E\u0434\u0438\u0442\u0441\u044F \u043D\u0430 1 \u0431\u0438\
+      \u0442\n                    # if prev_start != 0:\n                    #   \
+      \  count_mes_per_pack = i - prev_start\n                    #     exact_num_of_mes_per_bit\
+      \ = count_mes_per_pack / packet_size_bits\n                    #     print(exact_num_of_mes_per_bit)\n\
       \                    # prev_start = i\n\n                # if input_items[0][i]\
       \ > 0.5 and input_items[1][i] > 0.5:\n                #     start_condition_found\
       \ = True\n                #     read_started = True\n                #     bits_read\
@@ -853,19 +866,27 @@ blocks:
       \                    start_condition_found = False\n                    read_started\
       \ = False\n                    chan_0_start_condition = False\n            \
       \        chan_1_start_condition = False\n                    bits_read = 0\n\
-      \                    scheduler = 0\n                    j += (packet_size_bits\
-      \  + 1) * 4 - packet_size_bits  # (packet_size_bits * 2)    - \u043D\u0443\u043B\
-      \u0438 \u0438 \u043F\u043E\u043B\u0435\u0437\u043D\u0430\u044F \u043D\u0430\u0433\
-      \u0440\u0443\u0437\u043A\u0430\n                                           \
-      \                                 # (+ 1) - 0x3               - \u043D\u0430\
-      \u0447\u0430\u043B\u043E \u0444\u0440\u0435\u0439\u043C\u0430\n            \
-      \                                                                # (- packet_size_bits)\
-      \      - \u043C\u044B \u0443\u0436\u0435 \u043F\u0435\u0440\u0435\u0434\u0430\
-      \u043B\u0438 1 \u043F\u0430\u043A\u0435\u0442 \u0431\u0438\u0442\u043E\u0432\
-      , \u043D\u0430\u0434\u043E \u0438\u0445 \u0443\u0447\u0435\u0441\u0442\u044C\
-      \n                    i += (WAIT // 2)\n\n            i += 1  # \u0428\u0430\
-      \u0433 \u0432 \u043B\u044E\u0431\u043E\u043C \u0441\u043B\u0443\u0447\u0430\u0435\
-      \n    \n        return output_len\n"
+      \                    scheduler = 0\n                    j += packet_size_bits\
+      \ * 4   # (packet_size_bits * 2)    - \u043D\u0443\u043B\u0438 \u0438 \u043F\
+      \u043E\u043B\u0435\u0437\u043D\u0430\u044F \u043D\u0430\u0433\u0440\u0443\u0437\
+      \u043A\u0430\n                                                             \
+      \               # (+ 1) - 0x3               - \u043D\u0430\u0447\u0430\u043B\
+      \u043E \u0444\u0440\u0435\u0439\u043C\u0430\n                              \
+      \                                              # (- packet_size_bits)      -\
+      \ \u043C\u044B \u0443\u0436\u0435 \u043F\u0435\u0440\u0435\u0434\u0430\u043B\
+      \u0438 1 \u043F\u0430\u043A\u0435\u0442 \u0431\u0438\u0442\u043E\u0432, \u043D\
+      \u0430\u0434\u043E \u0438\u0445 \u0443\u0447\u0435\u0441\u0442\u044C\n     \
+      \               stop_trig = 0\n                    # i += (WAIT / 2)\n     \
+      \               while (i < input_len and stop_trig < (WAIT / 2)):\n        \
+      \                if ((input_items[0][i] < 0.4) and (input_items[0][i] < 0.4)):\n\
+      \                            stop_trig += 1\n                        else:\n\
+      \                            # print(\"STOP: \", stop_trig)\n              \
+      \              stop_trig = 0\n                        i += 1\n             \
+      \       # print(\"END: \", stop_trig)\n                    test_mark = i\n\n\
+      \            i += 1  # \u0428\u0430\u0433 \u0432 \u043B\u044E\u0431\u043E\u043C\
+      \ \u0441\u043B\u0443\u0447\u0430\u0435\n\n        # output_items[0][0] = 2\n\
+      \        # output_items[0][output_len - 1] = 3\n        # print(output_len)\n\
+      \        # print(input_len)\n\n        return output_len\n"
     affinity: ''
     alias: ''
     comment: ''
@@ -879,7 +900,66 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [840, 248.0]
+    coordinate: [688, 240.0]
+    rotation: 0
+    state: enabled
+- name: epy_block_1_0_0_0
+  id: epy_block
+  parameters:
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\n\nimport numpy as np\n\
+      from gnuradio import gr\n# import enum\nimport time\n\n\nclass blk(gr.sync_block):\
+      \  # other base classes are basic_block, decim_block, interp_block\n    \"\"\
+      \"Embedded Python Block example - a simple multiply const\"\"\"\n\n    def __init__(self,\
+      \ example_param=1.0):  # only default arguments here\n        \"\"\"arguments\
+      \ to this function show up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n\
+      \            self,\n            name='Extract information IQ QPSK',   # will\
+      \ show up in GRC\n            in_sig=[np.float32, np.float32],\n           \
+      \ out_sig=[np.float32]\n        )\n        # if an attribute with the same name\
+      \ as a parameter is found,\n        # a callback is registered (properties work,\
+      \ too).\n        self.example_param = example_param\n\n    def work(self, input_items,\
+      \ output_items):\n        i = 0\n        j = 0\n\n        res_msec = 0\n   \
+      \     # num_good_bytes = 0\n        output_len = len(output_items[0])\n    \
+      \    input_len = len(input_items[0])\n        packet_size_bytes = 10  # \u0420\
+      \u0430\u0437\u043C\u0435\u0440 \u043F\u0430\u043A\u0435\u0442\u0430 \u0432 \u0431\
+      \u0430\u0439\u0442\u0430\u0445\n        packet_size_bits = packet_size_bytes\
+      \ * 8  # 10 \u0431\u0430\u0439\u0442 = 80 \u0431\u0438\u0442\n\n\n        while\
+      \ i < output_len - packet_size_bytes * 8:\n            # 1 - \u043F\u0440\u043E\
+      \u0447\u0438\u0442\u0430\u0442\u044C \u043F\u0430\u043A\u0435\u0442:\n     \
+      \       packet_str = \"\"\n            readed_bytes = 0\n\n            start\
+      \ = time.time()\n            while (readed_bytes < packet_size_bytes) and (i\
+      \ < (output_len - 8)):\n                byte = 0\n                for n in range(0,\
+      \ 4):\n                    byte <<= 2\n                    byte += int(input_items[1][i])\n\
+      \                    byte += int(input_items[0][i] * 2)\n                  \
+      \  i += 1\n                output_items[0][j] = byte\n                if 31\
+      \ < byte < 127:\n                    pass\n                    # num_good_bytes\
+      \ += 1\n                    # print(chr(byte), end = '')\n                 \
+      \   # packet_str += chr(byte)\n                j += 1\n                readed_bytes\
+      \ += 1\n            if j == 10:\n                finish = time.time()\n    \
+      \            res = finish - start\n                res_msec = res * 1000\n \
+      \           # 2 - \u043F\u0440\u043E\u043F\u0443\u0441\u0442\u0438\u0442\u044C\
+      \ \u043D\u0443\u043B\u0438\n            # print(packet_str, end = '')\n    \
+      \        # print(packet_str)\n            # i += (packet_size_bits * 4)\n\n\
+      \        # print('\u0412\u0440\u0435\u043C\u044F \u0440\u0430\u0431\u043E\u0442\
+      \u044B \u0432 \u043C\u0438\u043B\u043B\u0438\u0441\u0435\u043A\u0443\u043D\u0434\
+      \u0430\u0445: ', res_msec)\n        # print('\u0445\u043E\u0440\u043E\u0448\u0438\
+      \u0445 \u0431\u0430\u0439\u0442: ', num_good_bytes)\n\n        return output_len\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    example_param: '1.0'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    _io_cache: ('Extract information IQ QPSK', 'blk', [('example_param', '1.0')],
+      [('0', 'float', 1), ('1', 'float', 1)], [('0', 'float', 1)], 'Embedded Python
+      Block example - a simple multiply const', ['example_param'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [968, 408.0]
     rotation: 0
     state: enabled
 - name: qtgui_time_sink_x_0
@@ -937,7 +1017,7 @@ blocks:
     marker9: '-1'
     name: '""'
     nconnections: '2'
-    size: '1024'
+    size: 1024*16
     srate: '100000'
     stemplot: 'False'
     style1: '1'
@@ -976,9 +1056,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1088, 288.0]
+    coordinate: [1016, 272.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: qtgui_time_sink_x_0_0
   id: qtgui_time_sink_x
   parameters:
@@ -1034,7 +1114,7 @@ blocks:
     marker9: '-1'
     name: '"Witout"'
     nconnections: '2'
-    size: '1024'
+    size: 1024*16
     srate: '100000'
     stemplot: 'False'
     style1: '1'
@@ -1073,7 +1153,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [776, 432.0]
+    coordinate: [624, 424.0]
     rotation: 0
     state: true
 - name: qtgui_time_sink_x_0_1
@@ -1131,7 +1211,7 @@ blocks:
     marker9: '-1'
     name: '""'
     nconnections: '1'
-    size: '1024'
+    size: 1024 * 16
     srate: '100000'
     stemplot: 'False'
     style1: '1'
@@ -1170,9 +1250,106 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1608, 208.0]
+    coordinate: [1272, 208.0]
     rotation: 0
     state: disabled
+- name: qtgui_time_sink_x_0_2
+  id: qtgui_time_sink_x
+  parameters:
+    affinity: ''
+    alias: ''
+    alpha1: '1.0'
+    alpha10: '1.0'
+    alpha2: '1.0'
+    alpha3: '1.0'
+    alpha4: '1.0'
+    alpha5: '1.0'
+    alpha6: '1.0'
+    alpha7: '1.0'
+    alpha8: '1.0'
+    alpha9: '1.0'
+    autoscale: 'False'
+    axislabels: 'True'
+    color1: blue
+    color10: dark blue
+    color2: red
+    color3: green
+    color4: black
+    color5: cyan
+    color6: magenta
+    color7: yellow
+    color8: dark red
+    color9: dark green
+    comment: ''
+    ctrlpanel: 'False'
+    entags: 'True'
+    grid: 'False'
+    gui_hint: ''
+    label1: Signal 1
+    label10: Signal 10
+    label2: Signal 2
+    label3: Signal 3
+    label4: Signal 4
+    label5: Signal 5
+    label6: Signal 6
+    label7: Signal 7
+    label8: Signal 8
+    label9: Signal 9
+    legend: 'True'
+    marker1: '-1'
+    marker10: '-1'
+    marker2: '-1'
+    marker3: '-1'
+    marker4: '-1'
+    marker5: '-1'
+    marker6: '-1'
+    marker7: '-1'
+    marker8: '-1'
+    marker9: '-1'
+    name: '""'
+    nconnections: '1'
+    size: 1024*16
+    srate: '100000'
+    stemplot: 'False'
+    style1: '1'
+    style10: '1'
+    style2: '1'
+    style3: '1'
+    style4: '1'
+    style5: '1'
+    style6: '1'
+    style7: '1'
+    style8: '1'
+    style9: '1'
+    tr_chan: '0'
+    tr_delay: '0'
+    tr_level: '0.0'
+    tr_mode: qtgui.TRIG_MODE_FREE
+    tr_slope: qtgui.TRIG_SLOPE_POS
+    tr_tag: '""'
+    type: float
+    update_time: '0.10'
+    width1: '1'
+    width10: '1'
+    width2: '1'
+    width3: '1'
+    width4: '1'
+    width5: '1'
+    width6: '1'
+    width7: '1'
+    width8: '1'
+    width9: '1'
+    ylabel: Amplitude
+    ymax: '1'
+    ymin: '-1'
+    yunit: '""'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1240, 400.0]
+    rotation: 0
+    state: enabled
 
 connections:
 - [blocks_char_to_float_0, '0', qtgui_time_sink_x_0_1, '0']
@@ -1196,9 +1373,12 @@ connections:
 - [epy_block_1_0, '0', qtgui_time_sink_x_0, '0']
 - [epy_block_1_0, '1', qtgui_time_sink_x_0, '1']
 - [epy_block_1_0_0, '0', blocks_float_to_char_0, '0']
+- [epy_block_1_0_0, '0', epy_block_1_0_0_0, '0']
 - [epy_block_1_0_0, '0', qtgui_time_sink_x_0, '0']
 - [epy_block_1_0_0, '1', blocks_float_to_char_0_0, '0']
+- [epy_block_1_0_0, '1', epy_block_1_0_0_0, '1']
 - [epy_block_1_0_0, '1', qtgui_time_sink_x_0, '1']
+- [epy_block_1_0_0_0, '0', qtgui_time_sink_x_0_2, '0']
 
 metadata:
   file_format: 1

@@ -16,7 +16,6 @@ import enum
 #     second_channel = 1
 #     deinit = 2
 
-
 class blk(gr.sync_block):  # other base classes are basic_block, decim_block, interp_block
     """Embedded Python Block example - a simple multiply const"""
 
@@ -33,10 +32,13 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
         self.example_param = example_param
 
     def work(self, input_items, output_items):
-        WAIT = 10
+        # WAIT = 10
+
+        WAIT = 10 * 8 * 4
         packet_size_bytes = 10  # Размер пакета в байтах
         packet_size_bits = packet_size_bytes * 8  # 10 байт = 80 бит
         bit_size = 4  # Размер бита (для расчета шага при чтении)
+        packet_size_mes = packet_size_bits * bit_size  # 10 байт = 80 бит
         # "Планировщик" распределяющий по каналам (кто раньше 0->1, тот первый канал) 
         # scheduler = Scheduler.first_channel
         scheduler = 0
@@ -56,6 +58,7 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
         input_len = len(input_items[0])
 
         # print(input_len, output_len)
+        test_mark = 0
         
 
         chan_0_start_condition = False
@@ -68,6 +71,11 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
         start_condition_found = False  # Флаг, найдено ли start_condition
         read_started = False  # Флаг, началось ли чтение
         bits_read = 0  # Счетчик прочитанных битов
+
+        # Не надо читать буфер, если в него не может поместиться как миниум 1 полноценный пакет
+        # Размер буфера почему-то постоянно меняется 
+        if (input_len < WAIT + packet_size_mes):
+            return(output_len)
 
         while i < (input_len - 7):
             if not start_condition_found:
@@ -89,6 +97,7 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
                 if (chan_0_start_condition and chan_1_start_condition):
                     if (abs(chan_0_start_index - chan_1_start_index) < 4):
                         start_condition_found = True
+                        # print(i - test_mark)
                         read_started = True
                         bits_read = 0  # Сбрасываем счетчик прочитанных битов
                     else:
@@ -126,11 +135,26 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
                     chan_1_start_condition = False
                     bits_read = 0
                     scheduler = 0
-                    j += (packet_size_bits  + 1) * 4 - packet_size_bits  # (packet_size_bits * 2)    - нули и полезная нагрузка
+                    j += packet_size_bits * 4   # (packet_size_bits * 2)    - нули и полезная нагрузка
                                                                             # (+ 1) - 0x3               - начало фрейма
                                                                             # (- packet_size_bits)      - мы уже передали 1 пакет битов, надо их учесть
-                    i += (WAIT // 2)
+                    stop_trig = 0
+                    # i += (WAIT / 2)
+                    while (i < input_len and stop_trig < (WAIT / 2)):
+                        if ((input_items[0][i] < 0.4) and (input_items[0][i] < 0.4)):
+                            stop_trig += 1
+                        else:
+                            # print("STOP: ", stop_trig)
+                            stop_trig = 0
+                        i += 1
+                    # print("END: ", stop_trig)
+                    test_mark = i
 
             i += 1  # Шаг в любом случае
-    
+
+        # output_items[0][0] = 2
+        # output_items[0][output_len - 1] = 3
+        # print(output_len)
+        # print(input_len)
+
         return output_len

@@ -31,7 +31,10 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
         i = 0
         default_level = "\0" * WAIT
         start_condition = chr(3)        # Это 2 единицы подряд (2 надо, чтобы на оба канала)
-        information = "<"*10
+
+        # information = "Hello!!!!!"
+        information = "<" * 10
+
         messege = default_level + start_condition + information
         message_bytes = bytes(messege, 'ascii')
         mes_len = len(messege)
