@@ -15,7 +15,7 @@ import time
 class blk(gr.sync_block):  # other base classes are basic_block, decim_block, interp_block
     """Embedded Python Block example - a simple multiply const"""
 
-    def __init__(self, example_param=1.0):  # only default arguments here
+    def __init__(self, mode = 0):  # only default arguments here
         """arguments to this function show up as parameters in GRC"""
         gr.sync_block.__init__(
             self,
@@ -24,8 +24,9 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
             out_sig=[np.float32]
         )
         # if an attribute with the same name as a parameter is found,
-        # a callback is registered (properties work, too).
-        self.example_param = example_param
+        self.num_good_bytes = 0
+        self.num_bad_bytes = 0
+        self.mode = mode
 
     def work(self, input_items, output_items):
         i = 0
@@ -47,14 +48,45 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
             start = time.time()
             while (readed_bytes < packet_size_bytes) and (i < (output_len - 8)):
                 byte = 0
-                for n in range(0, 4):
-                    byte <<= 2
-                    byte += int(input_items[1][i])
-                    byte += int(input_items[0][i] * 2)
-                    i += 1
+                # QPSK
+                if self.mode == 0:
+                    for n in range(0, 4):
+                        byte <<= 2
+                        byte += (1 if input_items[1][i] > 0.5  else 0)
+                        byte += (1 if input_items[0][i] > 0.5  else 0) * 2
+                        i += 1
+                # QAM16
+                if self.mode == 1:
+                    for n in range(2):
+                        byte <<= 2
+                        
+                        # Работа с input_items[1][i]
+                        byte += (0 if input_items[1][i] < 0.2 else 
+                                1 if input_items[1][i] < 0.4 else 
+                                2 if input_items[1][i] < 0.8 else 3)
+
+                        # Работа с input_items[0][i]
+                        byte += ((0 if input_items[0][i] < 0.2 else 
+                                1 if input_items[0][i] < 0.4 else 
+                                2 if input_items[0][i] < 0.8 else 3) * 4)
+                        
+                        # Увеличиваем индекс
+                        i += 1
+
+                if byte != 0:
+                    print(byte)
                 output_items[0][j] = byte
-                if 31 < byte < 127:
-                    pass
+                # if 31 < byte < 127:
+
+                # ЗАМЕР СКОРОСТИ И ОШИБКИ
+                if 0 < byte < 256:
+                    if byte == 60:
+                        self.num_good_bytes += 1
+                    else:
+                        self.num_bad_bytes += 1
+
+
+                #     pass
                     # num_good_bytes += 1
                     # print(chr(byte), end = '')
                     # packet_str += chr(byte)
@@ -71,5 +103,7 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
 
         # print('Время работы в миллисекундах: ', res_msec)
         # print('хороших байт: ', num_good_bytes)
+        if self.num_good_bytes > 1000:
+            print("Good bytes: ", self.num_good_bytes, "  ---  Bad bytes: ", self.num_bad_bytes)
 
         return output_len

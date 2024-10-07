@@ -232,11 +232,11 @@ class ADIBlock(gr.sync_block):  # other base classes are basic_block, decim_bloc
                 i = remaining_len  # Сбрасываем индекс для data
 
                 while i < (USB_PACKET_SIZE ) and n < input_len:  # Проверяем и n
-                    value1 = int((input_items[0][n] + 1) * 4000 / 2) & 0xFFF  # Приведение к целому числу и ограничение до 16 бит
+                    value1 = int((input_items[0][n]) * 4000) & 0xFFF  # Приведение к целому числу и ограничение до 16 бит
                     data[i] = value1 & 0xFF  # Младший байт
                     data[i + 1] = (value1 >> 8) & 0xFF  # Старший байт
                     i += 2
-                    value2 = int((input_items[1][n] + 1) * 4000 / 2) & 0xFFF  # Приведение к целому числу и ограничение до 16 бит
+                    value2 = int((input_items[1][n]) * 4000) & 0xFFF  # Приведение к целому числу и ограничение до 16 бит
                     data[i] = value2 & 0xFF  # Младший байт
                     data[i + 1] = (value2 >> 8) & 0xFF  # Старший байт
                     i += 2
@@ -252,11 +252,11 @@ class ADIBlock(gr.sync_block):  # other base classes are basic_block, decim_bloc
                 remaining_data = bytearray()
 
                 while n < input_len and i < USB_PACKET_SIZE :
-                    value1 = int((input_items[0][n] + 1) * 4000 / 2) & 0xFFF
+                    value1 = int((input_items[0][n]) * 4000) & 0xFFF
                     remaining_data.append(value1 & 0xFF)
                     remaining_data.append((value1 >> 8) & 0xFF)
                     i += 2
-                    value2 = int((input_items[1][n] + 1) * 4000 / 2) & 0xFFF
+                    value2 = int((input_items[1][n]) * 4000) & 0xFFF
                     remaining_data.append(value2 & 0xFF)
                     remaining_data.append((value2 >> 8) & 0xFF)
                     i += 2

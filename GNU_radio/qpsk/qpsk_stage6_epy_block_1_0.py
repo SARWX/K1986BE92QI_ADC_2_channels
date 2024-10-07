@@ -15,7 +15,7 @@ WAIT = 10
 class blk(gr.sync_block):  # other base classes are basic_block, decim_block, interp_block
     """Embedded Python Block example - a simple multiply const"""
 
-    def __init__(self, example_param=1.0):  # only default arguments here
+    def __init__(self, mode = 0):  # only default arguments here
         """arguments to this function show up as parameters in GRC"""
         gr.sync_block.__init__(
             self,
@@ -25,15 +25,20 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
         )
         # if an attribute with the same name as a parameter is found,
         # a callback is registered (properties work, too).
-        self.example_param = example_param
+        self.mode = mode  # QPSK = 0 или QAM16 = 1
 
     def work(self, input_items, output_items):
         i = 0
         default_level = "\0" * WAIT
-        start_condition = chr(3)        # Это 2 единицы подряд (2 надо, чтобы на оба канала)
+        if self.mode == 0:
+            start_condition = chr(3)        # Это 2 единицы подряд (2 надо, чтобы на оба канала)
+        else:
+            start_condition = chr(15)        # Это по 2 единицы подряд на 2 канала
+        all_contelation_points = chr(27)
 
         # information = "Hello!!!!!"
         information = "<" * 10
+        # information = all_contelation_points * 10
 
         messege = default_level + start_condition + information
         message_bytes = bytes(messege, 'ascii')
