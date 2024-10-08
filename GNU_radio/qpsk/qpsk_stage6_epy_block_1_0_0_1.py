@@ -19,7 +19,7 @@ import enum
 class blk(gr.sync_block):  # other base classes are basic_block, decim_block, interp_block
     """Embedded Python Block example - a simple multiply const"""
 
-    def __init__(self, example_param=1.0):  # only default arguments here
+    def __init__(self, mode = 0):  # only default arguments here
         """arguments to this function show up as parameters in GRC"""
         gr.sync_block.__init__(
             self,
@@ -27,12 +27,18 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
             in_sig=[np.float32, np.float32],
             out_sig=[np.float32, np.float32]
         )
+        # self.set_min_output_buffer(2**13)        # 512 - минимальный размер
+        # # self.set_max_output_buffer(2**9)  # Установка максимального размера буфера
+        # self.set_output_multiple(2**13)     # Установка шага данных
+
         # if an attribute with the same name as a parameter is found,
         # a callback is registered (properties work, too).
-        self.example_param = example_param
+        self.mode = mode
 
     def work(self, input_items, output_items):
         # WAIT = 10
+
+        cnt_start_cond = 0
 
         WAIT = 10 * 8 * 4
         packet_size_bytes = 10  # Размер пакета в байтах
@@ -55,7 +61,10 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
         prev_start = 0
 
         output_len = len(output_items[0])
+        # print("output len = ", output_len)
         input_len = len(input_items[0])
+        # print("input len = ", input_len)
+
 
         # print(input_len, output_len)
         test_mark = 0
@@ -84,7 +93,7 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
             amplitude = 1.0
         threshold = amplitude * 0.4
         
-
+        # print(input_len)
         while i < (input_len - 7):
             if not start_condition_found:
                 # 1 - Либо одновременно, либо с шагом в 1 оба канала должны перейти в 1 
@@ -103,27 +112,15 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
                     chan_1_start_condition = True
 
                 if (chan_0_start_condition and chan_1_start_condition):
-                    if (abs(chan_0_start_index - chan_1_start_index) < 4):
+                    if (abs(chan_0_start_index - chan_1_start_index) < 8):
                         start_condition_found = True
-                        # print(i - test_mark)
+                        cnt_start_cond += 1
                         read_started = True
                         bits_read = 0  # Сбрасываем счетчик прочитанных битов
                     else:
                         chan_0_start_condition = False
                         chan_1_start_condition = False
-                        # scheduler = Scheduler.first_channel
                         scheduler = 0
-                    # # Посчитаем точно сколько измерений приходится на 1 бит
-                    # if prev_start != 0:
-                    #     count_mes_per_pack = i - prev_start
-                    #     exact_num_of_mes_per_bit = count_mes_per_pack / packet_size_bits
-                    #     print(exact_num_of_mes_per_bit)
-                    # prev_start = i
-
-                # if input_items[0][i] > 0.5 and input_items[1][i] > 0.5:
-                #     start_condition_found = True
-                #     read_started = True
-                #     bits_read = 0  # Сбрасываем счетчик прочитанных битов
             else:
                 if read_started and (bits_read < packet_size_bits):
                     # 2 - Читаем биты с текущего индекса с шагом exact_num_of_mes_per_bit
@@ -137,8 +134,10 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
                         output_items[chan_num_1][j // 2] = (input_items[1][i] / amplitude)
                         j += 1
                         bits_read += 1
+                        # print(bits_read, i)
                 else:
                     # Чтение завершено, сбрасываем флаг и ищем новое start_condition
+                    # print("ENDED! i = ", i)
                     start_condition_found = False
                     read_started = False
                     chan_0_start_condition = False
@@ -149,30 +148,17 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
                                                                             # (+ 1) - 0x3               - начало фрейма
                                                                             # (- packet_size_bits)      - мы уже передали 1 пакет битов, надо их учесть
                     stop_trig = 0
-                    # i += (WAIT / 2)
-                    while (i < input_len and stop_trig < (WAIT / 2)):
+                    while (i < input_len and (stop_trig < (WAIT / 2) / (self.mode * 2 + 1))):
                         if ((input_items[0][i] < threshold) and (input_items[0][i] < threshold)):
                             stop_trig += 1
+                            # print("STOP_TRIG = ", stop_trig) 
                         else:
-                            # print("STOP: ", stop_trig)
+                            # print("DELETED STOP_TRIG WAS EQUAL = ", stop_trig) 
                             stop_trig = 0
                         i += 1
-                    # print("END: ", stop_trig)
                     test_mark = i
-
+                    # print(i)
             i += 1  # Шаг в любом случае
 
-        # output_items[0][0] = 2
-        # output_items[0][output_len - 1] = 3
-        # print(output_len)
-        # print(input_len)
-
-        # # Нормализуем данные
-        # amplitude = np.max(output_items[0][0])
-        # if amplitude > 1.0:
-        #     output_items[0][0] = np.divide(output_items[0][0], amplitude)
-        #     output_items[0][1] = np.divide(output_items[0][1], amplitude)
-        #     # print(amplitude)
-
-
+        print(cnt_start_cond)
         return output_len

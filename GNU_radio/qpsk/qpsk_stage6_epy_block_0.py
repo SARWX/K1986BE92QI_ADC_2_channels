@@ -220,6 +220,7 @@ class ADIBlock(gr.sync_block):  # other base classes are basic_block, decim_bloc
             n = 0
             remaining_len = 0
             input_len = min(len(input_items[0]), len(input_items[1]))  # Используем минимальную длину для избежания выхода за границы
+            # print(input_len)
 
             # Если есть remaining_data, объединяем его с текущими данными
             if self.remaining_data:

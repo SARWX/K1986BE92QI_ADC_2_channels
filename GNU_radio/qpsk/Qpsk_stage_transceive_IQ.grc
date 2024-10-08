@@ -90,7 +90,7 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    const: 1/3
+    const: 1/12
     maxoutbuf: '0'
     minoutbuf: '0'
     type: float
@@ -108,7 +108,7 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    const: 1/3
+    const: 1/12
     maxoutbuf: '0'
     minoutbuf: '0'
     type: float
@@ -169,7 +169,7 @@ blocks:
     bus_structure: null
     coordinate: [544, 240.0]
     rotation: 0
-    state: true
+    state: disabled
 - name: blocks_pack_k_bits_bb_0_0
   id: blocks_pack_k_bits_bb
   parameters:
@@ -185,7 +185,7 @@ blocks:
     bus_structure: null
     coordinate: [544, 304.0]
     rotation: 0
-    state: true
+    state: disabled
 - name: blocks_stream_demux_0
   id: blocks_stream_demux
   parameters:
@@ -204,7 +204,26 @@ blocks:
     bus_structure: null
     coordinate: [368, 248.0]
     rotation: 0
-    state: true
+    state: disabled
+- name: blocks_stream_demux_0_0
+  id: blocks_stream_demux
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    lengths: (1, 1)
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_outputs: '2'
+    type: byte
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [448, 80.0]
+    rotation: 0
+    state: enabled
 - name: blocks_unpack_k_bits_bb_0_0
   id: blocks_unpack_k_bits_bb
   parameters:
@@ -443,46 +462,47 @@ blocks:
       \u043C \u043C\u0438\u043D\u0438\u043C\u0430\u043B\u044C\u043D\u0443\u044E \u0434\
       \u043B\u0438\u043D\u0443 \u0434\u043B\u044F \u0438\u0437\u0431\u0435\u0436\u0430\
       \u043D\u0438\u044F \u0432\u044B\u0445\u043E\u0434\u0430 \u0437\u0430 \u0433\u0440\
-      \u0430\u043D\u0438\u0446\u044B\n\n            # \u0415\u0441\u043B\u0438 \u0435\
-      \u0441\u0442\u044C remaining_data, \u043E\u0431\u044A\u0435\u0434\u0438\u043D\
-      \u044F\u0435\u043C \u0435\u0433\u043E \u0441 \u0442\u0435\u043A\u0443\u0449\u0438\
-      \u043C\u0438 \u0434\u0430\u043D\u043D\u044B\u043C\u0438\n            if self.remaining_data:\n\
-      \                remaining_len = len(self.remaining_data)\n                #\
-      \ \u0423\u0432\u0435\u043B\u0438\u0447\u0438\u0432\u0430\u0435\u043C \u0440\u0430\
-      \u0437\u043C\u0435\u0440 \u0431\u0443\u0444\u0435\u0440\u0430, \u0434\u043E\u0431\
-      \u0430\u0432\u043B\u044F\u044F \u0434\u043B\u0438\u043D\u0443 remaining_data\n\
-      \                data = self.remaining_data + data[:USB_PACKET_SIZE  - remaining_len]\
-      \  # \u041E\u0433\u0440\u0430\u043D\u0438\u0447\u0438\u0432\u0430\u0435\u043C\
-      \ data \u043F\u043E \u0440\u0430\u0437\u043C\u0435\u0440\u0443\n           \
-      \     self.remaining_data = bytearray()  # \u041E\u0447\u0438\u0449\u0430\u0435\
-      \u043C \u0431\u0443\u0444\u0435\u0440 \u043F\u043E\u0441\u043B\u0435 \u043E\u0431\
-      \u044A\u0435\u0434\u0438\u043D\u0435\u043D\u0438\u044F\n\n            while\
-      \ n < input_len:\n                i = remaining_len  # \u0421\u0431\u0440\u0430\
-      \u0441\u044B\u0432\u0430\u0435\u043C \u0438\u043D\u0434\u0435\u043A\u0441 \u0434\
-      \u043B\u044F data\n\n                while i < (USB_PACKET_SIZE ) and n < input_len:\
-      \  # \u041F\u0440\u043E\u0432\u0435\u0440\u044F\u0435\u043C \u0438 n\n     \
-      \               value1 = int((input_items[0][n]) * 4000) & 0xFFF  # \u041F\u0440\
-      \u0438\u0432\u0435\u0434\u0435\u043D\u0438\u0435 \u043A \u0446\u0435\u043B\u043E\
-      \u043C\u0443 \u0447\u0438\u0441\u043B\u0443 \u0438 \u043E\u0433\u0440\u0430\u043D\
-      \u0438\u0447\u0435\u043D\u0438\u0435 \u0434\u043E 16 \u0431\u0438\u0442\n  \
-      \                  data[i] = value1 & 0xFF  # \u041C\u043B\u0430\u0434\u0448\
-      \u0438\u0439 \u0431\u0430\u0439\u0442\n                    data[i + 1] = (value1\
-      \ >> 8) & 0xFF  # \u0421\u0442\u0430\u0440\u0448\u0438\u0439 \u0431\u0430\u0439\
-      \u0442\n                    i += 2\n                    value2 = int((input_items[1][n])\
-      \ * 4000) & 0xFFF  # \u041F\u0440\u0438\u0432\u0435\u0434\u0435\u043D\u0438\u0435\
-      \ \u043A \u0446\u0435\u043B\u043E\u043C\u0443 \u0447\u0438\u0441\u043B\u0443\
-      \ \u0438 \u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D\u0438\u0435\
-      \ \u0434\u043E 16 \u0431\u0438\u0442\n                    data[i] = value2 &\
-      \ 0xFF  # \u041C\u043B\u0430\u0434\u0448\u0438\u0439 \u0431\u0430\u0439\u0442\
-      \n                    data[i + 1] = (value2 >> 8) & 0xFF  # \u0421\u0442\u0430\
-      \u0440\u0448\u0438\u0439 \u0431\u0430\u0439\u0442\n                    i +=\
-      \ 2\n                    n += 1\n\n                # \u041E\u0442\u043F\u0440\
-      \u0430\u0432\u043B\u044F\u0435\u043C \u0441\u043E\u0431\u0440\u0430\u043D\u043D\
-      \u044B\u0435 \u0434\u0430\u043D\u043D\u044B\u0435 \u0432 \u043F\u043E\u0440\u0442\
-      \n                self.port.write(data)  # \u041E\u0442\u043F\u0440\u0430\u0432\
-      \u043B\u044F\u0435\u043C \u0442\u043E\u043B\u044C\u043A\u043E \u0437\u0430\u043F\
-      \u043E\u043B\u043D\u0435\u043D\u043D\u0443\u044E \u0447\u0430\u0441\u0442\u044C\
-      \n                remaining_len = 0\n                data = bytearray(USB_PACKET_SIZE\
+      \u0430\u043D\u0438\u0446\u044B\n            # print(input_len)\n\n         \
+      \   # \u0415\u0441\u043B\u0438 \u0435\u0441\u0442\u044C remaining_data, \u043E\
+      \u0431\u044A\u0435\u0434\u0438\u043D\u044F\u0435\u043C \u0435\u0433\u043E \u0441\
+      \ \u0442\u0435\u043A\u0443\u0449\u0438\u043C\u0438 \u0434\u0430\u043D\u043D\u044B\
+      \u043C\u0438\n            if self.remaining_data:\n                remaining_len\
+      \ = len(self.remaining_data)\n                # \u0423\u0432\u0435\u043B\u0438\
+      \u0447\u0438\u0432\u0430\u0435\u043C \u0440\u0430\u0437\u043C\u0435\u0440 \u0431\
+      \u0443\u0444\u0435\u0440\u0430, \u0434\u043E\u0431\u0430\u0432\u043B\u044F\u044F\
+      \ \u0434\u043B\u0438\u043D\u0443 remaining_data\n                data = self.remaining_data\
+      \ + data[:USB_PACKET_SIZE  - remaining_len]  # \u041E\u0433\u0440\u0430\u043D\
+      \u0438\u0447\u0438\u0432\u0430\u0435\u043C data \u043F\u043E \u0440\u0430\u0437\
+      \u043C\u0435\u0440\u0443\n                self.remaining_data = bytearray()\
+      \  # \u041E\u0447\u0438\u0449\u0430\u0435\u043C \u0431\u0443\u0444\u0435\u0440\
+      \ \u043F\u043E\u0441\u043B\u0435 \u043E\u0431\u044A\u0435\u0434\u0438\u043D\u0435\
+      \u043D\u0438\u044F\n\n            while n < input_len:\n                i =\
+      \ remaining_len  # \u0421\u0431\u0440\u0430\u0441\u044B\u0432\u0430\u0435\u043C\
+      \ \u0438\u043D\u0434\u0435\u043A\u0441 \u0434\u043B\u044F data\n\n         \
+      \       while i < (USB_PACKET_SIZE ) and n < input_len:  # \u041F\u0440\u043E\
+      \u0432\u0435\u0440\u044F\u0435\u043C \u0438 n\n                    value1 =\
+      \ int((input_items[0][n]) * 4000) & 0xFFF  # \u041F\u0440\u0438\u0432\u0435\u0434\
+      \u0435\u043D\u0438\u0435 \u043A \u0446\u0435\u043B\u043E\u043C\u0443 \u0447\u0438\
+      \u0441\u043B\u0443 \u0438 \u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D\
+      \u0438\u0435 \u0434\u043E 16 \u0431\u0438\u0442\n                    data[i]\
+      \ = value1 & 0xFF  # \u041C\u043B\u0430\u0434\u0448\u0438\u0439 \u0431\u0430\
+      \u0439\u0442\n                    data[i + 1] = (value1 >> 8) & 0xFF  # \u0421\
+      \u0442\u0430\u0440\u0448\u0438\u0439 \u0431\u0430\u0439\u0442\n            \
+      \        i += 2\n                    value2 = int((input_items[1][n]) * 4000)\
+      \ & 0xFFF  # \u041F\u0440\u0438\u0432\u0435\u0434\u0435\u043D\u0438\u0435 \u043A\
+      \ \u0446\u0435\u043B\u043E\u043C\u0443 \u0447\u0438\u0441\u043B\u0443 \u0438\
+      \ \u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D\u0438\u0435 \u0434\u043E\
+      \ 16 \u0431\u0438\u0442\n                    data[i] = value2 & 0xFF  # \u041C\
+      \u043B\u0430\u0434\u0448\u0438\u0439 \u0431\u0430\u0439\u0442\n            \
+      \        data[i + 1] = (value2 >> 8) & 0xFF  # \u0421\u0442\u0430\u0440\u0448\
+      \u0438\u0439 \u0431\u0430\u0439\u0442\n                    i += 2\n        \
+      \            n += 1\n\n                # \u041E\u0442\u043F\u0440\u0430\u0432\
+      \u043B\u044F\u0435\u043C \u0441\u043E\u0431\u0440\u0430\u043D\u043D\u044B\u0435\
+      \ \u0434\u0430\u043D\u043D\u044B\u0435 \u0432 \u043F\u043E\u0440\u0442\n   \
+      \             self.port.write(data)  # \u041E\u0442\u043F\u0440\u0430\u0432\u043B\
+      \u044F\u0435\u043C \u0442\u043E\u043B\u044C\u043A\u043E \u0437\u0430\u043F\u043E\
+      \u043B\u043D\u0435\u043D\u043D\u0443\u044E \u0447\u0430\u0441\u0442\u044C\n\
+      \                remaining_len = 0\n                data = bytearray(USB_PACKET_SIZE\
       \ )\n\n            # \u041E\u0431\u0440\u0430\u0431\u043E\u0442\u043A\u0430\
       \ \u043E\u0441\u0442\u0430\u0432\u0448\u0438\u0445\u0441\u044F \u0434\u0430\u043D\
       \u043D\u044B\u0445\n            if n < input_len:\n                remaining_data\
@@ -551,7 +571,7 @@ blocks:
       \ \u043F\u043E 2 \u0435\u0434\u0438\u043D\u0438\u0446\u044B \u043F\u043E\u0434\
       \u0440\u044F\u0434 \u043D\u0430 2 \u043A\u0430\u043D\u0430\u043B\u0430\n   \
       \     all_contelation_points = chr(27)\n\n        # information = \"Hello!!!!!\"\
-      \n        information = \"<\" * 10\n        # information = all_contelation_points\
+      \n        # information = \"<\" * 10\n        information = all_contelation_points\
       \ * 10\n\n        messege = default_level + start_condition + information\n\
       \        message_bytes = bytes(messege, 'ascii')\n        mes_len = len(messege)\n\
       \        output_len = len(output_items[0])\n        while(i < (output_len -\
@@ -566,7 +586,7 @@ blocks:
     comment: ''
     maxoutbuf: '0'
     minoutbuf: '0'
-    mode: '1'
+    mode: '0'
   states:
     _io_cache: ('Test string generator', 'blk', [('mode', '0')], [], [('0', 'byte',
       1)], 'Embedded Python Block example - a simple multiply const', ['mode'])
@@ -672,7 +692,7 @@ blocks:
     bus_structure: null
     coordinate: [544, 400.0]
     rotation: 0
-    state: true
+    state: enabled
 - name: qtgui_time_sink_x_0_0
   id: qtgui_time_sink_x
   parameters:
@@ -767,9 +787,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1080, 136.0]
+    coordinate: [1072, 136.0]
     rotation: 0
-    state: true
+    state: enabled
 
 connections:
 - [blocks_char_to_float_0_0_0, '0', qtgui_time_sink_x_0, '0']
@@ -783,8 +803,11 @@ connections:
 - [blocks_pack_k_bits_bb_0_0, '0', blocks_char_to_float_0_0_0_1, '0']
 - [blocks_stream_demux_0, '0', blocks_pack_k_bits_bb_0, '0']
 - [blocks_stream_demux_0, '1', blocks_pack_k_bits_bb_0_0, '0']
+- [blocks_stream_demux_0_0, '0', blocks_char_to_float_0_0_0_0, '0']
+- [blocks_stream_demux_0_0, '1', blocks_char_to_float_0_0_0_1, '0']
 - [blocks_unpack_k_bits_bb_0_0, '0', blocks_char_to_float_0_0_0, '0']
 - [blocks_unpack_k_bits_bb_0_0, '0', blocks_stream_demux_0, '0']
+- [blocks_unpack_k_bits_bb_0_0, '0', blocks_stream_demux_0_0, '0']
 - [epy_block_0, '0', blocks_null_sink_0, '0']
 - [epy_block_0, '1', blocks_null_sink_0_0, '0']
 - [epy_block_1_0, '0', blocks_unpack_k_bits_bb_0_0, '0']

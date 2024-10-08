@@ -37,8 +37,8 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
         all_contelation_points = chr(27)
 
         # information = "Hello!!!!!"
-        information = "<" * 10
-        # information = all_contelation_points * 10
+        # information = "<" * 10
+        information = all_contelation_points * 10
 
         messege = default_level + start_condition + information
         message_bytes = bytes(messege, 'ascii')

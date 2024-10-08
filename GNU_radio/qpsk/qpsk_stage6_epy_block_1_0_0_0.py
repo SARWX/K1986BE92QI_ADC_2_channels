@@ -23,6 +23,9 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
             in_sig=[np.float32, np.float32],
             out_sig=[np.float32]
         )
+        # self.set_min_output_buffer(2**13)        # 512 - минимальный размер
+        # # self.set_max_output_buffer(2**9)  # Установка максимального размера буфера
+        # self.set_output_multiple(2**13)     # Установка шага данных
         # if an attribute with the same name as a parameter is found,
         self.num_good_bytes = 0
         self.num_bad_bytes = 0
@@ -31,6 +34,8 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
     def work(self, input_items, output_items):
         i = 0
         j = 0
+
+        GOOD_BYTE = 27
 
         res_msec = 0
         # num_good_bytes = 0
@@ -45,7 +50,7 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
             packet_str = ""
             readed_bytes = 0
 
-            start = time.time()
+            # start = time.time()
             while (readed_bytes < packet_size_bytes) and (i < (output_len - 8)):
                 byte = 0
                 # QPSK
@@ -58,7 +63,7 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
                 # QAM16
                 if self.mode == 1:
                     for n in range(2):
-                        byte <<= 2
+                        byte <<= 4
                         
                         # Работа с input_items[1][i]
                         byte += (0 if input_items[1][i] < 0.2 else 
@@ -73,14 +78,14 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
                         # Увеличиваем индекс
                         i += 1
 
-                if byte != 0:
-                    print(byte)
+                # if byte != 0:
+                    # print(byte)
                 output_items[0][j] = byte
                 # if 31 < byte < 127:
 
                 # ЗАМЕР СКОРОСТИ И ОШИБКИ
                 if 0 < byte < 256:
-                    if byte == 60:
+                    if byte == GOOD_BYTE:
                         self.num_good_bytes += 1
                     else:
                         self.num_bad_bytes += 1
@@ -91,11 +96,11 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
                     # print(chr(byte), end = '')
                     # packet_str += chr(byte)
                 j += 1
-                readed_bytes += 1
-            if j == 10:
-                finish = time.time()
-                res = finish - start
-                res_msec = res * 1000
+            #     readed_bytes += 1
+            # if j == 10:
+            #     finish = time.time()
+            #     res = finish - start
+            #     res_msec = res * 1000
             # 2 - пропустить нули
             # print(packet_str, end = '')
             # print(packet_str)
@@ -103,7 +108,7 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
 
         # print('Время работы в миллисекундах: ', res_msec)
         # print('хороших байт: ', num_good_bytes)
-        if self.num_good_bytes > 1000:
+        if self.num_good_bytes > 100000:
             print("Good bytes: ", self.num_good_bytes, "  ---  Bad bytes: ", self.num_bad_bytes)
 
         return output_len

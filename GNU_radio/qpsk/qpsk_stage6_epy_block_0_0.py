@@ -40,7 +40,6 @@ class ADIBlock(gr.sync_block):  # other base classes are basic_block, decim_bloc
             in_sig = [np.float32, np.float32],                # Входы
             out_sig = [np.float32, np.float32]  # Выходы
         )
-
         # Регистрация именованных входных и выходных портов
         self.message_port_register_in(pmt.intern('set_const_signal'))
         self.set_msg_handler(pmt.intern('set_const_signal'), self.handle_msg)
