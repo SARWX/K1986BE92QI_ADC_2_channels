@@ -19,11 +19,11 @@ import enum
 class blk(gr.sync_block):  # other base classes are basic_block, decim_block, interp_block
     """Embedded Python Block example - a simple multiply const"""
 
-    def __init__(self, mode = 0):  # only default arguments here
+    def __init__(self, modulation_type = 0):  # only default arguments here
         """arguments to this function show up as parameters in GRC"""
         gr.sync_block.__init__(
             self,
-            name='Filter IQ QPSK',   # will show up in GRC
+            name='Filter IQ',   # will show up in GRC
             in_sig=[np.float32, np.float32],
             out_sig=[np.float32, np.float32]
         )
@@ -33,7 +33,7 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
 
         # if an attribute with the same name as a parameter is found,
         # a callback is registered (properties work, too).
-        self.mode = mode
+        self.modulation_type = modulation_type
 
     def work(self, input_items, output_items):
         # WAIT = 10
@@ -83,8 +83,8 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
 
         # Не надо читать буфер, если в него не может поместиться как миниум 1 полноценный пакет
         # Размер буфера почему-то постоянно меняется 
-        if (input_len < WAIT + packet_size_mes):
-            return(output_len)
+        # if (input_len < WAIT + packet_size_mes):
+        #     return(output_len)
 
         # Для нормализации будем делить заносимые значения на амплитуду
         amplitude = max(input_items[0])
@@ -148,7 +148,7 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
                                                                             # (+ 1) - 0x3               - начало фрейма
                                                                             # (- packet_size_bits)      - мы уже передали 1 пакет битов, надо их учесть
                     stop_trig = 0
-                    while (i < input_len and (stop_trig < (WAIT / 2) / (self.mode * 2 + 1))):
+                    while (i < input_len and (stop_trig < (WAIT / 2) / (self.modulation_type * 2 + 1))):
                         if ((input_items[0][i] < threshold) and (input_items[0][i] < threshold)):
                             stop_trig += 1
                             # print("STOP_TRIG = ", stop_trig) 
@@ -160,5 +160,5 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
                     # print(i)
             i += 1  # Шаг в любом случае
 
-        print(cnt_start_cond)
+        # print(cnt_start_cond)
         return output_len

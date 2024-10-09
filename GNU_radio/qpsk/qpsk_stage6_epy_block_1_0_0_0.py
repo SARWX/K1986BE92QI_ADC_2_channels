@@ -15,11 +15,11 @@ import time
 class blk(gr.sync_block):  # other base classes are basic_block, decim_block, interp_block
     """Embedded Python Block example - a simple multiply const"""
 
-    def __init__(self, mode = 0):  # only default arguments here
+    def __init__(self, modulation_type = 0, mode = 0):  # only default arguments here
         """arguments to this function show up as parameters in GRC"""
         gr.sync_block.__init__(
             self,
-            name='Extract information IQ QPSK',   # will show up in GRC
+            name='Extract information IQ',   # will show up in GRC
             in_sig=[np.float32, np.float32],
             out_sig=[np.float32]
         )
@@ -29,7 +29,9 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
         # if an attribute with the same name as a parameter is found,
         self.num_good_bytes = 0
         self.num_bad_bytes = 0
-        self.mode = mode
+        self.modulation_type = modulation_type
+        self.mode = mode            # Stream / Messenger
+        self.message = ""
 
     def work(self, input_items, output_items):
         i = 0
@@ -54,14 +56,14 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
             while (readed_bytes < packet_size_bytes) and (i < (output_len - 8)):
                 byte = 0
                 # QPSK
-                if self.mode == 0:
+                if self.modulation_type == 0:
                     for n in range(0, 4):
                         byte <<= 2
                         byte += (1 if input_items[1][i] > 0.5  else 0)
                         byte += (1 if input_items[0][i] > 0.5  else 0) * 2
                         i += 1
                 # QAM16
-                if self.mode == 1:
+                if self.modulation_type == 1:
                     for n in range(2):
                         byte <<= 4
                         
@@ -81,34 +83,58 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
                 # if byte != 0:
                     # print(byte)
                 output_items[0][j] = byte
-                # if 31 < byte < 127:
+                byte = chr(byte)
 
-                # ЗАМЕР СКОРОСТИ И ОШИБКИ
-                if 0 < byte < 256:
-                    if byte == GOOD_BYTE:
-                        self.num_good_bytes += 1
-                    else:
-                        self.num_bad_bytes += 1
+                # Messenger
+                if self.mode == 1:
+                    # Конец строки?
+                    # if byte == '\n' or byte == '\r' or byte == ';':
+                        # print(self.message)
+                        # self.message = ""
+                    # Символ может быть интерпретирован?
+                    # elif ord(byte) > 0:
+                        # print(byte)
+                        # self.message += byte
+
+                    if byte.isprintable():
+                        # print(byte, end = '')
+                        try:
+                            print(byte, end='')
+                        except UnicodeEncodeError:
+                            pass  # Игнорируем символ, если его нельзя вывести
 
 
-                #     pass
-                    # num_good_bytes += 1
-                    # print(chr(byte), end = '')
-                    # packet_str += chr(byte)
-                j += 1
-            #     readed_bytes += 1
-            # if j == 10:
-            #     finish = time.time()
-            #     res = finish - start
-            #     res_msec = res * 1000
-            # 2 - пропустить нули
-            # print(packet_str, end = '')
-            # print(packet_str)
-            # i += (packet_size_bits * 4)
 
-        # print('Время работы в миллисекундах: ', res_msec)
-        # print('хороших байт: ', num_good_bytes)
-        if self.num_good_bytes > 100000:
-            print("Good bytes: ", self.num_good_bytes, "  ---  Bad bytes: ", self.num_bad_bytes)
+                # Stream
+                else:
+                    # if 31 < byte < 127:
+
+                    # ЗАМЕР СКОРОСТИ И ОШИБКИ
+                    if 0 < byte < 256:
+                        if byte == GOOD_BYTE:
+                            self.num_good_bytes += 1
+                        else:
+                            self.num_bad_bytes += 1
+
+
+                    #     pass
+                        # num_good_bytes += 1
+                        # print(chr(byte), end = '')
+                        # packet_str += chr(byte)
+                    j += 1
+                #     readed_bytes += 1
+                # if j == 10:
+                #     finish = time.time()
+                #     res = finish - start
+                #     res_msec = res * 1000
+                # 2 - пропустить нули
+                # print(packet_str, end = '')
+                # print(packet_str)
+                # i += (packet_size_bits * 4)
+
+            # print('Время работы в миллисекундах: ', res_msec)
+            # print('хороших байт: ', num_good_bytes)
+            if self.num_good_bytes > 100000:
+                print("Good bytes: ", self.num_good_bytes, "  ---  Bad bytes: ", self.num_bad_bytes)
 
         return output_len
