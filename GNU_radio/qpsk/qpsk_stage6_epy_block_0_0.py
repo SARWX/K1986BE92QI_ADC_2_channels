@@ -17,7 +17,7 @@ import pmt
 MAX_DAC_NUM = 500   # Максимальное количество чисел, которое может быть записано в const_signal
 MAX_DAC_VAL = 10.0  # Максимальное значение на выходе ЦАП
 CHUNK_SIZE = 10     # Максимальное количество чисел в одной команде
-USB_PACKET_SIZE = 32 # байт
+USB_PACKET_SIZE = 64 # байт
 # USB_PACKET_SIZE = 256 # байт              ДЛЯ dac mode
 
 
@@ -44,6 +44,9 @@ class ADIBlock(gr.sync_block):  # other base classes are basic_block, decim_bloc
         self.message_port_register_in(pmt.intern('set_const_signal'))
         self.set_msg_handler(pmt.intern('set_const_signal'), self.handle_msg)
         # self.message_port_register_out(pmt.intern('msg_out'))
+        self.set_min_output_buffer(2**13)        # 512 - минимальный размер
+        self.set_max_output_buffer(2**13)  # Установка максимального размера буфера
+        self.set_output_multiple(2**13)     # Установка шага данных
 
          # Инициализация переменных для COM порта
         self.port = None
@@ -156,6 +159,7 @@ class ADIBlock(gr.sync_block):  # other base classes are basic_block, decim_bloc
             
                 # Объединяем остаточные данные из предыдущей итерации с новыми
                 if self.remaining_data[0] == 1:
+                    print("REMAINING DATA = ", len(self.remaining_data))
                     # data = bytearray(chunk_size)  # Создание массива байтов для чтения данных
                     chunk_size = len(self.remaining_data) - 1
                     data = bytearray(chunk_size)
@@ -206,6 +210,11 @@ class ADIBlock(gr.sync_block):  # other base classes are basic_block, decim_bloc
                     self.remaining_data[0] = (0 if (USB_PACKET_SIZE - i) == 0 else 1)  # Флаг запроса чтения
                     # print(n)
                     # print(self.remaining_data)
+
+            # # TEST
+            # output_items[0][0] = -1
+            # output_items[0][output_len - 1] = -3
+            
 
             return len(output_items[0])  # Возвращаем количество обработанных элементов
 

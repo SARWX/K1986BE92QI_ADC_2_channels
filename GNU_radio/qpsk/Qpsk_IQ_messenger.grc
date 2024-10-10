@@ -58,13 +58,13 @@ blocks:
     comment: ''
     maxoutbuf: '0'
     minoutbuf: '0'
-    scale: '0.1'
+    scale: '4'
     vlen: '1'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [832, 256.0]
+    coordinate: [1064, 256.0]
     rotation: 0
     state: enabled
 - name: blocks_char_to_float_0_0_0_1
@@ -75,13 +75,13 @@ blocks:
     comment: ''
     maxoutbuf: '0'
     minoutbuf: '0'
-    scale: '0.1'
+    scale: '4'
     vlen: '1'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [840, 320.0]
+    coordinate: [1072, 320.0]
     rotation: 0
     state: enabled
 - name: blocks_null_sink_0
@@ -133,7 +133,7 @@ blocks:
     bus_structure: null
     coordinate: [704, 256.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: blocks_pack_k_bits_bb_0_0
   id: blocks_pack_k_bits_bb
   parameters:
@@ -149,7 +149,7 @@ blocks:
     bus_structure: null
     coordinate: [704, 320.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: blocks_stream_demux_0
   id: blocks_stream_demux
   parameters:
@@ -168,7 +168,7 @@ blocks:
     bus_structure: null
     coordinate: [528, 264.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: blocks_stream_demux_0_0
   id: blocks_stream_demux
   parameters:
@@ -185,9 +185,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [568, 96.0]
+    coordinate: [712, 24.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: blocks_unpack_k_bits_bb_0_0
   id: blocks_unpack_k_bits_bb
   parameters:
@@ -201,7 +201,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [384, 128.0]
+    coordinate: [272, 272.0]
     rotation: 0
     state: enabled
 - name: epy_block_0
@@ -243,54 +243,61 @@ blocks:
       \u044B\u0445\u043E\u0434\u043D\u044B\u0445 \u043F\u043E\u0440\u0442\u043E\u0432\
       \n        self.message_port_register_in(pmt.intern('set_const_signal'))\n  \
       \      self.set_msg_handler(pmt.intern('set_const_signal'), self.handle_msg)\n\
-      \        # self.message_port_register_out(pmt.intern('msg_out'))\n\n       \
-      \  # \u0418\u043D\u0438\u0446\u0438\u0430\u043B\u0438\u0437\u0430\u0446\u0438\
-      \u044F \u043F\u0435\u0440\u0435\u043C\u0435\u043D\u043D\u044B\u0445 \u0434\u043B\
-      \u044F COM \u043F\u043E\u0440\u0442\u0430\n        self.port = None\n      \
-      \  self.port_name = None\n        self.baudrate = 2000000  # \u0417\u0434\u0435\
-      \u0441\u044C \u0437\u0430\u0445\u0430\u0440\u0434\u043A\u043E\u0436\u0435\u043D\
-      \ baudrate\n        self.mode = mode\n        self.remaining_data = bytearray(USB_PACKET_SIZE\
-      \ + 1)  # \u0411\u0443\u0444\u0435\u0440 \u0434\u043B\u044F \u043E\u0441\u0442\
-      \u0430\u0432\u0448\u0438\u0445\u0441\u044F \u0434\u0430\u043D\u043D\u044B\u0445\
-      \     0\u043E\u0439 \u0431\u0430\u0439\u0442 - \u0444\u043B\u0430\u0433 (0 -\
-      \ \u0432 \u043C\u0430\u0441\u0441\u0438\u0432\u0435 \u043D\u0435\u0442 \u043F\
-      \u043E\u043B\u0435\u0437\u043D\u044B\u0445 \u0434\u0430\u043D\u043D\u044B\u0445\
-      , 1 - \u043D\u0430\u0434\u043E \u0447\u0438\u0442\u0430\u0442\u044C)\n     \
-      \   \n    def open_port(self):\n        \"\"\"\u041E\u0442\u043A\u0440\u044B\
-      \u0432\u0430\u0435\u0442 COM \u043F\u043E\u0440\u0442, \u0435\u0441\u043B\u0438\
-      \ \u043E\u043D \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u0435\u0442\
-      \ \u0438 \u043D\u0435 \u0437\u0430\u043D\u044F\u0442.\"\"\"\n        baudrate\
-      \ = 2000000\n        portName = 'COM' + str(self.portNumber)\n\n        # \u041F\
-      \u043E\u043B\u0443\u0447\u0430\u0435\u043C \u0441\u043F\u0438\u0441\u043E\u043A\
-      \ \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u044B\u0445 COM \u043F\u043E\u0440\
-      \u0442\u043E\u0432\n        available_ports = [port.device for port in serial.tools.list_ports.comports()]\n\
-      \n        if portName not in available_ports:\n            print(f\"\u041E\u0448\
-      \u0438\u0431\u043A\u0430: \u041F\u043E\u0440\u0442 {portName} \u043D\u0435 \u043D\
-      \u0430\u0439\u0434\u0435\u043D.\")\n            return\n        \n        try:\n\
-      \            # \u041F\u044B\u0442\u0430\u0435\u043C\u0441\u044F \u043E\u0442\
-      \u043A\u0440\u044B\u0442\u044C \u043F\u043E\u0440\u0442\n            self.port\
-      \ = serial.Serial(portName, baudrate, timeout=3.0)\n            # \u0415\u0441\
-      \u043B\u0438 \u043F\u043E\u0440\u0442 \u0443\u0436\u0435 \u0431\u044B\u043B\
-      \ \u043E\u0442\u043A\u0440\u044B\u0442, \u0437\u0430\u043A\u0440\u044B\u0432\
-      \u0430\u0435\u043C \u0435\u0433\u043E \u0438 \u043E\u0442\u043A\u0440\u044B\u0432\
-      \u0430\u0435\u043C \u0437\u0430\u043D\u043E\u0432\u043E\n            if self.port.is_open:\n\
-      \                self.port.close()\n                self.port.open()\n     \
-      \       else:\n                self.port.open()\n            print(f\"\u041F\
-      \u043E\u0440\u0442 {portName} \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u043E\
-      \u0442\u043A\u0440\u044B\u0442.\")\n        except serial.SerialException as\
-      \ e:\n            # \u0415\u0441\u043B\u0438 \u043D\u0435 \u0443\u0434\u0430\
-      \u043B\u043E\u0441\u044C \u043E\u0442\u043A\u0440\u044B\u0442\u044C \u043F\u043E\
-      \u0440\u0442 (\u043D\u0430\u043F\u0440\u0438\u043C\u0435\u0440, \u043E\u043D\
-      \ \u0437\u0430\u043D\u044F\u0442), \u0432\u044B\u0432\u043E\u0434\u0438\u043C\
-      \ \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0435 \u043E\u0431 \u043E\
-      \u0448\u0438\u0431\u043A\u0435\n            print(f\"\u041E\u0448\u0438\u0431\
-      \u043A\u0430 \u043F\u0440\u0438 \u043E\u0442\u043A\u0440\u044B\u0442\u0438\u0438\
-      \ \u043F\u043E\u0440\u0442\u0430 {portName}: {e}\")\n            self.port =\
-      \ None\n\n\n    def set_mode(self, mode_setting):\n        if mode_setting <\
-      \ 4:\n            command = \"mode \" + str(mode_setting)  \n        else:\n\
-      \            command = \"dac_mode\"\n        try:\n            self.port.write(command.encode('ascii'))\n\
-      \            print(f\"\u041E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\
-      \u043E: {command}\")\n            time.sleep(0.01)\n        except serial.SerialException\
+      \        # self.message_port_register_out(pmt.intern('msg_out'))\n        self.set_min_output_buffer(2**13)\
+      \        # 512 - \u043C\u0438\u043D\u0438\u043C\u0430\u043B\u044C\u043D\u044B\
+      \u0439 \u0440\u0430\u0437\u043C\u0435\u0440\n        self.set_max_output_buffer(2**13)\
+      \  # \u0423\u0441\u0442\u0430\u043D\u043E\u0432\u043A\u0430 \u043C\u0430\u043A\
+      \u0441\u0438\u043C\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0440\u0430\u0437\
+      \u043C\u0435\u0440\u0430 \u0431\u0443\u0444\u0435\u0440\u0430\n        self.set_output_multiple(2**13)\
+      \     # \u0423\u0441\u0442\u0430\u043D\u043E\u0432\u043A\u0430 \u0448\u0430\u0433\
+      \u0430 \u0434\u0430\u043D\u043D\u044B\u0445\n\n         # \u0418\u043D\u0438\
+      \u0446\u0438\u0430\u043B\u0438\u0437\u0430\u0446\u0438\u044F \u043F\u0435\u0440\
+      \u0435\u043C\u0435\u043D\u043D\u044B\u0445 \u0434\u043B\u044F COM \u043F\u043E\
+      \u0440\u0442\u0430\n        self.port = None\n        self.port_name = None\n\
+      \        self.baudrate = 2000000  # \u0417\u0434\u0435\u0441\u044C \u0437\u0430\
+      \u0445\u0430\u0440\u0434\u043A\u043E\u0436\u0435\u043D baudrate\n        self.mode\
+      \ = mode\n        self.remaining_data = bytearray(USB_PACKET_SIZE + 1)  # \u0411\
+      \u0443\u0444\u0435\u0440 \u0434\u043B\u044F \u043E\u0441\u0442\u0430\u0432\u0448\
+      \u0438\u0445\u0441\u044F \u0434\u0430\u043D\u043D\u044B\u0445     0\u043E\u0439\
+      \ \u0431\u0430\u0439\u0442 - \u0444\u043B\u0430\u0433 (0 - \u0432 \u043C\u0430\
+      \u0441\u0441\u0438\u0432\u0435 \u043D\u0435\u0442 \u043F\u043E\u043B\u0435\u0437\
+      \u043D\u044B\u0445 \u0434\u0430\u043D\u043D\u044B\u0445, 1 - \u043D\u0430\u0434\
+      \u043E \u0447\u0438\u0442\u0430\u0442\u044C)\n        \n    def open_port(self):\n\
+      \        \"\"\"\u041E\u0442\u043A\u0440\u044B\u0432\u0430\u0435\u0442 COM \u043F\
+      \u043E\u0440\u0442, \u0435\u0441\u043B\u0438 \u043E\u043D \u0441\u0443\u0449\
+      \u0435\u0441\u0442\u0432\u0443\u0435\u0442 \u0438 \u043D\u0435 \u0437\u0430\u043D\
+      \u044F\u0442.\"\"\"\n        baudrate = 2000000\n        portName = 'COM' +\
+      \ str(self.portNumber)\n\n        # \u041F\u043E\u043B\u0443\u0447\u0430\u0435\
+      \u043C \u0441\u043F\u0438\u0441\u043E\u043A \u0434\u043E\u0441\u0442\u0443\u043F\
+      \u043D\u044B\u0445 COM \u043F\u043E\u0440\u0442\u043E\u0432\n        available_ports\
+      \ = [port.device for port in serial.tools.list_ports.comports()]\n\n       \
+      \ if portName not in available_ports:\n            print(f\"\u041E\u0448\u0438\
+      \u0431\u043A\u0430: \u041F\u043E\u0440\u0442 {portName} \u043D\u0435 \u043D\u0430\
+      \u0439\u0434\u0435\u043D.\")\n            return\n        \n        try:\n \
+      \           # \u041F\u044B\u0442\u0430\u0435\u043C\u0441\u044F \u043E\u0442\u043A\
+      \u0440\u044B\u0442\u044C \u043F\u043E\u0440\u0442\n            self.port = serial.Serial(portName,\
+      \ baudrate, timeout=3.0)\n            # \u0415\u0441\u043B\u0438 \u043F\u043E\
+      \u0440\u0442 \u0443\u0436\u0435 \u0431\u044B\u043B \u043E\u0442\u043A\u0440\u044B\
+      \u0442, \u0437\u0430\u043A\u0440\u044B\u0432\u0430\u0435\u043C \u0435\u0433\u043E\
+      \ \u0438 \u043E\u0442\u043A\u0440\u044B\u0432\u0430\u0435\u043C \u0437\u0430\
+      \u043D\u043E\u0432\u043E\n            if self.port.is_open:\n              \
+      \  self.port.close()\n                self.port.open()\n            else:\n\
+      \                self.port.open()\n            print(f\"\u041F\u043E\u0440\u0442\
+      \ {portName} \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u043E\u0442\u043A\u0440\
+      \u044B\u0442.\")\n        except serial.SerialException as e:\n            #\
+      \ \u0415\u0441\u043B\u0438 \u043D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\
+      \u044C \u043E\u0442\u043A\u0440\u044B\u0442\u044C \u043F\u043E\u0440\u0442 (\u043D\
+      \u0430\u043F\u0440\u0438\u043C\u0435\u0440, \u043E\u043D \u0437\u0430\u043D\u044F\
+      \u0442), \u0432\u044B\u0432\u043E\u0434\u0438\u043C \u0441\u043E\u043E\u0431\
+      \u0449\u0435\u043D\u0438\u0435 \u043E\u0431 \u043E\u0448\u0438\u0431\u043A\u0435\
+      \n            print(f\"\u041E\u0448\u0438\u0431\u043A\u0430 \u043F\u0440\u0438\
+      \ \u043E\u0442\u043A\u0440\u044B\u0442\u0438\u0438 \u043F\u043E\u0440\u0442\u0430\
+      \ {portName}: {e}\")\n            self.port = None\n\n\n    def set_mode(self,\
+      \ mode_setting):\n        if mode_setting < 4:\n            command = \"mode\
+      \ \" + str(mode_setting)  \n        else:\n            command = \"dac_mode\"\
+      \n        try:\n            self.port.write(command.encode('ascii'))\n     \
+      \       print(f\"\u041E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E\
+      : {command}\")\n            time.sleep(0.01)\n        except serial.SerialException\
       \ as e:\n            print(f\"\u041E\u0448\u0438\u0431\u043A\u0430 \u043F\u0440\
       \u0438 \u043E\u0442\u043F\u0440\u0430\u0432\u043A\u0435 \u0434\u0430\u043D\u043D\
       \u044B\u0445: {e}\")\n\n\n    def handle_msg(self, msg):\n        \"\"\"\u041E\
@@ -522,43 +529,54 @@ blocks:
       \        self.message_port_register_out(pmt.intern('clear_input'))\n       \
       \ self.set_msg_handler(pmt.intern('msg_in'), self.handle_msg)\n        # \u041F\
       \u0443\u0431\u043B\u0438\u0447\u043D\u044B\u0435 \u0430\u0442\u0440\u0438\u0431\
-      \u0443\u0442\u044B\n        self.modulation_type = modulation_type\n\n    def\
-      \ handle_msg(self, msg):\n        global textboxValue\n\n        textboxValue\
-      \ = pmt.symbol_to_string (msg)\n        # print (textboxValue)\n    \n    def\
-      \ work(self, input_items, output_items):\n        global textboxValue\n\n  \
-      \      PACKET_SIZE = 10\n        WAIT = 10\n\n        output_len = len(output_items[0])\n\
-      \        output_items[0].fill(0)\n\n        # get length of string\n       \
-      \ _len = len(textboxValue)\n        # \u0412\u0441\u0442\u0430\u0432\u0438\u0442\
-      \u044C Start condition\n        if self.modulation_type == 0:\n            start_condition\
-      \ = 3        # \u042D\u0442\u043E 2 \u0435\u0434\u0438\u043D\u0438\u0446\u044B\
-      \ \u043F\u043E\u0434\u0440\u044F\u0434 (2 \u043D\u0430\u0434\u043E, \u0447\u0442\
-      \u043E\u0431\u044B \u043D\u0430 \u043E\u0431\u0430 \u043A\u0430\u043D\u0430\u043B\
-      \u0430)\n        else:\n            start_condition = 15        # \u042D\u0442\
-      \u043E \u043F\u043E 2 \u0435\u0434\u0438\u043D\u0438\u0446\u044B \u043F\u043E\
-      \u0434\u0440\u044F\u0434 \u043D\u0430 2 \u043A\u0430\u043D\u0430\u043B\u0430\
-      \n\n        pos_send = 0\n        pos_src = 0\n\n\n        if (_len > 0):\n\
-      \            # terminate with LF\n            textboxValue += \"\\n\" \n   \
-      \         _len += 1\n            # divide by packets\n            for packet\
-      \ in range(math.ceil(_len / PACKET_SIZE)):\n                print(packet)\n\
-      \                # Start condition                                         \
-      \    \n                output_items[0][pos_send] = start_condition\n       \
-      \         pos_send += 1\n                # Information\n                for\
-      \ _ in range(PACKET_SIZE):\n                    if pos_src < _len:\n       \
-      \                 output_items[0][pos_send] = ord(textboxValue[pos_src])\n \
-      \                       pos_send += 1\n                        pos_src += 1\n\
+      \u0443\u0442\u044B\n        self.modulation_type = modulation_type\n       \
+      \ self.cleared = 0\n\n        self.set_min_output_buffer(2**13)        # 512\
+      \ - \u043C\u0438\u043D\u0438\u043C\u0430\u043B\u044C\u043D\u044B\u0439 \u0440\
+      \u0430\u0437\u043C\u0435\u0440\n        self.set_max_output_buffer(2**13)  #\
+      \ \u0423\u0441\u0442\u0430\u043D\u043E\u0432\u043A\u0430 \u043C\u0430\u043A\u0441\
+      \u0438\u043C\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0440\u0430\u0437\u043C\
+      \u0435\u0440\u0430 \u0431\u0443\u0444\u0435\u0440\u0430\n        self.set_output_multiple(2**13)\
+      \     # \u0423\u0441\u0442\u0430\u043D\u043E\u0432\u043A\u0430 \u0448\u0430\u0433\
+      \u0430 \u0434\u0430\u043D\u043D\u044B\u0445\n\n    def handle_msg(self, msg):\n\
+      \        global textboxValue\n\n        textboxValue = pmt.symbol_to_string\
+      \ (msg)\n        # print (textboxValue)\n    \n    def work(self, input_items,\
+      \ output_items):\n        global textboxValue\n\n        PACKET_SIZE = 10\n\
+      \        WAIT = 10\n\n        output_len = len(output_items[0])\n        output_items[0].fill(0)\n\
+      \n        # get length of string\n        _len = len(textboxValue)\n       \
+      \ # \u0412\u0441\u0442\u0430\u0432\u0438\u0442\u044C Start condition\n     \
+      \   if self.modulation_type == 0:\n            start_condition = 3        #\
+      \ \u042D\u0442\u043E 2 \u0435\u0434\u0438\u043D\u0438\u0446\u044B \u043F\u043E\
+      \u0434\u0440\u044F\u0434 (2 \u043D\u0430\u0434\u043E, \u0447\u0442\u043E\u0431\
+      \u044B \u043D\u0430 \u043E\u0431\u0430 \u043A\u0430\u043D\u0430\u043B\u0430\
+      )\n        else:\n            start_condition = 15        # \u042D\u0442\u043E\
+      \ \u043F\u043E 2 \u0435\u0434\u0438\u043D\u0438\u0446\u044B \u043F\u043E\u0434\
+      \u0440\u044F\u0434 \u043D\u0430 2 \u043A\u0430\u043D\u0430\u043B\u0430\n\n \
+      \       pos_send = 0\n        pos_src = 0\n\n\n        if (_len > 0):\n    \
+      \        # terminate with LF\n            textboxValue += \"\\n\" \n       \
+      \     _len += 1\n\n            # Find good pos_send (not at the start)\n   \
+      \         pos_send = int(output_len - (_len * 2 + (_len // 10) + 10))\n\n  \
+      \          # divide by packets\n            for packet in range(math.ceil(_len\
+      \ / PACKET_SIZE)):\n                # print(packet)\n                # Start\
+      \ condition                                             \n                output_items[0][pos_send]\
+      \ = start_condition\n                pos_send += 1\n                # Information\n\
+      \                for _ in range(PACKET_SIZE):\n                    if pos_src\
+      \ < _len:\n                        output_items[0][pos_send] = ord(textboxValue[pos_src])\n\
+      \                        pos_send += 1\n                        pos_src += 1\n\
       \                    else:\n                        pos_send += 1\n        \
-      \        # Wait\n                print(pos_send)\n                pos_send +=\
-      \ WAIT\n            \n            # store elements in output array\n       \
-      \     # for x in range(_len):\n            #     output_items[0][x + 1] = ord(textboxValue[x])\n\
-      \            textboxValue = \"\"\n            self.message_port_pub(pmt.intern('clear_input'),\
-      \ pmt.intern(''))\n            # return (pos_send)\n            return (pos_send)\n\
-      \        else:\n            return (output_len)\n"
+      \        # Wait\n                # print(pos_send)\n                pos_send\
+      \ += WAIT\n            \n            # store elements in output array\n    \
+      \        # for x in range(_len):\n            #     output_items[0][x + 1] =\
+      \ ord(textboxValue[x])\n            textboxValue = \"\"\n            self.message_port_pub(pmt.intern('clear_input'),\
+      \ pmt.intern(''))\n            # print(output_len)\n            # return (pos_send)\n\
+      \            self.cleared = 0\n            return (output_len)\n        elif\
+      \ self.cleared == 1:\n            return (0)\n        else:\n            self.cleared\
+      \ = 1\n            return(output_len)"
     affinity: ''
     alias: ''
     comment: "modulation_type = 0\t- QPSK\nmodulation_type = 0\t- QAM16"
     maxoutbuf: '0'
     minoutbuf: '0'
-    modulation_type: '0'
+    modulation_type: '1'
   states:
     _io_cache: ('Messenger', 'my_sync_block', [('modulation_type', '0')], [('msg_in',
       'message', 1)], [('0', 'byte', 1), ('clear_input', 'message', 1)], '\n    reads
@@ -566,10 +584,10 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [232, 368.0]
+    coordinate: [64, 384.0]
     rotation: 0
-    state: true
-- name: epy_block_1_0
+    state: enabled
+- name: epy_block_1_0_0
   id: epy_block
   parameters:
     _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
@@ -585,70 +603,39 @@ blocks:
       \ up in GRC\n            in_sig=[],\n            out_sig=[np.byte]\n       \
       \ )\n        # if an attribute with the same name as a parameter is found,\n\
       \        # a callback is registered (properties work, too).\n        self.mode\
-      \ = mode  # QPSK = 0 \u0438\u043B\u0438 QAM16 = 1\n\ndef work(self, input_items,\
-      \ output_items):\n    global textboxValue\n\n    output_len = len(output_items[0])\n\
-      \    output_items[0].fill(0)  # \u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C\
-      \ \u0432\u044B\u0445\u043E\u0434\u043D\u043E\u0439 \u043C\u0430\u0441\u0441\u0438\
-      \u0432\n    \n    packet_size = 10  # \u0420\u0430\u0437\u043C\u0435\u0440 \u0441\
-      \u043E\u043E\u0431\u0449\u0435\u043D\u0438\u044F \u0432 \u0431\u0430\u0439\u0442\
-      \u0430\u0445\n    WAIT = 10 * 8 * 4  # \u0412\u0435\u043B\u0438\u0447\u0438\u043D\
-      \u0430 WAIT, \u043A\u0430\u043A \u0438 \u0432 \u0432\u0430\u0448\u0435\u043C\
-      \ \u043F\u0440\u0435\u0434\u044B\u0434\u0443\u0449\u0435\u043C \u043A\u043E\u0434\
-      \u0435\n    \n    _len = len(textboxValue)\n    \n    if _len > 0:\n       \
-      \ if self.modulation_type == 0:\n            start_condition = 3  # \u041D\u0430\
-      \u0447\u0430\u043B\u044C\u043D\u043E\u0435 \u0443\u0441\u043B\u043E\u0432\u0438\
-      \u0435 \u0434\u043B\u044F \u0442\u0438\u043F\u0430 \u043C\u043E\u0434\u0443\u043B\
-      \u044F\u0446\u0438\u0438 0\n        else:\n            start_condition = 15\
-      \  # \u041D\u0430\u0447\u0430\u043B\u044C\u043D\u043E\u0435 \u0443\u0441\u043B\
-      \u043E\u0432\u0438\u0435 \u0434\u043B\u044F \u0434\u0440\u0443\u0433\u043E\u0433\
-      \u043E \u0442\u0438\u043F\u0430 \u043C\u043E\u0434\u0443\u043B\u044F\u0446\u0438\
-      \u0438\n\n        # \u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0441\u0438\
-      \u043C\u0432\u043E\u043B \u043A\u043E\u043D\u0446\u0430 \u0441\u0442\u0440\u043E\
-      \u043A\u0438, \u0435\u0441\u043B\u0438 \u0435\u0433\u043E \u043D\u0435\u0442\
-      \n        if textboxValue[-1] != \"\\n\":\n            textboxValue += \"\\\
-      n\"\n            _len += 1\n\n        # \u0420\u0430\u0437\u0431\u0438\u0442\
-      \u044C \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0435 \u043D\u0430 \u043F\
-      \u0430\u043A\u0435\u0442\u044B \u043F\u043E 10 \u0431\u0430\u0439\u0442\n  \
-      \      i = 0\n        pos = 0\n        \n        while i < _len:\n         \
-      \   # \u0412\u0441\u0442\u0430\u0432\u0438\u0442\u044C start_condition \u0432\
-      \ \u043D\u0430\u0447\u0430\u043B\u043E \u043F\u0430\u043A\u0435\u0442\u0430\n\
-      \            output_items[0][pos] = start_condition\n            pos += 1\n\n\
-      \            # \u0412\u0441\u0442\u0430\u0432\u043B\u044F\u0435\u043C 10 \u0441\
-      \u0438\u043C\u0432\u043E\u043B\u043E\u0432 \u0438\u043B\u0438 \u043C\u0435\u043D\
-      \u044C\u0448\u0435, \u0435\u0441\u043B\u0438 \u043A\u043E\u043D\u0435\u0446\
-      \ \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u044F\n            for j\
-      \ in range(packet_size):\n                if i < _len:\n                   \
-      \ output_items[0][pos] = ord(textboxValue[i])\n                    i += 1\n\
-      \                else:\n                    output_items[0][pos] = 0  # \u0417\
-      \u0430\u043F\u043E\u043B\u043D\u044F\u0435\u043C \u043D\u0443\u043B\u044F\u043C\
-      \u0438, \u0435\u0441\u043B\u0438 \u0441\u0438\u043C\u0432\u043E\u043B\u043E\u0432\
-      \ \u043C\u0435\u043D\u044C\u0448\u0435 10\n                pos += 1\n\n    \
-      \        # \u0412\u0441\u0442\u0430\u0432\u0438\u0442\u044C \u043D\u0443\u043B\
-      \u0438 \u0434\u043B\u044F \u0432\u044B\u0440\u0430\u0432\u043D\u0438\u0432\u0430\
-      \u043D\u0438\u044F \u043F\u0430\u043A\u0435\u0442\u0430\n            for _ in\
-      \ range(WAIT):\n                output_items[0][pos] = 0\n                pos\
-      \ += 1\n\n        textboxValue = \"\"  # \u041E\u0447\u0438\u0441\u0442\u0438\
-      \u0442\u044C \u0442\u0435\u043A\u0441\u0442\u043E\u0432\u043E\u0435 \u0441\u043E\
-      \u043E\u0431\u0449\u0435\u043D\u0438\u0435 \u043F\u043E\u0441\u043B\u0435 \u043E\
-      \u0442\u043F\u0440\u0430\u0432\u043A\u0438\n        self.message_port_pub(pmt.intern('clear_input'),\
-      \ pmt.intern(''))\n        return pos  # \u0412\u043E\u0437\u0432\u0440\u0430\
-      \u0449\u0430\u0435\u043C \u043A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\
-      \u043E \u0437\u0430\u043F\u0438\u0441\u0430\u043D\u043D\u044B\u0445 \u044D\u043B\
-      \u0435\u043C\u0435\u043D\u0442\u043E\u0432\n    else:\n        return output_len\n\
-      \n"
+      \ = mode  # QPSK = 0 \u0438\u043B\u0438 QAM16 = 1\n\n    def work(self, input_items,\
+      \ output_items):\n        i = 0\n        default_level = \"\\0\" * WAIT\n  \
+      \      if self.mode == 0:\n            start_condition = chr(3)        # \u042D\
+      \u0442\u043E 2 \u0435\u0434\u0438\u043D\u0438\u0446\u044B \u043F\u043E\u0434\
+      \u0440\u044F\u0434 (2 \u043D\u0430\u0434\u043E, \u0447\u0442\u043E\u0431\u044B\
+      \ \u043D\u0430 \u043E\u0431\u0430 \u043A\u0430\u043D\u0430\u043B\u0430)\n  \
+      \      else:\n            start_condition = chr(15)        # \u042D\u0442\u043E\
+      \ \u043F\u043E 2 \u0435\u0434\u0438\u043D\u0438\u0446\u044B \u043F\u043E\u0434\
+      \u0440\u044F\u0434 \u043D\u0430 2 \u043A\u0430\u043D\u0430\u043B\u0430\n   \
+      \     all_contelation_points = chr(27)\n\n        # information = \"Hello!!!!!\"\
+      \n        information = \"<\" * 10\n        # information = all_contelation_points\
+      \ * 10\n\n        messege = default_level + start_condition + information\n\
+      \        message_bytes = bytes(messege, 'ascii')\n        mes_len = len(messege)\n\
+      \        output_len = len(output_items[0])\n        while(i < (output_len -\
+      \ mes_len)):\n           # \u041F\u0435\u0440\u0435\u0432\u043E\u0434\u0438\u043C\
+      \ \u0431\u0430\u0439\u0442\u044B \u0432 \u0446\u0435\u043B\u044B\u0435 \u0447\
+      \u0438\u0441\u043B\u0430 \u0438 \u0437\u0430\u043F\u0438\u0441\u044B\u0432\u0430\
+      \u0435\u043C \u0432 \u043C\u0430\u0441\u0441\u0438\u0432\n            output_items[0][i:i\
+      \ + mes_len] = np.frombuffer(message_bytes, dtype=np.byte)\n            i +=\
+      \ mes_len\n        return len(output_items[0])\n"
     affinity: ''
     alias: ''
     comment: ''
     maxoutbuf: '0'
     minoutbuf: '0'
-    mode: '0'
+    mode: '1'
   states:
     _io_cache: ('Test string generator', 'blk', [('mode', '0')], [], [('0', 'byte',
       1)], 'Embedded Python Block example - a simple multiply const', ['mode'])
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [168, 272.0]
+    coordinate: [64, 272.0]
     rotation: 0
     state: disabled
 - name: qtgui_edit_box_msg_0
@@ -670,9 +657,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [232, 480.0]
+    coordinate: [64, 512.0]
     rotation: 180
-    state: true
+    state: enabled
 - name: qtgui_time_sink_x_0
   id: qtgui_time_sink_x
   parameters:
@@ -702,7 +689,7 @@ blocks:
     color9: dark green
     comment: ''
     ctrlpanel: 'False'
-    entags: 'True'
+    entags: 'False'
     grid: 'False'
     gui_hint: ''
     label1: Signal 1
@@ -729,7 +716,7 @@ blocks:
     name: '"2"'
     nconnections: '1'
     size: '1024'
-    srate: '100000'
+    srate: '10000000'
     stemplot: 'False'
     style1: '1'
     style10: '1'
@@ -748,7 +735,7 @@ blocks:
     tr_slope: qtgui.TRIG_SLOPE_POS
     tr_tag: '""'
     type: float
-    update_time: '0.10'
+    update_time: '0.010'
     width1: '1'
     width10: '1'
     width2: '1'
@@ -826,7 +813,7 @@ blocks:
     name: '"Witout"'
     nconnections: '2'
     size: 1024 * 10
-    srate: '100000'
+    srate: '10000000'
     stemplot: 'False'
     style1: '1'
     style10: '1'
@@ -845,7 +832,7 @@ blocks:
     tr_slope: qtgui.TRIG_SLOPE_POS
     tr_tag: '""'
     type: float
-    update_time: '0.10'
+    update_time: '0.010'
     width1: '1'
     width10: '1'
     width2: '1'
@@ -887,7 +874,7 @@ connections:
 - [epy_block_0, '1', blocks_null_sink_0_0, '0']
 - [epy_block_1, '0', blocks_unpack_k_bits_bb_0_0, '0']
 - [epy_block_1, clear_input, qtgui_edit_box_msg_0, val]
-- [epy_block_1_0, '0', blocks_unpack_k_bits_bb_0_0, '0']
+- [epy_block_1_0_0, '0', blocks_unpack_k_bits_bb_0_0, '0']
 - [qtgui_edit_box_msg_0, msg, epy_block_1, msg_in]
 
 metadata:

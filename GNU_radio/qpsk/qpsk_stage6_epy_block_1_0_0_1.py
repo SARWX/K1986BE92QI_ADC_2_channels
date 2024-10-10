@@ -144,11 +144,12 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
                     chan_1_start_condition = False
                     bits_read = 0
                     scheduler = 0
-                    j += packet_size_bits * 4   # (packet_size_bits * 2)    - нули и полезная нагрузка
+                    j += int(packet_size_bits * 4 / (self.modulation_type + 1))   # (packet_size_bits * 2)    - нули и полезная нагрузка
                                                                             # (+ 1) - 0x3               - начало фрейма
                                                                             # (- packet_size_bits)      - мы уже передали 1 пакет битов, надо их учесть
                     stop_trig = 0
-                    while (i < input_len and (stop_trig < (WAIT / 2) / (self.modulation_type * 2 + 1))):
+                    # while (i < input_len and (stop_trig < ((WAIT / 2) / (self.modulation_type * 3 + 1)))):
+                    while (i < input_len and (stop_trig < 4)):
                         if ((input_items[0][i] < threshold) and (input_items[0][i] < threshold)):
                             stop_trig += 1
                             # print("STOP_TRIG = ", stop_trig) 

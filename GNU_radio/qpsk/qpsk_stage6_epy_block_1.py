@@ -28,6 +28,11 @@ class my_sync_block(gr.sync_block):
         self.set_msg_handler(pmt.intern('msg_in'), self.handle_msg)
         # Публичные атрибуты
         self.modulation_type = modulation_type
+        self.cleared = 0
+
+        self.set_min_output_buffer(2**13)        # 512 - минимальный размер
+        self.set_max_output_buffer(2**13)  # Установка максимального размера буфера
+        self.set_output_multiple(2**13)     # Установка шага данных
 
     def handle_msg(self, msg):
         global textboxValue
@@ -60,9 +65,13 @@ class my_sync_block(gr.sync_block):
             # terminate with LF
             textboxValue += "\n" 
             _len += 1
+
+            # Find good pos_send (not at the start)
+            pos_send = int(output_len - (_len * 2 + (_len // 10) + 10))
+
             # divide by packets
             for packet in range(math.ceil(_len / PACKET_SIZE)):
-                print(packet)
+                # print(packet)
                 # Start condition                                             
                 output_items[0][pos_send] = start_condition
                 pos_send += 1
@@ -75,7 +84,7 @@ class my_sync_block(gr.sync_block):
                     else:
                         pos_send += 1
                 # Wait
-                print(pos_send)
+                # print(pos_send)
                 pos_send += WAIT
             
             # store elements in output array
@@ -83,7 +92,12 @@ class my_sync_block(gr.sync_block):
             #     output_items[0][x + 1] = ord(textboxValue[x])
             textboxValue = ""
             self.message_port_pub(pmt.intern('clear_input'), pmt.intern(''))
+            # print(output_len)
             # return (pos_send)
-            return (pos_send)
-        else:
+            self.cleared = 0
             return (output_len)
+        elif self.cleared == 1:
+            return (0)
+        else:
+            self.cleared = 1
+            return(output_len)

@@ -32,12 +32,15 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
         self.modulation_type = modulation_type
         self.mode = mode            # Stream / Messenger
         self.message = ""
+        self.test_complite = 0 
+        self.test_start_time = 0
+        self.test_end_time = 0
 
     def work(self, input_items, output_items):
         i = 0
         j = 0
 
-        GOOD_BYTE = 27
+        GOOD_BYTE = "<"
 
         res_msec = 0
         # num_good_bytes = 0
@@ -83,6 +86,7 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
                 # if byte != 0:
                     # print(byte)
                 output_items[0][j] = byte
+                j += 1
                 byte = chr(byte)
 
                 # Messenger
@@ -103,25 +107,22 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
                         except UnicodeEncodeError:
                             pass  # Игнорируем символ, если его нельзя вывести
 
-
-
                 # Stream
-                else:
+
+                # Test
+                elif self.mode == 2:
                     # if 31 < byte < 127:
 
                     # ЗАМЕР СКОРОСТИ И ОШИБКИ
-                    if 0 < byte < 256:
+                    if ord(byte) > 0:
                         if byte == GOOD_BYTE:
                             self.num_good_bytes += 1
                         else:
                             self.num_bad_bytes += 1
-
-
-                    #     pass
-                        # num_good_bytes += 1
-                        # print(chr(byte), end = '')
-                        # packet_str += chr(byte)
-                    j += 1
+                        if self.test_start_time == 0:
+                            self.test_start_time = time.time()
+        
+            
                 #     readed_bytes += 1
                 # if j == 10:
                 #     finish = time.time()
@@ -134,7 +135,11 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
 
             # print('Время работы в миллисекундах: ', res_msec)
             # print('хороших байт: ', num_good_bytes)
-            if self.num_good_bytes > 100000:
-                print("Good bytes: ", self.num_good_bytes, "  ---  Bad bytes: ", self.num_bad_bytes)
+            if self.num_good_bytes > 100000 and self.test_complite == 0:
+                self.test_end_time = time.time()
+                print("\n")
+                print("Bitrate:\t\t\t\t", int(self.num_good_bytes / (self.test_end_time - self.test_start_time)), " Bytes/s")
+                print("BER (bit error ratio):\t", round((self.num_bad_bytes / (self.num_good_bytes + self.num_bad_bytes)) * 100, 2) , " %")
+                self.test_complite = 1
 
         return output_len
