@@ -15,6 +15,14 @@
 #include "defines.h"
 #include "MDR32F9Qx_rst_clk.h"
 
+#define MAX_ADC_FREQ 500000
+#define MIN_ADC_PRESCALER ADC_CLK_div_8
+
+#define ADC_PRESCALER_TO_INT(ADC_PRESCALER) (2**((int)ADC_PRESCALER << ADC1_CFG_REG_DIVCLK_Pos))
+#define INT_TO_ADC_PRESCALER(INT) (INT >> ADC1_CFG_REG_DIVCLK_Pos)
+
+#define DELAY_GO_TO_CLK_TICS(DELAY_GO) (28 + 1 + DELAY_GO)  // Минимум 29 тактов на преобразование, точное количество определяет ADCx_structure.ADC_DelayGo
+
 // Структуры для АЦП
 ADC_InitTypeDef ADC_structure;
 ADCx_InitTypeDef ADCx_structure;
@@ -104,6 +112,42 @@ void change_adc_chan_num(int num_adc_chan)
         ADCx_structure.ADC_Channels         = (ADC_CH_ADC0_MSK | ADC_CH_ADC1_MSK);	// Маска для каналов 0 и 1 (АЦП 1 будет оцифровывать их поочередно)
     }
     ADC1_Init (&ADCx_structure);  // Применяем настройки к АЦП 1
+}
+
+ADCx_Prescaler freq_to_ADC_prescaler(uint32_t input_freq)
+{
+    int current_adc_freq = ((HSE_FREQ * CPU_PLL) / ADC_PRESCALER_TO_INT((int)ADCx_structure.ADC_Prescaler)) / DELAY_GO_TO_CLK_TICS(ADCx_structure.ADC_DelayGo);
+    ADC_PRESCALER_TO_INT(MIN_PRESCALER)
+    switch(input_freq)
+    {
+        case 250000:
+            return ADC_CLK_div_8;
+        case 125000:
+            return ADC_CLK_div_16;
+        case 62500:
+            return ADC_CLK_div_32;
+        case 31250:
+            return ADC_CLK_div_64;
+        case 15625:
+            return ADC_CLK_div_128;
+        case 7813:
+            return ADC_CLK_div_256;
+        case 3906:
+            return ADC_CLK_div_512;
+        case 1953:
+            return ADC_CLK_div_1024;
+        case 976:
+            return ADC_CLK_div_2048;
+        default:
+            return ADC_CLK_div_None;
+    }
+}
+
+
+
+void reconfig_ADC_clock(int freq)
+{
+    
 }
 /*********************** (C) COPYRIGHT 2024 ICV ****************************
 *

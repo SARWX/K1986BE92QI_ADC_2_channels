@@ -104,6 +104,25 @@ int execute_command(char *command)
   }
 // ---------------------------------------------------------------------------------------------- //
 
+// ------------- "clock " command ------------------------------------------------------------ //
+  if (strstr(command, "clock ") == command) 
+  {                    // проверить: команда начинается с "clock "?
+    // Настройка частоты для ADC
+    if (strstr(command, "ADC ") == command + strlen("clock ")) {
+      int new_clock = atoi((char *)(command + strlen("clock ADC ")));       // перевести new_clock из строкового формата в int
+      reconfig_ADC_clock(new_clock);
+    }
+    // Настройка частоты для DAC
+    if (strstr(command, "DAC ") == command + strlen("clock ")) {
+      int new_clock = atoi((char *)(command + strlen("clock DAC ")));       // перевести new_clock из строкового формата в int
+      reconfig_DAC_clock(new_clock);
+    }
+
+    char src = *((char *)(command + strlen("clock ")));       // Получить 
+      set_sin_DAC_table(freq, 1);                                          // задать синусоиду требуемой частоты в DAC_table (в первый канал)
+  }
+// ---------------------------------------------------------------------------------------------- //
+
   return(0);
 }
 /** @example Commands 

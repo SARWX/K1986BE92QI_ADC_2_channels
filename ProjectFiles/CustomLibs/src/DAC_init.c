@@ -221,6 +221,11 @@ void reconfig_TIM_dac_mode()
 	MDR_TIMER2->CNT = 0;	
 }
 
+void reconfig_DAC_clock(int freq)
+{
+
+}
+
 /*********************** (C) COPYRIGHT 2024 ICV ****************************
 *
 * END OF FILE DAC_init.c */
