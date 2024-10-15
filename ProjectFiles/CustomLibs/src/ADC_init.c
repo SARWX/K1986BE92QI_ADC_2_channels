@@ -13,13 +13,14 @@
 #include "MDR32F9Qx_adc.h"
 #include "ADC_init.h"
 #include "defines.h"
+#include "Command_system.h"
 #include "MDR32F9Qx_rst_clk.h"
+// #include "MDR32Fx.h"                     // НЕ НУЖНО ВКЛЮЧАТЬ СЮДА ТО, ЧТО УЖЕ ЕСТЬ В ЗАГОЛОВОЧНОМ ФАЙЛЕ
 
-#define MAX_ADC_FREQ 500000
 #define MIN_ADC_PRESCALER ADC_CLK_div_8
-
-#define ADC_PRESCALER_TO_INT(ADC_PRESCALER) (2**((int)ADC_PRESCALER << ADC1_CFG_REG_DIVCLK_Pos))
-#define INT_TO_ADC_PRESCALER(INT) (INT >> ADC1_CFG_REG_DIVCLK_Pos)
+#define MAX_ADC_PRESCALER ADC_CLK_div_2048
+#define ADC_PRESCALER_TO_INT(ADC_PRESCALER) (1 << ((int)(ADC_PRESCALER) >> ADC1_CFG_REG_DIVCLK_Pos))
+#define INT_TO_ADC_PRESCALER(INT) ((ADCx_Prescaler)((__builtin_ctz(INT) << ADC1_CFG_REG_DIVCLK_Pos)))
 
 #define DELAY_GO_TO_CLK_TICS(DELAY_GO) (28 + 1 + DELAY_GO)  // Минимум 29 тактов на преобразование, точное количество определяет ADCx_structure.ADC_DelayGo
 
@@ -73,7 +74,7 @@ void Setup_ADC()
     ADCx_structure.ADC_Channels         = (ADC_CH_ADC0_MSK | ADC_CH_ADC1_MSK);	// Маска для каналов 0 и 1 (АЦП 1 будет оцифровывать их поочередно)
     ADCx_structure.ADC_VRefSource       = ADC_VREF_SOURCE_INTERNAL;			    // Опорное напряжение от внутреннего источника
     ADCx_structure.ADC_IntVRefSource    = ADC_INT_VREF_SOURCE_INEXACT;		    // Выбираем неточный источник опорного напряжения
-    ADCx_structure.ADC_Prescaler        = ADC_CLK_div_8;					    // Задаем скорость работы АЦП, ИМЕННО ЭТОЙ НАСТРОЙКОЙ ЗАДАЕТСЯ СКОРОСТЬ РАБОТЫ УСТРОЙСТВА
+    ADCx_structure.ADC_Prescaler        = MIN_ADC_PRESCALER;					    // Задаем скорость работы АЦП, ИМЕННО ЭТОЙ НАСТРОЙКОЙ ЗАДАЕТСЯ СКОРОСТЬ РАБОТЫ УСТРОЙСТВА
 	ADCx_structure.ADC_DelayGo          = 0x3;								    // сколько тактов на преобразование
     ADC1_Init (&ADCx_structure);											    // Применяем настройки к АЦП 1
     
@@ -101,53 +102,59 @@ void change_adc_chan_num(int num_adc_chan)
 {
     if (num_adc_chan == 1)
     {
-        ADCx_structure.ADC_Prescaler        = ADC_CLK_div_8;					    // Задаем скорость работы АЦП, ИМЕННО ЭТОЙ НАСТРОЙКОЙ ЗАДАЕТСЯ СКОРОСТЬ РАБОТЫ УСТРОЙСТВА
+        ADCx_structure.ADC_Prescaler        = MIN_ADC_PRESCALER;					    // Задаем скорость работы АЦП, ИМЕННО ЭТОЙ НАСТРОЙКОЙ ЗАДАЕТСЯ СКОРОСТЬ РАБОТЫ УСТРОЙСТВА
         ADCx_structure.ADC_ChannelSwitching = ADC_CH_SWITCHING_Disable; // Переключение каналов разрешено, АЦП 1 будет вссегда работать на PD0,// PD1
         ADCx_structure.ADC_Channels         = (ADC_CH_ADC0_MSK);	      // Маска для каналов 0 и 1 (АЦП 1 будет оцифровывать их поочередно)
     }
     else
     {
-        ADCx_structure.ADC_Prescaler        = ADC_CLK_div_8;					    // Задаем скорость работы АЦП, ИМЕННО ЭТОЙ НАСТРОЙКОЙ ЗАДАЕТСЯ СКОРОСТЬ РАБОТЫ УСТРОЙСТВА
+        ADCx_structure.ADC_Prescaler        = MIN_ADC_PRESCALER;					    // Задаем скорость работы АЦП, ИМЕННО ЭТОЙ НАСТРОЙКОЙ ЗАДАЕТСЯ СКОРОСТЬ РАБОТЫ УСТРОЙСТВА
         ADCx_structure.ADC_ChannelSwitching = ADC_CH_SWITCHING_Enable;			        // Переключение каналов разрешено, АЦП 1 будет вссегда работать на PD0,// PD1
         ADCx_structure.ADC_Channels         = (ADC_CH_ADC0_MSK | ADC_CH_ADC1_MSK);	// Маска для каналов 0 и 1 (АЦП 1 будет оцифровывать их поочередно)
     }
     ADC1_Init (&ADCx_structure);  // Применяем настройки к АЦП 1
 }
 
-ADCx_Prescaler freq_to_ADC_prescaler(uint32_t input_freq)
+/**
+  * @brief Reconfigures the ADC clock based on the input frequency and mode.
+  * This function calculates the required ADC prescaler to achieve the desired
+  * frequency based on the input frequency and the number of ADC channels
+  * active in the specified mode. The ADC prescaler is adjusted accordingly.
+  * @param input_freq The desired ADC frequency in Hz.
+  * @param mode The operating mode setting for the ADC, which determines the 
+  *             number of active ADC channels.
+  * @retval ErrorStatus 
+  *         - SUCCESS if the ADC frequency is successfully set; 
+  *         - ERROR if the requested frequency cannot be achieved.
+  */
+ErrorStatus reconfig_ADC_clock(uint32_t input_freq, enum mode_setting mode)
 {
-    int current_adc_freq = ((HSE_FREQ * CPU_PLL) / ADC_PRESCALER_TO_INT((int)ADCx_structure.ADC_Prescaler)) / DELAY_GO_TO_CLK_TICS(ADCx_structure.ADC_DelayGo);
-    ADC_PRESCALER_TO_INT(MIN_PRESCALER)
-    switch(input_freq)
+    ADC1_Cmd(DISABLE);
+    ErrorStatus new_freq_set = ERROR;
+    // 1 - вычислить границы
+    static const int min_prescaler = ADC_PRESCALER_TO_INT(MIN_ADC_PRESCALER);
+    static const int max_prescaler = ADC_PRESCALER_TO_INT(MAX_ADC_PRESCALER);
+    int conversion_ticks = DELAY_GO_TO_CLK_TICS(ADCx_structure.ADC_DelayGo);
+    uint32_t max_adc_freq = (HSE_FREQ * CPU_PLL) / 
+        (min_prescaler * conversion_ticks);
+    uint32_t min_adc_freq = (HSE_FREQ * CPU_PLL) / 
+        (max_prescaler * conversion_ticks);
+    // 2 - узнать сколько каналов задействовано в текущем режиме
+    int num_of_adc_channels = (((mode >> 1) & 0x1) + 1);
+    // 3 - вычислить требуемую частоту
+    uint32_t req_freq = input_freq * num_of_adc_channels;
+    // 4 - попытаться установить частоту:
+    for(int prescaler = max_prescaler; prescaler >= min_prescaler; prescaler /= 2)
     {
-        case 250000:
-            return ADC_CLK_div_8;
-        case 125000:
-            return ADC_CLK_div_16;
-        case 62500:
-            return ADC_CLK_div_32;
-        case 31250:
-            return ADC_CLK_div_64;
-        case 15625:
-            return ADC_CLK_div_128;
-        case 7813:
-            return ADC_CLK_div_256;
-        case 3906:
-            return ADC_CLK_div_512;
-        case 1953:
-            return ADC_CLK_div_1024;
-        case 976:
-            return ADC_CLK_div_2048;
-        default:
-            return ADC_CLK_div_None;
+        if (((max_adc_freq * min_prescaler) / prescaler) == req_freq)
+        {
+            ADCx_structure.ADC_Prescaler = INT_TO_ADC_PRESCALER(prescaler);
+            ADC1_Init (&ADCx_structure);  // Применяем настройки к АЦП 1
+            new_freq_set = SUCCESS;
+        }
     }
-}
-
-
-
-void reconfig_ADC_clock(int freq)
-{
-    
+    ADC1_Cmd(ENABLE);
+    return(new_freq_set);  
 }
 /*********************** (C) COPYRIGHT 2024 ICV ****************************
 *

@@ -24,6 +24,8 @@ extern uint16_t DAC_table[SIN_RES];                                 // Внеш�
 extern DMA_CtrlDataInitTypeDef TIM2_primary_DMA_structure;          // Внешние структуры DMA
 extern DMA_CtrlDataInitTypeDef TIM2_alternate_DMA_structure;        // Внешние структуры DMA
 
+enum mode_setting mode = 3;                                         // Режим работы устройства (по умолчанию режим = 3)
+
 float get_voltage_num(char *command, int *i);                       // функция преобразования числа строкового формата в число с плавающей точкой
 int convert_voltage_to_register_val(float voltage);                 // функция переводящая значение в вольтах в значение регистра ЦАП
 
@@ -91,6 +93,7 @@ int execute_command(char *command)
     // Выключить таймер (остановить ЦАП)
     // TIMER_Cmd(MDR_TIMER2, DISABLE);
    	// NVIC_DisableIRQ(DMA_IRQn);
+    mode = dac_mode;
     return(1);
   }
 // ---------------------------------------------------------------------------------------------- //
@@ -99,8 +102,10 @@ int execute_command(char *command)
 // ------------- "mode " command ------------------------------------------------------------ //
   if (strstr(command, "mode ") == command) 
   {                     // проверить: команда начинается с "mode "?
-    enum mode_setting mode = atoi((char *)(command + strlen("mode ")));       // перевести режим из строкового формата в int
-      set_mode_setting(mode);   // задать требуемый режим
+    int tmp_mode = atoi((char *)(command + strlen("mode ")));       // перевести режим из строкового формата в int
+    mode = (is_valid_mode_setting(tmp_mode) ? tmp_mode : mode);     // обновить mode только если значение валидное
+    set_mode_setting(mode);   // задать требуемый режим
+
   }
 // ---------------------------------------------------------------------------------------------- //
 
@@ -110,17 +115,14 @@ int execute_command(char *command)
     // Настройка частоты для ADC
     if (strstr(command, "ADC ") == command + strlen("clock ")) {
       int new_clock = atoi((char *)(command + strlen("clock ADC ")));       // перевести new_clock из строкового формата в int
-      reconfig_ADC_clock(new_clock);
+      reconfig_ADC_clock(new_clock, mode);
     }
     // Настройка частоты для DAC
     if (strstr(command, "DAC ") == command + strlen("clock ")) {
       int new_clock = atoi((char *)(command + strlen("clock DAC ")));       // перевести new_clock из строкового формата в int
-      reconfig_DAC_clock(new_clock);
+      reconfig_DAC_clock(new_clock, mode);
     }
-
-    char src = *((char *)(command + strlen("clock ")));       // Получить 
-      set_sin_DAC_table(freq, 1);                                          // задать синусоиду требуемой частоты в DAC_table (в первый канал)
-  }
+ }
 // ---------------------------------------------------------------------------------------------- //
 
   return(0);
@@ -197,8 +199,8 @@ int convert_voltage_to_register_val(float voltage)
 void set_mode_setting(enum mode_setting mode)
 {
   // Выключение АЦП и таймера
-	ADC1_Cmd (DISABLE);
-	ADC2_Cmd (DISABLE);
+	ADC1_Cmd(DISABLE);
+	ADC2_Cmd(DISABLE);
   TIMER_Cmd(MDR_TIMER2, DISABLE);
 
   // 1 устрановка АЦП
@@ -210,8 +212,8 @@ void set_mode_setting(enum mode_setting mode)
   change_dac_chan_num(num_dac_chan);
 
   // Включение АЦП и таймера
-	ADC1_Cmd (ENABLE);
-	ADC2_Cmd (ENABLE);
+	ADC1_Cmd(ENABLE);
+	ADC2_Cmd(ENABLE);
   TIMER_Cmd(MDR_TIMER2, ENABLE);
 
 		// NVIC_EnableIRQ(USB_IRQn);

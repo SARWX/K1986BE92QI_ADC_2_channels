@@ -11,6 +11,7 @@
 #ifndef DAC_init
 #define DAC_init
 
+#include "Command_system.h"
 /**
  * @brief Type for dac_mode,
  * this type signalize current DMA state
@@ -28,5 +29,7 @@ void Setup_TIM2();
 void set_sin_DAC_table(int freq, int chan);
 void change_dac_chan_num(int num_dac_chan);
 void reconfig_TIM_dac_mode(void);
+ErrorStatus reconfig_DAC_clock(uint32_t input_freq, enum mode_setting mode);
+
 
 #endif /* DAC_init */
