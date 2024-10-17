@@ -93,7 +93,7 @@ int execute_command(char *command)
     // Выключить таймер (остановить ЦАП)
     // TIMER_Cmd(MDR_TIMER2, DISABLE);
    	// NVIC_DisableIRQ(DMA_IRQn);
-    mode = dac_mode;
+    mode = dac_mode_s;
     return(1);
   }
 // ---------------------------------------------------------------------------------------------- //
@@ -223,6 +223,11 @@ void set_mode_setting(enum mode_setting mode)
     // NVIC_DisableIRQ(ADC_IRQn);
     // NVIC_DisableIRQ(Timer2_IRQn);
 }
+
+int is_valid_mode_setting(int x)
+{
+  return((0 <= x) && (x <= 3));
+};
 
 /*********************** (C) COPYRIGHT 2024 ICV ****************************
 *
