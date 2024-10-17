@@ -218,7 +218,7 @@ void reconfig_TIM_dac_mode()
 	// Проверить надо ли занижать частоту
 	int period = TIMER_GetCntAutoreload(MDR_TIMER2);
 	int prescaler = TIMER_GetCntPrescaler(MDR_TIMER2);
-	if ((period * prescaler) > (PRESCALER_T2_DAC_MODE * PERIOD_T2))
+	if ((period * prescaler) < (PRESCALER_T2_DAC_MODE * PERIOD_T2))
 	{
 		TIMER_SetCntPrescaler(MDR_TIMER2, PRESCALER_T2_DAC_MODE);
 		TIMER_SetCntAutoreload(MDR_TIMER2, PERIOD_T2);

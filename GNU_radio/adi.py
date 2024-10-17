@@ -24,16 +24,17 @@ class ADIBlock(gr.sync_block):  # other base classes are basic_block, decim_bloc
     Read data from serial port and forward it to output. 
     portNumber is number, you can see in the name of your 
     serial port in device manager, like COM16 or COM7 
+    DAC_freq and ADC_freq are specified for 1 channel
     """
 
     
-    def __init__(self, portNumber=7, mode = 3): 
+    def __init__(self, portNumber=7, mode = 3, adc_freq = 250000, dac_freq = 500000): 
         """arguments to this function show up as parameters in GRC"""
         self.portNumber = portNumber  # Сохраняем номер порта       
         gr.sync_block.__init__(
             self,
             name = 'Analog Digital Interface',   
-            in_sig = [np.float32, np.float32],                # Входы
+            in_sig = [np.float32, np.float32],  # Входы
             out_sig = [np.float32, np.float32]  # Выходы
         )
 
@@ -48,6 +49,8 @@ class ADIBlock(gr.sync_block):  # other base classes are basic_block, decim_bloc
         self.port = None
         self.port_name = None
         self.baudrate = 2000000  # Здесь захардкожен baudrate
+        self.adc_freq = adc_freq  
+        self.dac_freq = dac_freq
         self.mode = mode
         self.remaining_data = bytearray(USB_PACKET_SIZE + 1)  # Буфер для оставшихся данных     0ой байт - флаг (0 - в массиве нет полезных данных, 1 - надо читать)
         
@@ -82,6 +85,16 @@ class ADIBlock(gr.sync_block):  # other base classes are basic_block, decim_bloc
             command = "mode " + str(mode_setting)  
         else:
             command = "dac_mode"
+        try:
+            self.port.write(command.encode('ascii'))
+            print(f"Отправлено: {command}")
+            time.sleep(0.01)
+        except serial.SerialException as e:
+            print(f"Ошибка при отправке данных: {e}")
+
+    def set_clock(self, dac_or_adc, adc_freq):
+    # dac_or_adc = DAC      dac_or_adc = ADC
+        command = "clock " + dac_or_adc + str(adc_freq)  
         try:
             self.port.write(command.encode('ascii'))
             print(f"Отправлено: {command}")
@@ -125,6 +138,10 @@ class ADIBlock(gr.sync_block):  # other base classes are basic_block, decim_bloc
         if self.port is None:
             # Если порт не открыт, попытаться открыть его
             self.open_port()
+            if self.adc_freq > 0:
+                self.set_clock("ADC ", self.adc_freq)
+            if self.dac_freq > 0:
+                self.set_clock("DAC ", self.dac_freq)
             self.set_mode(self.mode)
 
         # Случай обычной работы (Упор на АЦП)
