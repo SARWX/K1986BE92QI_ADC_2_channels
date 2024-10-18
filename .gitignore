@@ -1,0 +1,19 @@
+ProjectFiles/Objects/*
+ProjectFiles/Listings/*
+ProjectFiles/EventRecorderStub.scvd
+# ProjectFiles/my_project.mil 
+# ProjectFiles/.project
+ProjectFiles/Blank.uvguix.PC_88
+# ProjectFiles/Blank.uvprojx 
+ProjectFiles/.vscode
+ProjectFiles/Tests/*
+GNU_radio/__pycache__/*
+GNU_radio/qpsk/*
+*.o
+*.i
+GNU_radio/__pycache__/PlotFromSerial_epy_block_0.cpython-311.pyc
+GNU_radio/__pycache__/PlotFromSerial_epy_block_1_0.cpython-311.pyc
+GNU_radio/__pycache__/PlotFromSerial_epy_block_1.cpython-311.pyc
+GNU_radio/qpsk/qpsk_stage6_epy_block*.py
+ProjectFiles/Blank.uvoptx
+.gitignore
