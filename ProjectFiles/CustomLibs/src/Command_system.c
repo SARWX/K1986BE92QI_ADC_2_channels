@@ -90,9 +90,6 @@ int execute_command(char *command)
 // ------------- "dac_mode " command ------------------------------------------------------------ //
   if (strstr(command, "dac_mode") == command) 
   {                    // проверить: команда начинается с "dac_mode"?
-    // Выключить таймер (остановить ЦАП)
-    // TIMER_Cmd(MDR_TIMER2, DISABLE);
-   	// NVIC_DisableIRQ(DMA_IRQn);
     mode = dac_mode_s;
     return(1);
   }
@@ -215,13 +212,6 @@ void set_mode_setting(enum mode_setting mode)
 	ADC1_Cmd(ENABLE);
 	ADC2_Cmd(ENABLE);
   TIMER_Cmd(MDR_TIMER2, ENABLE);
-
-		// NVIC_EnableIRQ(USB_IRQn);
-		// NVIC_EnableIRQ(ADC_IRQn);
-		// NVIC_EnableIRQ(DMA_IRQn);
-    // NVIC_DisableIRQ(DMA_IRQn);
-    // NVIC_DisableIRQ(ADC_IRQn);
-    // NVIC_DisableIRQ(Timer2_IRQn);
 }
 
 int is_valid_mode_setting(int x)

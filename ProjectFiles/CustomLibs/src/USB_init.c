@@ -28,7 +28,7 @@ static USB_Clock_TypeDef USB_Clock_InitStruct;
 static USB_DeviceBUSParam_TypeDef USB_DeviceBUSParam;
 static MDR_SSP_TypeDef SSP_InitStruct;
 SSP_InitTypeDef sSSP;
-PORT_InitTypeDef port_init_structure;
+// PORT_InitTypeDef port_init_structure;
 extern uint8_t *buffer;
 char rec_buf[BUFFER_LENGTH];
 static uint8_t DoubleBuf[BUFFER_LENGTH * 2];

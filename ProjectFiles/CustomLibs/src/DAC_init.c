@@ -52,16 +52,13 @@ void Setup_DAC()
 	// Подключаем тактирование к блоку ЦАП, и порту E 
     RST_CLK_PCLKcmd((RST_CLK_PCLK_RST_CLK | RST_CLK_PCLK_DAC), ENABLE);
     RST_CLK_PCLKcmd((RST_CLK_PCLK_PORTE), ENABLE);
-
 	// Сбрасываем настройки порта E
     PORT_DeInit(MDR_PORTE);
-	
 	// Конфигурируем выводы для ЦАП
     port_init_structure.PORT_Pin   = PORT_Pin_0;				//     PE0
     port_init_structure.PORT_OE    = PORT_OE_IN;				// Режим на вход
     port_init_structure.PORT_MODE  = PORT_MODE_ANALOG;			// Аналоговый вход (согласно спецификации)
     PORT_Init(MDR_PORTE, &port_init_structure);					// Инициализация выводов заданной структурой	
-	
 	DAC_DeInit();												// Сбросить настройки ЦАП
 	// Настройка ЦАП 1
 	DAC1_Init(DAC1_AVCC);										// AVcc - опорное напряжение
@@ -83,25 +80,19 @@ void Setup_TIM2()
 {
 	RST_CLK_PCLKcmd((RST_CLK_PCLK_TIMER2), ENABLE);
 	TIMER_DeInit(MDR_TIMER2);
-	TIMER_BRGInit(MDR_TIMER2, TIMER_HCLKdiv1);			// HCLK = 16 * 8 = 128 MHz
-														// 128 / 1 = 128 MHz
-														// Тактирование АЦП у нас 500 kHz, поэтому такую же частоту зададим и в ЦАП
-
+	TIMER_BRGInit(MDR_TIMER2, TIMER_HCLKdiv1);		// Предделитель для TIM2
 	// Заполним структуру для TIM2
 	TIMER_CntStructInit(&Cnt_sTim2);
 	Cnt_sTim2.TIMER_CounterMode = TIMER_CntMode_ClkFixedDir;			// Счет без направления изменения счета
 	Cnt_sTim2.TIMER_CounterDirection = TIMER_CntDir_Up;					// Счет в сторону увеличения
-	// Cnt_sTim2.TIMER_EventSource = TIMER_EvSrc_TM2; 					// Событие по достижении TIM2 значения ARR
 	Cnt_sTim2.TIMER_FilterSampling = TIMER_FDTS_TIMER_CLK_div_2;		// Вспомогательная частота для фильтра в 4 раза меньше основной
 	Cnt_sTim2.TIMER_ARR_UpdateMode = TIMER_ARR_Update_Immediately;		// Изменение ARR таймера по переполнению
 	Cnt_sTim2.TIMER_IniCounter = 0;										// Инициализационное значение таймера
 	Cnt_sTim2.TIMER_Prescaler = PRESCALER_T2;							// делим на 12:  128 MHz / 4 / 12 
-	Cnt_sTim2.TIMER_Period = PERIOD_T2;								// Значение ARR делим на 10:  112 MHz / 4 / 12 / 10
+	Cnt_sTim2.TIMER_Period = PERIOD_T2;									// Значение ARR делим на 10:  112 MHz / 4 / 12 / 10
 																		// Итоговая частота ЦАПа будет 250 кГц
-	
 	TIMER_CntInit(MDR_TIMER2, &Cnt_sTim2);
-
-
+	
 	// Сконфигурируем пин PE2 и PE1 для управления демультиплексором
 	RST_CLK_PCLKcmd (RST_CLK_PCLK_PORTE | RST_CLK_PCLK_TIMER2, ENABLE);
 	PORT_StructInit(&PortInitStructure);
@@ -135,7 +126,6 @@ void Setup_TIM2()
 	// Копируем конфигурацию для канала 1 (PE1)
 	TimerChnOutInitStructure.TIMER_CH_Number = TIMER_CHANNEL1;
 	TIMER_ChnOutInit (MDR_TIMER2, &TimerChnOutInitStructure);
-	//NVIC_EnableIRQ(Timer2_IRQn);
 	TIMER_DMACmd(MDR_TIMER2, TIMER_STATUS_CNT_ARR, ENABLE);
 
 	// Включим демультиплексор PE7 = 0 (0 = ON)
