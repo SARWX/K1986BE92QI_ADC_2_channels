@@ -32,3 +32,7 @@
 void Setup_SPI(void);
 
 #endif /* DAC_init */
+
+/*********************** (C) COPYRIGHT 2024 ICV ****************************
+*
+* END OF FILE SPI_init.c */

@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    DMA_init.c
   * @author  ICV
-  * @version V1.0.0
-  * @date    08/05/2024
+  * @version V1.1.0
+  * @date    19/10/2024
   * @brief   DMA initialization Header File.
   * ******************************************************************************
   */
@@ -20,3 +20,7 @@ void Setup_DMA();
 void reconfig_DMA_dac_mode(void);
 
 #endif /* DMA_init */
+
+/*********************** (C) COPYRIGHT 2024 ICV ****************************
+*
+* END OF FILE DMA_init.h */

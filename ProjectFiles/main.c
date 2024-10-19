@@ -1,3 +1,14 @@
+/**
+  ******************************************************************************
+  * @file    main.c
+  * @author  ICV
+  * @version V1.1.0
+  * @date    19/10/2024
+  * @brief   This file contains main logic of all project
+  * ******************************************************************************
+  */
+
+/* Includes ------------------------------------------------------------------*/
 #include "MDR32F9Qx_config.h"
 #include "MDR32F9Qx_usb_handlers.h"
 #include "MDR32F9Qx_rst_clk.h"
@@ -44,7 +55,7 @@ uint16_t tuner = NUM_OF_MES;					// Управление разверткой
 uint16_t coordinate_x = 0;
 uint16_t coordinate_y = 0;
 // переменные для dac_mode
-volatile enum dac_mode_state dac_mode_state;				// Состояние DMA для ЦАПа в режиме dac_mode
+volatile enum dac_mode_state dac_mode_state;	// Состояние DMA для ЦАПа в режиме dac_mode
 extern uint8_t main_array_for_DAC[];
 extern uint8_t alternate_array_for_DAC[];
 /* -------------------------------------------------------------------------------*/
@@ -55,29 +66,44 @@ USB_Result test_usb(USB_EP_TypeDef EPx, uint8_t* Buffer, uint32_t Length)
     return USB_SUCCESS;
 }
 
-int main(void) 
-	{
-	Setup_CPU_Clock();
-	VCom_Configuration();
+void pre_setup(void) 
+{
 	// Инициализируем контроллер прерывний (NVIC)
     SCB->AIRCR = AIRCR_SETTING;
     SCB->VTOR = VECTOR_TABLE_OFFSET;
     // Запрещаем все прерывания
     NVIC->ICPR[0] = WHOLE_WORD;			// Регистр сброса состояния ожидания для прерывания ICPR
     NVIC->ICER[0] = WHOLE_WORD;			// Регистр запрета прерываний IСER
-	NVIC->ISER[0] = (1<<ADC_IRQn);	    // Регистр разрешения прерываний ISER
+}
+
+void post_setup(void) 
+{
+	// Установим значение приоретета прерывания DMA
+	NVIC_EnableIRQ(ADC_IRQn);
+ 	NVIC_EnableIRQ(DMA_IRQn);
+	NVIC_SetPriority (DMA_IRQn, 1);
+	NVIC_SetPriority (USB_IRQn, 0);
+	// Разрешение работы DMA TIM2
+	DMA_Cmd(DMA_Channel_TIM2, ENABLE);								// А это тоже самое,
+	// MDR_DMA->CHNL_ENABLE_SET = (1 << DMA_Channel_TIM2);			// что и это ???
+	// Включение АЦП и DMA для АЦП
+	ADC1_Cmd(ENABLE);	// разрешаем работу ADC1
+	ADC2_Cmd(ENABLE);	// разрешаем работу ADC2
+}
+
+int main(void) 
+{
+	pre_setup();
+	Setup_CPU_Clock();
+	VCom_Configuration();
 	Setup_ADC();
 	Setup_DMA();
 	USB_CDC_Init((uint8_t *)buffer, 1, SET);
 	Setup_USB();		
 	Setup_DAC();
-
+	Setup_DEMUX_for_DAC();
 	Setup_TIM2();
- 
-	// Включение АЦП и DMA для АЦП
-	ADC1_Cmd (ENABLE);						// разрешаем работу ADC1
-	ADC2_Cmd (ENABLE);						// разрешаем работу ADC2
-	NVIC_SetPriority (USB_IRQn, 0);
+	post_setup();
 
 	while (1) 
 	{
@@ -105,17 +131,17 @@ int main(void)
 		while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) == 0) ;						// ждем, когда DMA перейдет на альтернативную структуру
 		DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_PRIMARY, &ADC1_primary_DMA_structure);			// реинициализируем основную структуру
 		convert_to_8_bit(main_array_for_ADC, NUM_OF_MES);
-		USB_CDC_SendData((uint8_t *)main_array_for_ADC, NUM_OF_MES);				// отправка буфера основной структуры DMA по USB
+		USB_CDC_SendData((uint8_t *)main_array_for_ADC, NUM_OF_MES);								// отправка буфера основной структуры DMA по USB
 
 		// 2 стадия - заполнение буфера, с использованием альтернативной структуры DMA, параллельная передача буфера основной по USB
 		while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) != 0) ;						// ждем, когда DMA перейдет на основную структуру
 		DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_ALTERNATE, &ADC1_alternate_DMA_structure);		// реинициализируем альтернативную структуру
 		convert_to_8_bit(alternate_array_for_ADC, NUM_OF_MES);
-		USB_CDC_SendData((uint8_t *)alternate_array_for_ADC, NUM_OF_MES );			// отправка буфера альтернативной структуры DMA по USB
+		USB_CDC_SendData((uint8_t *)alternate_array_for_ADC, NUM_OF_MES );							// отправка буфера альтернативной структуры DMA по USB
 	}	
 
 	dac_mode:
-	reconfig_TIM_dac_mode();
+	reconfig_TIM_dac_mode();		// ???? надо убрать NVIC из этой функции, но там вроде все не так просто
 	reconfig_DMA_dac_mode();
 	// Предустановка для работы в режиме dac_mode
 	for(int i = 0; i < DAC_MODE_BUF_SIZE; i++)
@@ -140,3 +166,7 @@ int main(void)
 		result = USB_EP_doDataOut(USB_EP3, alternate_array_for_DAC, DAC_MODE_BUF_SIZE*2, test_usb);
 	}
 }
+
+/*********************** (C) COPYRIGHT 2024 ICV ****************************
+*
+* END OF FILE main.c */

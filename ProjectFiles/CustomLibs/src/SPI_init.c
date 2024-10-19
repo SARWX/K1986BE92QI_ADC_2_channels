@@ -28,13 +28,12 @@ SSP_InitTypeDef SSP1_struct;
   */
 void Setup_SPI(void)
 {
-	PORT_InitTypeDef Port_sruct;
-
 	// Подключаем тактирование к блоку SPI, портам B и F 
     RST_CLK_PCLKcmd((RST_CLK_PCLK_RST_CLK | RST_CLK_PCLK_SSP1), ENABLE);
     RST_CLK_PCLKcmd((RST_CLK_PCLK_PORTB | RST_CLK_PCLK_PORTF), ENABLE);
 
 	// инициализация RESET и DC
+	PORT_InitTypeDef Port_sruct;
 	PORT_StructInit(&Port_sruct);
 	Port_sruct.PORT_Pin		= (Pin_DC_Display | Pin_Reset_Display);
 	Port_sruct.PORT_OE		= PORT_OE_OUT;
@@ -66,8 +65,12 @@ void Setup_SPI(void)
 	PORT_Init(Port_IRQ_Touch, &Port_sruct);
 
 	// инициализация SPI
-	SSP_BRGInit(MDR_SSP1, SSP_HCLKdiv1);		// Подключить SSP1 peripheral clock	
+	SSP_BRGInit(MDR_SSP1, SSP_HCLKdiv1);	// Подключить SSP1 peripheral clock	
 	SSP_StructInit(&SSP1_struct);
 	SSP_Init(MDR_SSP1, &SSP1_struct);
 	SSP_Cmd(MDR_SSP1, ENABLE); 
 };
+
+/*********************** (C) COPYRIGHT 2024 ICV ****************************
+*
+* END OF FILE SPI_init.c */

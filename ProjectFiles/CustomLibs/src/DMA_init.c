@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    DMA_init.c
   * @author  ICV
-  * @version V1.0.0
-  * @date    08/05/2024
+  * @version V1.1.0
+  * @date    19/10/2024
   * @brief   This file contains initialization of DMA also DMA_IRQHandler
   * ******************************************************************************
   */
@@ -48,21 +48,18 @@ void Setup_DMA()
 	RST_CLK_PCLKcmd (RST_CLK_PCLK_DMA | RST_CLK_PCLK_SSP1 |
 	RST_CLK_PCLK_SSP2, ENABLE);
 
-	// Запретить все прерывания, в том числе от SSP1 и SSP2
-	NVIC->ICPR[0] = WHOLE_WORD;			// КТО ЭТО Б..ТЬ ПРИДУМАЛ
-	NVIC->ICER[0] = WHOLE_WORD;			// УДАЛИТЬ
 	// Отключить DMA для SPI
 	MDR_SSP1->DMACR = 0;
 	MDR_SSP2->DMACR = 0;
 
 	// Сбросить все настройки DMA
 	DMA_DeInit();
-	DMA_StructInit (&ADC1_DMA_structure);		// Проинициализировать sDMA_ADC1 стандартными значениями
-	
-	// Заполняем структуру sDMA_PriCtrlData_ADC1 для АЦП 1
+	DMA_StructInit (&ADC1_DMA_structure);		// Проинициализировать стандартными значениями
+	// Заполняем основную структуру для АЦП 1
 	ADC1_primary_DMA_structure.DMA_SourceBaseAddr =								// Адрес откуда будем брать измерения 
-	(uint32_t)(&(MDR_ADC->ADC1_RESULT));									// Соответственно это регистр ADC1_RESULT
-	ADC1_primary_DMA_structure.DMA_DestBaseAddr = (uint32_t)(main_array_for_ADC);		// Адрес куда будем писать наши измерения
+	(uint32_t)(&(MDR_ADC->ADC1_RESULT));										// Соответственно это регистр ADC1_RESULT
+	ADC1_primary_DMA_structure.DMA_DestBaseAddr = 
+	(uint32_t)(main_array_for_ADC);												// Адрес куда будем писать наши измерения
 	ADC1_primary_DMA_structure.DMA_CycleSize = NUM_OF_MES;						// Сколько измерений (DMA передач) содержит 1 DMA цикл
 	ADC1_primary_DMA_structure.DMA_SourceIncSize = DMA_SourceIncNo;				// Адрес ADC1_RESULT не требует инкремента, он статичен
 	ADC1_primary_DMA_structure.DMA_DestIncSize = DMA_DestIncHalfword;			// Адрес места, куда будем писать измерения будет инкрементироваться на 16 бит, т.к. АЦП 12 битный и в 8 бит он не поместится
@@ -70,29 +67,30 @@ void Setup_DMA()
 	DMA_MemoryDataSize_HalfWord;	
 	ADC1_primary_DMA_structure.DMA_NumContinuous = DMA_Transfers_1024;			// Сколько передач может пройти между процедурой арбитража
 	ADC1_primary_DMA_structure.DMA_SourceProtCtrl = DMA_SourcePrivileged;		// Память, откуда берем значения кэшируемая (не факт)
-	ADC1_primary_DMA_structure.DMA_DestProtCtrl = DMA_DestCacheable;				// Память, куда пишем значения кэшируемая (не факт)
-	ADC1_primary_DMA_structure.DMA_Mode = DMA_Mode_PingPong;						// Режим "Пинг-понг" ст. 385 спецификации к К1986ВЕ92QI
+	ADC1_primary_DMA_structure.DMA_DestProtCtrl = DMA_DestCacheable;			// Память, куда пишем значения кэшируемая (не факт)
+	ADC1_primary_DMA_structure.DMA_Mode = DMA_Mode_PingPong;					// Режим "Пинг-понг" ст. 385 спецификации к К1986ВЕ92QI
 
-	// Заполним структуру sDMA_AltCtrlData_ADC1 для АЦП 1	
-	ADC1_alternate_DMA_structure.DMA_SourceBaseAddr =								// Адрес откуда будем брать измерения 
-	(uint32_t)(&(MDR_ADC->ADC1_RESULT));											// Соответственно это регистр ADC1_RESULT
-	ADC1_alternate_DMA_structure.DMA_DestBaseAddr = (uint32_t)(alternate_array_for_ADC);		// Адрес куда будем писать наши измерения (+ размер массива / 2 * 2 байта)
-	ADC1_alternate_DMA_structure.DMA_CycleSize = NUM_OF_MES;						// Сколько измерений (DMA передач) содержит 1 DMA цикл
-	ADC1_alternate_DMA_structure.DMA_SourceIncSize = DMA_SourceIncNo;				// Адрес ADC1_RESULT не требует инкремента, он статичен
-	ADC1_alternate_DMA_structure.DMA_DestIncSize = DMA_DestIncHalfword;				// Адрес места, куда будем писать измерения будет инкрементироваться на 16 бит
-	ADC1_alternate_DMA_structure.DMA_MemoryDataSize =								// Скажем DMA, Что мы работаем с 16 битными данными
+	// Заполним альтернативную структуру для АЦП 1	
+	ADC1_alternate_DMA_structure.DMA_SourceBaseAddr =							// Адрес откуда будем брать измерения 
+	(uint32_t)(&(MDR_ADC->ADC1_RESULT));										// Соответственно это регистр ADC1_RESULT
+	ADC1_alternate_DMA_structure.DMA_DestBaseAddr = 
+	(uint32_t)(alternate_array_for_ADC);										// Адрес куда будем писать наши измерения (+ размер массива / 2 * 2 байта)
+	ADC1_alternate_DMA_structure.DMA_CycleSize = NUM_OF_MES;					// Сколько измерений (DMA передач) содержит 1 DMA цикл
+	ADC1_alternate_DMA_structure.DMA_SourceIncSize = DMA_SourceIncNo;			// Адрес ADC1_RESULT не требует инкремента, он статичен
+	ADC1_alternate_DMA_structure.DMA_DestIncSize = DMA_DestIncHalfword;			// Адрес места, куда будем писать измерения будет инкрементироваться на 16 бит
+	ADC1_alternate_DMA_structure.DMA_MemoryDataSize =							// Скажем DMA, Что мы работаем с 16 битными данными
 	DMA_MemoryDataSize_HalfWord;
-	ADC1_alternate_DMA_structure.DMA_NumContinuous = DMA_Transfers_1024;			// Сколько передач может пройти между процедурой арбитража
-	ADC1_alternate_DMA_structure.DMA_SourceProtCtrl = DMA_SourcePrivileged;			// Память, откуда берем значения кэшируемая (не факт)
-	ADC1_alternate_DMA_structure.DMA_DestProtCtrl = DMA_DestCacheable;				// Память, куда пишем значения кэшируемая (не факт)
-	ADC1_alternate_DMA_structure.DMA_Mode = DMA_Mode_PingPong;						// Режим "Пинг-понг" ст. 385 спецификации к К1986ВЕ92QI
+	ADC1_alternate_DMA_structure.DMA_NumContinuous = DMA_Transfers_1024;		// Сколько передач может пройти между процедурой арбитража
+	ADC1_alternate_DMA_structure.DMA_SourceProtCtrl = DMA_SourcePrivileged;		// Память, откуда берем значения кэшируемая (не факт)
+	ADC1_alternate_DMA_structure.DMA_DestProtCtrl = DMA_DestCacheable;			// Память, куда пишем значения кэшируемая (не факт)
+	ADC1_alternate_DMA_structure.DMA_Mode = DMA_Mode_PingPong;					// Режим "Пинг-понг" ст. 385 спецификации к К1986ВЕ92QI
 	
 	// Заполним структуру для 1ого канала 
-	ADC1_DMA_structure.DMA_PriCtrlData = &ADC1_primary_DMA_structure;				// Укажем основную структуру
-	ADC1_DMA_structure.DMA_AltCtrlData = &ADC1_alternate_DMA_structure;				// Укажем альтернативную структуру
-	ADC1_DMA_structure.DMA_Priority = DMA_Priority_Default;							// Обычный уровень приоритетности (нужен для арбитража)
+	ADC1_DMA_structure.DMA_PriCtrlData = &ADC1_primary_DMA_structure;			// Укажем основную структуру
+	ADC1_DMA_structure.DMA_AltCtrlData = &ADC1_alternate_DMA_structure;			// Укажем альтернативную структуру
+	ADC1_DMA_structure.DMA_Priority = DMA_Priority_Default;						// Обычный уровень приоритетности (нужен для арбитража)
 	ADC1_DMA_structure.DMA_UseBurst = DMA_BurstClear;
-	ADC1_DMA_structure.DMA_SelectDataStructure =	DMA_CTRL_DATA_PRIMARY;			// в качестве базовой берем основную структуру
+	ADC1_DMA_structure.DMA_SelectDataStructure =	DMA_CTRL_DATA_PRIMARY;		// в качестве базовой берем основную структуру
 	
 	// Проинициализируем первый канал
 	DMA_Init(DMA_Channel_ADC1, &ADC1_DMA_structure);
@@ -132,11 +130,11 @@ void Setup_DMA()
 	TIM2_alternate_DMA_structure.DMA_Mode = DMA_Mode_PingPong;					// Стандартный режим работы DMA 
 	
 	// Заполним структуру для канала TIM2 
-	TIM2_DMA_structure.DMA_PriCtrlData = &TIM2_primary_DMA_structure;						// Укажем основную структуру
-	TIM2_DMA_structure.DMA_AltCtrlData = &TIM2_alternate_DMA_structure;						// Укажем альтернативную структуру
-	TIM2_DMA_structure.DMA_Priority = DMA_Priority_High;							// Высокий уровень приоритетности (нужен для арбитража)
+	TIM2_DMA_structure.DMA_PriCtrlData = &TIM2_primary_DMA_structure;			// Укажем основную структуру
+	TIM2_DMA_structure.DMA_AltCtrlData = &TIM2_alternate_DMA_structure;			// Укажем альтернативную структуру
+	TIM2_DMA_structure.DMA_Priority = DMA_Priority_High;						// Высокий уровень приоритетности (нужен для арбитража)
 	TIM2_DMA_structure.DMA_UseBurst = DMA_BurstClear;
-	TIM2_DMA_structure.DMA_SelectDataStructure =	DMA_CTRL_DATA_PRIMARY;				// в качестве базовой берем основную структуру
+	TIM2_DMA_structure.DMA_SelectDataStructure =	DMA_CTRL_DATA_PRIMARY;		// в качестве базовой берем основную структуру
 	
 	// Проинициализируем первый канал
 	DMA_Init(DMA_Channel_TIM2, &TIM2_DMA_structure);
@@ -151,9 +149,7 @@ void Setup_DMA()
 	MDR_DMA->CHNL_ENABLE_CLR = (1 << DMA_Channel_SSP1_RX | 
 	1 << DMA_Channel_SSP1_TX | 1 << DMA_Channel_SSP2_RX |
 	1 << DMA_Channel_SSP2_TX);
-	// Установим значение приоретета прерывания DMA
- 	NVIC_EnableIRQ(DMA_IRQn);
-	NVIC_SetPriority (DMA_IRQn, 1);	
+
 	MDR_DMA->CHNL_ENABLE_SET = (1 << DMA_Channel_TIM2);
 }
 

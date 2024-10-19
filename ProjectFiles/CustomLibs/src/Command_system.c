@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    Command_system.c
   * @author  ICV
-  * @version V1.0.0
-  * @date    08/05/2024
+  * @version V1.1.0
+  * @date    19/10/2024
   * @brief   This file contains command system for project.
   * ******************************************************************************
   */
@@ -26,7 +26,7 @@ extern DMA_CtrlDataInitTypeDef TIM2_alternate_DMA_structure;        // Внеш�
 
 enum mode_setting mode = 3;                                         // Режим работы устройства (по умолчанию режим = 3)
 
-float get_voltage_num(char *command, int i);                       // функция преобразования числа строкового формата в число с плавающей точкой
+float get_voltage_num(char *command, int i);                        // функция преобразования числа строкового формата в число с плавающей точкой
 int convert_voltage_to_register_val(float voltage);                 // функция переводящая значение в вольтах в значение регистра ЦАП
 
 /**
@@ -42,7 +42,7 @@ int execute_command(char *command)
   if (strstr(command, "set freq ") == command) 
   {                    // проверить: команда начинается с "set freq "?
     int freq = atoi((char *)(command + strlen("set freq ")));       // перевести freq из строкового формата в int
-      set_sin_DAC_table(freq, 1);                                          // задать синусоиду требуемой частоты в DAC_table (в первый канал)
+      set_sin_DAC_table(freq, 1);                                   // задать синусоиду требуемой частоты в DAC_table (в первый канал)
   }
 // ---------------------------------------------------------------------------------------------- //
 
@@ -56,7 +56,7 @@ int execute_command(char *command)
     while ((command[i] != 0) && (command[i] != '\n')                // пока строка не закончена
     && (command[i] != '\r') && (command[i] != '!'))                 // пока строка не закончена
     {
-      float voltage_num = get_voltage_num(command, i);             // получить число в формате X.XX
+      float voltage_num = get_voltage_num(command, i);              // получить число в формате X.XX
       if (voltage_num == -1.0)  
       {
         break;                                                      // неверное значение, прекратить выполнение
@@ -144,25 +144,25 @@ int execute_command(char *command)
   * @param  i - index of the value to be extracted.
   * @retval value of the extracted voltage 
   */
-  float get_voltage_num(char *command, int i)                      // передаем i по ссылке, а не по значению
+  float get_voltage_num(char *command, int i)   // передаем i по ссылке, а не по значению
   {
   float num = 0.0;
-    if ((command[i] >= '0') && (command[i] <= '9'))               // проверка того, что это цифра
+    if ((command[i] >= '0') && (command[i] <= '9'))   // проверка того, что это цифра
     {
       num = (command[i] - '0');
-      i += 1;                                                      // инкрементировать индекс
+      i += 1;   // инкрементировать индекс
     }
     else  
     {
-      return(-1);                                                   // ошибка при вводе
+      return(-1);   // ошибка при вводе
     }
     if (command[i] == '.')  
     {
-      i += 1;                                                      // пропустить символ '.'
+      i += 1;   // пропустить символ '.'
     }
     else  
     {
-      return(-1);                                                   // ошибка при вводе
+      return(-1);   // ошибка при вводе
     }
     float d = 10.0;
     while ((command[i] >= '0') && (command[i] <= '9'))  
@@ -171,7 +171,7 @@ int execute_command(char *command)
       d *= 10.0;
       i += 1;
     }
-    if(num > 3.3)                                                   // проверить не выходит ли напряжение за установленный максимум
+    if(num > 3.3)   // проверить не выходит ли напряжение за установленный максимум
     {
       return(-1);
     }
@@ -192,6 +192,12 @@ int convert_voltage_to_register_val(float voltage)
   return((int)voltage);     // преобразование к типу int
 }
 
+/**
+  * @brief : 
+  * function to set desired mode.
+  * @param  mode - mode to set.
+  * @retval None
+  */
 void set_mode_setting(enum mode_setting mode)
 {
   // Выключение АЦП и таймера
@@ -213,6 +219,12 @@ void set_mode_setting(enum mode_setting mode)
   TIMER_Cmd(MDR_TIMER2, ENABLE);
 }
 
+/**
+  * @brief : 
+  * function to check if x - correct node_setting.
+  * @param  x - value to test.
+  * @retval 1 - valid, 0 - not valid
+  */
 int is_valid_mode_setting(int x)
 {
   return((0 <= x) && (x <= 3));

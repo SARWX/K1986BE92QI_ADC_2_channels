@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    DAC_init.c
   * @author  ICV
-  * @version V1.0.0
-  * @date    08/05/2024
+  * @version V1.1.0
+  * @date    19/10/2024
   * @brief   This file contains initialization of DAC, TIM2
   * and set_sin_DAC_table() function for initializing table of 
   * values for DAC with sinusoid.
@@ -33,7 +33,7 @@ extern DMA_CtrlDataInitTypeDef TIM2_alternate_DMA_structure;
   * @param  None
   * @retval None
   */
-void Setup_DAC() 
+void Setup_DAC(void) 
 {
 	// Подключаем тактирование к блоку ЦАП, и порту E 
     RST_CLK_PCLKcmd((RST_CLK_PCLK_RST_CLK | RST_CLK_PCLK_DAC), ENABLE);
@@ -64,7 +64,7 @@ void Setup_DAC()
   * @param  None
   * @retval None
   */
-void Setup_TIM2() 
+void Setup_TIM2(void) 
 {
 	RST_CLK_PCLKcmd((RST_CLK_PCLK_TIMER2), ENABLE);
 	TIMER_DeInit(MDR_TIMER2);
@@ -77,11 +77,24 @@ void Setup_TIM2()
 	TIM2_cnt_struct.TIMER_FilterSampling = TIMER_FDTS_TIMER_CLK_div_2;		// Вспомогательная частота для фильтра в 4 раза меньше основной
 	TIM2_cnt_struct.TIMER_ARR_UpdateMode = TIMER_ARR_Update_Immediately;	// Изменение ARR таймера по переполнению
 	TIM2_cnt_struct.TIMER_IniCounter = 0;									// Инициализационное значение таймера
-	TIM2_cnt_struct.TIMER_Prescaler = PRESCALER_T2;							// делим на 12:  128 MHz / 4 / 12 
-	TIM2_cnt_struct.TIMER_Period = PERIOD_T2;								// Значение ARR делим на 10:  112 MHz / 4 / 12 / 10
-																			// Итоговая частота ЦАПа будет 250 кГц
-	TIMER_CntInit(MDR_TIMER2, &TIM2_cnt_struct);
-	
+	TIM2_cnt_struct.TIMER_Prescaler = PRESCALER_T2;							// делим на PRESCALER_T2:  HSE_FREQ * CPU_PLL / (CPU_DIV * PRESCALER_T2)
+	TIM2_cnt_struct.TIMER_Period = PERIOD_T2;								// Значение ARR (делим частоту еще на PERIOD_T2)
+	TIMER_CntInit(MDR_TIMER2, &TIM2_cnt_struct);	// Итоговая частота ЦАПа = HSE_FREQ * CPU_PLL / (CPU_DIV * PRESCALER_T2 * PERIOD_T2)
+	// Включить таймер
+	TIMER_Cmd(MDR_TIMER2, ENABLE);
+	TIMER_SetChnCompare (MDR_TIMER2, TIMER_CHANNEL3, 4);	// 4		PE2
+	TIMER_SetChnCompare (MDR_TIMER2, TIMER_CHANNEL1, 10);	// 10		PE1
+}
+
+/**
+  * @brief  Init ports for DEMUX control: 
+  * Configures ports and TIM2 channels
+  * to generate signals for demultiplexer
+  * @param  None
+  * @retval None
+  */
+void Setup_DEMUX_for_DAC(void) 
+{
 	// Сконфигурируем пин PE2 и PE1 для управления демультиплексором
 	RST_CLK_PCLKcmd (RST_CLK_PCLK_PORTE | RST_CLK_PCLK_TIMER2, ENABLE);
 	PORT_InitTypeDef port_struct_DEMUX;
@@ -93,7 +106,6 @@ void Setup_TIM2()
 	port_struct_DEMUX.PORT_Pin = (PORT_Pin_2 | PORT_Pin_1);		// PE1 и PE2
 	port_struct_DEMUX.PORT_SPEED = PORT_SPEED_MAXFAST;
 	PORT_Init (MDR_PORTE, &port_struct_DEMUX);
- 
 	// Сконфигурируем управление демультиплексором
 	// Общие настройки каналов
 	TIMER_ChnInitTypeDef TIM2_chn_init_struct;
@@ -121,7 +133,6 @@ void Setup_TIM2()
 	TIM2_chn_out_init_struct.TIMER_CH_Number = TIMER_CHANNEL1;
 	TIMER_ChnOutInit (MDR_TIMER2, &TIM2_chn_out_init_struct);
 	TIMER_DMACmd(MDR_TIMER2, TIMER_STATUS_CNT_ARR, ENABLE);
-
 	// Включим демультиплексор PE7 = 0 (0 = ON)
 	port_struct_DAC.PORT_Pin = PORT_Pin_7;
 	port_struct_DAC.PORT_OE = PORT_OE_OUT;
@@ -129,11 +140,6 @@ void Setup_TIM2()
 	port_struct_DAC.PORT_MODE = PORT_MODE_DIGITAL;
 	PORT_Init(MDR_PORTE, &port_struct_DAC);
 	PORT_ResetBits(MDR_PORTE, PORT_Pin_7); 	// Включить демультиплексор
-	
-	// Включить таймер
-	TIMER_Cmd(MDR_TIMER2, ENABLE);
-	TIMER_SetChnCompare (MDR_TIMER2, TIMER_CHANNEL3, 4);	// 4		PE2
-	TIMER_SetChnCompare (MDR_TIMER2, TIMER_CHANNEL1, 10);	// 10		PE1
 }
 
 /**
@@ -195,7 +201,7 @@ void change_dac_chan_num(int num_dac_chan)
 	}
 }
 
-void reconfig_TIM_dac_mode()
+void reconfig_TIM_dac_mode(void)
 {
 	// Проверить надо ли занижать частоту
 	int period = TIMER_GetCntAutoreload(MDR_TIMER2);
@@ -206,7 +212,7 @@ void reconfig_TIM_dac_mode()
 		TIMER_SetCntAutoreload(MDR_TIMER2, PERIOD_T2);
 	}
 	TIMER_Cmd(MDR_TIMER2, DISABLE);
-	NVIC_DisableIRQ(DMA_IRQn);
+	NVIC_DisableIRQ(DMA_IRQn);			// ?????? Странно
 	MDR_TIMER2->CNT = 0;	
 }
 

@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    defines.h
   * @author  ICV
-  * @version V1.0.0
-  * @date    08/05/2024
+  * @version V1.1.0
+  * @date    19/10/2024
   * @brief   This file contains diferent defines for programm (you can change them, but be carefull)
   * ******************************************************************************
   */

@@ -16,3 +16,7 @@ void Setup_USB(void);
 void VCom_Configuration(void); 
 
 #endif /* USB_init */
+
+/*********************** (C) COPYRIGHT 2024 ICV ****************************
+*
+* END OF FILE USB_init.c */

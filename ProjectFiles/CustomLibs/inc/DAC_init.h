@@ -2,8 +2,8 @@
   ******************************************************************************
   * @file    DAC_init.h
   * @author  ICV
-  * @version V1.0.0
-  * @date    08/05/2024
+  * @version V1.1.0
+  * @date    19/10/2024
   * @brief   DAC initialization Header File.
   * ******************************************************************************
   */
@@ -26,10 +26,14 @@ enum dac_mode_state
 
 void Setup_DAC();
 void Setup_TIM2();
+void Setup_DEMUX_for_DAC(void)
 void set_sin_DAC_table(int freq, int chan);
 void change_dac_chan_num(int num_dac_chan);
 void reconfig_TIM_dac_mode(void);
 ErrorStatus reconfig_DAC_clock(uint32_t input_freq, enum mode_setting mode);
 
-
 #endif /* DAC_init */
+
+/*********************** (C) COPYRIGHT 2024 ICV ****************************
+*
+* END OF FILE DAC_init.h */
