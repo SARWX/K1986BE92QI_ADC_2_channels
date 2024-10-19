@@ -20,7 +20,6 @@
 #define MAX_ADC_PRESCALER ADC_CLK_div_2048
 #define ADC_PRESCALER_TO_INT(ADC_PRESCALER) (1 << ((int)(ADC_PRESCALER) >> ADC1_CFG_REG_DIVCLK_Pos))
 #define INT_TO_ADC_PRESCALER(INT) ((ADCx_Prescaler)((__builtin_ctz(INT) << ADC1_CFG_REG_DIVCLK_Pos)))
-
 #define DELAY_GO_TO_CLK_TICS(DELAY_GO) (28 + 1 + DELAY_GO)  // Минимум 29 тактов на преобразование, точное количество определяет ADC1_structure.ADC_DelayGo
 
 // Структуры для АЦП
@@ -60,17 +59,17 @@ void Setup_ADC()
     ADC1_structure.ADC_Channels         = (ADC_CH_ADC0_MSK | ADC_CH_ADC1_MSK);	// Маска для каналов 0 и 1 (АЦП 1 будет оцифровывать их поочередно)
     ADC1_structure.ADC_VRefSource       = ADC_VREF_SOURCE_INTERNAL;			    // Опорное напряжение от внутреннего источника
     ADC1_structure.ADC_IntVRefSource    = ADC_INT_VREF_SOURCE_INEXACT;		    // Выбираем неточный источник опорного напряжения
-    ADC1_structure.ADC_Prescaler        = MIN_ADC_PRESCALER;					    // Задаем скорость работы АЦП, ИМЕННО ЭТОЙ НАСТРОЙКОЙ ЗАДАЕТСЯ СКОРОСТЬ РАБОТЫ УСТРОЙСТВА
+    ADC1_structure.ADC_Prescaler        = MIN_ADC_PRESCALER;					// Задаем скорость работы АЦП, ИМЕННО ЭТОЙ НАСТРОЙКОЙ ЗАДАЕТСЯ СКОРОСТЬ РАБОТЫ УСТРОЙСТВА
 	ADC1_structure.ADC_DelayGo          = 0x3;								    // сколько тактов на преобразование
     ADC1_Init (&ADC1_structure);											    // Применяем настройки к АЦП 1
     
     // Настройка АЦП для регулировки
-    ADCx_InitTypeDef ADC2_structure = ADC1_structure;
-    ADC2_structure.ADC_SamplingMode     = ADC_SAMPLING_MODE_CYCLIC_CONV;		    // Режим работы (циклические преобразования, а не одиночное)
-    ADC2_structure.ADC_ChannelSwitching = ADC_CH_SWITCHING_Disable;				      // Переключение каналов разрешено, АЦП 1 будет вссегда работать на PD0,// PD1
+    ADCx_InitTypeDef ADC2_structure     = ADC1_structure;
+    ADC2_structure.ADC_SamplingMode     = ADC_SAMPLING_MODE_CYCLIC_CONV;        // Режим работы (циклические преобразования, а не одиночное)
+    ADC2_structure.ADC_ChannelSwitching = ADC_CH_SWITCHING_Disable;             // Переключение каналов разрешено, АЦП 1 будет вссегда работать на PD0,// PD1
     ADC2_structure.ADC_ChannelNumber    = ADC_CH_ADC1;
-    ADC2_structure.ADC_Prescaler        = ADC_CLK_div_2048;						          // Задаем скорость работы АЦП, ИМЕННО ЭТОЙ НАСТРОЙКОЙ ЗАДАЕТСЯ СКОРОСТЬ РАБОТЫ УСТРОЙСТВА
-    ADC2_Init (&ADC2_structure);													                      // Применяем настройки к АЦП 2
+    ADC2_structure.ADC_Prescaler        = ADC_CLK_div_2048;                     // Задаем скорость работы АЦП, ИМЕННО ЭТОЙ НАСТРОЙКОЙ ЗАДАЕТСЯ СКОРОСТЬ РАБОТЫ УСТРОЙСТВА
+    ADC2_Init (&ADC2_structure);                                                // Применяем настройки к АЦП 2
 }
 
 /**
@@ -84,14 +83,12 @@ void change_adc_chan_num(int num_adc_chan)
 {
     if (num_adc_chan == 1)
     {
-        // ADC1_structure.ADC_Prescaler        = MIN_ADC_PRESCALER;					    // Задаем скорость работы АЦП, ИМЕННО ЭТОЙ НАСТРОЙКОЙ ЗАДАЕТСЯ СКОРОСТЬ РАБОТЫ УСТРОЙСТВА
         ADC1_structure.ADC_ChannelSwitching = ADC_CH_SWITCHING_Disable; // Переключение каналов разрешено, АЦП 1 будет вссегда работать на PD0,// PD1
         ADC1_structure.ADC_Channels         = (ADC_CH_ADC0_MSK);	      // Маска для каналов 0 и 1 (АЦП 1 будет оцифровывать их поочередно)
     }
     else
     {
-        // ADC1_structure.ADC_Prescaler        = MIN_ADC_PRESCALER;					    // Задаем скорость работы АЦП, ИМЕННО ЭТОЙ НАСТРОЙКОЙ ЗАДАЕТСЯ СКОРОСТЬ РАБОТЫ УСТРОЙСТВА
-        ADC1_structure.ADC_ChannelSwitching = ADC_CH_SWITCHING_Enable;			        // Переключение каналов разрешено, АЦП 1 будет вссегда работать на PD0,// PD1
+        ADC1_structure.ADC_ChannelSwitching = ADC_CH_SWITCHING_Enable;			    // Переключение каналов разрешено, АЦП 1 будет вссегда работать на PD0,// PD1
         ADC1_structure.ADC_Channels         = (ADC_CH_ADC0_MSK | ADC_CH_ADC1_MSK);	// Маска для каналов 0 и 1 (АЦП 1 будет оцифровывать их поочередно)
     }
     ADC1_Init (&ADC1_structure);  // Применяем настройки к АЦП 1

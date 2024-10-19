@@ -17,3 +17,5 @@ GNU_radio/__pycache__/PlotFromSerial_epy_block_1.cpython-311.pyc
 GNU_radio/qpsk/qpsk_stage6_epy_block*.py
 ProjectFiles/Blank.uvoptx
 .gitignore
+.vscode/settings.json
+ProjectFiles/Blank.uvguix.Timofei
