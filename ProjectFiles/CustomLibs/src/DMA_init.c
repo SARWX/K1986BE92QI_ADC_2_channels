@@ -54,6 +54,8 @@ void Setup_DMA()
 
 	// Сбросить все настройки DMA
 	DMA_DeInit();
+	// DeInit включает все каналы, отключим их
+	MDR_DMA->CHNL_ENABLE_CLR = WHOLE_WORD;
 	DMA_StructInit (&ADC1_DMA_structure);		// Проинициализировать стандартными значениями
 	// Заполняем основную структуру для АЦП 1
 	ADC1_primary_DMA_structure.DMA_SourceBaseAddr =								// Адрес откуда будем брать измерения 
@@ -150,7 +152,7 @@ void Setup_DMA()
 	1 << DMA_Channel_SSP1_TX | 1 << DMA_Channel_SSP2_RX |
 	1 << DMA_Channel_SSP2_TX);
 
-	MDR_DMA->CHNL_ENABLE_SET = (1 << DMA_Channel_TIM2);
+	MDR_DMA->CHNL_ENABLE_SET = (1 << DMA_Channel_TIM2);			// ЗАМЕНИТЬ НА DMA_Cmd
 }
 
 /**
@@ -163,7 +165,7 @@ void reconfig_DMA_dac_mode(void)
 {
 	// Основная
 	TIM2_primary_DMA_structure.DMA_DestBaseAddr = 
-	(uint32_t)(&(MDR_DAC->DAC2_DATA)) ;	
+	(uint32_t)(&(MDR_DAC->DAC2_DATA));	
 	TIM2_primary_DMA_structure.DMA_SourceBaseAddr =								// Адрес откуда будем брать измерения 
 	(uint32_t)(main_array_for_DAC);												// Начало массива DAC_table
 	TIM2_primary_DMA_structure.DMA_CycleSize = (DAC_MODE_BUF_SIZE);				// Сколько измерений (DMA передач) содержит 1 DMA цикл
@@ -179,13 +181,14 @@ void reconfig_DMA_dac_mode(void)
 	TIM2_alternate_DMA_structure.DMA_SourceIncSize = DMA_SourceIncHalfword;		// теперь DAC_table - 8 битный массив => инкремент = байт
 	TIM2_alternate_DMA_structure.DMA_MemoryDataSize =							// Скажем DMA, Что мы работаем с 8 битными данными
 	DMA_MemoryDataSize_HalfWord;
+
+	// Сбрасываем предыдущие настройки
+	DMA_DeInit();
+	// MDR_DMA->CHNL_ENABLE_CLR = WHOLE_WORD;
 	// Реинициализируем DMA с новыми настройками
 	DMA_CtrlInit(DMA_Channel_TIM2, DMA_CTRL_DATA_PRIMARY, &TIM2_primary_DMA_structure);		// реинициализируем основную структуру
 	DMA_CtrlInit(DMA_Channel_TIM2, DMA_CTRL_DATA_ALTERNATE, &TIM2_alternate_DMA_structure);	// реинициализируем альтернативную структуру
 	DMA_Init(DMA_Channel_TIM2, &TIM2_DMA_structure);
-	MDR_DMA->CHNL_REQ_MASK_CLR = 1 << DMA_Channel_TIM2;
-	MDR_DMA->CHNL_USEBURST_CLR = 1 << DMA_Channel_TIM2;
-	MDR_DMA->CHNL_ENABLE_SET = (1 << DMA_Channel_TIM2);
 }
 
 /**

@@ -213,8 +213,8 @@ void reconfig_TIM_dac_mode(void)
 		TIMER_SetCntPrescaler(MDR_TIMER2, PRESCALER_T2_DAC_MODE);
 		TIMER_SetCntAutoreload(MDR_TIMER2, PERIOD_T2);
 	}
-	TIMER_Cmd(MDR_TIMER2, DISABLE);
-	NVIC_DisableIRQ(DMA_IRQn);			// ?????? Странно
+	// TIMER_Cmd(MDR_TIMER2, DISABLE);
+	// NVIC_DisableIRQ(DMA_IRQn);			// ?????? Странно
 	MDR_TIMER2->CNT = 0;	
 }
 
@@ -255,7 +255,7 @@ ErrorStatus reconfig_DAC_clock(uint32_t input_freq, enum mode_setting mode)
 		}
 	}
 	// восстановить таймер
-	TIMER_Cmd(MDR_TIMER2, ENABLE);
+	// TIMER_Cmd(MDR_TIMER2, ENABLE);
 }
 
 /*********************** (C) COPYRIGHT 2024 ICV ****************************

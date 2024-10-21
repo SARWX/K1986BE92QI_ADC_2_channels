@@ -85,7 +85,6 @@ void post_setup(void)
 	NVIC_SetPriority (USB_IRQn, 0);
 	// Разрешение работы DMA TIM2
 	DMA_Cmd(DMA_Channel_TIM2, ENABLE);								// А это тоже самое,
-	// MDR_DMA->CHNL_ENABLE_SET = (1 << DMA_Channel_TIM2);			// что и это ???
 	// Включение АЦП и DMA для АЦП
 	ADC1_Cmd(ENABLE);	// разрешаем работу ADC1
 	ADC2_Cmd(ENABLE);	// разрешаем работу ADC2
@@ -110,13 +109,8 @@ int main(void)
 		// Проверим, не ожидает ли исполнения команда
 		if (command_recived == 1) 
 		{
-			// Надо приостановить работу АЦП
-			// NVIC_DisableIRQ(DMA_IRQn);
-			// TIMER_Cmd(MDR_TIMER2, DISABLE);
-			// ADC1_Cmd(DISABLE);
-			// MDR_DMA->CHNL_REQ_MASK_SET = 0xFFFFFFFF;
-			DMA_Cmd(DMA_Channel_TIM2, DISABLE);	
-			DMA_Cmd(DMA_Channel_ADC1, DISABLE);	
+			// Надо приостановить работу DMA
+			MDR_DMA->CHNL_REQ_MASK_SET = WHOLE_WORD;	// Замаскируем все каналы DMA
 			command_recived = 0;
 			if(execute_command(rec_buf) == 1)		// Если пришла команда "dac_mode", то переходим в другой основной цикл
 			{
@@ -128,14 +122,12 @@ int main(void)
 			{
 				buffer[i] = 0;
 			}
-			// Восстанавливаем работу АЦП
-			DMA_Cmd(DMA_Channel_TIM2, ENABLE);	
-			DMA_Cmd(DMA_Channel_ADC1, ENABLE);	
-			// MDR_DMA->CHNL_REQ_MASK_CLR = (DMA_Channel_TIM2 | DMA_Channel_ADC1 | DMA_Channel_ADC2);
-			// TIMER_Cmd(MDR_TIMER2, ENABLE);
-			// ADC1_Cmd(ENABLE);
-			// NVIC_ClearPendingIRQ(DMA_IRQn);
-			// NVIC_EnableIRQ(DMA_IRQn);
+			// Восстанавливаем работу DMA
+			MDR_DMA->CHNL_REQ_MASK_CLR = (
+				1 << DMA_Channel_TIM2 | 
+				1 << DMA_Channel_ADC1 | 
+				1 << DMA_Channel_ADC2
+				);
 		}
 
 		// 1 стадия - заполнение буфера, с использованием основной структуры DMA, параллельная передача буфера альтернативной по USB
@@ -152,20 +144,30 @@ int main(void)
 	}	
 
 	dac_mode:
-	// Замаскировать запросы от DMA
-	MDR_DMA->CHNL_REQ_MASK_SET = (DMA_Channel_TIM2 | DMA_Channel_ADC1 | DMA_Channel_ADC2);
-	reconfig_TIM_dac_mode();		// ???? надо убрать NVIC из этой функции, но там вроде все не так просто
-	reconfig_DMA_dac_mode();
+ 	NVIC_DisableIRQ(DMA_IRQn);
+	TIMER_Cmd(MDR_TIMER2, DISABLE);
+	// Замаскируем все каналы DMA
+	MDR_DMA->CHNL_REQ_MASK_SET = WHOLE_WORD;
 	// Предустановка для работы в режиме dac_mode
 	for(int i = 0; i < DAC_MODE_BUF_SIZE; i++)
 	{
 		main_array_for_DAC[i] = 100 * (i%2);
 		alternate_array_for_DAC[i] = 100 * (i%2);
 	}
+	reconfig_TIM_dac_mode();		// ???? надо убрать NVIC из этой функции, но там вроде все не так просто
+	reconfig_DMA_dac_mode();
 	// Теперь все готово, можно включить TIM2
- 	NVIC_EnableIRQ(DMA_IRQn);
+	// TIMER_Cmd(MDR_TIMER2, ENABLE);
+	// Восстанавливаем работу DMA
+	MDR_DMA->CHNL_REQ_MASK_CLR = (
+		1 << DMA_Channel_TIM2 
+		// | 1 << DMA_Channel_ADC1
+		// | 1 << DMA_Channel_ADC2
+		);
 	TIMER_Cmd(MDR_TIMER2, ENABLE);
-//	MDR_DMA->CHNL_REQ_MASK_CLR = (DMA_Channel_TIM2 | DMA_Channel_ADC1 | DMA_Channel_ADC2);
+ 	NVIC_EnableIRQ(DMA_IRQn);
+	NVIC_SetPendingIRQ(DMA_IRQn);
+
 
 	while (1)
 	{
