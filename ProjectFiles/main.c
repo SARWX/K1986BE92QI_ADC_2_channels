@@ -112,9 +112,11 @@ int main(void)
 		{
 			// Надо приостановить работу АЦП
 			// NVIC_DisableIRQ(DMA_IRQn);
-			MDR_DMA->CHNL_REQ_MASK_SET = (DMA_Channel_TIM2 | DMA_Channel_ADC1 | DMA_Channel_ADC2);
-			TIMER_Cmd(MDR_TIMER2, DISABLE);
-			ADC1_Cmd(DISABLE);
+			// TIMER_Cmd(MDR_TIMER2, DISABLE);
+			// ADC1_Cmd(DISABLE);
+			// MDR_DMA->CHNL_REQ_MASK_SET = 0xFFFFFFFF;
+			DMA_Cmd(DMA_Channel_TIM2, DISABLE);	
+			DMA_Cmd(DMA_Channel_ADC1, DISABLE);	
 			command_recived = 0;
 			if(execute_command(rec_buf) == 1)		// Если пришла команда "dac_mode", то переходим в другой основной цикл
 			{
@@ -127,9 +129,12 @@ int main(void)
 				buffer[i] = 0;
 			}
 			// Восстанавливаем работу АЦП
-			TIMER_Cmd(MDR_TIMER2, ENABLE);
-			ADC1_Cmd(ENABLE);
-			MDR_DMA->CHNL_REQ_MASK_CLR = (DMA_Channel_TIM2 | DMA_Channel_ADC1 | DMA_Channel_ADC2);
+			DMA_Cmd(DMA_Channel_TIM2, ENABLE);	
+			DMA_Cmd(DMA_Channel_ADC1, ENABLE);	
+			// MDR_DMA->CHNL_REQ_MASK_CLR = (DMA_Channel_TIM2 | DMA_Channel_ADC1 | DMA_Channel_ADC2);
+			// TIMER_Cmd(MDR_TIMER2, ENABLE);
+			// ADC1_Cmd(ENABLE);
+			// NVIC_ClearPendingIRQ(DMA_IRQn);
 			// NVIC_EnableIRQ(DMA_IRQn);
 		}
 
@@ -160,7 +165,7 @@ int main(void)
 	// Теперь все готово, можно включить TIM2
  	NVIC_EnableIRQ(DMA_IRQn);
 	TIMER_Cmd(MDR_TIMER2, ENABLE);
-	MDR_DMA->CHNL_REQ_MASK_CLR = (DMA_Channel_TIM2 | DMA_Channel_ADC1 | DMA_Channel_ADC2);
+//	MDR_DMA->CHNL_REQ_MASK_CLR = (DMA_Channel_TIM2 | DMA_Channel_ADC1 | DMA_Channel_ADC2);
 
 	while (1)
 	{
