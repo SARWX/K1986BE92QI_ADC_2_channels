@@ -623,6 +623,8 @@ void USB_SetSIS(uint32_t RegValue)
 
     /* USB_SIS bits may be only cleared by writing 1 */
     MDR_USB->SIS = RegValue;
+		// Bug: writing to SIS generates pending IRQ for USB
+		// NVIC_ClearPendingIRQ(USB_IRQn);
 }
 
 /**
