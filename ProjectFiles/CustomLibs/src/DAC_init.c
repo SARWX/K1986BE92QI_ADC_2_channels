@@ -134,11 +134,13 @@ void Setup_DEMUX_for_DAC(void)
 	TIMER_ChnOutInit (MDR_TIMER2, &TIM2_chn_out_init_struct);
 	TIMER_DMACmd(MDR_TIMER2, TIMER_STATUS_CNT_ARR, ENABLE);
 	// Включим демультиплексор PE7 = 0 (0 = ON)
-	port_struct_DAC.PORT_Pin = PORT_Pin_7;
-	port_struct_DAC.PORT_OE = PORT_OE_OUT;
-	port_struct_DAC.PORT_SPEED = PORT_SPEED_MAXFAST;
-	port_struct_DAC.PORT_MODE = PORT_MODE_DIGITAL;
-	PORT_Init(MDR_PORTE, &port_struct_DAC);
+	PORT_InitTypeDef port_struct_DAC_DEMUX;
+    PORT_StructInit(&port_struct_DAC_DEMUX);
+	port_struct_DAC_DEMUX.PORT_Pin = PORT_Pin_7;
+	port_struct_DAC_DEMUX.PORT_OE = PORT_OE_OUT;
+	port_struct_DAC_DEMUX.PORT_SPEED = PORT_SPEED_MAXFAST;
+	port_struct_DAC_DEMUX.PORT_MODE = PORT_MODE_DIGITAL;
+	PORT_Init(MDR_PORTE, &port_struct_DAC_DEMUX);
 	PORT_ResetBits(MDR_PORTE, PORT_Pin_7); 	// Включить демультиплексор
 }
 
