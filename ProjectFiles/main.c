@@ -131,13 +131,15 @@ int main(void)
 		}
 
 		// 1 стадия - заполнение буфера, с использованием основной структуры DMA, параллельная передача буфера альтернативной по USB
-		while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) == 0) ;						// ждем, когда DMA перейдет на альтернативную структуру
+		while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) == 0) 						// ждем, когда DMA перейдет на альтернативную структуру
+			;
 		DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_PRIMARY, &ADC1_primary_DMA_structure);			// реинициализируем основную структуру
 		convert_to_8_bit(main_array_for_ADC, NUM_OF_MES);
 		USB_CDC_SendData((uint8_t *)main_array_for_ADC, NUM_OF_MES);								// отправка буфера основной структуры DMA по USB
 
 		// 2 стадия - заполнение буфера, с использованием альтернативной структуры DMA, параллельная передача буфера основной по USB
-		while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) != 0) ;						// ждем, когда DMA перейдет на основную структуру
+		while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) != 0) 						// ждем, когда DMA перейдет на основную структуру
+			;
 		DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_ALTERNATE, &ADC1_alternate_DMA_structure);		// реинициализируем альтернативную структуру
 		convert_to_8_bit(alternate_array_for_ADC, NUM_OF_MES);
 		USB_CDC_SendData((uint8_t *)alternate_array_for_ADC, NUM_OF_MES );							// отправка буфера альтернативной структуры DMA по USB
@@ -146,27 +148,20 @@ int main(void)
 	dac_mode:
  	NVIC_DisableIRQ(DMA_IRQn);
 	TIMER_Cmd(MDR_TIMER2, DISABLE);
-	// Замаскируем все каналы DMA
-	MDR_DMA->CHNL_REQ_MASK_SET = WHOLE_WORD;
 	// Предустановка для работы в режиме dac_mode
 	for(int i = 0; i < DAC_MODE_BUF_SIZE; i++)
 	{
 		main_array_for_DAC[i] = 100 * (i%2);
 		alternate_array_for_DAC[i] = 100 * (i%2);
 	}
-	reconfig_TIM_dac_mode();		// ???? надо убрать NVIC из этой функции, но там вроде все не так просто
+	reconfig_TIM_dac_mode();
 	reconfig_DMA_dac_mode();
-	// Теперь все готово, можно включить TIM2
-	// TIMER_Cmd(MDR_TIMER2, ENABLE);
 	// Восстанавливаем работу DMA
 	MDR_DMA->CHNL_REQ_MASK_CLR = (
 		1 << DMA_Channel_TIM2 
-		// | 1 << DMA_Channel_ADC1
-		// | 1 << DMA_Channel_ADC2
 		);
 	TIMER_Cmd(MDR_TIMER2, ENABLE);
  	NVIC_EnableIRQ(DMA_IRQn);
-	// NVIC_SetPendingIRQ(DMA_IRQn);
 
 
 	while (1)

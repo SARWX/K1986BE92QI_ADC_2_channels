@@ -213,39 +213,46 @@ void reconfig_TIM_dac_mode(void)
 		TIMER_SetCntPrescaler(MDR_TIMER2, PRESCALER_T2_DAC_MODE);
 		TIMER_SetCntAutoreload(MDR_TIMER2, PERIOD_T2);
 	}
-	// TIMER_Cmd(MDR_TIMER2, DISABLE);
-	// NVIC_DisableIRQ(DMA_IRQn);			// ?????? Странно
+	// Сбросить таймер (надо, чтобы каналы демультиплесора
+	// всегда однозначно соотносились с порядковыми номерами
+	// индексов в массивах)
 	MDR_TIMER2->CNT = 0;	
 }
 
 ErrorStatus reconfig_DAC_clock(uint32_t input_freq, enum mode_setting mode)
 {
-	// 1 - остановить таймер
-	TIMER_Cmd(MDR_TIMER2, DISABLE);
 	ErrorStatus new_freq_set = ERROR;
-    // 2 - вычислить границы
+    // 1 - вычислить границы
 	static const int y = PRESCALER_T2 * PERIOD_T2;
 	static const int min_dac_freq = 1;
 	static const int max_dac_freq = HSE_FREQ * CPU_PLL / y;
-	// 3 - узнать сколько каналов задействовано в текущем режиме
+	
+	// 2 - узнать сколько каналов задействовано в текущем режиме
     int num_of_dac_channels = ((mode & 0x1) + 1);
-	// 4 - вычислить требуемую частоту
+
+	// 3 - вычислить требуемую частоту
 	int req_freq = input_freq * num_of_dac_channels;
-	// 5 - Найти результирующую комбинацию 
+
+	// 4 - Найти результирующую комбинацию 
 	int x = (int)(HSE_FREQ * CPU_PLL / req_freq);
-	// 6 - проверить, что частота не выйдет за максимум
+
+	// 5 - проверить, что частота не выйдет за максимум
 	x = x >= y ? x : y; 
-	// 7 - задаим переменные параметры
+
+	// 6 - задаим переменные параметры
 	int tim_period = PERIOD_T2;
 	int tim_prescaler = PRESCALER_T2;
-	// 8 - найдем значение периода, кратное требуемой частоте
+
+	// 7 - найдем значение периода, кратное требуемой частоте
 	while(tim_period <= x)
 	{
 		if((x % tim_period) == 0) 
 		{
 			tim_prescaler = (int)(x / tim_period);
+
 			TIMER_SetCntPrescaler(MDR_TIMER2, tim_prescaler);
 			TIMER_SetCntAutoreload(MDR_TIMER2, tim_period);
+			
 			ErrorStatus new_freq_set = SUCCESS;
 			break;
 		}
@@ -254,8 +261,6 @@ ErrorStatus reconfig_DAC_clock(uint32_t input_freq, enum mode_setting mode)
 			tim_period++;
 		}
 	}
-	// восстановить таймер
-	// TIMER_Cmd(MDR_TIMER2, ENABLE);
 }
 
 /*********************** (C) COPYRIGHT 2024 ICV ****************************
