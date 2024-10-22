@@ -100,8 +100,8 @@ int main(void)
 	USB_CDC_Init((uint8_t *)buffer, 1, SET);
 	Setup_USB();		
 	Setup_DAC();
-	Setup_DEMUX_for_DAC();
 	Setup_TIM2();
+	Setup_DEMUX_for_DAC();
 	post_setup();
 
 	while (1) 
@@ -166,7 +166,7 @@ int main(void)
 		);
 	TIMER_Cmd(MDR_TIMER2, ENABLE);
  	NVIC_EnableIRQ(DMA_IRQn);
-	NVIC_SetPendingIRQ(DMA_IRQn);
+	// NVIC_SetPendingIRQ(DMA_IRQn);
 
 
 	while (1)

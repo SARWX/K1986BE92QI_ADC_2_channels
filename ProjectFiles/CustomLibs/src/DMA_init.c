@@ -163,6 +163,7 @@ void Setup_DMA()
  */
 void reconfig_DMA_dac_mode(void)
 {
+	DMA_Cmd(DMA_Channel_TIM2, DISABLE);
 	// Основная
 	TIM2_primary_DMA_structure.DMA_DestBaseAddr = 
 	(uint32_t)(&(MDR_DAC->DAC2_DATA));	
@@ -184,11 +185,14 @@ void reconfig_DMA_dac_mode(void)
 
 	// Сбрасываем предыдущие настройки
 	DMA_DeInit();
-	// MDR_DMA->CHNL_ENABLE_CLR = WHOLE_WORD;
+	MDR_DMA->CHNL_ENABLE_CLR = WHOLE_WORD;
+	MDR_DMA->CHNL_REQ_MASK_SET = WHOLE_WORD;
 	// Реинициализируем DMA с новыми настройками
 	DMA_CtrlInit(DMA_Channel_TIM2, DMA_CTRL_DATA_PRIMARY, &TIM2_primary_DMA_structure);		// реинициализируем основную структуру
 	DMA_CtrlInit(DMA_Channel_TIM2, DMA_CTRL_DATA_ALTERNATE, &TIM2_alternate_DMA_structure);	// реинициализируем альтернативную структуру
 	DMA_Init(DMA_Channel_TIM2, &TIM2_DMA_structure);
+	// DMA_Cmd(DMA_Channel_TIM2, ENABLE);
+
 }
 
 /**
