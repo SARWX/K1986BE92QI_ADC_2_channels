@@ -20,14 +20,15 @@
 #include "DAC_init.h"
 #include "Command_system.h"
 
-extern uint16_t DAC_table[SIN_RES];                                 // Внешняя таблица значений ЦАП
-extern DMA_CtrlDataInitTypeDef TIM2_primary_DMA_structure;          // Внешние структуры DMA
-extern DMA_CtrlDataInitTypeDef TIM2_alternate_DMA_structure;        // Внешние структуры DMA
+// внешние переменные
+extern uint16_t DAC_table[SIN_RES];
+extern DMA_CtrlDataInitTypeDef TIM2_primary_DMA_structure;    
+extern DMA_CtrlDataInitTypeDef TIM2_alternate_DMA_structure;  
 
-enum mode_setting mode = 3;                                         // Режим работы устройства (по умолчанию режим = 3)
+enum mode_setting mode = 3;   /* режим работы устройства */
 
-float get_voltage_num(char *command, int i);                        // функция преобразования числа строкового формата в число с плавающей точкой
-int convert_voltage_to_register_val(float voltage);                 // функция переводящая значение в вольтах в значение регистра ЦАП
+float get_voltage_num(char *command, int i); 
+int convert_voltage_to_register_val(float voltage);
 
 /**
   * @brief : 
@@ -124,17 +125,27 @@ int execute_command(char *command)
 
   return(0);
 }
-/** @example Commands 
- *  command can be sent to the MCU through USB or specified in code \n
-  * \n List of the commands: \n
-  * \n \b "set \b freq \b X"      this command will set sinusoid with specified frequence in DAC table \n
-  * \b "set \b freq \b 100" configures DAC to 100 HZ \n
-  * \n \b "set \b X.X \b Y.Y \b ... \b Z.Z \b !"      this command will set specified voltage values in DAC table \n
-  * \b "set \b 2.0 \b 0.0 \b !" configures DAC repetitively transmit 2.0 V and then 0.0 V \n
-  * \n Notice, that if you transmit command through USB MAX command length = 64 bytes, \n
-  * So that transmit this command in separate messages, it won't be executed while you \n
-  * won't transmit ! at the end of set command 
-  */
+/**
+ * @example Commands 
+ * Commands can be sent to the MCU through USB or specified in code.
+ * 
+ * ### List of the commands:
+ * 
+ * - **set freq X1**
+ *   This command sets a sinusoidal signal with the specified frequency in the DAC table.  
+ *   Example:  
+ *   ``` set freq 100 ``` configures DAC to 100 Hz.
+ * 
+ * - **set X.X Y.Y ... Z.Z**  
+ *   This command sets the specified voltage values in the DAC table.  
+ *   Example:  
+ *   ``` set 2.0 0.0 ! ``` configures DAC to repetitively transmit 2.0 V and then 0.0 V.
+ * 
+ * > [!note] \n
+ * > When transmitting a command through USB, the maximum command length is 64 bytes.  
+ * > Therefore, transmit this command in separate messages. The command will not be executed until you transmit **!** at the end of the **set** command.
+ * \n
+ */
 
 /**
   * @brief :
@@ -187,9 +198,9 @@ int execute_command(char *command)
   */
 int convert_voltage_to_register_val(float voltage) 
 {
-  voltage /= 3.3;           // перевод в проценты от 3.3 вольт (максимума)
-  voltage *= 4095;          // перевод в регистровое значение (4095 - максимум)
-  return((int)voltage);     // преобразование к типу int
+  voltage /= 3.3;         // перевод в проценты от 3.3 вольт (максимума)
+  voltage *= 4095;        // перевод в регистровое значение (4095 - максимум)
+  return((int)voltage);   // преобразование к типу int
 }
 
 /**

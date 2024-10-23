@@ -38,9 +38,9 @@ void Setup_CPU_Clock(void)
 	 	while (1)
 		{
 			PORT_SetBits(MDR_PORTC, PORT_Pin_2); 	// Включить светодиод
-			delay_tick(100000);
+			delay_ms(200);
 			PORT_ResetBits(MDR_PORTC, PORT_Pin_2); 	// Выключить светодиод
-			delay_tick(100000);
+			delay_ms(200);
 		}
 	}
 	RST_CLK_CPU_PLLconfig(RST_CLK_CPU_PLLsrcHSEdiv1, RST_CLK_CPU_PLLmul8);

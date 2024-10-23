@@ -76,7 +76,7 @@ void Setup_ADC()
   * @brief  Changes number of active channels in ADC 
   * You may want to increase speed twice 
   * in this case use 1 channel
-  * @param  None
+  * @param  num_adc_chan - desired number of ADC channels
   * @retval None
   */
 void change_adc_chan_num(int num_adc_chan)
@@ -84,7 +84,7 @@ void change_adc_chan_num(int num_adc_chan)
     if (num_adc_chan == 1)
     {
         ADC1_structure.ADC_ChannelSwitching = ADC_CH_SWITCHING_Disable; // Переключение каналов разрешено, АЦП 1 будет вссегда работать на PD0,// PD1
-        ADC1_structure.ADC_Channels         = (ADC_CH_ADC0_MSK);	      // Маска для каналов 0 и 1 (АЦП 1 будет оцифровывать их поочередно)
+        ADC1_structure.ADC_Channels         = (ADC_CH_ADC0_MSK);        // Маска для каналов 0 и 1 (АЦП 1 будет оцифровывать их поочередно)
     }
     else
     {

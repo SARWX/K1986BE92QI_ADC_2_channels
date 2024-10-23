@@ -9,6 +9,7 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
+// Milandr SPL
 #include "MDR32F9Qx_config.h"
 #include "MDR32F9Qx_usb_handlers.h"
 #include "MDR32F9Qx_rst_clk.h"
@@ -19,6 +20,7 @@
 #include "MDR32F9Qx_dma.h"
 #include "MDR32F9Qx_timer.h"
 
+// Стандартные библиотеки
 #include <stddef.h>
 #include <string.h>
 #include <stdlib.h>
@@ -42,22 +44,25 @@
 /* Макроподстановки --------------------------------------------------------------*/
 #include "defines.h"
 /* Внешние переменные ------------------------------------------------------------*/
-int command_recived = 0;
-int dac_mode = 0;
-char buffer[BUFFER_LENGTH];
-char buffer_2[BUFFER_LENGTH];					// буфер для DAC alt данных
-extern char rec_buf[];							// Массив в котором записана переданная команда
+int command_recived = 0;		/* флаг получения команды */
+int dac_mode = 0;				/* режим потоковой работы DAC */
+char buffer[BUFFER_LENGTH];		/* буфер для получения USB команд */
+extern char rec_buf[];			/* буфер для обработки USB команд*/
+// char buffer_2[BUFFER_LENGTH];					// буфер для DAC alt данных
+
 // массивы для АЦП
-uint16_t main_array_for_ADC[NUM_OF_MES];		// Массив измерений АЦП для заполнения сновной структурой DMA
-uint16_t alternate_array_for_ADC[NUM_OF_MES];	// Массив измерений АЦП для заполнения альтернативной структурой DMA
+uint16_t main_array_for_ADC[NUM_OF_MES];		/* массив измерений АЦП для заполнения сновной структурой DMA */
+uint16_t alternate_array_for_ADC[NUM_OF_MES];	/* массив измерений АЦП для заполнения альтернативной структурой DMA */
+
 // элементы управления
-uint16_t tuner = NUM_OF_MES;					// Управление разверткой
+uint16_t tuner = NUM_OF_MES;	/* управление разверткой */
 uint16_t coordinate_x = 0;
 uint16_t coordinate_y = 0;
+
 // переменные для dac_mode
-volatile enum dac_mode_state dac_mode_state;	// Состояние DMA для ЦАПа в режиме dac_mode
-extern uint8_t main_array_for_DAC[];
-extern uint8_t alternate_array_for_DAC[];
+volatile enum dac_mode_state dac_mode_state;	/* Состояние DMA для ЦАПа в режиме dac_mode */
+extern uint8_t main_array_for_DAC[];			/* массив для передачи в DAC основной структурой DMA */
+extern uint8_t alternate_array_for_DAC[];		/* массив для передачи в DAC альтернативной структурой DMA */
 /* -------------------------------------------------------------------------------*/
 
 USB_Result test_usb(USB_EP_TypeDef EPx, uint8_t* Buffer, uint32_t Length)
@@ -72,8 +77,8 @@ void pre_setup(void)
     SCB->AIRCR = AIRCR_SETTING;
     SCB->VTOR = VECTOR_TABLE_OFFSET;
     // Запрещаем все прерывания
-    NVIC->ICPR[0] = WHOLE_WORD;			// Регистр сброса состояния ожидания для прерывания ICPR
-    NVIC->ICER[0] = WHOLE_WORD;			// Регистр запрета прерываний IСER
+    NVIC->ICPR[0] = WHOLE_WORD;	// Регистр сброса состояния ожидания для прерывания ICPR
+    NVIC->ICER[0] = WHOLE_WORD;	// Регистр запрета прерываний IСER
 }
 
 void post_setup(void) 
@@ -83,11 +88,14 @@ void post_setup(void)
  	NVIC_EnableIRQ(DMA_IRQn);
 	NVIC_SetPriority (DMA_IRQn, 1);
 	NVIC_SetPriority (USB_IRQn, 0);
-	// Разрешение работы DMA TIM2
-	DMA_Cmd(DMA_Channel_TIM2, ENABLE);								// А это тоже самое,
-	// Включение АЦП и DMA для АЦП
-	ADC1_Cmd(ENABLE);	// разрешаем работу ADC1
-	ADC2_Cmd(ENABLE);	// разрешаем работу ADC2
+	// Разрешение работы DMA TIM2, ADC1
+	DMA_Cmd(DMA_Channel_TIM2, ENABLE);
+	DMA_Cmd(DMA_Channel_ADC1, ENABLE);
+	// Включение АЦП
+	ADC1_Cmd(ENABLE);
+	ADC2_Cmd(ENABLE);
+	// Запуск таймера
+	TIMER_Cmd(MDR_TIMER2, ENABLE);
 }
 
 int main(void) 
@@ -109,20 +117,20 @@ int main(void)
 		// Проверим, не ожидает ли исполнения команда
 		if (command_recived == 1) 
 		{
-			// Надо приостановить работу DMA
-			MDR_DMA->CHNL_REQ_MASK_SET = WHOLE_WORD;	// Замаскируем все каналы DMA
+			// Замаскируем все каналы DMA
+			MDR_DMA->CHNL_REQ_MASK_SET = WHOLE_WORD;
 			command_recived = 0;
-			if(execute_command(rec_buf) == 1)		// Если пришла команда "dac_mode", то переходим в другой основной цикл
+			if(execute_command(rec_buf) == 1)		// Если пришла команда "dac_mode",
 			{
 				dac_mode = 1;
-				goto dac_mode;
+				goto dac_mode;						// то переходим в другой основной цикл
 			}
 			// Почистим буфер
 			for(int i = 0; i < BUFFER_LENGTH; i++) 
 			{
 				buffer[i] = 0;
 			}
-			// Восстанавливаем работу DMA
+			// Снятие маскировки с DMA	
 			MDR_DMA->CHNL_REQ_MASK_CLR = (
 				1 << DMA_Channel_TIM2 | 
 				1 << DMA_Channel_ADC1 | 
@@ -131,18 +139,18 @@ int main(void)
 		}
 
 		// 1 стадия - заполнение буфера, с использованием основной структуры DMA, параллельная передача буфера альтернативной по USB
-		while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) == 0) 						// ждем, когда DMA перейдет на альтернативную структуру
-			;
+		while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) == 0) 						
+			;	// ждем, когда DMA перейдет на альтернативную структуру
 		DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_PRIMARY, &ADC1_primary_DMA_structure);			// реинициализируем основную структуру
-		convert_to_8_bit(main_array_for_ADC, NUM_OF_MES);
+		convert_to_8_bit((uint8_t *)main_array_for_ADC, NUM_OF_MES);
 		USB_CDC_SendData((uint8_t *)main_array_for_ADC, NUM_OF_MES);								// отправка буфера основной структуры DMA по USB
 
 		// 2 стадия - заполнение буфера, с использованием альтернативной структуры DMA, параллельная передача буфера основной по USB
-		while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) != 0) 						// ждем, когда DMA перейдет на основную структуру
-			;
+		while (DMA_GetFlagStatus(DMA_Channel_ADC1, DMA_FLAG_CHNL_ALT) != 0)
+			;	// ждем, когда DMA перейдет на основную структуру
 		DMA_CtrlInit(DMA_Channel_ADC1, DMA_CTRL_DATA_ALTERNATE, &ADC1_alternate_DMA_structure);		// реинициализируем альтернативную структуру
-		convert_to_8_bit(alternate_array_for_ADC, NUM_OF_MES);
-		USB_CDC_SendData((uint8_t *)alternate_array_for_ADC, NUM_OF_MES );							// отправка буфера альтернативной структуры DMA по USB
+		convert_to_8_bit((uint8_t *)alternate_array_for_ADC, NUM_OF_MES);
+		USB_CDC_SendData((uint8_t *)alternate_array_for_ADC, NUM_OF_MES);							// отправка буфера альтернативной структуры DMA по USB
 	}	
 
 	dac_mode:

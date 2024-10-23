@@ -1,3 +1,13 @@
+/**
+  ******************************************************************************
+  * @file    compress.c
+  * @author  ICV
+  * @version V1.1.0
+  * @date    23/10/2024
+  * @brief   This file contains compress / convert fuctions.
+  * ***************************************************************************
+  */
+
 #include <stdint.h>
 
 /**
@@ -70,6 +80,12 @@ void convert_to_12_bit(uint8_t *arr, int size)
     }
 }
 
+/**
+ * @brief Function-Converter 
+ * alligns 8 bit array to 16  bit array format
+ * @param size - number of elements
+ * @retval None
+*/
 void convert_8_to_16_bit(uint8_t *arr, int size)
 {
 	uint16_t *converted_arr = (uint16_t *)arr;
@@ -78,3 +94,7 @@ void convert_8_to_16_bit(uint8_t *arr, int size)
 		converted_arr[size] = (uint16_t)arr[size];
 	}
 }
+
+/*********************** (C) COPYRIGHT 2024 ICV ****************************
+*
+* END OF FILE compress.c */

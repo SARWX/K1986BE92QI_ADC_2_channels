@@ -43,16 +43,16 @@ void Setup_DAC(void)
 	// Конфигурируем выводы для ЦАП
 	PORT_InitTypeDef port_struct_DAC;
     PORT_StructInit(&port_struct_DAC);
-    port_struct_DAC.PORT_Pin   = PORT_Pin_0;				// PE0
-    port_struct_DAC.PORT_OE    = PORT_OE_IN;				// Режим на вход
-    port_struct_DAC.PORT_MODE  = PORT_MODE_ANALOG;			// Аналоговый вход (согласно спецификации)
-    PORT_Init(MDR_PORTE, &port_struct_DAC);					// Инициализация выводов заданной структурой	
-	DAC_DeInit();											// Сбросить настройки ЦАП
+    port_struct_DAC.PORT_Pin   = PORT_Pin_0;		// PE0
+    port_struct_DAC.PORT_OE    = PORT_OE_IN;		// Режим на вход
+    port_struct_DAC.PORT_MODE  = PORT_MODE_ANALOG;	// Аналоговый вход (согласно спецификации)
+    PORT_Init(MDR_PORTE, &port_struct_DAC);			// Инициализация выводов заданной структурой	
+	DAC_DeInit();									// Сбросить настройки ЦАП
 	// Настройка ЦАП 1
-	DAC1_Init(DAC1_AVCC);									// AVcc - опорное напряжение
+	DAC1_Init(DAC1_AVCC);							// AVcc - опорное напряжение
 	DAC1_Cmd(ENABLE);
 	// Настройка ЦАП 2
-	DAC2_Init(DAC2_AVCC);									// AVcc - опорное напряжение
+	DAC2_Init(DAC2_AVCC);							// AVcc - опорное напряжение
 	DAC2_Cmd(ENABLE);			
 }
 
@@ -110,11 +110,11 @@ void Setup_DEMUX_for_DAC(void)
 	// Общие настройки каналов
 	TIMER_ChnInitTypeDef TIM2_chn_init_struct;
 	TIMER_ChnStructInit (&TIM2_chn_init_struct);
-	TIM2_chn_init_struct.TIMER_CH_Number = TIMER_CHANNEL3;					// PE2 - 3 канал альтернативная функция (прямой канал)
+	TIM2_chn_init_struct.TIMER_CH_Number = TIMER_CHANNEL3;				// PE2 - 3 канал альтернативная функция (прямой канал)
 	TIM2_chn_init_struct.TIMER_CH_Mode = TIMER_CH_MODE_PWM;
 	TIM2_chn_init_struct.TIMER_CH_REF_Format = TIMER_CH_REF_Format3;
 	TIMER_ChnInit (MDR_TIMER2, &TIM2_chn_init_struct);
-	TIM2_chn_init_struct.TIMER_CH_Number = TIMER_CHANNEL1;					// PE1 - 1 канал альтернативная функция (инвертированный канал)
+	TIM2_chn_init_struct.TIMER_CH_Number = TIMER_CHANNEL1;				// PE1 - 1 канал альтернативная функция (инвертированный канал)
 	TIMER_ChnInit (MDR_TIMER2, &TIM2_chn_init_struct);
 	// Настройка выходных сигналов
 	TIMER_ChnOutInitTypeDef TIM2_chn_out_init_struct;
@@ -168,15 +168,25 @@ void set_sin_DAC_table(int freq, int chan)
 	double angle_inc = (6.28318 / tics);			// Шаг таблицы в радианах
 	for (int i = 0; i < (tics); i++)  
 	{
-		DAC_table[(i * 2 + (chan - 1))] = (int) (sin(i * angle_inc) * SIN_AMPLITUDE) + SIN_MEDIUM_LINE;	// Вычисляем значение sin для i, с учетом средней линии
+		DAC_table[(i * 2 + (chan - 1))] = 
+			(int)(sin(i * angle_inc) * SIN_AMPLITUDE) +	// Вычисляем значение sin для i,
+			SIN_MEDIUM_LINE;							// с учетом средней линии
 	}
-	DAC_table[0] = SIN_MEDIUM_LINE;													// Первое значение sin - это средняя линия 
-	DAC_table[tics - 1] = SIN_MEDIUM_LINE;											// Последнее значение sin - это средняя линия
+	DAC_table[0] = SIN_MEDIUM_LINE;			// Первое значение sin - это средняя линия 
+	DAC_table[tics - 1] = SIN_MEDIUM_LINE;	// Последнее значение sin - это средняя линия
 
-	TIM2_primary_DMA_structure.DMA_CycleSize = (tics*2);								// Сколько измерений (DMA передач) содержит 1 DMA цикл
-	TIM2_alternate_DMA_structure.DMA_CycleSize = (tics*2);							// Сколько измерений (DMA передач) содержит 1 DMA цикл
+	TIM2_primary_DMA_structure.DMA_CycleSize = (tics*2);	// Сколько измерений (DMA передач) содержит 1 DMA цикл
+	TIM2_alternate_DMA_structure.DMA_CycleSize = (tics*2);	// Сколько измерений (DMA передач) содержит 1 DMA цикл
 }
 
+/**
+  * @brief  Changes total number of DAC channels:
+  * Configures DEMUX ports
+  * switch control ports: 2 DAC channels
+  * const control ports: 1 DAC channel
+  * @param  num_dac_chan - desired numbe of channels
+  * @retval None
+  */
 void change_dac_chan_num(int num_dac_chan)
 {
 	PORT_InitTypeDef port_struct_DEMUX;
@@ -186,7 +196,7 @@ void change_dac_chan_num(int num_dac_chan)
 		port_struct_DEMUX.PORT_FUNC = PORT_FUNC_PORT;
 		port_struct_DEMUX.PORT_OE = PORT_OE_OUT;
 		port_struct_DEMUX.PORT_MODE = PORT_MODE_DIGITAL;
-		port_struct_DEMUX.PORT_Pin = (PORT_Pin_2 | PORT_Pin_1);		// PE1 и PE2
+		port_struct_DEMUX.PORT_Pin = (PORT_Pin_2 | PORT_Pin_1);	// PE1 и PE2
 		port_struct_DEMUX.PORT_SPEED = PORT_SPEED_SLOW;
 		PORT_Init (MDR_PORTE, &port_struct_DEMUX);
 		// Задаем комбинацию для канала
@@ -197,12 +207,20 @@ void change_dac_chan_num(int num_dac_chan)
 		port_struct_DEMUX.PORT_FUNC = PORT_FUNC_ALTER;
 		port_struct_DEMUX.PORT_OE = PORT_OE_OUT;
 		port_struct_DEMUX.PORT_MODE = PORT_MODE_DIGITAL;
-		port_struct_DEMUX.PORT_Pin = (PORT_Pin_2 | PORT_Pin_1);		// PE1 и PE2
+		port_struct_DEMUX.PORT_Pin = (PORT_Pin_2 | PORT_Pin_1);	// PE1 и PE2
 		port_struct_DEMUX.PORT_SPEED = PORT_SPEED_MAXFAST;
 		PORT_Init (MDR_PORTE, &port_struct_DEMUX);
 	}
 }
 
+/**
+  * @brief  Reconfigs timer for dac_mode:
+  * checks if current TIM2 frequency is
+  * ok for dac_mode, if it is, just resets
+  * counter, if not aditionaly lower TIM2 freq 
+  * @param  None
+  * @retval None
+  */
 void reconfig_TIM_dac_mode(void)
 {
 	// Проверить надо ли занижать частоту
@@ -219,6 +237,14 @@ void reconfig_TIM_dac_mode(void)
 	MDR_TIMER2->CNT = 0;	
 }
 
+/**
+  * @brief  Set desired freq for DAC:
+  * counts combination of prescaler and
+  * period of TIM2 to reach desired 
+  * frequency, changes theese parameters
+  * @param  None
+  * @retval None
+  */
 ErrorStatus reconfig_DAC_clock(uint32_t input_freq, enum mode_setting mode)
 {
 	ErrorStatus new_freq_set = ERROR;
