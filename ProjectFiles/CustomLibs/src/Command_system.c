@@ -58,7 +58,7 @@ int execute_command(char *command)
     && (command[i] != '\r') && (command[i] != '!'))                 // пока строка не закончена
     {
       float voltage_num = get_voltage_num(command, i);              // получить число в формате X.XX
-      if (voltage_num == -1.0)  
+      if (voltage_num == -1)  
       {
         break;                                                      // неверное значение, прекратить выполнение
       }

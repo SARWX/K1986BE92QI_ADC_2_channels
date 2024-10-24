@@ -59,7 +59,6 @@ void Setup_SPI(void)
 	
 	// Настройка для Touch
 	Port_sruct.PORT_FUNC	= PORT_FUNC_PORT;
-	Port_sruct.PORT_MODE	= PORT_MODE_DIGITAL;
 	Port_sruct.PORT_Pin		= (Pin_IRQ_Touch);
 	Port_sruct.PORT_OE		= PORT_OE_IN;
 	PORT_Init(Port_IRQ_Touch, &Port_sruct);

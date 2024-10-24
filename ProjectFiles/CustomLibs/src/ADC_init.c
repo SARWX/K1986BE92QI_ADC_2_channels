@@ -20,7 +20,7 @@
 #define MAX_ADC_PRESCALER ADC_CLK_div_2048
 #define ADC_PRESCALER_TO_INT(ADC_PRESCALER) (1 << ((int)(ADC_PRESCALER) >> ADC1_CFG_REG_DIVCLK_Pos))
 #define INT_TO_ADC_PRESCALER(INT) ((ADCx_Prescaler)((__builtin_ctz(INT) << ADC1_CFG_REG_DIVCLK_Pos)))
-#define DELAY_GO_TO_CLK_TICS(DELAY_GO) (28 + 1 + DELAY_GO)  // Минимум 29 тактов на преобразование, точное количество определяет ADC1_structure.ADC_DelayGo
+#define DELAY_GO_TO_CLK_TICS(DELAY_GO) (28 + 1 + (DELAY_GO))  // Минимум 29 тактов на преобразование, точное количество определяет ADC1_structure.ADC_DelayGo
 
 // Структуры для АЦП
 ADC_InitTypeDef ADC_structure;

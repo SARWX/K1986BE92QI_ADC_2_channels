@@ -157,6 +157,7 @@ USB_Result USB_CDC_RecieveData(uint8_t *buffer, uint32_t Length)
 		// }
 		// usb_dac_mode_state = stopped;	// установим флаг того, что USB остановлен
 	}
+	return USB_SUCCESS;
 }
 
 #ifdef USB_CDC_LINE_CODING_SUPPORTED

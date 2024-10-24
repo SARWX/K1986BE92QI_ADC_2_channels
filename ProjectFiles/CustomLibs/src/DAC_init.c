@@ -279,7 +279,7 @@ ErrorStatus reconfig_DAC_clock(uint32_t input_freq, enum mode_setting mode)
 			TIMER_SetCntPrescaler(MDR_TIMER2, tim_prescaler);
 			TIMER_SetCntAutoreload(MDR_TIMER2, tim_period);
 			
-			ErrorStatus new_freq_set = SUCCESS;
+			new_freq_set = SUCCESS;
 			break;
 		}
 		else
@@ -287,6 +287,7 @@ ErrorStatus reconfig_DAC_clock(uint32_t input_freq, enum mode_setting mode)
 			tim_period++;
 		}
 	}
+	return(new_freq_set);
 }
 
 /*********************** (C) COPYRIGHT 2024 ICV ****************************

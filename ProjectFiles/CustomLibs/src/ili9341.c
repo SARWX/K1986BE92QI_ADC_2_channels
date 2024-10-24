@@ -499,7 +499,7 @@ uint8_t ILI9341_TouchPressed()
   * @param  y - variable to contain y coordinate
   * @retval None
   */
-uint8_t ILI9341_TouchGetCoordinates(uint16_t* x, uint16_t* y) 
+void ILI9341_TouchGetCoordinates(uint16_t* x, uint16_t* y) 
 {
     uint32_t avg_x = 0;
     uint32_t avg_y = 0;
@@ -510,7 +510,7 @@ uint8_t ILI9341_TouchGetCoordinates(uint16_t* x, uint16_t* y)
 	{
 		*x = 0;			// Обнуляем координаты, чтобы
 		*y = 0;			// не передавать неактуальные
-		return 0;		// выходим из функции
+		return;		// выходим из функции
 	}
 	// Если пользователь нажимает на экран нажимает
 	for(int i = 0; i < AVG_NUM; i++)
