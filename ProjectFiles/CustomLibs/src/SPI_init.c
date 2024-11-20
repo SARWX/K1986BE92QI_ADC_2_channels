@@ -39,7 +39,7 @@ void Setup_SPI(void)
 	Port_sruct.PORT_OE		= PORT_OE_OUT;
 	Port_sruct.PORT_SPEED	= PORT_SPEED_MAXFAST;
 	Port_sruct.PORT_MODE	= PORT_MODE_DIGITAL;
-	PORT_Init(Port_DC_Reset_Display, &Port_sruct);
+	// PORT_Init(Port_DC_Reset_Display, &Port_sruct);		НЕ ИНИЦИАЛИЗИРУЕМ DC и RESET, ОНИ НА ТОМ ЖЕ ПОРТУ, ЧТО И JTAG
 
 	// инициализация CS
 	Port_sruct.PORT_Pin     = Pin_SPI_CS_Display;
@@ -47,7 +47,7 @@ void Setup_SPI(void)
 	Port_SPI_CS_Display->RXTX |= Pin_SPI_CS_Display;
 	Port_sruct.PORT_Pin     = Pin_SPI_CS_Touch;
 	PORT_Init(Port_SPI_CS_Touch, &Port_sruct);
-	Port_SPI_CS_Touch->RXTX |= Pin_SPI_CS_Touch;
+	Port_SPI_CS_Display->RXTX |= Pin_SPI_CS_Display;
 
 	// инициализация MOSI, SCK, MISO
 	Port_sruct.PORT_Pin     = (Pin_SPI_MOSI | Pin_SPI_CLK);
@@ -57,14 +57,14 @@ void Setup_SPI(void)
 	Port_sruct.PORT_OE      = PORT_OE_IN;
 	PORT_Init(Port_SPI, &Port_sruct);
 	
-	// Настройка для Touch
-	Port_sruct.PORT_FUNC	= PORT_FUNC_PORT;
-	Port_sruct.PORT_Pin		= (Pin_IRQ_Touch);
-	Port_sruct.PORT_OE		= PORT_OE_IN;
-	PORT_Init(Port_IRQ_Touch, &Port_sruct);
+	// // Настройка для Touch
+	// Port_sruct.PORT_FUNC	= PORT_FUNC_PORT;
+	// Port_sruct.PORT_Pin		= (Pin_IRQ_Touch);
+	// Port_sruct.PORT_OE		= PORT_OE_IN;
+	// PORT_Init(Port_IRQ_Touch, &Port_sruct);
 
 	// инициализация SPI
-	SSP_BRGInit(MDR_SSP1, SSP_HCLKdiv1);	// Подключить SSP1 peripheral clock	
+	SSP_BRGInit(MDR_SSP1, SSP_HCLKdiv32);	// Подключить SSP1 peripheral clock	
 	SSP_StructInit(&SSP1_struct);
 	SSP_Init(MDR_SSP1, &SSP1_struct);
 	SSP_Cmd(MDR_SSP1, ENABLE); 

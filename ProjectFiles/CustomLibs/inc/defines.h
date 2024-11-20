@@ -71,6 +71,8 @@
         (bit) * 4 \
     ))			/* Макро для bit banding */
 
+#define SSP1_CS PORT_Pin_2
+
 /** @} */ /* End of group __Specific_declaration */
 
 #endif /* Defines */

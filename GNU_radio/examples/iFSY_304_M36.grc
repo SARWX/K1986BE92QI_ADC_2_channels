@@ -132,6 +132,95 @@ blocks:
     coordinate: [1896, 32.0]
     rotation: 0
     state: enabled
+- name: blocks_null_sink_0
+  id: blocks_null_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    bus_structure_sink: '[[0,],]'
+    comment: ''
+    num_inputs: '1'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [488, 144.0]
+    rotation: 0
+    state: true
+- name: blocks_null_sink_0_0
+  id: blocks_null_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    bus_structure_sink: '[[0,],]'
+    comment: ''
+    num_inputs: '1'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1048, 104.0]
+    rotation: 0
+    state: true
+- name: blocks_null_sink_0_1
+  id: blocks_null_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    bus_structure_sink: '[[0,],]'
+    comment: ''
+    num_inputs: '1'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1048, 144.0]
+    rotation: 0
+    state: true
+- name: blocks_null_source_0
+  id: blocks_null_source
+  parameters:
+    affinity: ''
+    alias: ''
+    bus_structure_source: '[[0,],]'
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_outputs: '1'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [472, 184.0]
+    rotation: 0
+    state: true
+- name: blocks_null_source_0_0
+  id: blocks_null_source
+  parameters:
+    affinity: ''
+    alias: ''
+    bus_structure_source: '[[0,],]'
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_outputs: '1'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [472, 224.0]
+    rotation: 0
+    state: true
 - name: epy_block_0_0_0
   id: epy_block
   parameters:
@@ -191,20 +280,20 @@ blocks:
       \u0430\u0439\u0442 - \u0444\u043B\u0430\u0433 (0 - \u0432 \u043C\u0430\u0441\
       \u0441\u0438\u0432\u0435 \u043D\u0435\u0442 \u043F\u043E\u043B\u0435\u0437\u043D\
       \u044B\u0445 \u0434\u0430\u043D\u043D\u044B\u0445, 1 - \u043D\u0430\u0434\u043E\
-      \ \u0447\u0438\u0442\u0430\u0442\u044C)\n        \n\n    def open_port(self):\n\
-      \        \"\"\"\u041E\u0442\u043A\u0440\u044B\u0432\u0430\u0435\u0442 COM \u043F\
-      \u043E\u0440\u0442, \u0435\u0441\u043B\u0438 \u043E\u043D \u0441\u0443\u0449\
-      \u0435\u0441\u0442\u0432\u0443\u0435\u0442 \u0438 \u043D\u0435 \u0437\u0430\u043D\
-      \u044F\u0442.\"\"\"\n        baudrate = 2000000\n        portName = 'COM' +\
-      \ str(self.portNumber)\n        # \u041F\u043E\u043B\u0443\u0447\u0430\u0435\
-      \u043C \u0441\u043F\u0438\u0441\u043E\u043A \u0434\u043E\u0441\u0442\u0443\u043F\
-      \u043D\u044B\u0445 COM \u043F\u043E\u0440\u0442\u043E\u0432\n        available_ports\
-      \ = [port.device for port in serial.tools.list_ports.comports()]\n        if\
-      \ portName not in available_ports:\n            print(f\"\u041E\u0448\u0438\u0431\
-      \u043A\u0430: \u041F\u043E\u0440\u0442 {portName} \u043D\u0435 \u043D\u0430\u0439\
-      \u0434\u0435\u043D.\")\n            return\n        try:\n            # \u041F\
-      \u044B\u0442\u0430\u0435\u043C\u0441\u044F \u043E\u0442\u043A\u0440\u044B\u0442\
-      \u044C \u043F\u043E\u0440\u0442\n            self.port = serial.Serial(portName,\
+      \ \u0447\u0438\u0442\u0430\u0442\u044C)\n        self.spi_len = 0\n        \n\
+      \n    def open_port(self):\n        \"\"\"\u041E\u0442\u043A\u0440\u044B\u0432\
+      \u0430\u0435\u0442 COM \u043F\u043E\u0440\u0442, \u0435\u0441\u043B\u0438 \u043E\
+      \u043D \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u0435\u0442 \u0438 \u043D\
+      \u0435 \u0437\u0430\u043D\u044F\u0442.\"\"\"\n        baudrate = 2000000\n \
+      \       portName = 'COM' + str(self.portNumber)\n        # \u041F\u043E\u043B\
+      \u0443\u0447\u0430\u0435\u043C \u0441\u043F\u0438\u0441\u043E\u043A \u0434\u043E\
+      \u0441\u0442\u0443\u043F\u043D\u044B\u0445 COM \u043F\u043E\u0440\u0442\u043E\
+      \u0432\n        available_ports = [port.device for port in serial.tools.list_ports.comports()]\n\
+      \        if portName not in available_ports:\n            print(f\"\u041E\u0448\
+      \u0438\u0431\u043A\u0430: \u041F\u043E\u0440\u0442 {portName} \u043D\u0435 \u043D\
+      \u0430\u0439\u0434\u0435\u043D.\")\n            return\n        try:\n     \
+      \       # \u041F\u044B\u0442\u0430\u0435\u043C\u0441\u044F \u043E\u0442\u043A\
+      \u0440\u044B\u0442\u044C \u043F\u043E\u0440\u0442\n            self.port = serial.Serial(portName,\
       \ baudrate, timeout=3.0)\n            # \u0415\u0441\u043B\u0438 \u043F\u043E\
       \u0440\u0442 \u0443\u0436\u0435 \u0431\u044B\u043B \u043E\u0442\u043A\u0440\u044B\
       \u0442, \u0437\u0430\u043A\u0440\u044B\u0432\u0430\u0435\u043C \u0435\u0433\u043E\
@@ -236,53 +325,65 @@ blocks:
       \u043E: {command}\")\n            time.sleep(0.01)\n        except serial.SerialException\
       \ as e:\n            print(f\"\u041E\u0448\u0438\u0431\u043A\u0430 \u043F\u0440\
       \u0438 \u043E\u0442\u043F\u0440\u0430\u0432\u043A\u0435 \u0434\u0430\u043D\u043D\
-      \u044B\u0445: {e}\")\n\n\n    def handle_spi(self, msg):\n        spi_value\
-      \ = pmt.to_python(msg)        # \u041F\u0440\u0435\u043E\u0431\u0440\u0430\u0437\
-      \u043E\u0432\u0430\u043D\u0438\u0435 \u0432 int\n        # \u041F\u0440\u043E\
-      \u0432\u0435\u0440\u043A\u0430\n        print(spi_value)\n        # \u0424\u043E\
-      \u0440\u043C\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435 ASCII \u0441\u0442\
-      \u0440\u043E\u043A\u0438\n        ascii_string = \"spi2_send \".encode('ascii')\
-      \ + spi_value.tobytes()\n        # \u041E\u0442\u043A\u0440\u044B\u0442\u0438\
-      \u0435 \u043F\u043E\u0440\u0442\u0430, \u0435\u0441\u043B\u0438 \u0435\u0449\
-      \u0435 \u043D\u0435 \u043E\u0442\u043A\u0440\u044B\u0442\n        if self.port\
-      \ is None:\n            self.open_port()\n        if self.port is not None and\
-      \ self.port.is_open:\n            try:\n                self.port.write(ascii_string)\n\
-      \                print(f\"\u041E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\
-      \u043E spi2_send \" + spi_value)\n                time.sleep(0.01)\n       \
-      \     except serial.SerialException as e:\n                print(f\"\u041E\u0448\
-      \u0438\u0431\u043A\u0430 \u043F\u0440\u0438 \u043E\u0442\u043F\u0440\u0430\u0432\
-      \u043A\u0435 \u0434\u0430\u043D\u043D\u044B\u0445: {e}\")\n        \n\n\n  \
-      \  def handle_set_const_signal(self, msg):\n        \"\"\"\u041E\u0431\u0440\
-      \u0430\u0431\u043E\u0442\u043A\u0430 \u0432\u0445\u043E\u0434\u043D\u044B\u0445\
-      \ \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0439.\"\"\"\n        # \u041F\
-      \u0440\u0435\u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435\
-      \ \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u044F \u0432 \u0441\u043F\
-      \u0438\u0441\u043E\u043A \u0447\u0438\u0441\u0435\u043B \u0441 \u043F\u043B\u0430\
-      \u0432\u0430\u044E\u0449\u0435\u0439 \u0437\u0430\u043F\u044F\u0442\u043E\u0439\
-      \n        numbers = pmt.to_python(msg)        # \u041F\u0440\u0435\u043E\u0431\
-      \u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435 \u0432 \u0441\u0442\u0440\
-      \u043E\u043A\u0443\n        numbers = [float(x) for x in numbers.split()]\n\
-      \        print(\"\u041E\u0431\u0440\u0430\u0431\u043E\u0442\u043A\u0430 \u0441\
-      \u043E\u043E\u0431\u0449\u0435\u043D\u0438\u044F\")\n        if len(numbers)\
-      \ > MAX_DAC_NUM:\n            print(f\"\u041E\u0448\u0438\u0431\u043A\u0430\
-      : \u0421\u043B\u0438\u0448\u043A\u043E\u043C \u043C\u043D\u043E\u0433\u043E\
-      \ \u0447\u0438\u0441\u0435\u043B. \u041C\u0430\u043A\u0441\u0438\u043C\u0443\
-      \u043C {MAX_DAC_NUM}.\")\n            return\n        if any(val > MAX_DAC_VAL\
-      \ for val in numbers):\n            print(f\"\u041E\u0448\u0438\u0431\u043A\u0430\
-      : \u0417\u043D\u0430\u0447\u0435\u043D\u0438\u044F \u043D\u0435 \u043C\u043E\
-      \u0433\u0443\u0442 \u043F\u0440\u0435\u0432\u044B\u0448\u0430\u0442\u044C {MAX_DAC_VAL}.\"\
-      )\n            return\n        # \u041E\u0442\u043A\u0440\u044B\u0442\u0438\u0435\
-      \ \u043F\u043E\u0440\u0442\u0430, \u0435\u0441\u043B\u0438 \u0435\u0449\u0435\
-      \ \u043D\u0435 \u043E\u0442\u043A\u0440\u044B\u0442\n        if self.port is\
-      \ None:\n            self.open_port()\n        if self.port is not None and\
-      \ self.port.is_open:\n            # \u0420\u0430\u0437\u0434\u0435\u043B\u0435\
-      \u043D\u0438\u0435 \u0434\u0430\u043D\u043D\u044B\u0445 \u043D\u0430 \u043A\u0443\
-      \u0441\u043A\u0438 \u043F\u043E 10 \u0447\u0438\u0441\u0435\u043B \u0438 \u043E\
-      \u0442\u043F\u0440\u0430\u0432\u043A\u0430\n            for i in range(0, len(numbers),\
-      \ CHUNK_SIZE):\n                chunk = numbers[i:i + CHUNK_SIZE]\n        \
-      \        command = \"set \" + \" \".join(map(str, chunk))\n                if\
-      \ i + CHUNK_SIZE >= len(numbers):\n                    command += \" !\"\n \
-      \               try:\n                    self.port.write(command.encode('ascii'))\n\
+      \u044B\u0445: {e}\")\n\n\n    def handle_spi(self, msg):\n        if self.spi_len\
+      \ == 0:\n            self.spi_len = pmt.to_python(msg)\n            print(self.spi_len)\n\
+      \            print(\"SPI LEN IS SET\")\n            return\n            \n \
+      \       spi_value = pmt.to_python(msg)        # \u041F\u0440\u0435\u043E\u0431\
+      \u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435 \u0432 int\n        #\
+      \ \u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430\n        print(spi_value)\n\
+      \        # \u0424\u043E\u0440\u043C\u0438\u0440\u043E\u0432\u0430\u043D\u0438\
+      \u0435 ASCII \u0441\u0442\u0440\u043E\u043A\u0438\n        # ascii_string =\
+      \ \"spi1_send \".encode('ascii') + chr(self.spi_len) + ' ' + spi_value.to_bytes(6,\
+      \ 'big')\n        ascii_string = (\n            b\"spi1_send \"  # \u041F\u0440\
+      \u044F\u043C\u043E \u0437\u0430\u0434\u0430\u0435\u043C \u0431\u0430\u0439\u0442\
+      \u043E\u0432\u0443\u044E \u0441\u0442\u0440\u043E\u043A\u0443\n            +\
+      \ bytes([self.spi_len])  # \u041F\u0440\u0435\u043E\u0431\u0440\u0430\u0437\u0443\
+      \u0435\u043C spi_len \u0432 \u0431\u0430\u0439\u0442\u044B (\u043E\u0434\u0438\
+      \u043D \u0431\u0430\u0439\u0442)\n            + b' '  # \u041F\u0440\u043E\u0431\
+      \u0435\u043B\n            + spi_value.to_bytes(self.spi_len, byteorder='big')\
+      \  # \u041F\u0440\u0435\u043E\u0431\u0440\u0430\u0437\u0443\u0435\u043C spi_value\
+      \ \u0432 6 \u0431\u0430\u0439\u0442\u043E\u0432 \u0432 big-endian\n        )\n\
+      \        # \u041E\u0442\u043A\u0440\u044B\u0442\u0438\u0435 \u043F\u043E\u0440\
+      \u0442\u0430, \u0435\u0441\u043B\u0438 \u0435\u0449\u0435 \u043D\u0435 \u043E\
+      \u0442\u043A\u0440\u044B\u0442\n        if self.port is None:\n            self.open_port()\n\
+      \        if self.port is not None and self.port.is_open:\n            try:\n\
+      \                self.port.write(ascii_string)\n                print(f\"\u041E\
+      \u0442\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u043E spi1_send \" + str(self.spi_len)\
+      \ + \" \" + str(spi_value))\n                time.sleep(0.01)\n            except\
+      \ serial.SerialException as e:\n                print(f\"\u041E\u0448\u0438\u0431\
+      \u043A\u0430 \u043F\u0440\u0438 \u043E\u0442\u043F\u0440\u0430\u0432\u043A\u0435\
+      \ \u0434\u0430\u043D\u043D\u044B\u0445: {e}\")\n                \n        print(\"\
+      SPI LEN IS RESET\")\n        self.spi_len = 0\n        \n\n\n    def handle_set_const_signal(self,\
+      \ msg):\n        \"\"\"\u041E\u0431\u0440\u0430\u0431\u043E\u0442\u043A\u0430\
+      \ \u0432\u0445\u043E\u0434\u043D\u044B\u0445 \u0441\u043E\u043E\u0431\u0449\u0435\
+      \u043D\u0438\u0439.\"\"\"\n        # \u041F\u0440\u0435\u043E\u0431\u0440\u0430\
+      \u0437\u043E\u0432\u0430\u043D\u0438\u0435 \u0441\u043E\u043E\u0431\u0449\u0435\
+      \u043D\u0438\u044F \u0432 \u0441\u043F\u0438\u0441\u043E\u043A \u0447\u0438\u0441\
+      \u0435\u043B \u0441 \u043F\u043B\u0430\u0432\u0430\u044E\u0449\u0435\u0439 \u0437\
+      \u0430\u043F\u044F\u0442\u043E\u0439\n        numbers = pmt.to_python(msg) \
+      \       # \u041F\u0440\u0435\u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\
+      \u043D\u0438\u0435 \u0432 \u0441\u0442\u0440\u043E\u043A\u0443\n        numbers\
+      \ = [float(x) for x in numbers.split()]\n        print(\"\u041E\u0431\u0440\u0430\
+      \u0431\u043E\u0442\u043A\u0430 \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\
+      \u044F\")\n        if len(numbers) > MAX_DAC_NUM:\n            print(f\"\u041E\
+      \u0448\u0438\u0431\u043A\u0430: \u0421\u043B\u0438\u0448\u043A\u043E\u043C \u043C\
+      \u043D\u043E\u0433\u043E \u0447\u0438\u0441\u0435\u043B. \u041C\u0430\u043A\u0441\
+      \u0438\u043C\u0443\u043C {MAX_DAC_NUM}.\")\n            return\n        if any(val\
+      \ > MAX_DAC_VAL for val in numbers):\n            print(f\"\u041E\u0448\u0438\
+      \u0431\u043A\u0430: \u0417\u043D\u0430\u0447\u0435\u043D\u0438\u044F \u043D\u0435\
+      \ \u043C\u043E\u0433\u0443\u0442 \u043F\u0440\u0435\u0432\u044B\u0448\u0430\u0442\
+      \u044C {MAX_DAC_VAL}.\")\n            return\n        # \u041E\u0442\u043A\u0440\
+      \u044B\u0442\u0438\u0435 \u043F\u043E\u0440\u0442\u0430, \u0435\u0441\u043B\u0438\
+      \ \u0435\u0449\u0435 \u043D\u0435 \u043E\u0442\u043A\u0440\u044B\u0442\n   \
+      \     if self.port is None:\n            self.open_port()\n        if self.port\
+      \ is not None and self.port.is_open:\n            # \u0420\u0430\u0437\u0434\
+      \u0435\u043B\u0435\u043D\u0438\u0435 \u0434\u0430\u043D\u043D\u044B\u0445 \u043D\
+      \u0430 \u043A\u0443\u0441\u043A\u0438 \u043F\u043E 10 \u0447\u0438\u0441\u0435\
+      \u043B \u0438 \u043E\u0442\u043F\u0440\u0430\u0432\u043A\u0430\n           \
+      \ for i in range(0, len(numbers), CHUNK_SIZE):\n                chunk = numbers[i:i\
+      \ + CHUNK_SIZE]\n                command = \"set \" + \" \".join(map(str, chunk))\n\
+      \                if i + CHUNK_SIZE >= len(numbers):\n                    command\
+      \ += \" !\"\n                try:\n                    self.port.write(command.encode('ascii'))\n\
       \                    print(f\"\u041E\u0442\u043F\u0440\u0430\u0432\u043B\u0435\
       \u043D\u043E: {command}\")\n                    time.sleep(0.01)\n         \
       \       except serial.SerialException as e:\n                    print(f\"\u041E\
@@ -475,99 +576,106 @@ blocks:
       \u0445\n        self.mux_sel = mux_sel\n        self.mux_en = mux_en\n     \
       \   self.ref_div_ctrl = ref_div_ctrl\n        self.input_div_ctrl = input_div_ctrl\n\
       \        self.pre_divider_mode = pre_divider_mode\n        self.enable = enable\n\
-      \n        # \u0420\u0435\u0433\u0438\u0441\u0442\u0440\u0430\u0446\u0438\u044F\
-      \ \u0432\u044B\u0445\u043E\u0434\u043D\u043E\u0433\u043E \u043F\u043E\u0440\u0442\
-      \u0430 \u0434\u043B\u044F \u043E\u0442\u043F\u0440\u0430\u0432\u043A\u0438 \u0434\
+      \        self.target_register_len = 6    # \u0431\u0430\u0439\u0442\n\n    \
+      \    # \u0420\u0435\u0433\u0438\u0441\u0442\u0440\u0430\u0446\u0438\u044F \u0432\
+      \u044B\u0445\u043E\u0434\u043D\u043E\u0433\u043E \u043F\u043E\u0440\u0442\u0430\
+      \ \u0434\u043B\u044F \u043E\u0442\u043F\u0440\u0430\u0432\u043A\u0438 \u0434\
       \u0430\u043D\u043D\u044B\u0445\n        self.message_port_register_out(pmt.intern('spi'))\n\
-      \n\n    def generate_iFSY_setting(self, mux_sel_new, mux_en_new, ref_div_ctrl_new,\
-      \ input_div_ctrl_new, pre_divider_mode_new):\n        \"\"\"\u0413\u0435\u043D\
-      \u0435\u0440\u0430\u0446\u0438\u044F \u0437\u043D\u0430\u0447\u0435\u043D\u0438\
-      \u044F 48 \u0431\u0438\u0442\u043D\u043E\u0433\u043E \u0440\u0435\u0433\u0438\
-      \u0441\u0442\u0440\u0430\"\"\"\n        # \u041F\u0440\u0438\u0432\u0435\u0434\
-      \u0435\u043D\u0438\u0435 \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0439 \u043A\
-      \ \u0442\u0438\u043F\u0443 uint64 \u043F\u0435\u0440\u0435\u0434 \u0432\u044B\
-      \u043F\u043E\u043B\u043D\u0435\u043D\u0438\u0435\u043C \u043E\u043F\u0435\u0440\
-      \u0430\u0446\u0438\u0439\n        mux_sel                 = np.uint64(mux_sel_new)\
-      \            << np.uint64(0)     # \u0412\u044B\u0431\u043E\u0440 \u0440\u0435\
-      \u0436\u0438\u043C\u0430 \u0440\u0430\u0431\u043E\u0442\u044B \u0432\u044B\u0445\
-      \u043E\u0434\u043D\u043E\u0433\u043E \u043C\u0443\u043B\u044C\u0442\u0438\u043F\
-      \u043B\u0435\u043A\u0441\u043E\u0440\u0430\n        mux_en                 \
-      \ = np.uint64(mux_en_new)             << np.uint64(3)     # \u0412\u043A\u043B\
-      ./ \u0432\u044B\u043A\u043B. \u043C\u0443\u043B\u044C\u0442\u0438\u043F\u043B\
-      \u0435\u043A\u0441\u043E\u0440\u0430 \n        reserve_1               = np.uint64(0)\
-      \                      << np.uint64(4)     # \u0440\u0435\u0437\u0435\u0440\u0432\
-      \u043D\u044B\u0439\n        capture_detector_div    = np.uint64(int('0010',\
-      \ 2))         << np.uint64(5)     # \u043A\u043E\u044D\u0444\u0444\u0438\u0446\
-      \u0438\u0435\u043D\u0442 \u0434\u0435\u043B\u0435\u043D\u0438\u044F \u0434\u0435\
-      \u043B\u0438\u0442\u0435\u043B\u044F \u0434\u0435\u0442\u0435\u043A\u0442\u043E\
-      \u0440\u0430 \u0437\u0430\u0445\u0432\u0430\u0442\u0430\n        capture_detector_en\
-      \     = np.uint64(1)                      << np.uint64(10)    # \u0432\u043A\
-      \u043B./\u0432\u044B\u043A\u043B. \u0434\u0435\u0442\u0435\u043A\u0442\u043E\
-      \u0440\u0430 \u0437\u0430\u0445\u0432\u0430\u0442\u0430\n        current_key_mode\
-      \        = np.uint64(0)                      << np.uint64(11)    # \u0440\u0435\
-      \u0436\u0438\u043C \u0440\u0430\u0431\u043E\u0442\u044B \u0441\u0435\u043A\u0446\
-      \u0438\u0439 \u0442\u043E\u043A\u043E\u0432\u043E\u0433\u043E \u043A\u043B\u044E\
-      \u0447\u0430\n        ref_div_ctrl            = np.uint64(ref_div_ctrl_new)\
-      \       << np.uint64(17)    # \u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\
-      \u0438\u0435 \u043A\u043E\u044D\u0444\u0444\u0438\u0446\u0438\u0435\u043D\u0442\
-      \u043E\u043C \u0434\u0435\u043B\u0435\u043D\u0438\u044F \u043E\u043F\u043E\u0440\
-      \u043D\u043E\u0433\u043E \u0434\u0435\u043B\u0438\u0442\u0435\u043B\u044F (\u041A\
-      \u043E\u043F)\n        reserve_2               = np.uint64(0)              \
-      \        << np.uint64(23)    # \u0440\u0435\u0437\u0435\u0440\u0432\u043D\u044B\
-      \u0439\n        input_div_ctrl          = np.uint64(input_div_ctrl_new)    \
-      \ << np.uint64(24)    # \u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\
-      \u0435 \u043A\u043E\u044D\u0444\u0444\u0438\u0446\u0438\u0435\u043D\u0442\u043E\
-      \u043C \u0434\u0435\u043B\u0435\u043D\u0438\u044F \u0432\u0445\u043E\u0434\u043D\
-      \u043E\u0439 \u0447\u0430\u0441\u0442\u043E\u0442\u044B (\u041A\u0433\u0443\u043D\
-      )\n        current_key_sections_1  = np.uint64(int('111', 2))          << np.uint64(37)\
-      \    # \u0441\u0435\u043A\u0446\u0438\u0438 \u0442\u043E\u043A\u043E\u0432\u043E\
-      \u0433\u043E \u043A\u043B\u044E\u0447\u0430\n        current_key_work_mode \
-      \  = np.uint64(int('11', 2))           << np.uint64(40)    # \u0440\u0430\u0431\
-      \u043E\u0447\u0438\u0439 \u0440\u0435\u0436\u0438\u043C \u0442\u043E\u043A\u043E\
-      \u0432\u043E\u0433\u043E \u043A\u043B\u044E\u0447\u0430\n        current_key_sections_2\
-      \  = np.uint64(int('111', 2))          << np.uint64(42)    # \u0441\u0435\u043A\
+      \n        # # \u041F\u0435\u0440\u0435\u0434\u0430\u0442\u044C \u043E\u0441\u043D\
+      \u043E\u0432\u043D\u043E\u043C\u0443 \u0431\u043B\u043E\u043A\u0443 \u0440\u0430\
+      \u0437\u043C\u0435\u0440 \u0440\u0435\u0433\u0438\u0441\u0442\u0440\u0430 (\u043E\
+      \u0431\u044A\u0435\u043C \u0442\u0440\u0430\u043D\u0437\u0430\u043A\u0446\u0438\
+      \u0439)\n        # print(\"AVAVAVAV\")\n        # self.message_port_pub(pmt.intern('spi'),\
+      \ pmt.from_long(self.target_register_len)) \n\n\n    def generate_iFSY_setting(self,\
+      \ mux_sel_new, mux_en_new, ref_div_ctrl_new, input_div_ctrl_new, pre_divider_mode_new):\n\
+      \        \"\"\"\u0413\u0435\u043D\u0435\u0440\u0430\u0446\u0438\u044F \u0437\
+      \u043D\u0430\u0447\u0435\u043D\u0438\u044F 48 \u0431\u0438\u0442\u043D\u043E\
+      \u0433\u043E \u0440\u0435\u0433\u0438\u0441\u0442\u0440\u0430\"\"\"\n      \
+      \  # \u041F\u0440\u0438\u0432\u0435\u0434\u0435\u043D\u0438\u0435 \u0437\u043D\
+      \u0430\u0447\u0435\u043D\u0438\u0439 \u043A \u0442\u0438\u043F\u0443 uint64\
+      \ \u043F\u0435\u0440\u0435\u0434 \u0432\u044B\u043F\u043E\u043B\u043D\u0435\u043D\
+      \u0438\u0435\u043C \u043E\u043F\u0435\u0440\u0430\u0446\u0438\u0439\n      \
+      \  mux_sel                 = np.uint64(mux_sel_new)            << np.uint64(0)\
+      \     # \u0412\u044B\u0431\u043E\u0440 \u0440\u0435\u0436\u0438\u043C\u0430\
+      \ \u0440\u0430\u0431\u043E\u0442\u044B \u0432\u044B\u0445\u043E\u0434\u043D\u043E\
+      \u0433\u043E \u043C\u0443\u043B\u044C\u0442\u0438\u043F\u043B\u0435\u043A\u0441\
+      \u043E\u0440\u0430\n        mux_en                  = np.uint64(mux_en_new)\
+      \             << np.uint64(3)     # \u0412\u043A\u043B./ \u0432\u044B\u043A\u043B\
+      . \u043C\u0443\u043B\u044C\u0442\u0438\u043F\u043B\u0435\u043A\u0441\u043E\u0440\
+      \u0430 \n        reserve_1               = np.uint64(0)                    \
+      \  << np.uint64(4)     # \u0440\u0435\u0437\u0435\u0440\u0432\u043D\u044B\u0439\
+      \n        capture_detector_div    = np.uint64(int('0010', 2))         << np.uint64(5)\
+      \     # \u043A\u043E\u044D\u0444\u0444\u0438\u0446\u0438\u0435\u043D\u0442 \u0434\
+      \u0435\u043B\u0435\u043D\u0438\u044F \u0434\u0435\u043B\u0438\u0442\u0435\u043B\
+      \u044F \u0434\u0435\u0442\u0435\u043A\u0442\u043E\u0440\u0430 \u0437\u0430\u0445\
+      \u0432\u0430\u0442\u0430\n        capture_detector_en     = np.uint64(1)   \
+      \                   << np.uint64(10)    # \u0432\u043A\u043B./\u0432\u044B\u043A\
+      \u043B. \u0434\u0435\u0442\u0435\u043A\u0442\u043E\u0440\u0430 \u0437\u0430\u0445\
+      \u0432\u0430\u0442\u0430\n        current_key_mode        = np.uint64(0)   \
+      \                   << np.uint64(11)    # \u0440\u0435\u0436\u0438\u043C \u0440\
+      \u0430\u0431\u043E\u0442\u044B \u0441\u0435\u043A\u0446\u0438\u0439 \u0442\u043E\
+      \u043A\u043E\u0432\u043E\u0433\u043E \u043A\u043B\u044E\u0447\u0430\n      \
+      \  ref_div_ctrl            = np.uint64(ref_div_ctrl_new)       << np.uint64(17)\
+      \    # \u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u043A\u043E\
+      \u044D\u0444\u0444\u0438\u0446\u0438\u0435\u043D\u0442\u043E\u043C \u0434\u0435\
+      \u043B\u0435\u043D\u0438\u044F \u043E\u043F\u043E\u0440\u043D\u043E\u0433\u043E\
+      \ \u0434\u0435\u043B\u0438\u0442\u0435\u043B\u044F (\u041A\u043E\u043F)\n  \
+      \      reserve_2               = np.uint64(0)                      << np.uint64(23)\
+      \    # \u0440\u0435\u0437\u0435\u0440\u0432\u043D\u044B\u0439\n        input_div_ctrl\
+      \          = np.uint64(input_div_ctrl_new)     << np.uint64(24)    # \u0443\u043F\
+      \u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u043A\u043E\u044D\u0444\u0444\
+      \u0438\u0446\u0438\u0435\u043D\u0442\u043E\u043C \u0434\u0435\u043B\u0435\u043D\
+      \u0438\u044F \u0432\u0445\u043E\u0434\u043D\u043E\u0439 \u0447\u0430\u0441\u0442\
+      \u043E\u0442\u044B (\u041A\u0433\u0443\u043D)\n        current_key_sections_1\
+      \  = np.uint64(int('111', 2))          << np.uint64(37)    # \u0441\u0435\u043A\
       \u0446\u0438\u0438 \u0442\u043E\u043A\u043E\u0432\u043E\u0433\u043E \u043A\u043B\
-      \u044E\u0447\u0430 (\u0435\u0449\u0435 \u0440\u0430\u0437 \u0443\u043F\u043E\
-      \u043C\u0438\u043D\u0430\u044E\u0442\u0441\u044F)\n        pre_divider_mode\
-      \        = np.uint64(pre_divider_mode_new)   << np.uint64(45)    # \u043F\u0440\
-      \u0435\u0434\u0432\u0430\u0440\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0439\
-      \ \u0434\u0435\u043B\u0438\u0442\u0435\u043B\u044C \u0447\u0430\u0441\u0442\u043E\
-      \u0442\u044B \xAB8/9\xBB, \xAB16/17\xBB\n        reserve_3               = np.uint64(0)\
-      \                      << np.uint64(47)    # \u0440\u0435\u0437\u0435\u0440\u0432\
-      \u043D\u044B\u0439\n\n        # \u041E\u0431\u044A\u0435\u0434\u0438\u043D\u0435\
-      \u043D\u0438\u0435 \u0432 \u043E\u0434\u043D\u043E 64-\u0431\u0438\u0442\u043D\
-      \u043E\u0435 \u0447\u0438\u0441\u043B\u043E\n        combined = (\n        \
-      \    mux_sel                 |\n            mux_en                  |\n    \
-      \        reserve_1               |\n            capture_detector_div    |\n\
-      \            capture_detector_en     |\n            current_key_mode       \
-      \ |\n            ref_div_ctrl            |\n            reserve_2          \
-      \     |\n            input_div_ctrl          |\n            current_key_sections_1\
-      \  |\n            current_key_work_mode   |\n            current_key_sections_2\
-      \  |\n            pre_divider_mode        |\n            reserve_3\n       \
-      \ )\n\n        # \u0412\u044B\u0434\u0435\u043B\u0435\u043D\u0438\u0435 \u043C\
-      \u043B\u0430\u0434\u0448\u0438\u0445 48 \u0431\u0438\u0442\n        extracted_48_bits\
-      \ = combined & np.uint64((1 << 48) - 1)\n        print(f\"Generated signal:\
-      \ {extracted_48_bits}\")\n        return extracted_48_bits\n\n    done = 0\n\
-      \    def work(self, input_items, output_items):\n        # \u0424\u0443\u043D\
-      \u043A\u0446\u0438\u044F work \u0432\u044B\u043F\u043E\u043B\u043D\u044F\u0435\
-      \u0442\u0441\u044F \u043F\u0443\u0441\u0442\u043E\u0439, \u0442\u0430\u043A\
-      \ \u043A\u0430\u043A \u0441\u0438\u0433\u043D\u0430\u043B \u0433\u0435\u043D\
-      \u0435\u0440\u0438\u0440\u0443\u0435\u0442\u0441\u044F \u0442\u043E\u043B\u044C\
-      \u043A\u043E \u043E\u0434\u0438\u043D \u0440\u0430\u0437\n        n = 0\n  \
-      \      while n < len(output_items[0]):\n            output_items[0][n] = self.enable\n\
-      \            n += 1\n        if self.enable == 1:\n                # print(f\"\
-      Works\")\n        # # \u0413\u0435\u043D\u0435\u0440\u0430\u0446\u0438\u044F\
-      \ \u0438 \u043E\u0442\u043F\u0440\u0430\u0432\u043A\u0430 \u0442\u0440\u0435\
-      \u0443\u0433\u043E\u043B\u044C\u043D\u043E\u0433\u043E \u0441\u0438\u0433\u043D\
-      \u0430\u043B\u0430 \u043F\u0440\u0438 \u0438\u043D\u0438\u0446\u0438\u0430\u043B\
-      \u0438\u0437\u0430\u0446\u0438\u0438\n            spi_value = self.generate_iFSY_setting(self,\
-      \ self.mux_sel, self.mux_en, self.ref_div_ctrl, self.input_div_ctrl, self.pre_divider_mode)\n\
-      \n            time.sleep(2.00)\n\n            # \u041E\u0442\u043F\u0440\u0430\
-      \u0432\u043A\u0430 \u0441\u0433\u0435\u043D\u0435\u0440\u0438\u0440\u043E\u0432\
-      \u0430\u043D\u043D\u044B\u0445 \u0434\u0430\u043D\u043D\u044B\u0445 \u0432 ADI\
-      \ \u0431\u043B\u043E\u043A\n            self.message_port_pub(pmt.intern('spi'),\
-      \ pmt.intern(spi_value))\n        # done = 1\n        # return 0\n        return\
-      \ len(output_items[0])"
+      \u044E\u0447\u0430\n        current_key_work_mode   = np.uint64(int('11', 2))\
+      \           << np.uint64(40)    # \u0440\u0430\u0431\u043E\u0447\u0438\u0439\
+      \ \u0440\u0435\u0436\u0438\u043C \u0442\u043E\u043A\u043E\u0432\u043E\u0433\u043E\
+      \ \u043A\u043B\u044E\u0447\u0430\n        current_key_sections_2  = np.uint64(int('111',\
+      \ 2))          << np.uint64(42)    # \u0441\u0435\u043A\u0446\u0438\u0438 \u0442\
+      \u043E\u043A\u043E\u0432\u043E\u0433\u043E \u043A\u043B\u044E\u0447\u0430 (\u0435\
+      \u0449\u0435 \u0440\u0430\u0437 \u0443\u043F\u043E\u043C\u0438\u043D\u0430\u044E\
+      \u0442\u0441\u044F)\n        pre_divider_mode        = np.uint64(pre_divider_mode_new)\
+      \   << np.uint64(45)    # \u043F\u0440\u0435\u0434\u0432\u0430\u0440\u0438\u0442\
+      \u0435\u043B\u044C\u043D\u044B\u0439 \u0434\u0435\u043B\u0438\u0442\u0435\u043B\
+      \u044C \u0447\u0430\u0441\u0442\u043E\u0442\u044B \xAB8/9\xBB, \xAB16/17\xBB\
+      \n        reserve_3               = np.uint64(0)                      << np.uint64(47)\
+      \    # \u0440\u0435\u0437\u0435\u0440\u0432\u043D\u044B\u0439\n\n        # \u041E\
+      \u0431\u044A\u0435\u0434\u0438\u043D\u0435\u043D\u0438\u0435 \u0432 \u043E\u0434\
+      \u043D\u043E 64-\u0431\u0438\u0442\u043D\u043E\u0435 \u0447\u0438\u0441\u043B\
+      \u043E\n        combined = (\n            mux_sel                 |\n      \
+      \      mux_en                  |\n            reserve_1               |\n  \
+      \          capture_detector_div    |\n            capture_detector_en     |\n\
+      \            current_key_mode        |\n            ref_div_ctrl           \
+      \ |\n            reserve_2               |\n            input_div_ctrl     \
+      \     |\n            current_key_sections_1  |\n            current_key_work_mode\
+      \   |\n            current_key_sections_2  |\n            pre_divider_mode \
+      \       |\n            reserve_3\n        )\n\n        # \u0412\u044B\u0434\u0435\
+      \u043B\u0435\u043D\u0438\u0435 \u043C\u043B\u0430\u0434\u0448\u0438\u0445 48\
+      \ \u0431\u0438\u0442\n        extracted_48_bits = combined & np.uint64((1 <<\
+      \ 48) - 1)\n        print(f\"Generated signal: {extracted_48_bits}\")\n    \
+      \    return extracted_48_bits\n\n    done = 0\n    def work(self, input_items,\
+      \ output_items):\n        # \u0424\u0443\u043D\u043A\u0446\u0438\u044F work\
+      \ \u0432\u044B\u043F\u043E\u043B\u043D\u044F\u0435\u0442\u0441\u044F \u043F\u0443\
+      \u0441\u0442\u043E\u0439, \u0442\u0430\u043A \u043A\u0430\u043A \u0441\u0438\
+      \u0433\u043D\u0430\u043B \u0433\u0435\u043D\u0435\u0440\u0438\u0440\u0443\u0435\
+      \u0442\u0441\u044F \u0442\u043E\u043B\u044C\u043A\u043E \u043E\u0434\u0438\u043D\
+      \ \u0440\u0430\u0437\n        n = 0\n        while n < len(output_items[0]):\
+      \ \n            output_items[0][n] = self.enable \n            n += 1 \n   \
+      \     if self.enable == 1: \n            # \u041E\u0442\u043F\u0440\u0430\u0432\
+      \u043A\u0430 \u0434\u043B\u0438\u043D\u044B \u0441\u043E\u043E\u0431\u0449\u0435\
+      \u043D\u0438\u044F\n            self.message_port_pub(pmt.intern('spi'), pmt.from_long(self.target_register_len))\
+      \ \n\n            # \u0413\u0435\u043D\u0435\u0440\u0430\u0446\u0438\u044F \u0437\
+      \u043D\u0430\u0447\u0435\u043D\u0438\u044F \u0440\u0435\u0433\u0438\u0441\u0442\
+      \u0440\u0430\n            spi_value = self.generate_iFSY_setting(self.mux_sel,\
+      \ self.mux_en, self.ref_div_ctrl, self.input_div_ctrl, self.pre_divider_mode)\
+      \ \n             \n            # \u041E\u0442\u043F\u0440\u0430\u0432\u043A\u0430\
+      \ \u0441\u0433\u0435\u043D\u0435\u0440\u0438\u0440\u043E\u0432\u0430\u043D\u043D\
+      \u044B\u0445 \u0434\u0430\u043D\u043D\u044B\u0445 \u0432 ADI \u0431\u043B\u043E\
+      \u043A \n            self.message_port_pub(pmt.intern('spi'), pmt.from_uint64(spi_value))\
+      \ \n\n            time.sleep(1.00)\n\n        # done = 1 \n        # return\
+      \ 0 \n        return len(output_items[0]) \n"
     affinity: ''
     alias: ''
     comment: ''
@@ -590,7 +698,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [288, 192.0]
+    coordinate: [240, 192.0]
     rotation: 0
     state: true
 - name: qtgui_time_sink_x_0_0_0
@@ -687,15 +795,18 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1056, 200.0]
+    coordinate: [1056, 216.0]
     rotation: 0
-    state: enabled
+    state: disabled
 
 connections:
+- [blocks_null_source_0, '0', epy_block_0_0_0, '0']
+- [blocks_null_source_0_0, '0', epy_block_0_0_0, '1']
+- [epy_block_0_0_0, '0', blocks_null_sink_0_0, '0']
 - [epy_block_0_0_0, '0', qtgui_time_sink_x_0_0_0, '0']
+- [epy_block_0_0_0, '1', blocks_null_sink_0_1, '0']
 - [epy_block_0_0_0, '1', qtgui_time_sink_x_0_0_0, '1']
-- [epy_block_1_0, '0', epy_block_0_0_0, '0']
-- [epy_block_1_0, '0', epy_block_0_0_0, '1']
+- [epy_block_1_0, '0', blocks_null_sink_0, '0']
 - [epy_block_1_0, spi, epy_block_0_0_0, spi]
 
 metadata:

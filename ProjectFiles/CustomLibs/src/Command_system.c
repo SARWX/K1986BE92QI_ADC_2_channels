@@ -13,11 +13,14 @@
 #include "MDR32F9Qx_dma.h"
 #include "MDR32F9Qx_timer.h"
 #include "MDR32F9Qx_adc.h"
+#include "MDR32F9Qx_ssp.h"
+#include "MDR32F9Qx_port.h"
 #include <string.h>
 #include <stdlib.h>
 #include "ADC_init.h"
 #include "defines.h"
 #include "DAC_init.h"
+#include "SPI_init.h"
 #include "Command_system.h"
 
 // внешние переменные
@@ -121,6 +124,24 @@ int execute_command(char *command)
       reconfig_DAC_clock(new_clock, mode);
     }
  }
+// ---------------------------------------------------------------------------------------------- //
+
+// ------------- "spi1_send " command ------------------------------------------------------------ //
+  if (strstr(command, "spi1_send ") == command) 
+  {                    // проверить: команда начинается с "spi1_send "?
+    uint8_t *data_to_send = (uint8_t *)(command + strlen("spi1_send "));
+    uint8_t len_of_message = *data_to_send;       // прочитать длину транзакции в байтах
+    data_to_send += strlen("X ");     // 1ый байт 'X' - размер транзакции в байтах
+                                      // 2ой байт ' ' - пробел
+
+    Port_SPI_CS_Display->RXTX &= ~(Pin_SPI_CS_Display);			// cs = 0
+    for(int i = 0; i < len_of_message; i++)
+    {
+      SSP_SendData(MDR_SSP1, (uint16_t)(data_to_send[i]));    // SSP настроен на работу с 8 битными данными, 
+                                                              // но функция принимает uint16_t, поэтому надо привести тип
+    }
+    Port_SPI_CS_Display->RXTX |= Pin_SPI_CS_Display;			  // cs = 1
+  }
 // ---------------------------------------------------------------------------------------------- //
 
   return(0);

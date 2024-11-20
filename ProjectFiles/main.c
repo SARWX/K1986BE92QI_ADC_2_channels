@@ -110,6 +110,9 @@ int main(void)
 	Setup_DAC();
 	Setup_TIM2();
 	Setup_DEMUX_for_DAC();
+	
+	Setup_SPI();
+	
 	post_setup();
 
 	while (1) 
