@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    SPI_init.c
+  * @file    SPI_init.h
   * @author  ICV
   * @version V1.0.0
   * @date    08/05/2024
@@ -21,7 +21,8 @@
 #define Port_DC_Reset_Display   MDR_PORTB
 #define Pin_DC_Display          PORT_Pin_6
 #define Pin_Reset_Display       PORT_Pin_7
-#define Port_SPI_CS_Display     MDR_PORTF
+#define Port_SPI_CS_Display     MDR_PORTD       // Был F, пришлось изменить на D, потому что 
+                                                // не работает с нынешней конфигурацией JTAG
 #define Pin_SPI_CS_Display      PORT_Pin_2
 // Touch  
 #define Port_SPI_CS_Touch       MDR_PORTB

@@ -141,6 +141,8 @@ int execute_command(char *command)
       SSP_SendData(MDR_SSP1, (uint16_t)(data_to_send[i]));    // SSP настроен на работу с 8 битными данными, 
                                                               // но функция принимает uint16_t, поэтому надо привести тип
     }
+    while (SSP_GetFlagStatus(MDR_SSP1, SSP_FLAG_BSY))
+      ;
     PORT_SetBits(Port_SPI_CS_Display, Pin_SPI_CS_Display); 	// cs = 1
     // Port_SPI_CS_Display->RXTX |= Pin_SPI_CS_Display;			  // cs = 1
   }
