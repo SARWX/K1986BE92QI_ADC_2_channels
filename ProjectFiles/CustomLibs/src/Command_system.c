@@ -134,13 +134,15 @@ int execute_command(char *command)
     data_to_send += strlen("X ");     // 1ый байт 'X' - размер транзакции в байтах
                                       // 2ой байт ' ' - пробел
 
-    Port_SPI_CS_Display->RXTX &= ~(Pin_SPI_CS_Display);			// cs = 0
+    PORT_ResetBits(Port_SPI_CS_Display, Pin_SPI_CS_Display); 	// cs = 0
+    // Port_SPI_CS_Display->RXTX &= ~(Pin_SPI_CS_Display);			// cs = 0
     for(int i = 0; i < len_of_message; i++)
     {
       SSP_SendData(MDR_SSP1, (uint16_t)(data_to_send[i]));    // SSP настроен на работу с 8 битными данными, 
                                                               // но функция принимает uint16_t, поэтому надо привести тип
     }
-    Port_SPI_CS_Display->RXTX |= Pin_SPI_CS_Display;			  // cs = 1
+    PORT_SetBits(Port_SPI_CS_Display, Pin_SPI_CS_Display); 	// cs = 1
+    // Port_SPI_CS_Display->RXTX |= Pin_SPI_CS_Display;			  // cs = 1
   }
 // ---------------------------------------------------------------------------------------------- //
 

@@ -110,7 +110,29 @@ int main(void)
 	Setup_DAC();
 	Setup_TIM2();
 	Setup_DEMUX_for_DAC();
-	
+
+	// Test PF2
+	PORT_InitTypeDef GPIO_TEST_InitStruct;
+	RST_CLK_PCLKcmd (RST_CLK_PCLK_PORTF, ENABLE);
+	GPIO_TEST_InitStruct.PORT_Pin = PORT_Pin_2;
+	GPIO_TEST_InitStruct.PORT_OE = PORT_OE_OUT;
+	GPIO_TEST_InitStruct.PORT_SPEED = PORT_SPEED_MAXFAST;
+	GPIO_TEST_InitStruct.PORT_MODE = PORT_MODE_DIGITAL;
+	PORT_Init(MDR_PORTF, &GPIO_TEST_InitStruct);
+	while (1)
+	{
+		PORT_SetBits(MDR_PORTF, PORT_Pin_2); 	// CS = 1
+		delay_ms(200);
+		PORT_ResetBits(MDR_PORTF, PORT_Pin_2); 	// CS = 0
+		delay_ms(200);
+	}
+
+
+
+
+
+
+
 	Setup_SPI();
 	
 	post_setup();
