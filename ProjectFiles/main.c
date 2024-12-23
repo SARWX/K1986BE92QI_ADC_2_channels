@@ -29,13 +29,13 @@
 #include <math.h>
 
 // Собственные библиотеки
-#include "DMA_init.h"
-#include "DAC_init.h"
-#include "ADC_init.h"
-#include "sys_CLK_init.h"
-#include "USB_init.h"
-#include "command_system.h"
-#include "SPI_init.h"
+#include "dma.h"
+#include "dac.h"
+#include "adc.h"
+#include "sys_clk.h"
+#include "usb.h"
+#include "command_sys_flex.h"
+#include "spi.h"
 #include "ili9341.h"
 #include "ili9341_interface.h"
 #include "delay.h"
@@ -43,6 +43,7 @@
 
 /* Макроподстановки --------------------------------------------------------------*/
 #include "defines.h"
+#include "pins.h"
 /* Внешние переменные ------------------------------------------------------------*/
 int command_recived = 0;		/* флаг получения команды */
 int dac_mode = 0;				/* режим потоковой работы DAC */
@@ -64,6 +65,21 @@ volatile enum dac_mode_state dac_mode_state;	/* Состояние DMA для Ц
 extern uint8_t main_array_for_DAC[];			/* массив для передачи в DAC основной структурой DMA */
 extern uint8_t alternate_array_for_DAC[];		/* массив для передачи в DAC альтернативной структурой DMA */
 /* -------------------------------------------------------------------------------*/
+
+/** 
+ * @brief This array of structures 
+ * describes all used CS pins (for SPI)
+ * 
+ * for pinPhysNumber __-1 = NOTUSED__
+ * for pinNumber __-1 = END__
+ */
+const struct spi_aux_pin spi_aux_pins[4] = {
+	{1, Pin_SPI_CS_Display, Port_SPI_CS_Display},
+	{1, Pin_SPI_CS_Touch, Port_SPI_CS_Display},
+	// RESET & DC (currently not used)
+	// {-1, Pin_DC_Display, Port_DC_Reset_Display},
+	// {-1, Pin_Reset_Display, Port_DC_Reset_Display},
+};
 
 USB_Result test_usb(USB_EP_TypeDef EPx, uint8_t* Buffer, uint32_t Length)
 {
@@ -101,7 +117,7 @@ void post_setup(void)
 int main(void) 
 {
 	pre_setup();
-	Setup_CPU_Clock();
+	Setup_CPU_Clock(FAST_CONFIG);
 	VCom_Configuration();
 	Setup_ADC();
 	Setup_DMA();
@@ -111,7 +127,7 @@ int main(void)
 	Setup_TIM2();
 	Setup_DEMUX_for_DAC();
 
-	Setup_SPI();
+	Setup_SPI(spi_aux_pins, 2);
 	
 	post_setup();
 

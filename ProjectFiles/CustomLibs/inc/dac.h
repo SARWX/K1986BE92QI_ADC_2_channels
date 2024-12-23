@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    DAC_init.h
+  * @file    dac.h
   * @author  ICV
   * @version V1.1.0
   * @date    19/10/2024
@@ -12,7 +12,7 @@
 #ifndef DAC_init
 #define DAC_init
 
-#include "Command_system.h"
+#include "command_sys_flex.h"
 
 /**
  * @brief Type for dac_mode,
@@ -44,4 +44,4 @@ ErrorStatus reconfig_DAC_clock(uint32_t input_freq, enum mode_setting mode);
 
 /*********************** (C) COPYRIGHT 2024 ICV ****************************
 *
-* END OF FILE DAC_init.h */
+* END OF FILE dac.h */

@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    Command_system.h
+  * @file    command_sys_flex.h
   * @author  ICV
   * @version V1.1.0
   * @date    19/10/2024
@@ -39,4 +39,4 @@ void set_mode_setting(enum mode_setting mode);
 
 /*********************** (C) COPYRIGHT 2024 ICV ****************************
 *
-* END OF FILE Command_system.h */
+* END OF FILE command_sys_flex.h */

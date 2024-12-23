@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    DMA_init.c
+  * @file    dma.c
   * @author  ICV
   * @version V1.1.0
   * @date    19/10/2024
@@ -14,8 +14,8 @@
 #include "MDR32F9Qx_rst_clk.h"
 #include "defines.h"
 #include "MDR32F9Qx_timer.h"
-#include "DMA_init.h"
-#include "DAC_init.h"
+#include "dma.h"
+#include "dac.h"
 
 // Внешние переменные
 extern uint16_t DAC_table[];
@@ -30,8 +30,8 @@ uint8_t alternate_array_for_DAC[DAC_MODE_BUF_SIZE * 2];		// (преобразу�
 // Структуры для DMA
 DMA_ChannelInitTypeDef ADC1_DMA_structure;
 DMA_ChannelInitTypeDef TIM2_DMA_structure;
-DMA_CtrlDataInitTypeDef ADC1_primary_DMA_structure;				// Основная структура канала для ADC1
-DMA_CtrlDataInitTypeDef ADC1_alternate_DMA_structure;				// Альтернативная структура канала для ADC1
+DMA_CtrlDataInitTypeDef ADC1_primary_DMA_structure;			// Основная структура канала для ADC1
+DMA_CtrlDataInitTypeDef ADC1_alternate_DMA_structure;		// Альтернативная структура канала для ADC1
 DMA_CtrlDataInitTypeDef TIM2_primary_DMA_structure;
 DMA_CtrlDataInitTypeDef TIM2_alternate_DMA_structure;
 
@@ -221,4 +221,4 @@ void DMA_IRQHandler() {
 
 /*********************** (C) COPYRIGHT 2024 ICV ****************************
 *
-* END OF FILE DMA_init.c */
+* END OF FILE dma.c */

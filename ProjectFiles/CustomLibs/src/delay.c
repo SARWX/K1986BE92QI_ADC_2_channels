@@ -37,7 +37,7 @@ void delay_tick(uint32_t count)
  */
 void delay_ms(uint32_t delay)
 {
-    delay_tick(delay * (HSE_FREQ / 1000)); /**< Converts delay to tick counts for milliseconds. */
+    delay_tick(delay * (MCU_FREQ / 1e3)); /**< Converts delay to tick counts for milliseconds. */
 }
 
 /**
@@ -50,7 +50,7 @@ void delay_ms(uint32_t delay)
  */
 void delay_us(uint32_t delay)
 {
-    delay_tick(delay * (HSE_FREQ / 1000000)); /**< Converts delay to tick counts for microseconds. */
+    delay_tick(delay * (MCU_FREQ / 1e6)); /**< Converts delay to tick counts for microseconds. */
 }
 
 

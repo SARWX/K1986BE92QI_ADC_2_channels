@@ -16,6 +16,10 @@
   * @{
   */
 /* Макроподстановки --------------------------------------------------------------*/
+// #define SHFKIT      // Specific parts for shfkit project
+#define PCR         // Specific parts for pcr project
+#define MCU_FREQ (uint32_t)128e6
+
 #define BUFFER_LENGTH 128               /* размер буфера для команд USB */
 
 #define SIN_RES 250 					/* разрешение синусоиды (точек на период) */
@@ -45,8 +49,10 @@
     // контроллером USB они будут поделены на пакеты по 64 байта, поскольку 1 измерение АЦП кодируется 2 байтами,
     // количество измерений целесообразно выбирать кратным 32 (для достижения максимальной скорости)
 
+
 #define PERIPH_BASE		0x40000000 		/* начало секции памяти периферии*/
 #define PERIPH_BB_BASE	0x42000000 		/* начало bit banding секции памяти периферии*/
+
 /**
  * @def BITBAND_PERIPH(address, bit)
  * @brief Macro for accessing bits of peripheral registers through Bit-Banding.

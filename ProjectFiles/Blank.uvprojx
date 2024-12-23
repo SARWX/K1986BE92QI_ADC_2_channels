@@ -314,7 +314,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>1</Optim>
+            <Optim>4</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -750,41 +750,6 @@
           <GroupName>src</GroupName>
           <Files>
             <File>
-              <FileName>ADC_init.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CustomLibs\src\ADC_init.c</FilePath>
-            </File>
-            <File>
-              <FileName>command_system.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CustomLibs\src\command_system.c</FilePath>
-            </File>
-            <File>
-              <FileName>DAC_init.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CustomLibs\src\DAC_init.c</FilePath>
-            </File>
-            <File>
-              <FileName>DMA_init.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CustomLibs\src\DMA_init.c</FilePath>
-            </File>
-            <File>
-              <FileName>sys_CLK_init.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CustomLibs\src\sys_CLK_init.c</FilePath>
-            </File>
-            <File>
-              <FileName>USB_init.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CustomLibs\src\USB_init.c</FilePath>
-            </File>
-            <File>
-              <FileName>SPI_init.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\CustomLibs\src\SPI_init.c</FilePath>
-            </File>
-            <File>
               <FileName>ili9341.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\CustomLibs\src\ili9341.c</FilePath>
@@ -901,45 +866,80 @@
               <FileType>1</FileType>
               <FilePath>.\CustomLibs\src\compress.c</FilePath>
             </File>
+            <File>
+              <FileName>adc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CustomLibs\src\adc.c</FilePath>
+            </File>
+            <File>
+              <FileName>command_sys_flex.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CustomLibs\src\command_sys_flex.c</FilePath>
+            </File>
+            <File>
+              <FileName>dac.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CustomLibs\src\dac.c</FilePath>
+            </File>
+            <File>
+              <FileName>gpio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CustomLibs\src\gpio.c</FilePath>
+            </File>
+            <File>
+              <FileName>ili9341_interface.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CustomLibs\src\ili9341_interface.c</FilePath>
+            </File>
+            <File>
+              <FileName>ili9341gfx.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CustomLibs\src\ili9341gfx.c</FilePath>
+            </File>
+            <File>
+              <FileName>led.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CustomLibs\src\led.c</FilePath>
+            </File>
+            <File>
+              <FileName>ring_buffer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CustomLibs\src\ring_buffer.c</FilePath>
+            </File>
+            <File>
+              <FileName>spi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CustomLibs\src\spi.c</FilePath>
+            </File>
+            <File>
+              <FileName>sys_clk.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CustomLibs\src\sys_clk.c</FilePath>
+            </File>
+            <File>
+              <FileName>usb.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CustomLibs\src\usb.c</FilePath>
+            </File>
+            <File>
+              <FileName>dma.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CustomLibs\src\dma.c</FilePath>
+            </File>
+            <File>
+              <FileName>command_sys_strict.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\CustomLibs\src\command_sys_strict.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>inc</GroupName>
           <Files>
             <File>
-              <FileName>ADC_init.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\CustomLibs\inc\ADC_init.h</FilePath>
-            </File>
-            <File>
-              <FileName>DAC_init.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\CustomLibs\inc\DAC_init.h</FilePath>
-            </File>
-            <File>
               <FileName>defines.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\CustomLibs\inc\defines.h</FilePath>
-            </File>
-            <File>
-              <FileName>DMA_init.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\CustomLibs\inc\DMA_init.h</FilePath>
-            </File>
-            <File>
-              <FileName>sys_CLK_init.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\CustomLibs\inc\sys_CLK_init.h</FilePath>
-            </File>
-            <File>
-              <FileName>USB_init.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\CustomLibs\inc\USB_init.h</FilePath>
-            </File>
-            <File>
-              <FileName>SPI_init.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\CustomLibs\inc\SPI_init.h</FilePath>
             </File>
             <File>
               <FileName>ili9341.h</FileName>
@@ -955,6 +955,66 @@
               <FileName>compress.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\CustomLibs\inc\compress.h</FilePath>
+            </File>
+            <File>
+              <FileName>adc.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\CustomLibs\inc\adc.h</FilePath>
+            </File>
+            <File>
+              <FileName>command_sys_flex.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\CustomLibs\inc\command_sys_flex.h</FilePath>
+            </File>
+            <File>
+              <FileName>dac.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\CustomLibs\inc\dac.h</FilePath>
+            </File>
+            <File>
+              <FileName>dma.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\CustomLibs\inc\dma.h</FilePath>
+            </File>
+            <File>
+              <FileName>gpio.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\CustomLibs\inc\gpio.h</FilePath>
+            </File>
+            <File>
+              <FileName>ili9341_interface.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\CustomLibs\inc\ili9341_interface.h</FilePath>
+            </File>
+            <File>
+              <FileName>ili9341gfx.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\CustomLibs\inc\ili9341gfx.h</FilePath>
+            </File>
+            <File>
+              <FileName>led.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\CustomLibs\inc\led.h</FilePath>
+            </File>
+            <File>
+              <FileName>pins.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\CustomLibs\inc\pins.h</FilePath>
+            </File>
+            <File>
+              <FileName>ring_buffer.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\CustomLibs\inc\ring_buffer.h</FilePath>
+            </File>
+            <File>
+              <FileName>spi.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\CustomLibs\inc\spi.h</FilePath>
+            </File>
+            <File>
+              <FileName>command_sys_strict.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\CustomLibs\inc\command_sys_strict.h</FilePath>
             </File>
           </Files>
         </Group>

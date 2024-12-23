@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    ADC_init.h
+  * @file    adc.h
   * @author  ICV
   * @version V1.1.0
   * @date    19/10/2024
@@ -8,7 +8,7 @@
   * ******************************************************************************
   */
 
-#include "Command_system.h"
+#include "command_sys_flex.h"
 #include "MDR32Fx.h"
 
 /* Define to prevent recursive inclusion -------------------------------------*/
@@ -29,4 +29,4 @@ ErrorStatus reconfig_ADC_clock(uint32_t input_freq, enum mode_setting mode);
 
 /*********************** (C) COPYRIGHT 2024 ICV ****************************
 *
-* END OF FILE ADC_init.h */
+* END OF FILE adc.h */

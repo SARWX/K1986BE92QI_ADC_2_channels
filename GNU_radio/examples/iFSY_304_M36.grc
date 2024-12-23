@@ -148,7 +148,7 @@ blocks:
     bus_structure: null
     coordinate: [488, 144.0]
     rotation: 0
-    state: true
+    state: disabled
 - name: blocks_null_sink_0_0
   id: blocks_null_sink
   parameters:
@@ -530,7 +530,7 @@ blocks:
       \u044B\u0435 \u0434\u043B\u044F \u0441\u043B\u0435\u0434\u0443\u044E\u0449\u0435\
       \u0433\u043E \u0432\u044B\u0437\u043E\u0432\u0430\n                self.remaining_data\
       \ = remaining_data\n\n            return len(input_items[0])\n"
-    adc_freq: 0* 62500
+    adc_freq: '500000'
     affinity: ''
     alias: ''
     comment: "mode = 0 \t- 1\u044B\u0439 \u043A\u0430\u043D\u0430\u043B \u0410\u0426\
@@ -557,7 +557,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [728, 192.0]
+    coordinate: [760, 192.0]
     rotation: 0
     state: enabled
 - name: epy_block_1_0
@@ -567,140 +567,169 @@ blocks:
       \ time\n\nclass TriangleWaveGenerator(gr.sync_block):\n    \"\"\"\n    \u0413\
       \u0435\u043D\u0435\u0440\u0430\u0442\u043E\u0440 \u0437\u043D\u0430\u0447\u0435\
       \u043D\u0438\u044F 48 \u0431\u0438\u0442\u043D\u043E\u0433\u043E \u0440\u0435\
-      \u0433\u0438\u0441\u0442\u0440\u0430 iFSY-304-M36.\n    \"\"\"\n\n    def __init__(self,\
-      \ mux_sel = 0, mux_en = 0, ref_div_ctrl = 0, input_div_ctrl = 0, pre_divider_mode\
-      \ = 0, enable = 0.0):\n        gr.sync_block.__init__(\n            self,\n\
-      \            name=\"iFSY driver\",\n            in_sig=[],\n            out_sig=[np.float32]\n\
-      \        )\n\n        # \u0418\u043D\u0438\u0446\u0438\u0430\u043B\u0438\u0437\
+      \u0433\u0438\u0441\u0442\u0440\u0430 iFSY-304-M36.\n    \"\"\"\n\n    def __init__(\n\
+      \        self, \n        mux_sel = 0, \n        mux_en = 0, \n        ref_div_ctrl\
+      \ = 0, \n        input_div_ctrl = 0, \n        pre_divider_mode = 0, \n    \
+      \    enable = 0.0, \n        in_freq = 1000000, \n        out_freq = 2000000\n\
+      \    ):\n        gr.sync_block.__init__(\n            self,\n            name=\"\
+      iFSY driver\",\n            in_sig=[],\n            out_sig=[np.float32]\n \
+      \       )\n\n        # \u0418\u043D\u0438\u0446\u0438\u0430\u043B\u0438\u0437\
       \u0430\u0446\u0438\u044F \u043F\u0435\u0440\u0435\u043C\u0435\u043D\u043D\u044B\
       \u0445\n        self.mux_sel = mux_sel\n        self.mux_en = mux_en\n     \
       \   self.ref_div_ctrl = ref_div_ctrl\n        self.input_div_ctrl = input_div_ctrl\n\
       \        self.pre_divider_mode = pre_divider_mode\n        self.enable = enable\n\
-      \        self.target_register_len = 6    # \u0431\u0430\u0439\u0442\n\n    \
-      \    # \u0420\u0435\u0433\u0438\u0441\u0442\u0440\u0430\u0446\u0438\u044F \u0432\
-      \u044B\u0445\u043E\u0434\u043D\u043E\u0433\u043E \u043F\u043E\u0440\u0442\u0430\
-      \ \u0434\u043B\u044F \u043E\u0442\u043F\u0440\u0430\u0432\u043A\u0438 \u0434\
-      \u0430\u043D\u043D\u044B\u0445\n        self.message_port_register_out(pmt.intern('spi'))\n\
-      \n        # # \u041F\u0435\u0440\u0435\u0434\u0430\u0442\u044C \u043E\u0441\u043D\
-      \u043E\u0432\u043D\u043E\u043C\u0443 \u0431\u043B\u043E\u043A\u0443 \u0440\u0430\
-      \u0437\u043C\u0435\u0440 \u0440\u0435\u0433\u0438\u0441\u0442\u0440\u0430 (\u043E\
-      \u0431\u044A\u0435\u043C \u0442\u0440\u0430\u043D\u0437\u0430\u043A\u0446\u0438\
-      \u0439)\n        # print(\"AVAVAVAV\")\n        # self.message_port_pub(pmt.intern('spi'),\
-      \ pmt.from_long(self.target_register_len)) \n\n\n    def generate_iFSY_setting(self,\
-      \ mux_sel_new, mux_en_new, ref_div_ctrl_new, input_div_ctrl_new, pre_divider_mode_new):\n\
-      \        \"\"\"\u0413\u0435\u043D\u0435\u0440\u0430\u0446\u0438\u044F \u0437\
-      \u043D\u0430\u0447\u0435\u043D\u0438\u044F 48 \u0431\u0438\u0442\u043D\u043E\
-      \u0433\u043E \u0440\u0435\u0433\u0438\u0441\u0442\u0440\u0430\"\"\"\n      \
-      \  # \u041F\u0440\u0438\u0432\u0435\u0434\u0435\u043D\u0438\u0435 \u0437\u043D\
-      \u0430\u0447\u0435\u043D\u0438\u0439 \u043A \u0442\u0438\u043F\u0443 uint64\
-      \ \u043F\u0435\u0440\u0435\u0434 \u0432\u044B\u043F\u043E\u043B\u043D\u0435\u043D\
-      \u0438\u0435\u043C \u043E\u043F\u0435\u0440\u0430\u0446\u0438\u0439\n      \
-      \  mux_sel                 = np.uint64(mux_sel_new)            << np.uint64(0)\
-      \     # \u0412\u044B\u0431\u043E\u0440 \u0440\u0435\u0436\u0438\u043C\u0430\
-      \ \u0440\u0430\u0431\u043E\u0442\u044B \u0432\u044B\u0445\u043E\u0434\u043D\u043E\
-      \u0433\u043E \u043C\u0443\u043B\u044C\u0442\u0438\u043F\u043B\u0435\u043A\u0441\
-      \u043E\u0440\u0430\n        mux_en                  = np.uint64(mux_en_new)\
-      \             << np.uint64(3)     # \u0412\u043A\u043B./ \u0432\u044B\u043A\u043B\
-      . \u043C\u0443\u043B\u044C\u0442\u0438\u043F\u043B\u0435\u043A\u0441\u043E\u0440\
-      \u0430 \n        reserve_1               = np.uint64(0)                    \
-      \  << np.uint64(4)     # \u0440\u0435\u0437\u0435\u0440\u0432\u043D\u044B\u0439\
-      \n        capture_detector_div    = np.uint64(int('0010', 2))         << np.uint64(5)\
-      \     # \u043A\u043E\u044D\u0444\u0444\u0438\u0446\u0438\u0435\u043D\u0442 \u0434\
-      \u0435\u043B\u0435\u043D\u0438\u044F \u0434\u0435\u043B\u0438\u0442\u0435\u043B\
-      \u044F \u0434\u0435\u0442\u0435\u043A\u0442\u043E\u0440\u0430 \u0437\u0430\u0445\
-      \u0432\u0430\u0442\u0430\n        capture_detector_en     = np.uint64(1)   \
-      \                   << np.uint64(10)    # \u0432\u043A\u043B./\u0432\u044B\u043A\
-      \u043B. \u0434\u0435\u0442\u0435\u043A\u0442\u043E\u0440\u0430 \u0437\u0430\u0445\
-      \u0432\u0430\u0442\u0430\n        current_key_mode        = np.uint64(0)   \
-      \                   << np.uint64(11)    # \u0440\u0435\u0436\u0438\u043C \u0440\
-      \u0430\u0431\u043E\u0442\u044B \u0441\u0435\u043A\u0446\u0438\u0439 \u0442\u043E\
-      \u043A\u043E\u0432\u043E\u0433\u043E \u043A\u043B\u044E\u0447\u0430\n      \
-      \  ref_div_ctrl            = np.uint64(ref_div_ctrl_new)       << np.uint64(17)\
-      \    # \u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u043A\u043E\
-      \u044D\u0444\u0444\u0438\u0446\u0438\u0435\u043D\u0442\u043E\u043C \u0434\u0435\
-      \u043B\u0435\u043D\u0438\u044F \u043E\u043F\u043E\u0440\u043D\u043E\u0433\u043E\
-      \ \u0434\u0435\u043B\u0438\u0442\u0435\u043B\u044F (\u041A\u043E\u043F)\n  \
-      \      reserve_2               = np.uint64(0)                      << np.uint64(23)\
-      \    # \u0440\u0435\u0437\u0435\u0440\u0432\u043D\u044B\u0439\n        input_div_ctrl\
-      \          = np.uint64(input_div_ctrl_new)     << np.uint64(24)    # \u0443\u043F\
-      \u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u043A\u043E\u044D\u0444\u0444\
-      \u0438\u0446\u0438\u0435\u043D\u0442\u043E\u043C \u0434\u0435\u043B\u0435\u043D\
-      \u0438\u044F \u0432\u0445\u043E\u0434\u043D\u043E\u0439 \u0447\u0430\u0441\u0442\
-      \u043E\u0442\u044B (\u041A\u0433\u0443\u043D)\n        current_key_sections_1\
-      \  = np.uint64(int('111', 2))          << np.uint64(37)    # \u0441\u0435\u043A\
+      \        self.target_register_len = 6    # \u0431\u0430\u0439\u0442\n      \
+      \  self.in_freq = in_freq\n        self.out_freq = out_freq\n\n        # \u0420\
+      \u0435\u0433\u0438\u0441\u0442\u0440\u0430\u0446\u0438\u044F \u0432\u044B\u0445\
+      \u043E\u0434\u043D\u043E\u0433\u043E \u043F\u043E\u0440\u0442\u0430 \u0434\u043B\
+      \u044F \u043E\u0442\u043F\u0440\u0430\u0432\u043A\u0438 \u0434\u0430\u043D\u043D\
+      \u044B\u0445\n        self.message_port_register_out(pmt.intern('spi'))\n\n\n\
+      \    def generate_iFSY_setting(self, mux_sel_new, mux_en_new, ref_div_ctrl_new,\
+      \ input_div_ctrl_new, pre_divider_mode_new, in_freq, out_freq):\n        \"\"\
+      \"\u0413\u0435\u043D\u0435\u0440\u0430\u0446\u0438\u044F \u0437\u043D\u0430\u0447\
+      \u0435\u043D\u0438\u044F 48 \u0431\u0438\u0442\u043D\u043E\u0433\u043E \u0440\
+      \u0435\u0433\u0438\u0441\u0442\u0440\u0430\"\"\"\n        # \u041F\u0440\u043E\
+      \u0432\u0435\u0440\u043A\u0430 \u043D\u0430 \u0432\u044B\u0445\u043E\u0434 \u0437\
+      \u0430 \u0434\u0438\u0430\u043F\u0430\u0437\u043E\u043D\u044B\n        # \u041F\
+      \u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0432\u0445\u043E\u0434\u043D\u043E\
+      \u0439 \u0447\u0430\u0441\u0442\u043E\u0442\u044B\n        if not (1e7 <= in_freq\
+      \ <= 1e8):  # \u0414\u0438\u0430\u043F\u0430\u0437\u043E\u043D 10 \u041C\u0413\
+      \u0446 - 100 \u041C\u0413\u0446\n            print(\"\u041E\u0448\u0438\u0431\
+      \u043A\u0430: \u0412\u0445\u043E\u0434\u043D\u0430\u044F \u0447\u0430\u0441\u0442\
+      \u043E\u0442\u0430 \u0434\u043E\u043B\u0436\u043D\u0430 \u0431\u044B\u0442\u044C\
+      \ \u0432 \u0434\u0438\u0430\u043F\u0430\u0437\u043E\u043D\u0435 \u043E\u0442\
+      \ 10 \u0434\u043E 100 \u041C\u0413\u0446.\")\n            return\n\n       \
+      \ # \u0420\u0430\u0441\u0447\u0435\u0442 \u043C\u0438\u043D\u0438\u043C\u0430\
+      \u043B\u044C\u043D\u043E\u0439 \u0438 \u043C\u0430\u043A\u0441\u0438\u043C\u0430\
+      \u043B\u044C\u043D\u043E\u0439 \u0432\u044B\u0445\u043E\u0434\u043D\u043E\u0439\
+      \ \u0447\u0430\u0441\u0442\u043E\u0442\u044B\n        min_out_freq = in_freq\
+      \ * (400 / 64)\n        max_out_freq = in_freq * (600 / 2)\n\n        # \u041F\
+      \u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0432\u044B\u0445\u043E\u0434\u043D\
+      \u043E\u0439 \u0447\u0430\u0441\u0442\u043E\u0442\u044B\n        if not (min_out_freq\
+      \ <= out_freq <= max_out_freq):\n            print(\n                f\"\u041E\
+      \u0448\u0438\u0431\u043A\u0430: \u0412\u044B\u0445\u043E\u0434\u043D\u0430\u044F\
+      \ \u0447\u0430\u0441\u0442\u043E\u0442\u0430 \u0434\u043E\u043B\u0436\u043D\u0430\
+      \ \u0431\u044B\u0442\u044C \u0432 \u0434\u0438\u0430\u043F\u0430\u0437\u043E\
+      \u043D\u0435 \u043E\u0442 {min_out_freq:.2f} \u0434\u043E {max_out_freq:.2f}\
+      \ \u0413\u0446 \"\n                f\"\u043F\u0440\u0438 \u0432\u0445\u043E\u0434\
+      \u043D\u043E\u0439 \u0447\u0430\u0441\u0442\u043E\u0442\u0435 {in_freq} \u0413\
+      \u0446.\"\n            )\n            return\n\n        # \u0420\u0430\u0441\
+      \u0447\u0435\u0442 \u043F\u0430\u0440\u0430\u043C\u0435\u0442\u0440\u043E\u0432\
+      \ \u0432\u044B\u0445\u043E\u0434\n\n        \n\n\n        # \u041F\u0440\u0438\
+      \u0432\u0435\u0434\u0435\u043D\u0438\u0435 \u0437\u043D\u0430\u0447\u0435\u043D\
+      \u0438\u0439 \u043A \u0442\u0438\u043F\u0443 uint64 \u043F\u0435\u0440\u0435\
+      \u0434 \u0432\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u0438\u0435\u043C \u043E\
+      \u043F\u0435\u0440\u0430\u0446\u0438\u0439\n        mux_sel                \
+      \ = np.uint64(mux_sel_new)            << np.uint64(0)     # \u0412\u044B\u0431\
+      \u043E\u0440 \u0440\u0435\u0436\u0438\u043C\u0430 \u0440\u0430\u0431\u043E\u0442\
+      \u044B \u0432\u044B\u0445\u043E\u0434\u043D\u043E\u0433\u043E \u043C\u0443\u043B\
+      \u044C\u0442\u0438\u043F\u043B\u0435\u043A\u0441\u043E\u0440\u0430\n       \
+      \ mux_en                  = np.uint64(mux_en_new)             << np.uint64(3)\
+      \     # \u0412\u043A\u043B./ \u0432\u044B\u043A\u043B. \u043C\u0443\u043B\u044C\
+      \u0442\u0438\u043F\u043B\u0435\u043A\u0441\u043E\u0440\u0430 \n        reserve_1\
+      \               = np.uint64(0)                      << np.uint64(4)     # \u0440\
+      \u0435\u0437\u0435\u0440\u0432\u043D\u044B\u0439\n        capture_detector_div\
+      \    = np.uint64(int('0010', 2))         << np.uint64(5)     # \u043A\u043E\u044D\
+      \u0444\u0444\u0438\u0446\u0438\u0435\u043D\u0442 \u0434\u0435\u043B\u0435\u043D\
+      \u0438\u044F \u0434\u0435\u043B\u0438\u0442\u0435\u043B\u044F \u0434\u0435\u0442\
+      \u0435\u043A\u0442\u043E\u0440\u0430 \u0437\u0430\u0445\u0432\u0430\u0442\u0430\
+      \n        capture_detector_en     = np.uint64(1)                      << np.uint64(10)\
+      \    # \u0432\u043A\u043B./\u0432\u044B\u043A\u043B. \u0434\u0435\u0442\u0435\
+      \u043A\u0442\u043E\u0440\u0430 \u0437\u0430\u0445\u0432\u0430\u0442\u0430\n\
+      \        current_key_mode        = np.uint64(0)                      << np.uint64(11)\
+      \    # \u0440\u0435\u0436\u0438\u043C \u0440\u0430\u0431\u043E\u0442\u044B \u0441\
+      \u0435\u043A\u0446\u0438\u0439 \u0442\u043E\u043A\u043E\u0432\u043E\u0433\u043E\
+      \ \u043A\u043B\u044E\u0447\u0430\n        ref_div_ctrl            = np.uint64(ref_div_ctrl_new)\
+      \       << np.uint64(17)    # \u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\
+      \u0438\u0435 \u043A\u043E\u044D\u0444\u0444\u0438\u0446\u0438\u0435\u043D\u0442\
+      \u043E\u043C \u0434\u0435\u043B\u0435\u043D\u0438\u044F \u043E\u043F\u043E\u0440\
+      \u043D\u043E\u0433\u043E \u0434\u0435\u043B\u0438\u0442\u0435\u043B\u044F (\u041A\
+      \u043E\u043F)\n        reserve_2               = np.uint64(0)              \
+      \        << np.uint64(23)    # \u0440\u0435\u0437\u0435\u0440\u0432\u043D\u044B\
+      \u0439\n        input_div_ctrl          = np.uint64(input_div_ctrl_new)    \
+      \ << np.uint64(24)    # \u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\
+      \u0435 \u043A\u043E\u044D\u0444\u0444\u0438\u0446\u0438\u0435\u043D\u0442\u043E\
+      \u043C \u0434\u0435\u043B\u0435\u043D\u0438\u044F \u0432\u0445\u043E\u0434\u043D\
+      \u043E\u0439 \u0447\u0430\u0441\u0442\u043E\u0442\u044B (\u041A\u0433\u0443\u043D\
+      )\n        current_key_sections_1  = np.uint64(int('111', 2))          << np.uint64(37)\
+      \    # \u0441\u0435\u043A\u0446\u0438\u0438 \u0442\u043E\u043A\u043E\u0432\u043E\
+      \u0433\u043E \u043A\u043B\u044E\u0447\u0430\n        current_key_work_mode \
+      \  = np.uint64(int('11', 2))           << np.uint64(40)    # \u0440\u0430\u0431\
+      \u043E\u0447\u0438\u0439 \u0440\u0435\u0436\u0438\u043C \u0442\u043E\u043A\u043E\
+      \u0432\u043E\u0433\u043E \u043A\u043B\u044E\u0447\u0430\n        current_key_sections_2\
+      \  = np.uint64(int('111', 2))          << np.uint64(42)    # \u0441\u0435\u043A\
       \u0446\u0438\u0438 \u0442\u043E\u043A\u043E\u0432\u043E\u0433\u043E \u043A\u043B\
-      \u044E\u0447\u0430\n        current_key_work_mode   = np.uint64(int('11', 2))\
-      \           << np.uint64(40)    # \u0440\u0430\u0431\u043E\u0447\u0438\u0439\
-      \ \u0440\u0435\u0436\u0438\u043C \u0442\u043E\u043A\u043E\u0432\u043E\u0433\u043E\
-      \ \u043A\u043B\u044E\u0447\u0430\n        current_key_sections_2  = np.uint64(int('111',\
-      \ 2))          << np.uint64(42)    # \u0441\u0435\u043A\u0446\u0438\u0438 \u0442\
-      \u043E\u043A\u043E\u0432\u043E\u0433\u043E \u043A\u043B\u044E\u0447\u0430 (\u0435\
-      \u0449\u0435 \u0440\u0430\u0437 \u0443\u043F\u043E\u043C\u0438\u043D\u0430\u044E\
-      \u0442\u0441\u044F)\n        pre_divider_mode        = np.uint64(pre_divider_mode_new)\
-      \   << np.uint64(45)    # \u043F\u0440\u0435\u0434\u0432\u0430\u0440\u0438\u0442\
-      \u0435\u043B\u044C\u043D\u044B\u0439 \u0434\u0435\u043B\u0438\u0442\u0435\u043B\
-      \u044C \u0447\u0430\u0441\u0442\u043E\u0442\u044B \xAB8/9\xBB, \xAB16/17\xBB\
-      \n        reserve_3               = np.uint64(0)                      << np.uint64(47)\
-      \    # \u0440\u0435\u0437\u0435\u0440\u0432\u043D\u044B\u0439\n\n        # \u041E\
-      \u0431\u044A\u0435\u0434\u0438\u043D\u0435\u043D\u0438\u0435 \u0432 \u043E\u0434\
-      \u043D\u043E 64-\u0431\u0438\u0442\u043D\u043E\u0435 \u0447\u0438\u0441\u043B\
-      \u043E\n        combined = (\n            mux_sel                 |\n      \
-      \      mux_en                  |\n            reserve_1               |\n  \
-      \          capture_detector_div    |\n            capture_detector_en     |\n\
-      \            current_key_mode        |\n            ref_div_ctrl           \
-      \ |\n            reserve_2               |\n            input_div_ctrl     \
-      \     |\n            current_key_sections_1  |\n            current_key_work_mode\
-      \   |\n            current_key_sections_2  |\n            pre_divider_mode \
-      \       |\n            reserve_3\n        )\n\n        # \u0412\u044B\u0434\u0435\
-      \u043B\u0435\u043D\u0438\u0435 \u043C\u043B\u0430\u0434\u0448\u0438\u0445 48\
-      \ \u0431\u0438\u0442\n        extracted_48_bits = combined & np.uint64((1 <<\
-      \ 48) - 1)\n        print(f\"Generated signal: {extracted_48_bits}\")\n    \
-      \    return extracted_48_bits\n\n    done = 0\n    def work(self, input_items,\
-      \ output_items):\n        # \u0424\u0443\u043D\u043A\u0446\u0438\u044F work\
-      \ \u0432\u044B\u043F\u043E\u043B\u043D\u044F\u0435\u0442\u0441\u044F \u043F\u0443\
-      \u0441\u0442\u043E\u0439, \u0442\u0430\u043A \u043A\u0430\u043A \u0441\u0438\
-      \u0433\u043D\u0430\u043B \u0433\u0435\u043D\u0435\u0440\u0438\u0440\u0443\u0435\
-      \u0442\u0441\u044F \u0442\u043E\u043B\u044C\u043A\u043E \u043E\u0434\u0438\u043D\
-      \ \u0440\u0430\u0437\n        n = 0\n        while n < len(output_items[0]):\
-      \ \n            output_items[0][n] = self.enable \n            n += 1 \n   \
-      \     if self.enable == 1: \n            # \u041E\u0442\u043F\u0440\u0430\u0432\
-      \u043A\u0430 \u0434\u043B\u0438\u043D\u044B \u0441\u043E\u043E\u0431\u0449\u0435\
-      \u043D\u0438\u044F\n            self.message_port_pub(pmt.intern('spi'), pmt.from_long(self.target_register_len))\
-      \ \n\n            # \u0413\u0435\u043D\u0435\u0440\u0430\u0446\u0438\u044F \u0437\
-      \u043D\u0430\u0447\u0435\u043D\u0438\u044F \u0440\u0435\u0433\u0438\u0441\u0442\
-      \u0440\u0430\n            spi_value = self.generate_iFSY_setting(self.mux_sel,\
-      \ self.mux_en, self.ref_div_ctrl, self.input_div_ctrl, self.pre_divider_mode)\
-      \ \n             \n            # \u041E\u0442\u043F\u0440\u0430\u0432\u043A\u0430\
-      \ \u0441\u0433\u0435\u043D\u0435\u0440\u0438\u0440\u043E\u0432\u0430\u043D\u043D\
-      \u044B\u0445 \u0434\u0430\u043D\u043D\u044B\u0445 \u0432 ADI \u0431\u043B\u043E\
-      \u043A \n            self.message_port_pub(pmt.intern('spi'), pmt.from_uint64(spi_value))\
-      \ \n\n            time.sleep(1.00)\n\n        # done = 1 \n        # return\
-      \ 0 \n        return len(output_items[0]) \n"
+      \u044E\u0447\u0430 (\u0435\u0449\u0435 \u0440\u0430\u0437 \u0443\u043F\u043E\
+      \u043C\u0438\u043D\u0430\u044E\u0442\u0441\u044F)\n        pre_divider_mode\
+      \        = np.uint64(pre_divider_mode_new)   << np.uint64(45)    # \u043F\u0440\
+      \u0435\u0434\u0432\u0430\u0440\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0439\
+      \ \u0434\u0435\u043B\u0438\u0442\u0435\u043B\u044C \u0447\u0430\u0441\u0442\u043E\
+      \u0442\u044B \xAB8/9\xBB, \xAB16/17\xBB\n        reserve_3               = np.uint64(0)\
+      \                      << np.uint64(47)    # \u0440\u0435\u0437\u0435\u0440\u0432\
+      \u043D\u044B\u0439\n\n\n\n        # \u041E\u0431\u044A\u0435\u0434\u0438\u043D\
+      \u0435\u043D\u0438\u0435 \u0432 \u043E\u0434\u043D\u043E 64-\u0431\u0438\u0442\
+      \u043D\u043E\u0435 \u0447\u0438\u0441\u043B\u043E\n        combined = (\n  \
+      \          mux_sel                 |\n            mux_en                  |\n\
+      \            reserve_1               |\n            capture_detector_div   \
+      \ |\n            capture_detector_en     |\n            current_key_mode   \
+      \     |\n            ref_div_ctrl            |\n            reserve_2      \
+      \         |\n            input_div_ctrl          |\n            current_key_sections_1\
+      \  |\n            current_key_work_mode   |\n            current_key_sections_2\
+      \  |\n            pre_divider_mode        |\n            reserve_3\n       \
+      \ )\n\n        # \u0412\u044B\u0434\u0435\u043B\u0435\u043D\u0438\u0435 \u043C\
+      \u043B\u0430\u0434\u0448\u0438\u0445 48 \u0431\u0438\u0442\n        extracted_48_bits\
+      \ = combined & np.uint64((1 << 48) - 1)\n        print(f\"Generated signal:\
+      \ {extracted_48_bits}\")\n        return extracted_48_bits\n\n    done = 0\n\
+      \    def work(self, input_items, output_items):\n        # \u0424\u0443\u043D\
+      \u043A\u0446\u0438\u044F work \u0432\u044B\u043F\u043E\u043B\u043D\u044F\u0435\
+      \u0442\u0441\u044F \u043F\u0443\u0441\u0442\u043E\u0439, \u0442\u0430\u043A\
+      \ \u043A\u0430\u043A \u0441\u0438\u0433\u043D\u0430\u043B \u0433\u0435\u043D\
+      \u0435\u0440\u0438\u0440\u0443\u0435\u0442\u0441\u044F \u0442\u043E\u043B\u044C\
+      \u043A\u043E \u043E\u0434\u0438\u043D \u0440\u0430\u0437\n        n = 0\n  \
+      \      while n < len(output_items[0]): \n            output_items[0][n] = self.enable\
+      \ \n            n += 1 \n        if self.enable == 1: \n            # \u041E\
+      \u0442\u043F\u0440\u0430\u0432\u043A\u0430 \u0434\u043B\u0438\u043D\u044B \u0441\
+      \u043E\u043E\u0431\u0449\u0435\u043D\u0438\u044F\n            self.message_port_pub(pmt.intern('spi'),\
+      \ pmt.from_long(self.target_register_len)) \n\n            # \u0413\u0435\u043D\
+      \u0435\u0440\u0430\u0446\u0438\u044F \u0437\u043D\u0430\u0447\u0435\u043D\u0438\
+      \u044F \u0440\u0435\u0433\u0438\u0441\u0442\u0440\u0430\n            spi_value\
+      \ = self.generate_iFSY_setting(\n                self.mux_sel, \n          \
+      \      self.mux_en, \n                self.ref_div_ctrl, \n                self.input_div_ctrl,\
+      \ \n                self.pre_divider_mode, \n                self.in_freq, \n\
+      \                self.out_freq\n            ) \n             \n            #\
+      \ \u041E\u0442\u043F\u0440\u0430\u0432\u043A\u0430 \u0441\u0433\u0435\u043D\u0435\
+      \u0440\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0445 \u0434\u0430\u043D\
+      \u043D\u044B\u0445 \u0432 ADI \u0431\u043B\u043E\u043A \n            self.message_port_pub(pmt.intern('spi'),\
+      \ pmt.from_uint64(spi_value)) \n\n            time.sleep(1.00)\n\n        #\
+      \ done = 1 \n        # return 0 \n        return len(output_items[0]) \n"
     affinity: ''
     alias: ''
     comment: ''
     enable: generate_signal
+    in_freq: '1000000'
     input_div_ctrl: '0'
     maxoutbuf: '0'
     minoutbuf: '0'
     mux_en: '0'
     mux_sel: '0'
+    out_freq: '2000000'
     pre_divider_mode: '0'
     ref_div_ctrl: '0'
   states:
     _io_cache: "('iFSY driver', 'TriangleWaveGenerator', [('mux_sel', '0'), ('mux_en',\
       \ '0'), ('ref_div_ctrl', '0'), ('input_div_ctrl', '0'), ('pre_divider_mode',\
-      \ '0'), ('enable', '0.0')], [], [('0', 'float', 1), ('spi', 'message', 1)],\
-      \ '\\n    \u0413\u0435\u043D\u0435\u0440\u0430\u0442\u043E\u0440 \u0437\u043D\
-      \u0430\u0447\u0435\u043D\u0438\u044F 48 \u0431\u0438\u0442\u043D\u043E\u0433\
-      \u043E \u0440\u0435\u0433\u0438\u0441\u0442\u0440\u0430 iFSY-304-M36.\\n   \
-      \ ', ['enable', 'input_div_ctrl', 'mux_en', 'mux_sel', 'pre_divider_mode', 'ref_div_ctrl'])"
+      \ '0'), ('enable', '0.0'), ('in_freq', '1000000'), ('out_freq', '2000000')],\
+      \ [], [('0', 'float', 1), ('spi', 'message', 1)], '\\n    \u0413\u0435\u043D\
+      \u0435\u0440\u0430\u0442\u043E\u0440 \u0437\u043D\u0430\u0447\u0435\u043D\u0438\
+      \u044F 48 \u0431\u0438\u0442\u043D\u043E\u0433\u043E \u0440\u0435\u0433\u0438\
+      \u0441\u0442\u0440\u0430 iFSY-304-M36.\\n    ', ['enable', 'in_freq', 'input_div_ctrl',\
+      \ 'mux_en', 'mux_sel', 'out_freq', 'pre_divider_mode', 'ref_div_ctrl'])"
     bus_sink: false
     bus_source: false
     bus_structure: null
     coordinate: [240, 192.0]
     rotation: 0
-    state: true
+    state: disabled
 - name: qtgui_time_sink_x_0_0_0
   id: qtgui_time_sink_x
   parameters:
@@ -797,7 +826,7 @@ blocks:
     bus_structure: null
     coordinate: [1056, 216.0]
     rotation: 0
-    state: disabled
+    state: enabled
 
 connections:
 - [blocks_null_source_0, '0', epy_block_0_0_0, '0']

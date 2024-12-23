@@ -10,7 +10,7 @@
   */
 
 #include "ili9341.h"
-#include "SPI_init.h"
+#include "spi.h"
 #include <stdint.h>
 #include "MDR32F9Qx_ssp.h"
 #include "MDR32F9Qx_port.h"
@@ -33,7 +33,7 @@ volatile uint16_t LCD_W=ILI9341_TFTWIDTH;
 volatile uint16_t LCD_H=ILI9341_TFTHEIGHT;
 
 // SSP control structure
-extern SSP_InitTypeDef SSP1_struct;
+static SSP_InitTypeDef SSP1_struct;
 
 void test(void)
 {
@@ -118,6 +118,7 @@ void ili9341_hard_reset(void)	// hard reset display (переключить вы
 
 void ili9341_init(void) 	// set up display using predefined command sequence
 {
+	SSP_StructInit(&SSP1_struct);
 	ili9341_hard_reset();			// Выполнить сброс экрана
 	ili9341_writecommand8(0x01);	// Послать команду сброса
 	delay_ms(1000);

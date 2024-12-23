@@ -11,9 +11,9 @@
 /* Includes ------------------------------------------------------------------*/
 #include "MDR32F9Qx_port.h"
 #include "MDR32F9Qx_adc.h"
-#include "ADC_init.h"
+#include "adc.h"
 #include "defines.h"
-#include "Command_system.h"
+#include "command_sys_flex.h"
 #include "MDR32F9Qx_rst_clk.h"
 
 #define MIN_ADC_PRESCALER ADC_CLK_div_8

@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    DAC_init.c
+  * @file    dac.c
   * @author  ICV
   * @version V1.1.0
   * @date    19/10/2024
@@ -16,7 +16,7 @@
 #include "MDR32F9Qx_dac.h"
 #include "MDR32F9Qx_timer.h"
 #include "MDR32F9Qx_dma.h"
-#include "DAC_init.h"
+#include "dac.h"
 #include "defines.h"
 #include <math.h>
 
@@ -292,4 +292,4 @@ ErrorStatus reconfig_DAC_clock(uint32_t input_freq, enum mode_setting mode)
 
 /*********************** (C) COPYRIGHT 2024 ICV ****************************
 *
-* END OF FILE DAC_init.c */
+* END OF FILE dac.c */

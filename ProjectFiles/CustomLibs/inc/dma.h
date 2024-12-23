@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    DMA_init.c
+  * @file    dma.h
   * @author  ICV
   * @version V1.1.0
   * @date    19/10/2024
@@ -31,4 +31,4 @@ void reconfig_DMA_dac_mode(void);
 
 /*********************** (C) COPYRIGHT 2024 ICV ****************************
 *
-* END OF FILE DMA_init.h */
+* END OF FILE dma.h */

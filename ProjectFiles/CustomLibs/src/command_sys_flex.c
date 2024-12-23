@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    Command_system.c
+  * @file    command_sys_flex.c
   * @author  ICV
   * @version V1.1.0
   * @date    19/10/2024
@@ -17,11 +17,12 @@
 #include "MDR32F9Qx_port.h"
 #include <string.h>
 #include <stdlib.h>
-#include "ADC_init.h"
+#include "adc.h"
 #include "defines.h"
-#include "DAC_init.h"
-#include "SPI_init.h"
-#include "Command_system.h"
+#include "pins.h"
+#include "dac.h"
+#include "spi.h"
+#include "command_sys_flex.h"
 
 // внешние переменные
 extern uint16_t DAC_table[SIN_RES];
@@ -30,7 +31,7 @@ extern DMA_CtrlDataInitTypeDef TIM2_alternate_DMA_structure;
 
 enum mode_setting mode = 3;   /* режим работы устройства */
 
-float get_voltage_num(char *command, int *i); 
+float get_voltage_num(const char *command, int *i); 
 int convert_voltage_to_register_val(float voltage);
 
 /**
@@ -54,7 +55,7 @@ int execute_command(char *command)
   else if (strstr(command, "set ") == command)                      // проверить: команда начинается с "set "?
   {
     static int DAC_table_buf[SIN_RES*2];                            // буфер DAC_table_buf
-    int i = (int)strlen("set ");                                         // 1ый символ числа num
+    int i = (int)strlen("set ");                                    // 1ый символ числа num
     int buffer_num = 0;                                             // буферная переменная
     static int j = 0;                                               // индекс таблицы DAC_table_buf
     while ((command[i] != 0) && (command[i] != '\n')                // пока строка не закончена
@@ -180,7 +181,7 @@ int execute_command(char *command)
   * @param  i - index of the value to be extracted.
   * @retval value of the extracted voltage 
   */
-  float get_voltage_num(char *command, int *i)   // передаем i по ссылке, а не по значению
+  float get_voltage_num(const char *command, int *i)   // передаем i по ссылке, а не по значению
   {
   float num = 0.0;
     if ((command[*i] >= '0') && (command[*i] <= '9'))   // проверка того, что это цифра
@@ -268,4 +269,4 @@ int is_valid_mode_setting(int x)
 
 /*********************** (C) COPYRIGHT 2024 ICV ****************************
 *
-* END OF FILE Command_system.c */
+* END OF FILE command_sys_flex.c */
