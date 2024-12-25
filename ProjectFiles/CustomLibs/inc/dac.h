@@ -33,10 +33,10 @@ enum dac_mode_state
 void Setup_DAC();
 void Setup_TIM2();
 void Setup_DEMUX_for_DAC(void);
-void set_sin_DAC_table(int freq, int chan);
+void set_sin_DAC_table(int freq, int chan, int total_chan);
 void change_dac_chan_num(int num_dac_chan);
 void reconfig_TIM_dac_mode(void);
-ErrorStatus reconfig_DAC_clock(uint32_t input_freq, enum mode_setting mode);
+ErrorStatus reconfig_DAC_clock(uint32_t input_freq, int num_of_dac_channels /* enum mode_setting mode */);
 
 /** @} */ /* End of group __Specific_DAC */
 

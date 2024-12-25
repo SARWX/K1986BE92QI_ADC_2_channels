@@ -106,7 +106,7 @@ void change_adc_chan_num(int num_adc_chan)
   *         - SUCCESS if the ADC frequency is successfully set; 
   *         - ERROR if the requested frequency cannot be achieved.
   */
-ErrorStatus reconfig_ADC_clock(uint32_t input_freq, enum mode_setting mode)
+ErrorStatus reconfig_ADC_clock(uint32_t input_freq, int num_of_adc_channels/* enum mode_setting mode */)
 {
     ADC1_Cmd(DISABLE);
     ErrorStatus new_freq_set = ERROR;
@@ -119,7 +119,7 @@ ErrorStatus reconfig_ADC_clock(uint32_t input_freq, enum mode_setting mode)
     uint32_t min_adc_freq = (HSE_FREQ * CPU_PLL) / 
         (max_prescaler * conversion_ticks);
     // 2 - узнать сколько каналов задействовано в текущем режиме
-    int num_of_adc_channels = (((mode >> 1) & 0x1) + 1);
+    // int num_of_adc_channels = (((mode >> 1) & 0x1) + 1);
     // 3 - вычислить требуемую частоту
     uint32_t req_freq = input_freq * num_of_adc_channels;
     // 4 - попытаться установить частоту:

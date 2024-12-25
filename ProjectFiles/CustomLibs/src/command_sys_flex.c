@@ -47,7 +47,7 @@ int execute_command(char *command)
   if (strstr(command, "set freq ") == command) 
   {                    // проверить: команда начинается с "set freq "?
     int freq = atoi((char *)(command + strlen("set freq ")));       // перевести freq из строкового формата в int
-      set_sin_DAC_table(freq, 1);                                   // задать синусоиду требуемой частоты в DAC_table (в первый канал)
+      set_sin_DAC_table(freq, 1, get_dac_chan_num(mode));           // задать синусоиду требуемой частоты в DAC_table (в первый канал)
   }
 // ---------------------------------------------------------------------------------------------- //
 
@@ -116,13 +116,13 @@ int execute_command(char *command)
     if (strstr(command, "ADC ") == command + strlen("clock ")) 
     {
       int new_clock = atoi((char *)(command + strlen("clock ADC ")));       // перевести new_clock из строкового формата в int
-      reconfig_ADC_clock(new_clock, mode);
+      reconfig_ADC_clock(new_clock, get_adc_chan_num(mode));
     }
     // Настройка частоты для DAC
     if (strstr(command, "DAC ") == command + strlen("clock ")) 
     {
       int new_clock = atoi((char *)(command + strlen("clock DAC ")));       // перевести new_clock из строкового формата в int
-      reconfig_DAC_clock(new_clock, mode);
+      reconfig_DAC_clock(new_clock, get_dac_chan_num(mode));
     }
  }
 // ---------------------------------------------------------------------------------------------- //
@@ -258,7 +258,7 @@ void set_mode_setting(enum mode_setting mode)
 
 /**
   * @brief : 
-  * function to check if x - correct node_setting.
+  * function to check if x - correct mode_setting.
   * @param  x - value to test.
   * @retval 1 - valid, 0 - not valid
   */
@@ -267,6 +267,29 @@ int is_valid_mode_setting(int x)
   return((0 <= x) && (x <= 3));
 };
 
+
+/**
+  * @brief returns number of current adc channels 
+  * @param  mode - current operating mode
+  * @retval number of channels (1 = 1)
+  */
+int get_adc_chan_num(enum mode_setting mode)
+{
+  int adc_chan = ((mode & 0x2) >> 1);
+  return(adc_chan + 1);
+}
+
+
+/**
+  * @brief returns number of current dac channels 
+  * @param  mode - current operating mode
+  * @retval number of channels (1 = 1)
+  */
+int get_dac_chan_num(enum mode_setting mode)
+{
+  int dac_chan = (mode & 0x1);
+  return(dac_chan + 1);
+}
 /*********************** (C) COPYRIGHT 2024 ICV ****************************
 *
 * END OF FILE command_sys_flex.c */

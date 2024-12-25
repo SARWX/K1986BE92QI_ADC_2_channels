@@ -21,7 +21,7 @@
 
 void Setup_ADC();
 void change_adc_chan_num(int num_adc_chan);
-ErrorStatus reconfig_ADC_clock(uint32_t input_freq, enum mode_setting mode);
+ErrorStatus reconfig_ADC_clock(uint32_t input_freq, int num_of_adc_channels /* enum mode_setting mode */);
 
 /** @} */ /* End of group __Specific_ADC */
 

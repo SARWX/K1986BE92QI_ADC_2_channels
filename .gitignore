@@ -7,15 +7,16 @@ ProjectFiles/Blank.uvguix.PC_88
 # ProjectFiles/Blank.uvprojx 
 ProjectFiles/.vscode
 ProjectFiles/Tests/*
-GNU_radio/__pycache__/*
-GNU_radio/qpsk/*
+# GNU_radio/__pycache__/*
+# GNU_radio/qpsk/*
 *.o
 *.i
-GNU_radio/__pycache__/PlotFromSerial_epy_block_0.cpython-311.pyc
-GNU_radio/__pycache__/PlotFromSerial_epy_block_1_0.cpython-311.pyc
-GNU_radio/__pycache__/PlotFromSerial_epy_block_1.cpython-311.pyc
-GNU_radio/qpsk/qpsk_stage6_epy_block*.py
 ProjectFiles/Blank.uvoptx
-.gitignore
+# .gitignore
 .vscode/settings.json
 ProjectFiles/Blank.uvguix.Timofei
+GNU_radio/*
+!GNU_radio/python_blocks/
+!GNU_radio/examples/
+GNU_radio/examples/*
+!GNU_radio/examples/*.grc

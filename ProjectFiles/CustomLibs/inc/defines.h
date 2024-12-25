@@ -23,7 +23,8 @@
 #define BUFFER_LENGTH 128               /* размер буфера для команд USB */
 
 #define SIN_RES 250 					/* разрешение синусоиды (точек на период) */
-#define SIN_AMPLITUDE 2000				/* должно быть меньше < 4096 / 2 */
+// #define SIN_AMPLITUDE 2000				/* должно быть меньше < 4096 / 2 */
+#define SIN_AMPLITUDE 1000				/* должно быть меньше < 4096 / 2 */
 #define SIN_MEDIUM_LINE 2000			/* средняя линия для синусоиды на ЦАП */
 #define MAX_ADC_VAL 4095				/* максимальное значение 12 битного АЦП */
 #define CORRECTION_FACTOR 1.1			/* поправочный коэфициент для задания точной частоты */
@@ -39,9 +40,13 @@
 #define PRESCALER_T2 8					/* предделитель для TIM2 */
 #define PRESCALER_T2_DAC_MODE 64		/* предделитель для TIM2 в dac_mode */
 #define PERIOD_T2 16				    /* определяет период для TIM2 */
-#define DISCRET_FREQ                    \
+#define MAX_DAC_FREQ                    \
     ((HSE_FREQ * CPU_PLL / CPU_DIV) /   \
      (PRESCALER_T2 * PERIOD_T2))	    /* частота дискретизации ЦАП */ 
+
+#define CUR_DAC_FREQ(prescaler, period) \
+    ((HSE_FREQ * CPU_PLL / CPU_DIV) /   \
+     (prescaler * period))	    /* частота дискретизации ЦАП */ 
 
 #define DAC_MODE_BUF_SIZE 128           /* размер буфера для dac_mode (адается в 16 битных числах) */
 #define NUM_OF_MES 128	                /* количество измерений в одном пакете */

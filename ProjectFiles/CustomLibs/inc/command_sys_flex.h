@@ -30,6 +30,10 @@ enum mode_setting
 
 int is_valid_mode_setting(int x);
 
+int get_adc_chan_num(enum mode_setting mode);
+
+int get_dac_chan_num(enum mode_setting mode);
+
 int execute_command(char *command);
 void set_mode_setting(enum mode_setting mode);
 

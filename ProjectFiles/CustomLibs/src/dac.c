@@ -152,31 +152,44 @@ void Setup_DEMUX_for_DAC(void)
   * @param  chan - DAC channel (may be 1 or 2)
   * @retval None
   */
-void set_sin_DAC_table(int freq, int chan) 
+void set_sin_DAC_table(int freq, int chan, int total_chan)
 {
-	chan--;											// Приведем chan к 0 или 1
+	// chan--;											// Приведем chan к 0 или 1
 	freq = (int)((float)freq * CORRECTION_FACTOR); 	// Поправочный коэффициент
-	int tics = (DISCRET_FREQ / freq);				// Сколько тиков таймера отвести на период синусоиды с частотой freq
-	int divider = 1;								
-	while(tics > SIN_RES)  							// Размер DAC_table ограничен SIN_RES
+
+	// int prescaler = TIMER_GetCntPrescaler(MDR_TIMER2);
+	// int period = TIMER_GetCntAutoreload(MDR_TIMER2);
+	// int discret_freq = CUR_DAC_FREQ(prescaler, period);
+	// int tics = (discret_freq / freq) / total_chan;				// Сколько тиков таймера отвести на период синусоиды с частотой freq
+
+	int tics = (MAX_DAC_FREQ / freq) / total_chan;				// Сколько тиков таймера отвести на период синусоиды с частотой freq
+	int divider = 1;
+	int limit = (total_chan == 1) ? (SIN_RES * 2) : SIN_RES;
+	while(tics > limit)  							// Размер DAC_table ограничен SIN_RES
 	{
 		divider *= 2;								// Будем удваивать период таймера (разрешение будет падать) 
 		tics /= 2;									// Будем делить пополам количество точек для записи в DAC_table
 	}
-	MDR_TIMER2->ARR = (PERIOD_T2 * divider - 1);	// Установить новый период таймера
+	TIMER_SetCntPrescaler(MDR_TIMER2, PRESCALER_T2);
+	// MDR_TIMER2->ARR = (PERIOD_T2 * divider - 1);	// Установить новый период таймера
+	TIMER_SetCntAutoreload(MDR_TIMER2, (PERIOD_T2 * divider - 1));
 
 	double angle_inc = (6.28318 / tics);			// Шаг таблицы в радианах
-	for (int i = 0; i < (tics); i++)  
+	for (int i = 0; i < tics; i++)  
 	{
-		DAC_table[(i * 2 + (chan - 1))] = 
+		DAC_table[(i * total_chan + (chan - 1))] = 
 			(int)(sin(i * angle_inc) * SIN_AMPLITUDE) +	// Вычисляем значение sin для i,
 			SIN_MEDIUM_LINE;							// с учетом средней линии
 	}
-	DAC_table[0] = SIN_MEDIUM_LINE;			// Первое значение sin - это средняя линия 
-	DAC_table[tics - 1] = SIN_MEDIUM_LINE;	// Последнее значение sin - это средняя линия
+	DAC_table[(chan - 1)] = SIN_MEDIUM_LINE;			// Первое значение sin - это средняя линия
+	int last_element = tics * total_chan - 1;
+	if (total_chan == 2) {
+		(chan == 1) ? last_element-- : last_element;
+	}
+	DAC_table[last_element] = SIN_MEDIUM_LINE;	// Последнее значение sin - это средняя линия
 
-	TIM2_primary_DMA_structure.DMA_CycleSize = (tics*2);	// Сколько измерений (DMA передач) содержит 1 DMA цикл
-	TIM2_alternate_DMA_structure.DMA_CycleSize = (tics*2);	// Сколько измерений (DMA передач) содержит 1 DMA цикл
+	TIM2_primary_DMA_structure.DMA_CycleSize = (tics * total_chan);	// Сколько измерений (DMA передач) содержит 1 DMA цикл
+	TIM2_alternate_DMA_structure.DMA_CycleSize = (tics * total_chan);	// Сколько измерений (DMA передач) содержит 1 DMA цикл
 }
 
 /**
@@ -245,7 +258,7 @@ void reconfig_TIM_dac_mode(void)
   * @param  None
   * @retval None
   */
-ErrorStatus reconfig_DAC_clock(uint32_t input_freq, enum mode_setting mode)
+ErrorStatus reconfig_DAC_clock(uint32_t input_freq, int num_of_dac_channels /* enum mode_setting mode */)
 {
 	ErrorStatus new_freq_set = ERROR;
     // 1 - вычислить границы
@@ -253,8 +266,8 @@ ErrorStatus reconfig_DAC_clock(uint32_t input_freq, enum mode_setting mode)
 	static const int min_dac_freq = 1;
 	static const int max_dac_freq = HSE_FREQ * CPU_PLL / y;
 	
-	// 2 - узнать сколько каналов задействовано в текущем режиме
-    int num_of_dac_channels = ((mode & 0x1) + 1);
+	// // 2 - узнать сколько каналов задействовано в текущем режиме
+    // int num_of_dac_channels = ((mode & 0x1) + 1);
 
 	// 3 - вычислить требуемую частоту
 	int req_freq = input_freq * num_of_dac_channels;
