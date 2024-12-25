@@ -33,22 +33,6 @@ options:
     state: enabled
 
 blocks:
-- name: DAC_frequency
-  id: variable_qtgui_label
-  parameters:
-    comment: ''
-    formatter: None
-    gui_hint: ''
-    label: DAC frequency
-    type: int
-    value: (int)(DAC_sample_rate /(500 -  amplify_rx))
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [56, 536.0]
-    rotation: 0
-    state: true
 - name: DAC_sample_rate
   id: variable
   parameters:
@@ -61,54 +45,12 @@ blocks:
     coordinate: [152, 8.0]
     rotation: 0
     state: true
-- name: amplify_rx
-  id: variable_qtgui_range
-  parameters:
-    comment: ''
-    gui_hint: ''
-    label: "\u0423\u0441\u0438\u043B\u0435\u043D\u0438\u0435 RX, \u0434\u0411"
-    min_len: '200'
-    orient: QtCore.Qt.Horizontal
-    rangeType: int
-    start: '0'
-    step: '1'
-    stop: 500 - 2
-    value: '0'
-    widget: counter_slider
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [40, 192.0]
-    rotation: 0
-    state: true
-- name: amplify_tx
-  id: variable_qtgui_range
-  parameters:
-    comment: ''
-    gui_hint: ''
-    label: "\u0423\u0441\u0438\u043B\u0435\u043D\u0438\u0435 TX, \u0434\u0411"
-    min_len: '200'
-    orient: QtCore.Qt.Horizontal
-    rangeType: int
-    start: '0'
-    step: '1'
-    stop: 500 - 2
-    value: '0'
-    widget: counter_slider
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [40, 328.0]
-    rotation: 0
-    state: true
 - name: generate_signal
   id: variable_qtgui_push_button
   parameters:
     comment: ''
     gui_hint: ''
-    label: Triangle
+    label: Send config
     pressed: '1'
     released: '0'
     type: int
@@ -148,7 +90,7 @@ blocks:
     bus_structure: null
     coordinate: [488, 144.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: blocks_null_sink_0_0
   id: blocks_null_sink
   parameters:
@@ -743,7 +685,7 @@ blocks:
     bus_structure: null
     coordinate: [240, 192.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: qtgui_time_sink_x_0_0_0
   id: qtgui_time_sink_x
   parameters:
