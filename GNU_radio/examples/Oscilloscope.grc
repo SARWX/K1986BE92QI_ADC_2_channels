@@ -1151,7 +1151,7 @@ blocks:
     dac_freq: '0'
     maxoutbuf: '0'
     minoutbuf: '0'
-    mode: '0'
+    mode: '3'
     portNumber: '7'
   states:
     _io_cache: ('Analog Digital Interface', 'ADIBlock', [('portNumber', '7'), ('mode',
