@@ -114,22 +114,6 @@ void post_setup(void)
 	TIMER_Cmd(MDR_TIMER2, ENABLE);
 }
 
-int wait_for_usb_connection()
-{
-	const char *hello_message = "hello";
-	volatile USB_Result answer = USB_ERROR;
-
-	delay_ms(40);
-
-	while(answer != USB_SUCCESS) {
-		answer = USB_CDC_SendData((uint8_t *)hello_message, 6);
-	}
-	// TRAP
-	while(1)
-		;
-	return(0);
-}
-
 int main(void) 
 {
 	pre_setup();
@@ -145,8 +129,6 @@ int main(void)
 
 	Setup_SPI(spi_aux_pins, 2);
 
-	wait_for_usb_connection();
-	
 	post_setup();
 
 	while (1) 

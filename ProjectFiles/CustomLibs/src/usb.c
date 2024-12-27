@@ -63,7 +63,8 @@ void Setup_USB(void)
 	USB_DeviceBUSParam.PULL = USB_HSCR_DP_PULLUP_Set;
 	USB_DeviceInit(&USB_Clock_InitStruct, &USB_DeviceBUSParam);
 	/* Enable all USB interrupts */
-	 USB_SetSIM(USB_SIS_SCTDONE_Set);
+	//  USB_SetSIM(USB_SIS_SCTDONE_Set);
+	 USB_SetSIM(USB_SIS_Msk);
 	USB_DevicePowerOn();
 	/* Enable interrupt on USB */
 #ifdef USB_INT_HANDLE_REQUIRED
